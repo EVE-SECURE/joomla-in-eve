@@ -35,9 +35,9 @@ class EveController extends JController {
 	function apiform() {
 		$model = $this->getModel('Apiform');
 		if ($model->processForm($_POST)) {
-			$this->setRedirect('index.php?option=com_eve&view=apiform&layout=success');
-		} else {
 			$this->setRedirect('index.php?option=com_eve&view=apiform&layout=failure');
+		} else {
+			$this->setRedirect('index.php?option=com_eve&view=apiform&layout=success');
 		}
 		
 	}

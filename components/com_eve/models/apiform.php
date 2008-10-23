@@ -40,7 +40,7 @@ class EveModelApiform  extends JModel {
 			$authenticate = & JAuthentication::getInstance();
 			$response	  = $authenticate->authenticate($credentials, $options);
 			if ($response->status !== JAUTHENTICATE_STATUS_SUCCESS) {
-				return false;
+				return JError::raiseWarning('SOME_ERROR_CODE', JText::_("AUTHENTICATION FAILED"));
 			}
 			$user = JFactory::getUser($credentials['username']);
 		}
@@ -48,13 +48,13 @@ class EveModelApiform  extends JModel {
 		$apiUserID = JArrayHelper::getValue($hash, 'apiUserID', '', 'int');
 		$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
 		if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
-			return false;
+			return JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
 		}
 		$api = new EveHelperApi();
 		$api->setCredentials($apiUserID, $apiKey);
 		$chars = $api->getCharacters();
 		if (is_null($chars)) {
-			return false; 
+			return JError::raiseWarning('SOME_ERROR_CODE', JText::_("FAILED TO RETRIEVE CHARACTER LIST"));
 		}
 		
 		$xml = new SimpleXMLElement($chars);
@@ -72,11 +72,14 @@ class EveModelApiform  extends JModel {
 			
 			//print_r($attribs);
 			$char->loadByEveId((string)$attribs->characterID);
-			$char->userID						= $user->id;
-			$char->name 				= (string)$attribs->name;
+			if ($char->userID > 0 && $char->userID != $user->id) {
+				continue;
+			}
+			$char->userID			= $user->id;
+			$char->name 			= (string)$attribs->name;
 			$char->corporationID 	= (string)$attribs->corporationID;
-			$char->apiUserID					= $apiUserID;
-			$char->apiKey						= $apiKey;
+			$char->apiUserID		= $apiUserID;
+			$char->apiKey			= $apiKey;
 			
 			//$char->corporationName	= (string)$attribs->corporationName;
 			$char->store();
@@ -84,13 +87,13 @@ class EveModelApiform  extends JModel {
 		}
 		
 		if (!$user->block) {
-			return true;
+			return;
 		}
 		
 		JArrayHelper::toInteger($corps);
 		
 		if (!count($corps)) {
-			return false;
+			return JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION"));
 		}
 		
 		
@@ -105,18 +108,14 @@ class EveModelApiform  extends JModel {
 			$user->set('block', '0');
 			$user->set('activation', '');
 			if (!$user->save()) {
-				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
-				return false;
+				return JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
 			}
 		} else {
-			JError::raiseWarning( "SOME_ERROR_CODE_NOT_IN_OWNER_CORP", 1 );
-			return false;
+			return JError::raiseWarning( "SOME_ERROR_CODE", JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION") );
 		}
 		
 		//var_dump($chars);
 		//echo $chars->asXML;
-		return true;
-		
 	}
 	
 	

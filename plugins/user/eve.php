@@ -89,13 +89,9 @@ class plgUserEVE extends JPlugin
 		 	return false;
 		}
 		
-		$userid = $this->_getUserId($user);
-		if (!$userid) {
-			return;
-		}
 		if ($isnew) {
 			$dbo = JFactory::getDBO();
-			$sql = 'UPDATE #__users SET block=1 WHERE id='.$userid;
+			$sql = 'UPDATE #__users SET block=1 WHERE id='.$user['id'];
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
@@ -111,11 +107,6 @@ class plgUserEVE extends JPlugin
 		// convert the user parameters passed to the event
 		// to a format the external application
 		
-
-		if ($isnew) {
-			$this->_handleChar($userid);
-			
-		}
 	}
 
 }
