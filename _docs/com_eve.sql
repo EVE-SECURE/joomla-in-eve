@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `jos_eve_corporations` (
 
 
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
-('EVE', 'option=com_eve', 0, 0, 'option=com_eve', 'EVE', 'com_eve', 0, 'components/com_eve/assets/icon-eve-16.png', 0, '', 1);
+('EVE', 'option=com_eve', 0, 0, 'option=com_eve&control=char', 'EVE', 'com_eve', 0, 'components/com_eve/assets/icon-eve-16.png', 0, '', 1);
 
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES

@@ -34,7 +34,8 @@ Member Tracking
 - Need some styling, look for suitable template styling or  make new?
 - Make default corporationID/userID for layouts, see administrator/components/com_content/elements/ for example
 - Backend section
-	- check for required tables
+	- [DONE] check for required tables 
+	- find nice menu icon
 	- allow to use custom table names and database?
 - Finish/cleanup translations
 - Finish/cleanup .xml definitions for layouts
