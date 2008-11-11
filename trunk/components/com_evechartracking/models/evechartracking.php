@@ -83,8 +83,8 @@ class EvechartrackingModelEvechartracking  extends JModel {
 		$q = new JQuery();
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('mapDenormalize', 'md', 'ch.locationID=md.itemID');
-		$q->addJoin('stastations', 'st', 'ch.locationID=st.stationID');
-		$q->addJoin('invtypes', 'iv', 'ch.shipTypeID=iv.typeID');
+		$q->addJoin('staStations', 'st', 'ch.locationID=st.stationID');
+		$q->addJoin('invTypes', 'iv', 'ch.shipTypeID=iv.typeID');
 		$q->addQuery('ch.*');
 		$q->addQuery('md.itemName AS locationName, md.typeID AS locationTypeID');
 		$q->addQuery('st.stationName AS baseName, stationTypeID AS baseTypeID');
