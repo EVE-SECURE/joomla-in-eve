@@ -1,0 +1,240 @@
+<?php
+defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
+
+require_once ALE_BASE.DIRECTORY_SEPARATOR.'base.php';
+
+define('ALE_AUTH_DEFAULT', 0);
+define('ALE_AUTH_NONE', 1);
+define('ALE_AUTH_USER', 2);
+define('ALE_AUTH_CHARACTER', 3);
+define('ALE_AUTH_AVAILABLE', 4);
+
+
+class AleEVEOnline extends AleBase {
+	
+	private $userID;
+	private $apiKey;
+	private $characterID;
+	
+	private $xml;
+	
+	protected $default = array(
+		'host' => 'http://api.eve-online.com/',
+		'suffix' => '.xml.aspx',
+		'parserClass' => 'SimpleXMLElement' ,
+		'serverError' => 'throwException',
+		);
+	
+	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+		parent::__construct($request, $cache, $config);
+	}
+	
+	/**
+	 * Extract cached until time
+	 *
+	 * @param string $content
+	 * @return string
+	 */
+	protected function getCachedUntil($content) {
+		if (!isset($this->xml)) {
+			$this->xml = new SimpleXMLElement($content);
+		}
+		return (string) $this->xml->cachedUntil;
+	}
+	
+	/**
+	 * Check for server error. Return null, string or object, based on configuration
+	 *
+	 * @param string $content
+	 * @param bool $useCache
+	 * @return mixed 
+	 */
+	protected function handleContent($content, &$useCache = true) {
+		$errorCode = 0;
+		$errorText = '';
+		
+		//get error code and error mesage first, I'm using xpath because I could pull it from config later
+		$this->xml = new SimpleXMLElement($content);
+		if ($this->config['serverError'] != 'ignore') {
+			$xerrorCode = $this->xml->xpath('/eveapi/error/@code');
+			$xerrorText = $this->xml->xpath('/eveapi/error/text()');
+			if ($xerrorCode) {
+				$errorCode = (int) $xerrorCode[0];
+			}
+			if ($xerrorText) {
+				$errorText = (string) $xerrorText[0];
+			}
+		}
+		
+		//if we found an error
+		if ($errorCode || $errorText) {
+			//we do not want to cache error, right?
+			$useCache = false;
+			switch ($this->config['serverError']) {
+				case 'returnParsed':
+					break;
+				case 'returnNull':
+					return null;
+					break;
+				case 'throwException':
+				default:
+					throw new Exception($errorText, $errorCode);
+					
+			}
+		}
+		
+		$parserClass = $this->config['parserClass'];
+		//check if we have result we want
+		if (strtolower($parserClass) == strtolower('SimpleXMLElement') && isset($this->xml)) {
+			return $this->xml; 
+		}
+		return parent::handleContent($content, $useCache);
+	}
+		
+	/**
+	 * Resolves ALE_AUTH_DEFAULT credentials setting
+	 *
+	 * @param string $context
+	 * @param int $auth Credentials level
+	 * @return int
+	 */
+	protected function getAuth($context, $auth) {
+		if ($auth == ALE_AUTH_DEFAULT) {
+			switch ($context) {
+				case 'eve':
+				case 'map':
+					$auth = ALE_AUTH_NONE;
+					break;
+				case 'account':
+					$auth = ALE_AUTH_USER;
+					break;
+				case 'char':
+				case 'corp':
+					$auth = ALE_AUTH_CHARACTER;
+					break;
+				default:
+					$auth = ALE_AUTH_AVAILABLE;
+			}
+		}
+		return $auth;
+	}
+	
+	/**
+	 * Add Credentials to parameters
+	 *
+	 * @param array $params
+	 * @param int $auth Credentials level
+	 */
+	protected function addCredentials(array &$params, $auth) {
+		switch ($auth) {
+			case ALE_AUTH_CHARACTER:
+				if ($this->characterID) {
+					$params['characterID'] = $this->characterID;
+				} else {
+					throw new Exception('Api call requires characterID');
+				}
+			case ALE_AUTH_USER:
+				if ($this->userID && $this->apiKey) {
+					$params['userID'] = $this->userID;
+					$params['apiKey'] = $this->apiKey;
+				} else {
+					throw new Exception('Api call requires user credentials');
+				}
+			case ALE_AUTH_NONE:
+				break;
+			case ALE_AUTH_AVAILABLE:
+				if ($this->userID && $this->apiKey) {
+					$params['userID'] = $this->userID;
+					$params['apiKey'] = $this->apiKey;
+					if ($this->characterID) {
+						$params['characterID'] = $this->characterID;
+					}
+				}
+				break;
+			default:
+				throw new InvalidArgumentException('Unknown credentials level');
+		}
+	}
+	
+	public function  _retrieveXml(array $context, array $arguments) {
+		$params = isset($arguments[0]) && is_array($arguments[0]) ? $arguments[0] : array();
+		$auth = isset($arguments[1]) ? $arguments[1] : ALE_AUTH_DEFAULT;
+		
+		$auth = $this->getAuth(reset($context), $auth);
+		//let's add credentials first, remember kids: ALE_AUTH_DEFAULT is invalid
+		$this->addCredentials($params, $auth);
+		$arguments[0] = $params;
+				
+		return parent::_retrieveXml($context, $arguments);
+		
+	}	
+	/**
+	 * Set userID 
+	 *
+	 * @param int $userID
+	 */
+	public function setUserID($userID)
+	{
+		// The user ID must be a numeric value.
+		if (!is_numeric($userID))
+		{
+			// ERROR: User ID is not numeric.
+			throw new UnexpectedValueException("setUserID: userID must be a numeric value.");
+		}
+		
+		// Validation checks out, set the User ID
+		$this->userID = $userID;
+	}	
+	
+	/**
+	 * Set apiKey
+	 *
+	 * @param string $apiKey
+	 */
+	public function setApiKey($apiKey)
+	{
+		// The API Key must be a string.
+		if (!is_string($apiKey))
+		{
+			// ERROR: Api Key is not a string!!
+			throw new UnexpectedValueException("setApiKey: apiKey must be a string value. It is " . getType($apiKey));
+		}
+		
+		// Validation checks out, set the Api Key
+		$this->apiKey = $apiKey;
+	}
+	
+	/**
+	 * Set CharacterID
+	 *
+	 * @param int $characterID
+	 */
+	public function setCharacterID($characterID = null) {
+		// The char ID must be a numeric value.
+		if (!empty($characterID) && !is_numeric($characterID))
+		{
+			// ERROR: User ID is not numeric.
+			throw new UnexpectedValueException("setCharacterID: characterID must be a numeric value.");
+		}
+		
+		// Validation checks out, set the User ID, if it's empty, set to null.
+		if (!empty($characterID))
+			$this->characterID = $characterID;
+		else 
+			$this->characterID = null;
+	}
+	
+	/**
+	 * Set API credentials
+	 *
+	 * @param int $userID
+	 * @param string $apiKey
+	 * @param int $characterID
+	 */
+	public function setCredentials($userID, $apiKey, $characterID = null) {
+		$this->setUserID($userID);
+		$this->setApiKey($apiKey);
+		$this->setCharacterID($characterID);
+	}
+
+}

@@ -1,0 +1,20 @@
+<filters>
+	<filter name="filter_standings">
+		<option>
+			<key></key>
+			<text>- Select Standings -</text>
+		</option>
+		<option>
+			<key>owner</key>
+			<text>Owner</text>
+		</option>
+		<option>
+			<key>friendly</key>
+			<text>Friendly</text>
+		</option>
+		<option>
+			<key>hostile</key>
+			<text>Hostile</text>
+		</option>
+	</filter>
+</filters>
