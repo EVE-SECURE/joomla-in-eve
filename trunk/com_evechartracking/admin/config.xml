@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<params>
+		<param name="name_link" type="text" default="%s" label="Name Link" 
+			description="Format name using this pattern, sprintf(pattern, name, characterID)" size="64" />
+		<param name="name_link_igb" type="text" default='&lt;a href="showinfo:1373//%2$s"&gt;%1$s&lt;/a&gt;' label="IGB Name Link" 
+			description="Format name using this pattern, sprintf(pattern, name, characterID)" size="64" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="show_race" type="radio" default="1" label="Race" description="Show/Hide the Race in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_gender" type="radio" default="1" label="Gender" description="Show/Hide the Gender in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_bloodLine" type="radio" default="1" label="Blood Line" description="Show/Hide the Blood Line in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_balance" type="radio" default="2" label="Wallet ballance" description="Show/Hide the Wallet Ballance in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_startDateTime" type="radio" default="2" label="Join Date" description="Show/Hide the Join Date in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_title" type="radio" default="2" label="Title" description="Show/Hide the Title in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_baseName" type="radio" default="2" label="Base" description="Show/Hide the Base Location in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_logonDateTime" type="radio" default="2" label="Logon Time" description="Show/Hide the last Login Time in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_logoffDateTime" type="radio" default="2" label="Logoff Time" description="Show/Hide the last Logoff Time in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_locationName" type="radio" default="2" label="Current Location" description="Show/Hide the Current Location in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+		<param name="show_shipTypeName" type="radio" default="2" label="Boarded ship" description="Show/Hide the current Ship in list">
+			<option value="0">Disable</option>
+			<option value="1">Hide</option>
+			<option value="2">Show</option>
+		</param>
+	</params>
+</config>

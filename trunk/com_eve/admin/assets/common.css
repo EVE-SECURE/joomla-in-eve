@@ -1,0 +1,33 @@
+.icon-48-char {
+	background: url(icon-char-64.png) no-repeat;
+	background-position: -8px 50%
+}
+
+.icon-48-corp {
+	background: url(icon-corp-64.png) no-repeat;
+	background-position: -8px 50%
+}
+
+.icon-48-alliance {
+	background: url(icon-alliance-64.png) no-repeat;
+	background-position: -8px 50%
+}
+
+.icon-32-alliance {
+	 background-image: url(icon-alliance-32.png);
+}
+
+.icon-32-corp {
+	 background-image: url(icon-corp-32.png);
+}
+.icon-32-char {
+	 background-image: url(icon-char-32.png);
+}
+
+.icon-16-star-yellow {
+	 background-image: url(icon-star-yellow-16.png);
+}
+
+.icon-16-star-blue {
+	 background-image: url(icon-star-blue-16.png);
+}
