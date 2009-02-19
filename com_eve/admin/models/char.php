@@ -51,6 +51,11 @@ class EveModelChar extends EveModel {
 		return EveHelperIgb::value('charid');
 	}
 	
+	function charCharacterSheet($xml, $fromCache) {
+		$character = $this->getCharacter($xml->result->characterID);
+		$character->save($xml->result->toArray());
+	}
+	
 	function apiGetCharacterSheet($cid) {
 		JArrayHelper::toInteger($cid);
 		
@@ -60,6 +65,9 @@ class EveModelChar extends EveModel {
 		}
 		
 		//TODO: Handle exceptions and errors
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $characterID) {
 			$character  = $this->getCharacter($characterID);
@@ -71,6 +79,8 @@ class EveModelChar extends EveModel {
 			$xml = $ale->char->CharacterSheet();
 			$sheet = $xml->result->toArray();
 			$character->save($sheet);
+			$dispatcher->trigger('onFetchEveapi', 
+				array('charCharacterSheet', $xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
 		}
 		return ! (bool) JError::getError();
 	}

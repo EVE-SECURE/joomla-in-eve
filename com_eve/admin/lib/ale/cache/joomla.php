@@ -117,7 +117,7 @@ class TableAleCache extends JTable {
 }
 
 /*
- CREATE TABLE `jos_ale_cache` (
+ CREATE TABLE `jos_eve_apicache` (
 `id` INT NOT NULL AUTO_INCREMENT ,
 `host` VARCHAR( 64 ) NOT NULL ,
 `path` VARCHAR( 64 ) NOT NULL ,

@@ -35,6 +35,8 @@
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.php <joomla root>/plugins/user/eve.php
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.xml <joomla root>/plugins/user/eve.xml
 
+	ln -s <joomla-in-eve root>/plg_eveapi_calls/calls.php <joomla root>/plugins/eveapi/calls.php
+
 
 	B) Windonws XP
 	Unfortunately, Windows does not support links to files, but only for directories.
