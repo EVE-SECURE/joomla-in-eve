@@ -41,9 +41,9 @@ class AleBase {
 		if ($this->config['parserClass'] != 'string' && !class_exists($this->config['parserClass'])) {
 			//let's try to load internal class
 			$file = preg_replace('/^AleParser/', '', $this->config['parserClass']);
-			$path = ALE_BASE.DIRECTORY_SEPARATOR.'parser'.DIRECTORY_SEPARATOR.$file.'.php';
+			$path = ALE_BASE.DIRECTORY_SEPARATOR.'parser'.DIRECTORY_SEPARATOR.strtolower($file).'.php';
 			if (!file_exists($path)) {
-				throw new LogicException('Invalid parser class');
+				throw new LogicException('Invalid parser class path: '.$path);
 			}
 			require_once $path;
 			if (!class_exists($this->config['parserClass'])) {

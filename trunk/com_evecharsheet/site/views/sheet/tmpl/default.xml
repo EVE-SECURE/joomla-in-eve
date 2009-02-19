@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Character Sheet Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Character Sheet Layout</name>
+		<description>DESC HERE</description>
+		<!--url addpath="/administrator/components/com_contact/elements">
+			<param name="catid" type="category" scope="com_contact_details" default="0" label="Select Category" description="A contacts category" />
+		</url-->
+		<params>
+			<param name="characterID" type="text" />
+		</params>
+	</state>
+</metadata>
