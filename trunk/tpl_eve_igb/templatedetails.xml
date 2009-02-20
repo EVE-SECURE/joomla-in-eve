@@ -2,14 +2,14 @@
 <!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://dev.joomla.org/xml/1.5/template-install.dtd">
 <install version="1.5" type="template">
 	<name>eve_igb</name>
+	<creationDate>April 2008</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code.google.com/p/joomla-in-eve/</authorUrl>
+	<copyright>(C) 2008 Pavol Kovalik</copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>0.1 Alpha</version>
 	<description>EVE IGB compatible template for Joomla!</description>
-	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<author>Pavol Kovalik</author>
-	<creationDate>April 2008</creationDate>
-	<authoremail>kovalikp@gmail.com</authoremail>
-	<authorurl>http://code.google.com/p/joomla-in-eve/</authorurl>
-	<copyright>(C) 2008 Pavol Kovalik</copyright>
 	<files>
 		<filename>html/com_user/register/default.php</filename>
 		<filename>html/com_user/remind/default.php</filename>
@@ -31,7 +31,10 @@
 		<filename>templatedetails.xml</filename>
 		<filename>template_thumbnail.png</filename>
 	</files>
-	<params></params>
+	<languages>
+		<language tag="en-GB"></language>
+	</languages>
+	<administration></administration>
 	<positions>
 		<position>top</position>
 		<position>breadcrumb</position>
@@ -40,4 +43,6 @@
 		<position>footer</position>
 		<position>debug</position>
 	</positions>
+	<params></params>
+	
 </install>

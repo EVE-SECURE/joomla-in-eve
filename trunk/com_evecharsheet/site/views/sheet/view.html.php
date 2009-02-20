@@ -28,23 +28,32 @@ jimport('joomla.application.component.view');
 class EvecharsheetViewSheet extends JView {
 	function display($tmpl = null) {
 		global $mainframe;
-
+		
+		$document =& JFactory::getDocument();
+		$document->addStyleSheet(JURI::base(). 'components/com_evecharsheet/assets/sheet.css');
+		//$document->addScript('components/com_consulting/assets/product.js');
+		
 		$params = &$mainframe->getParams();
 		$this->assignRef('params', $params);
 		
 		$model = $this->getModel();
 		
 		$characterID = JRequest::getInt('characterID');
+		if (!$characterID) {
+			$characterID = $params->get('characterID');
+		}
 		
 		$character = $model->getCharacter($characterID);
-		
+				
 		if (!$character) {
 			$this->display('none');
 			return;
 		}
+		$corporation = $model->getCorporation($character->corporationID);
 		
-		$groups = $model->getGroups();
+		$groups = $model->getGroups($characterID);
 		$this->assignRef('character', $character);
+		$this->assignRef('corporation', $corporation);
 		$this->assignRef('groups', $groups);
 		
 		parent::display($tmpl);

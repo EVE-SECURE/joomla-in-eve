@@ -29,22 +29,40 @@ class EvecharsheetModelSheet extends EveModel {
 		return $this->getInstance('Character', $characterID);
 	}
 	
-	function getGroups() {
+	function getCorporation($corporationID) {
+		return $this->getInstance('Corporation', $corporationID);
+	}
+	
+	function getGroups($characterID) {
+		$q = $this->getQuery();
+		$q->addTable('#__eve_charskills', 'cs');
+		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID');
+		$q->addWhere("characterID='%s'", $characterID);
+		$q->addOrder('typeName', 'ASC');
+		$skills =  $q->loadObjectList();
+		
 		$q = $this->getQuery();
 		$q->addTable('invGroups');
 		$q->addWhere('`categoryID` = 16');
 		$q->addWhere('published = 1');
-		return $q->loadObjectList();
+		$q->addOrder('groupName', 'ASC');
+		$groups = $q->loadObjectList('groupID');
+		
+		foreach ($skills as $skill) {
+			if (!isset($groups[$skill->groupID]->skills)) {
+				$groups[$skill->groupID]->skills = array();
+				$groups[$skill->groupID]->skillCount = 0;
+				$groups[$skill->groupID]->skillpoints = 0;
+				$groups[$skill->groupID]->skillPrice = 0;
+			}
+			$groups[$skill->groupID]->skills[] = $skill;
+			$groups[$skill->groupID]->skillCount += 1;
+			$groups[$skill->groupID]->skillpoints += $skill->skillpoints;
+			$groups[$skill->groupID]->skillPrice += $skill->basePrice;
+		}
+		
+		return $groups;
 	}
 	
-	function getSkills($characterID, $groupID) {
-		$q = $this->getQuery();
-		$q->addTable('#__eve_charskills', 'cs');
-		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID');
-		$q->addWhere("it.groupID='%s'", $groupID);
-		$q->addWhere("characterID='%s'", $characterID);
-		return $q->loadObjectList();
-		
-	}
 	
 }
