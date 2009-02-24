@@ -54,16 +54,11 @@ class EveModelAlliance extends EveModel {
 		$ale = $this->getAleEVEOnline();
 		$xml = $ale->eve->AllianceList();
 		
-		if (is_null($xml)) {
-			JError::raiseWarning(500, JText::_('GET_XML_FAILED'));
-			return false;
-		}
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
 		
-		$alliances = $xml->result->alliances->toArray();
-		foreach ($alliances as $array) {
-			$alliance = $this->getAlliance($array['allianceID']);
-			$alliance->save($array);
-		}
+		$dispatcher->trigger('eveAlianceList', 
+			array($xml, $ale->isFromCache(), array()));
 		
 		return true;
 	}
@@ -80,6 +75,12 @@ class EveModelAlliance extends EveModel {
 		$ale = $this->getAleEVEOnline();
 		$xml = $ale->eve->AllianceList();
 		
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
+		$dispatcher->trigger('eveAlianceList', 
+			array($xml, $ale->isFromCache(), array()));
+		
 		$conditions = array();
 		foreach ($cid as $allianceID) {
 			$conditions[] = "@allianceID='$allianceID'";
@@ -91,13 +92,10 @@ class EveModelAlliance extends EveModel {
 			$corporationID = (int) $corp->corporationID;
 			$corporation = $this->getInstance('Corporation', $corporationID);
 			$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
-			$sheet = $xml->result->toArray();
-			$corporation->save($sheet);
-		}
+			$dispatcher->trigger('corpCorporationSheet', 
+				array($xml, $ale->isFromCache(), array()));
+			}
 		return true;
 	}
 	
 }
-
-
-?>

@@ -43,11 +43,11 @@ class AleBase {
 			$file = preg_replace('/^AleParser/', '', $this->config['parserClass']);
 			$path = ALE_BASE.DIRECTORY_SEPARATOR.'parser'.DIRECTORY_SEPARATOR.strtolower($file).'.php';
 			if (!file_exists($path)) {
-				throw new LogicException('Invalid parser class path: '.$path);
+				throw new LogicException(sprintf('Cannot find Parser class [%s] in file \'%s\'', $this->config['parserClass'], $path));
 			}
 			require_once $path;
 			if (!class_exists($this->config['parserClass'])) {
-				throw new LogicException('Invalid parser class');
+				throw new LogicException(sprintf('Cannot find Parser class [%s] in file \'%s\'', $this->config['parserClass'], $path));
 			}
 		}
 		$this->cache->setHost($this->config['host']);
@@ -158,7 +158,7 @@ class AleBase {
 	 */
 	public function setConfig($key, $value = null) {
 		if (!isset($this->default[$key])) {
-			throw new Exception('setConfig: key is not valid');  
+			throw new InvalidArgumentException('setConfig: key is not valid');  
 		}
 		$result = $this->config[$key]; 
 		$this->config[$key] = isset($vale) ? $this->default[$key] : $value;

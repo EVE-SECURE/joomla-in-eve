@@ -1,14 +1,11 @@
-DROP TABLE IF EXISTS `jos_eve_apicache`;
-CREATE TABLE `jos_eve_apicache` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `host` VARCHAR( 64 ) NOT NULL ,
-  `path` VARCHAR( 64 ) NOT NULL ,
-  `params` VARCHAR( 41 ) NOT NULL ,
-  `content` TEXT NULL ,
-  `currentTime` DATETIME NOT NULL ,
-  `cachedUntil` DATETIME NOT NULL ,
-PRIMARY KEY ( `id` )
-) CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `jos_eve_alecache` (
+  `host` varchar(64) NOT NULL,
+  `path` varchar(64) NOT NULL,
+  `params` varchar(64) NOT NULL,
+  `content` longtext NOT NULL,
+  `cachedUntil` datetime default NULL,
+  PRIMARY KEY  (`host`,`path`,`params`)
+) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `jos_eve_apicalls`;
 CREATE TABLE IF NOT EXISTS `jos_eve_apicalls` (

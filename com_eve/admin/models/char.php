@@ -77,10 +77,8 @@ class EveModelChar extends EveModel {
 			}
 			$ale->setCredentials($account->userID, $account->apiKey, $character->characterID);
 			$xml = $ale->char->CharacterSheet();
-			$sheet = $xml->result->toArray();
-			$character->save($sheet);
-			$dispatcher->trigger('onFetchEveapi', 
-				array('charCharacterSheet', $xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
+			$dispatcher->trigger('charCharacterSheet', 
+				array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
 		}
 		return ! (bool) JError::getError();
 	}
@@ -93,6 +91,9 @@ class EveModelChar extends EveModel {
 			return false;
 		}
 		
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
 		//TODO: Handle exceptions and errors
 		$ale = $this->getAleEVEOnline();
 		$finishedCorps = array();
@@ -102,17 +103,13 @@ class EveModelChar extends EveModel {
 				continue;
 			}
 			$account = $this->getInstance('Account', $character->userID);
-			$corporation = $this->getInstance('Corporation', $character->corporationID);
 			$ale->setCredentials($account->userID, $account->apiKey, $character->characterID);
 			$xml = $ale->corp->CorporationSheet();
-			$sheet = $xml->result->toArray();
-			$corporation->save($sheet);
+			$dispatcher->trigger('corpCorporationSheet', 
+				array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
 			$finishedCorps[] = $character->corporationID;
 		}
 		return ! (bool) JError::getError();
 	}
 		
 }
-
-
-?>

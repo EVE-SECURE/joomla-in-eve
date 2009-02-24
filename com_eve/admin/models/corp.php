@@ -68,9 +68,10 @@ class EveModelCorp extends EveModel {
 			JError::raiseWarning(500, JText::_('NO CORPORATION SELECTED'));
 			return false;
 		}
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
 		
 		$ale = $this->getAleEVEOnline();
-		
 		foreach ($cid as $corporationID) {
 			$corporation = $this->getCorporation($corporationID);
 			$ceo = $this->getInstance('Character', $corporation->ceoID);
@@ -84,9 +85,9 @@ class EveModelCorp extends EveModel {
 				$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
 			}
 			
-			$sheet = $xml->result->toArray();
-			$corporation->save($sheet);
-
+			$dispatcher->trigger('corpCorporationSheet', 
+				array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
+			
 		}
 		return ! (bool) JError::getError();
 	}
@@ -98,9 +99,10 @@ class EveModelCorp extends EveModel {
 			JError::raiseWarning(500, JText::_('NO CORPORATION SELECTED'));
 			return false;
 		}
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
 		
 		$ale = $this->getAleEVEOnline();
-		
 		foreach ($cid as $corporationID) {
 			$corporation = $this->getCorporation($corporationID);
 			$ceo = $this->getInstance('Character', $corporation->ceoID);
@@ -109,16 +111,11 @@ class EveModelCorp extends EveModel {
 			$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
 			$xml = $ale->corp->MemberTracking();
 
-			foreach ($xml->result->members as $characterID => $member) {
-				$sheet = $member->toArray();
-				$sheet['corporationID'] = $corporationID; 
-				$character = $this->getInstance('Character', $characterID);
-				$character->save($sheet);
-			}
+			$dispatcher->trigger('corpMemberTracking', 
+				array($xml, $ale->isFromCache(), array('characterID'=>$ceo->characterID)));
 		}
 		return ! (bool) JError::getError();
 		
 	}
 	
 }
-?>

@@ -1,0 +1,56 @@
+<?php
+defined('ALE_BASE') or die('Restricted access');
+
+require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractdb.php';
+
+class AleCacheMySQL extends AleCacheAbstractDB {
+	
+	function __construct(array $config = array()) {
+		parent::__construct($config);
+		if (isset($config['db']) && is_resource($config['db'])) {
+			$this->db = $config['db'];
+		} else {
+			$config['host'] = $this->_($config, 'host', null);
+			$config['user'] = $this->_($config, 'user', null);
+			$config['password'] = $this->_($config, 'password', null);
+			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
+			$config['client_flags'] = $this->_($config, 'client_flags', 0);
+			if ($this->_($config, 'persistent')) {
+				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
+			} else {
+				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
+			}
+			if ($this->db == false) {
+				throw new AleExceptionCache(mysql_error(), mysql_errno());
+			}
+			if (isset($config['database'])) {
+				$result = mysql_select_db($config['database'], $this->db);
+				if ($result === false) {
+					throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+				}
+			}
+		}
+	}
+	
+	protected function escape($string) {
+		return mysql_escape_string($string);
+	}
+	
+	protected function &execute($query) {
+		$result = mysql_query($query, $this->db);
+		if ($result === false) {
+			throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+		}
+		return $result;
+	}
+	
+	protected function &fetchRow(&$result) {
+		$row = mysql_fetch_assoc($result);
+		return $row;
+	}
+	
+	protected function freeResult(&$result) {
+		mysql_free_result($result);
+	}
+			
+}

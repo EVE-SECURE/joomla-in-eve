@@ -132,6 +132,9 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 * @return AleParserXMLElement
 	 */
 	protected function transformNode($node) {
+		if (!$node->children() && !$node->attributes() && (string) $node) {
+			return (string) $node;
+		}
 		$classname = get_class($this);
 		return new $classname($node);
 	}

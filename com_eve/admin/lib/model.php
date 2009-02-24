@@ -26,8 +26,6 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 class EveModel extends JModel {
-	static $instances = array();
-	
 	function __construct($config = array()) {
 		$config['table_path'] = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables';
 		parent::__construct($config);
@@ -35,37 +33,21 @@ class EveModel extends JModel {
 	
 	function getQuery() {
 		$dbo = $this->getDBO();
-		$q = new JQuery($dbo);
-		return $q;
+		return EveFactory::getQuery($dbo);
 	}
 	
 	/**
-	 * Enter description here...
+	 * Return instance of AleEVEOnline class (api adapter)
 	 *
 	 * @return AleEVEOnline
 	 */
 	function getAleEVEOnline() {
-		return AleFactory::getEVEOnline();
+		return EveFactory::getAleEVEOnline($this->getDBO());
 	}
 	
 	function getInstance($table, $id = null) {
-		if (!$id) {
-			return $this->getTable($table);
-		}
-		
-		$_table = strtolower($table);
-		 
-		if (!isset(self::$instances[$_table])) {
-			self::$instances[$_table] = array();
-		}
-		
-		if (!isset(self::$instances[$_table][$id])) {
-			$instance = $this->getTable($table);
-			$instance->load((int) $id);
-			self::$instances[$_table][$id] = $instance;
-		}
-		
-		return self::$instances[$_table][$id];
+		$config = array('dbo'=>$this->getDBO());
+		return EveFactory::getInstance($table, $id, $config);
 	}
 	
 }

@@ -57,20 +57,16 @@ class EveModelApiform  extends EveModel {
 		
 		$xml = $ale->account->Characters();
 		
-		$dbo = $this->getDBO();
-		$sql = 'UPDATE #__eve_characters SET userID=0 WHERE userID='.$userID;
-		$dbo->Execute($sql);
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
+		$dispatcher->trigger('accountCharacters', 
+			array($xml, $ale->isFromCache(), array('userID' => $userID)));
+		
 		
 		$corps = array();
-		foreach ($xml->result->characters->toArray() as $characterID => $array) {
-			$character = $this->getInstance('Character', $characterID);
-			$character->userID = $userID;
-			$character->save($array);
-			
-			$corporation = $this->getInstance('Corporation', $array['corporationID']);
-			if (!$corporation->isLoaded()) {
-				$corporation->save($array);
-			}
+		foreach ($xml->result->characters as $characterID => $character) {
+			$corps[] = $character->corporationID;;
 		}
 		
 		
