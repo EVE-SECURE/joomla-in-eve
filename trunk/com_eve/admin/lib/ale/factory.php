@@ -34,11 +34,11 @@ class AleFactory {
 		}
 		$path .= strtolower($name).'.php';
 		if (!file_exists($path)) {
-			throw new Exception('could not find');
+			throw new LogicException(sprintf('Cannot find class [%s] in file \'%s\'', $class, $path));
 		}
 		require_once $path;
 		if (!class_exists($class)) {
-			throw new Exception('class definition missing: '.$class);
+			throw new LogicException(sprintf('Cannot find class [%s] in file \'%s\'', $class, $path));
 		}
 		return $class;
 	}
@@ -63,46 +63,48 @@ class AleFactory {
 	 */
 	private static function init($name, $config) {
 		$_name = strtolower($name);
-		//echo ALE_CONFIG_DIR.DIRECTORY_SEPARATOR.$_name.'.ini';
-		if (file_exists(ALE_CONFIG_DIR.DIRECTORY_SEPARATOR.$_name.'.ini')) {
-			$tmp = parse_ini_file(ALE_CONFIG_DIR.DIRECTORY_SEPARATOR.$_name.'.ini', true);
+		$configfile = self::_default($config, 'config', ALE_CONFIG_DIR.DIRECTORY_SEPARATOR.$_name.'.ini');
+		if ($configfile !== false) {
+			if (file_exists($configfile)) {
+				$tmp = parse_ini_file($configfile, true);
+			} else {
+				throw new LogicException(sprintf("Configuration file '%s' not found", $configfile));
+			}
+			if ($tmp === false) {
+				throw new LogicException(sprintf("Could not parse configuration file '%s'", $configfile));
+			}
 		} else {
-			throw new Exception('config not found');
-		}
-		if ($tmp === false) {
-			throw new Exception('bad config');
+			$tmp = array();
 		}
 		
 		$mainConfig 	= self::_default($tmp, 'main', array());
 		$cacheConfig 	= self::_default($tmp, 'cache', array());
 		$requestConfig 	= self::_default($tmp, 'request', array());
 		
-		if (is_array($config)) {
-			foreach($config as $key => $value) {
-				$split = explode('.', $key, 2);
-				if (count($split) == 2) {
-					if ($split[0] == 'main' || $split[0] == 'cache' || $split[0] == 'request') {
-						$key = $split[0];
-						$value = array($split[1] => $value);
+		foreach($config as $key => $value) {
+			$split = explode('.', $key, 2);
+			if (count($split) == 2) {
+				if ($split[0] == 'main' || $split[0] == 'cache' || $split[0] == 'request') {
+					$key = $split[0];
+					$value = array($split[1] => $value);
+				}
+				if ($key == 'main' && is_array($value)) {
+					foreach ($value as $k => $v) {
+						$mainConfig[$k] = $v;
 					}
-					if ($key == 'main' && is_array($value)) {
-						foreach ($value as $k => $v) {
-							$mainConfig[$k] = $v;
-						}
-					} elseif ($key == 'cache' && is_array($value)) {
-						foreach ($value as $k => $v) {
-							$cacheConfig[$k] = $v;
-						}
-					} elseif ($key == 'request' && is_array($value)) {
-						foreach ($value as $k => $v) {
-							$requestConfig[$k] = $v;
-						}
-					} else {
-						$mainConfig[$key] = $value;
+				} elseif ($key == 'cache' && is_array($value)) {
+					foreach ($value as $k => $v) {
+						$cacheConfig[$k] = $v;
+					}
+				} elseif ($key == 'request' && is_array($value)) {
+					foreach ($value as $k => $v) {
+						$requestConfig[$k] = $v;
 					}
 				} else {
 					$mainConfig[$key] = $value;
 				}
+			} else {
+				$mainConfig[$key] = $value;
 			}
 		}
 		
@@ -131,9 +133,9 @@ class AleFactory {
 	 * @param array $config
 	 * @return AleBase AleBase object or its descendant
 	 */
-	public function get($name, $config = false) {
+	public function get($name, array $config = array(), $newInstance = false) {
 		$_name = strtolower($name);
-		if ($config !== false || !isset(self::$instances[$_name])) {
+		if ($newInstance || !isset(self::$instances[$_name])) {
 			self::init($name, $config);
 		}
 		return self::$instances[$_name];
@@ -145,8 +147,8 @@ class AleFactory {
 	 * @param array $config
 	 * @return AleEVEOnline
 	 */
-	public function getEVEOnline($config = false) {
-		return self::get('EVEOnline', $config);
+	public function getEVEOnline(array $config = array(), $newInstance = false) {
+		return self::get('EVEOnline', $config, $newInstance);
 	}
 	
 }

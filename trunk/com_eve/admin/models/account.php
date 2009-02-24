@@ -43,24 +43,16 @@ class EveModelAccount extends EveModel {
 			JError::raiseWarning(500, JText::_('NO ACCOUNTS SELECTED'));
 			return false;
 		}
-		$dbo = $this->getDBO();
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $userID) {
 			$account = $this->getAccount($userID);
 			$ale->setCredentials($account->userID, $account->apiKey);
 			$xml = $ale->account->Characters();
-			$sql = 'UPDATE #__eve_characters SET userID=0 WHERE userID='.$userID;
-			$dbo->Execute($sql);
-			foreach ($xml->result->characters->toArray() as $characterID => $array) {
-				$character = $this->getInstance('Character', $characterID);
-				$character->userID = $account->userID;
-				$character->save($array);
-				
-				$corporation = $this->getInstance('Corporation', $array['corporationID']);
-				if (!$corporation->isLoaded()) {
-					$corporation->save($array);
-				}
-			}
+			$dispatcher->trigger('accountCharacters', 
+				array($xml, $ale->isFromCache(), array('userID' => $userID)));
 		}
 		return true;
 	}

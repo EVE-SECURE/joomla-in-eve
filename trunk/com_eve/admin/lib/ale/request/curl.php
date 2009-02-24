@@ -3,6 +3,8 @@ defined('ALE_BASE') or die('Restricted access');
 
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'interface'.DIRECTORY_SEPARATOR.'request.php';
 
+require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'request.php';
+
 class AleRequestCurl implements AleInterfaceRequest  {
 	
 	/**
@@ -11,7 +13,9 @@ class AleRequestCurl implements AleInterfaceRequest  {
 	 * @param array $config
 	 */
 	public function __construct(array $config = array()) {
-		
+		if (!function_exists('curl_init')) {
+			throw new LogicException('Curl extension is missing');
+		}
 	}
 	
 	/**
@@ -22,14 +26,13 @@ class AleRequestCurl implements AleInterfaceRequest  {
 	 * @return int
 	 */
 	protected function readHeader($ch, $header) {
-		//echo '-'.$header.'-<br>';
 		$matches = array();
 		if (!preg_match('#^HTTP/[0-9]\\.[0-9] +([0-9]+) +(.*)$#', $header, $matches)) {
 			return strlen($header);
 		}
 		if ($matches[1] >= 400) {
 			curl_close($ch);
-			throw new Exception($matches[2], $matches[1]);
+			throw new AleExceptionRequest('Server Response Error::'. $matches[2], $matches[1]);
 		}
 		return strlen($header);
 	}
@@ -59,7 +62,7 @@ class AleRequestCurl implements AleInterfaceRequest  {
 			$errstr = curl_error($ch);
 			//TODO: API exception
 			curl_close ($ch);
-			throw new Exception($errstr, $errno);
+			throw new AleExceptionRequest($errstr, $errno);
 		}
 		
 		curl_close ($ch);

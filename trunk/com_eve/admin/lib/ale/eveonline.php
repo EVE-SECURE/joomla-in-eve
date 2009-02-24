@@ -3,6 +3,8 @@ defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
 
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'base.php';
 
+require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'eveonline.php';
+
 define('ALE_AUTH_DEFAULT', 0);
 define('ALE_AUTH_NONE', 1);
 define('ALE_AUTH_USER', 2);
@@ -23,6 +25,7 @@ class AleEVEOnline extends AleBase {
 		'suffix' => '.xml.aspx',
 		'parserClass' => 'SimpleXMLElement' ,
 		'serverError' => 'throwException',
+		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 
 		);
 	
 	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
@@ -66,6 +69,10 @@ class AleEVEOnline extends AleBase {
 			}
 		}
 		
+		if (in_array($errorCode, $this->config['cacheUpdateError'])) {
+			$this->cache->updateCachedUntil((string) $this->xml->cachedUntil);
+		}
+		
 		//if we found an error
 		if ($errorCode || $errorText) {
 			//we do not want to cache error, right?
@@ -78,8 +85,15 @@ class AleEVEOnline extends AleBase {
 					break;
 				case 'throwException':
 				default:
-					throw new Exception($errorText, $errorCode);
-					
+					if (100 <= $errorCode && $errorCode < 200) {
+						throw new AleExceptionEVEUserInput($errorText, $errorCode);
+					} elseif (200 <= $errorCode && $errorCode < 300) {
+						throw new AleExceptionEVEAuthentication($errorText, $errorCode);
+					} elseif (500 <= $errorCode && $errorCode < 600) {
+						throw new AleExceptionEVEServerError($errorText, $errorCode);
+					} else {
+						throw new AleExceptionEVEMiscellaneous($errorText, $errorCode);
+					}
 			}
 		}
 		
@@ -131,14 +145,14 @@ class AleEVEOnline extends AleBase {
 				if ($this->characterID) {
 					$params['characterID'] = $this->characterID;
 				} else {
-					throw new Exception('Api call requires characterID');
+					throw new LogicException('Api call requires characterID');
 				}
 			case ALE_AUTH_USER:
 				if ($this->userID && $this->apiKey) {
 					$params['userID'] = $this->userID;
 					$params['apiKey'] = $this->apiKey;
 				} else {
-					throw new Exception('Api call requires user credentials');
+					throw new LogicException('Api call requires user credentials');
 				}
 			case ALE_AUTH_NONE:
 				break;
