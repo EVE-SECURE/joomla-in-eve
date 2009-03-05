@@ -76,7 +76,7 @@ class EveControllerAccount extends EveController {
 		$post = JRequest::get('post');
 		
 		$model = & $this->getModel('Account');
-		$table = $model->getTable('Account');
+		$table = $model->getAccount(JRequest::getInt('userID'));
 		
 		if (!$table->bind( $post )) {
 			return JError::raiseWarning( 500, $table->getError() );
