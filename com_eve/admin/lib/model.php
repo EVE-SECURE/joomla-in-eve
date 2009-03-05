@@ -50,4 +50,61 @@ class EveModel extends JModel {
 		return EveFactory::getInstance($table, $id, $config);
 	}
 	
+	function getOwnerCorporations() {
+		$user = JFactory::getUser();
+		if (!$user->id) {
+			return array();
+		}
+		
+		$q = $this->getQuery();
+		$q->addTable('#__eve_characters', 'ch');
+		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
+		$q->addWhere('ac.owner = %s', $user->id);
+		$q->addQuery('DISTINCT corporationID');
+		$corps = $q->loadResultArray();
+		if (empty($corps)) {
+			return array();
+		}
+		
+		$corps = implode(', ', $corps);
+		
+		$q = $this->getQuery();
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addWhere('co.owner OR al.owner');
+		$q->addWhere('co.corporationID IN (%s)', $corps);
+		$q->addQuery('co.*');
+		$q->addOrder('co.corporationName');
+		return $q->loadObjectList('corporationID');		
+	}
+	
+	function getCharacters($owner) {
+		$user = JFactory::getUser();
+		if ($owner == 0) {
+			$owner = $user->id;
+		}
+		
+		$q = $this->getQuery();
+		$q->addTable('#__eve_characters', 'ch');
+		if (!$owner != $user->id) {
+			$q = $this->getQuery();
+			$q->addTable('#__eve_characters', 'ch');
+			$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
+			$q->addWhere('ac.owner = %s', $user->id);
+			$q->addQuery('DISTINCT corporationID');
+			$corps = $q->loadResultArray();
+			if (empty($corps)) {
+				return array();
+			}
+			$q->addJoin('#__eve_corporations', 'co', 'ch.corporationID=co.corporationID');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addWhere('ch.corporationID IN (%s)', $corps);
+			$q->addWhere('(co.owner OR al.owner)');
+		}
+		$q->addQuery('ch.*');
+		$q->addWhere('ch.owner=%s', intval($owner));
+		return $q->loadObjectList('characterID');
+		
+	}
+	
 }
