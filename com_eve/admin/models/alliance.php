@@ -36,66 +36,78 @@ class EveModelAlliance extends EveModel {
 		return $this->getInstance('Alliance', $id);
 	}
 	
-	function eveAllianceId() {
-		return EveHelperIgb::value('allianceid');
-	}
-	
-	/**
-	 * Binds sent data to table instance
-	 *
-	 * @param TableEVE_Alliances $instance
-	 */
-	function bindAllianceData(&$instance) {
-		$instance->allianceID 			= EveHelperIgb::value('allianceid', 'int'); 
-		$instance->allianceName 		= EveHelperIgb::value('alliancename');
-	}
-	
 	function apiGetAllianceList() {
+		global $mainframe;
 		$ale = $this->getAleEVEOnline();
-		$xml = $ale->eve->AllianceList();
-		
-		JPluginHelper::importPlugin('eveapi');
-		$dispatcher =& JDispatcher::getInstance();
-		
-		$dispatcher->trigger('eveAlianceList', 
-			array($xml, $ale->isFromCache(), array()));
-		
-		return true;
+		try {
+			$xml = $ale->eve->AllianceList();
+			
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			
+			$dispatcher->trigger('eveAlianceList', 
+				array($xml, $ale->isFromCache(), array()));
+			
+			$mainframe->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}
 	}
 	
 	function apiGetAllianceMembers($cid) {
-
-		JArrayHelper::toInteger($cid);
+		global $mainframe;
 		
+		JArrayHelper::toInteger($cid);
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('NO ALLIANCE SELECTED'));
 			return false;
 		}
 		
 		$ale = $this->getAleEVEOnline();
-		$xml = $ale->eve->AllianceList();
-		
-		JPluginHelper::importPlugin('eveapi');
-		$dispatcher =& JDispatcher::getInstance();
-		
-		$dispatcher->trigger('eveAlianceList', 
-			array($xml, $ale->isFromCache(), array()));
-		
-		$conditions = array();
-		foreach ($cid as $allianceID) {
-			$conditions[] = "@allianceID='$allianceID'";
-		}
-		$_condition = implode(' or ', $conditions);
-		$corps = $xml->xpath('/eveapi/result/rowset/row['.$_condition.']/rowset/row');
-		
-		foreach ($corps as $corp) {
-			$corporationID = (int) $corp->corporationID;
-			$corporation = $this->getInstance('Corporation', $corporationID);
-			$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
-			$dispatcher->trigger('corpCorporationSheet', 
+		try {
+			$xml = $ale->eve->AllianceList();
+			
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			$dispatcher->trigger('eveAlianceList', 
 				array($xml, $ale->isFromCache(), array()));
+			
+			$conditions = array();
+			foreach ($cid as $allianceID) {
+				$conditions[] = "@allianceID='$allianceID'";
 			}
-		return true;
+			$_condition = implode(' or ', $conditions);
+			$corps = $xml->xpath('/eveapi/result/rowset/row['.$_condition.']/rowset/row');
+			
+			$count = 0;
+			foreach ($corps as $corp) {
+				try {
+					$corporationID = (int) $corp->corporationID;
+					$corporation = $this->getInstance('Corporation', $corporationID);
+					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
+					$dispatcher->trigger('corpCorporationSheet', 
+						array($xml, $ale->isFromCache(), array()));
+					$count += 1;
+				}
+				catch (RuntimeException $e) {
+					JError::raiseWarning($e->getCode(), $e->getMessage());
+				}
+				catch (Exception $e) {
+					JError::raiseError($e->getCode(), $e->getMessage());
+				}
+			}
+			$mainframe->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}		
 	}
 	
 }

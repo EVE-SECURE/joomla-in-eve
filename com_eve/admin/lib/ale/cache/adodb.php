@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: joomla.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: adodb.php 190 2009-03-05 18:59:58Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -23,35 +23,52 @@ defined('ALE_BASE') or die('Restricted access');
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractdb.php';
 
 
-class AleCacheJoomla extends AleCacheAbstractDB {
+class AleCacheADOdb extends AleCacheAbstractDB {
 	
 	function __construct(array $config = array()) {
 		parent::__construct($config);
+		if (isset($config['adodb_dir'])) {
+			require_once $config['adodb_dir'].DIRECTORY_SEPARATOR.'adodb.inc.php';
+		}
+		if ($config['adodb_error'] == 'exception') {
+			require_once ADODB_DIR.DIRECTORY_SEPARATOR.'adodb-exceptions.inc.php';
+		}		
+		if (!defined('_ADODB_LAYER')) {
+			throw new AleExceptionCache('ADOdb layer not defined');
+		}
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
 		} else {
-			$this->db = JFactory::getDBO();
+			if (!isset($config['dsn'])) {
+				throw new AleExceptionCache('ADOdb dsn (Data Source Name) config missing');
+			}
+			$this->db = ADONewConnection($config['dsn']);
+			
+			if ($this->db == false) {
+				throw new AleExceptionCache('ADODb connection failed');
+			}
 		}
 	}
 	
 	protected function escape($string) {
-		return $this->db->getEscaped($string);
+		return $this->db->escape($string);
 	}
 	
 	protected function &execute($query) {
 		$result = $this->db->Execute($query);
 		if ($result === false) {
-			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db-getErrorNum());
+			throw new AleExceptionCache($this->db->ErrorMsg(), $this->db->ErrorNo());
 		}
-		$result = $this->db->loadAssoc();
 		return $result;
 	}
 	
 	protected function &fetchRow(&$result) {
-		return $result;
+		$row = $result->GetRowAssoc(2);
+		return $row;
 	}
 	
 	protected function freeResult(&$result) {
+		unset($result);
 	}
 			
 }

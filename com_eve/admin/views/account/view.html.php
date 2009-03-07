@@ -37,6 +37,7 @@ class EveViewAccount extends JView {
 		JToolBarHelper::cancel();
 		JToolBarHelper::back();
 		
+		
 		$model = $this->getModel();
 		
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
@@ -58,10 +59,13 @@ class EveViewAccount extends JView {
 		$q->addQuery('id, name');
 		$users = $q->loadObjectList();
 		
+		$apiStates = $model->getApiStates();
+		
 		$nouser = array('id' => '0', 'name'=>JText::_('UNKNOWN OWNER'));
 		$nouser = array('0' => JArrayHelper::toObject($nouser));
 		$users = array_merge($nouser, $users);
 		
+		$this->assignRef('apiStates', $apiStates);
 		$this->assignRef('users', $users);
 		$this->assignRef('item', $item);
 		parent::display($tpl);

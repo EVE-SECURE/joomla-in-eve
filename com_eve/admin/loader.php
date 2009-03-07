@@ -31,4 +31,4 @@ JLoader::register('EveTable', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.D
 JLoader::register('EveModel', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'model.php');
 JLoader::register('JQuery', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'query.php');
 
-require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'igb.php';
+require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'igb.php';

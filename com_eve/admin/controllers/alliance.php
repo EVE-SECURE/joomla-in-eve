@@ -67,7 +67,7 @@ class EveControllerAlliance extends EveController {
 		
 		$url = JRoute::_('index.php?option=com_eve&control=alliance', false);
 		$this->setRedirect($url, JText::_('ALLIANCE DELETED'));
-			}
+	}
 	
 	function applysave() {
 		JRequest::checkToken() or die( 'Invalid Token' );
@@ -95,8 +95,7 @@ class EveControllerAlliance extends EveController {
 				
 		$task = $this->getTask();
 		
-		switch ($task)
-		{
+		switch ($task) {
 			case 'apply':
 				$link = 'index.php?option=com_eve&control=alliance&task=edit&cid[]='. $table->allianceID ;
 				break;
@@ -112,27 +111,15 @@ class EveControllerAlliance extends EveController {
 	
 	function getAllianceList() {
 		$model = & $this->getModel('Alliance', 'EveModel');
-		
-		$msg = null;
-		if ($model->apiGetAllianceList()) {
-			$msg = JText::_('ALLIANCES SUCCESSFULLY IMPORTED');
-		}
-		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false), $msg);
+		$model->apiGetAllianceList();
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false));
 	}
 	
 	function getAllianceMembers() {
 		$model = & $this->getModel('Alliance', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
-		$msg = null;
-		if ($model->apiGetAllianceMembers($cid)) {
-			$msg = JText::_('ALLIANCES SUCCESSFULLY IMPORTED');
-		}
-		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false), $msg);
+		$model->apiGetAllianceMembers($cid);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false));
 	}
 	
-	
 }
-?>

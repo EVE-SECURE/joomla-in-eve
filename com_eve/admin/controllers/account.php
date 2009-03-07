@@ -71,52 +71,34 @@ class EveControllerAccount extends EveController {
 	function applysave() {
 		JRequest::checkToken() or die( 'Invalid Token' );
 
-		$this->setRedirect( 'index.php?option=com_eve' );
+		$this->setRedirect( 'index.php?option=com_eve&control=account' );
 
-		$post = JRequest::get('post');
-		
 		$model = & $this->getModel('Account');
-		$table = $model->getAccount(JRequest::getInt('userID'));
 		
-		if (!$table->bind( $post )) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->store()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
+		$model->store();
 				
 		$task = $this->getTask();
 		
-		switch ($task)
-		{
+		switch ($task) {
 			case 'apply':
-				$url = 'index.php?option=com_eve&control=account&task=edit&cid[]='. $table->userID ;
+				$url = 'index.php?option=com_eve&control=account&task=edit&cid[]='. JRequest::getInt('userID', 0, 'POST'); 
 				break;
-
 			case 'save':
 			default:
 				$url = 'index.php?option=com_eve&control=account';
 				break;
 		}
 
-		$this->setRedirect( JRoute::_($url, false), JText::_( 'USER SAVED' ) );
+		$this->setRedirect( JRoute::_($url, false) );
 	}
 	
 	function getCharacters() {
 		$model = & $this->getModel('Account');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		
-		$msg = null;
-		if ($model->apiGetCharacters($cid)) {
-			$msg = JText::_('CHARACTERS SUCCESSFULLY IMPORTED');
-		}
+		$model->apiGetCharacters($cid);
 		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=account', false), $msg);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=account', false));
 		
 	}
 

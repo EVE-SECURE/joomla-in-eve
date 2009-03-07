@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0">
 	<name>EVE</name>
 	<version>0.1 Alpha</version>
@@ -8,6 +10,7 @@
 	<authoremail>kovalikp@gmail.com</authoremail>
 	<authorurl>http://eve.webnamieru.sk</authorurl>
 	<copyright>(C) 2008 Pavol Kovalik</copyright>
+	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -22,6 +25,18 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
 		</sql>
 	</uninstall>
+	
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB.com_eve.ini</language>
+	</languages>
+	<files folder="site">
+		<filename>eve.php</filename>
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+	
 	<administration>
 		<menu img="components/com_eve/assets/icon-eve-16.png">EVE</menu>
 		<submenu>
@@ -36,49 +51,20 @@
 		</languages>
 		<files folder="admin">
 			<filename>admin.eve.php</filename>
-			<filename>assets/common.css</filename>
-			<filename>assets/icon-alliance-16.png</filename>
-			<filename>assets/icon-alliance-32.png</filename>
-			<filename>assets/icon-alliance-64.png</filename>
-			<filename>assets/icon-char-16.png</filename>
-			<filename>assets/icon-char-32.png</filename>
-			<filename>assets/icon-char-64.png</filename>
-			<filename>assets/icon-corp-16.png</filename>
-			<filename>assets/icon-corp-32.png</filename>
-			<filename>assets/icon-corp-64.png</filename>
-			<filename>assets/icon-eve-16.png</filename>
-			<filename>controllers/alliance.php</filename>
-			<filename>controllers/char.php</filename>
-			<filename>controllers/corp.php</filename>
-			<filename>helpers/igb.php</filename>
-			<filename>helpers/query.php</filename>
+			<filename>config.xml</filename>
+			<filename>filters.xml</filename>
 			<filename>index.html</filename>
 			<filename>loader.php</filename>
-			<filename>models/alliance.php</filename>
-			<filename>models/char.php</filename>
-			<filename>models/corp.php</filename>
-			<filename>sql/install.compat.sql</filename>
-			<filename>sql/install.sql</filename>
-			<filename>sql/uninstall.compat.sql</filename>
-			<filename>sql/uninstall.sql</filename>
-			<filename>tables/eve_alliances.php</filename>
-			<filename>tables/eve_chars.php</filename>
-			<filename>tables/eve_corps.php</filename>
-			<filename>views/alliance_addedit/tmpl/default.php</filename>
-			<filename>views/alliance_addedit/view.html.php</filename>
-			<filename>views/alliance_index/tmpl/default.php</filename>
-			<filename>views/alliance_index/tmpl/default_item.php</filename>
-			<filename>views/alliance_index/view.html.php</filename>
-			<filename>views/char_addedit/tmpl/default.php</filename>
-			<filename>views/char_addedit/view.html.php</filename>
-			<filename>views/char_index/tmpl/default.php</filename>
-			<filename>views/char_index/tmpl/default_item.php</filename>
-			<filename>views/char_index/view.html.php</filename>
-			<filename>views/corp_addedit/tmpl/default.php</filename>
-			<filename>views/corp_addedit/view.html.php</filename>
-			<filename>views/corp_index/tmpl/default.php</filename>
-			<filename>views/corp_index/tmpl/default_item.php</filename>
-			<filename>views/corp_index/view.html.php</filename>
+			<filename>install.php</filename>
+			<filename>uninstall.php</filename>
+			<folder>assets</folder>
+			<folder>controllers</folder>
+			<folder>html</folder>
+			<folder>lib</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>sql</folder>
 		</files>
 	</administration>
 </install>

@@ -36,7 +36,75 @@ class EveModelAccount extends EveModel {
 		return $this->getInstance('Account', $id);
 	}
 	
+	function getApiStates() {
+		return $this->getEnumOptions('#__eve_accounts', 'apiStatus');
+	}
+	
+	function store() {
+		global $mainframe;
+		$post = JRequest::get('post');
+		
+		$account = $this->getAccount(JRequest::getInt('userID'));
+		
+		if (!$account->bind( $post )) {
+			return JError::raiseWarning( 500, $account->getError() );
+		}
+		
+		//check status of apiKey
+		if ($account->apiStatus == 'Unknown') {
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			$ale = $this->getAleEVEOnline();
+			try {
+				$ale->setCredentials($account->userID, $account->apiKey);
+				$xml = $ale->account->Characters();
+				$dispatcher->trigger('accountCharacters', 
+					array($xml, $ale->isFromCache(), array('userID' => $account->userID)));
+				
+				$charRow = reset($xml->result->characters->getIterator());
+				if ($charRow !== false) {
+					$ale->setCharacterID($charRow->characterID);
+					$xml = $ale->char->AccountBalance();
+					$dispatcher->trigger('charAccountBalance', 
+						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
+				}
+				$account->apiStatus = 'Full';
+				$mainframe->enqueueMessage(JText::_('API key offers full access'));
+			}
+			catch (AleExceptionEVEAuthentication $e) {
+				$this->updateApiStatus($account, $e->getCode());
+				switch ($account->apiStatus) {
+					case 'Limited':
+						JError::raiseNotice(0, JText::_('API key offers limited access'));
+						break;
+					case 'Invalid':
+						JError::raiseWarning(0, JText::_('API key is invalid'));
+						break;
+					case 'Inactive':
+						JError::raiseWarning(0, JText::_('Account is inactive'));
+						break;
+				}
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (Exception $e) {
+				JError::raiseError($e->getCode(), $e->getMessage());
+			}
+		}
+		
+		if (!$account->check()) {
+			return JError::raiseWarning( 500, $account->getError() );
+		}	
+		if (!$account->store()) {
+			return JError::raiseWarning( 500, $account->getError() );
+		}
+		$mainframe->enqueueMessage(JText::_('ACCOUNT STORED'));
+		
+	}
+	
 	function apiGetCharacters($cid) {
+		global $mainframe;
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
@@ -46,15 +114,36 @@ class EveModelAccount extends EveModel {
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
+		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $userID) {
-			$account = $this->getAccount($userID);
-			$ale->setCredentials($account->userID, $account->apiKey);
-			$xml = $ale->account->Characters();
-			$dispatcher->trigger('accountCharacters', 
-				array($xml, $ale->isFromCache(), array('userID' => $userID)));
+			try {
+				$account = $this->getAccount($userID);
+				$ale->setCredentials($account->userID, $account->apiKey);
+				$xml = $ale->account->Characters();
+				$dispatcher->trigger('accountCharacters', 
+					array($xml, $ale->isFromCache(), array('userID' => $userID)));
+				$count += 1;
+			}
+			catch (AleExceptionEVEAuthentication $e) {
+				$this->updateApiStatus($account, $e->getCode());
+				$account->store();
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (Exception $e) {
+				JError::raiseError($e->getCode(), $e->getMessage());
+			}
+			
 		}
-		return true;
+		if ($count == 1) {
+			$mainframe->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
+		}
+		if ($count > 1) {
+			$mainframe->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
+		}
 	}
 	
 }

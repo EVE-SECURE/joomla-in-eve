@@ -36,6 +36,25 @@ class EveModel extends JModel {
 		return EveFactory::getQuery($dbo);
 	}
 	
+	function getEnumOptions($table, $field) {
+		$dbo = $this->getDBO();
+		$sql = "SHOW COLUMNS FROM `".$table."` LIKE '".$field."'";
+		$dbo->Execute($sql);
+		$desc = $dbo->loadRow();
+	    preg_match_all('/\'(.*?)\'/', $desc[1], $enum_array);
+		$result = array();
+		
+		if(!empty($enum_array[1])) {
+			foreach($enum_array[1] as $mkey => $value)  {
+				$obj = new stdClass();
+				$obj->value = $value;
+				$result[] = $obj;
+			}
+		}
+		return $result;
+		
+	}
+	
 	/**
 	 * Return instance of AleEVEOnline class (api adapter)
 	 *
@@ -48,6 +67,33 @@ class EveModel extends JModel {
 	function getInstance($table, $id = null) {
 		$config = array('dbo'=>$this->getDBO());
 		return EveFactory::getInstance($table, $id, $config);
+	}
+	
+	/**
+	 * Enter description here...
+	 *
+	 * @param TableAccount $account
+	 * @param int $errorCode
+	 */
+	function updateApiStatus($account, $errorCode) {
+		
+		switch ($errorCode) {
+			case 200:
+				$account->apiStatus = 'Limited';
+				break;
+			case 202:
+			case 203:
+			case 204:
+			case 205:
+			case 210:
+			case 212:
+				$account->apiStatus = 'Invalid';
+				break;
+			case 211:
+				$account->apiStatus = 'Inactive';
+				break;
+		}
+		 
 	}
 	
 	function getOwnerCorporations() {

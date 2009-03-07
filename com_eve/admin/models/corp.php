@@ -46,21 +46,6 @@ class EveModelCorp extends EveModel {
 		return $this->getInstance('Corporation', $id);
 	}
 	
-	function eveCorpId() {
-		return EveHelperIgb::value('corpid');
-	}
-	
-	/**
-	 * Binds sent data to table instance
-	 *
-	 * @param TableEVE_Corps $instance
-	 */
-	function bindCorpData(&$instance) {
-		$instance->corporationID	= EveHelperIgb::value('corpid', 'int'); 
-		$instance->corporationName	= EveHelperIgb::value('corpname');
-		$instance->allianceID		= EveHelperIgb::value('allianceid', 'int');
-	}
-	
 	function apiGetCorporationSheet($cid) {
 		JArrayHelper::toInteger($cid);
 		
@@ -112,7 +97,7 @@ class EveModelCorp extends EveModel {
 			$xml = $ale->corp->MemberTracking();
 
 			$dispatcher->trigger('corpMemberTracking', 
-				array($xml, $ale->isFromCache(), array('characterID'=>$ceo->characterID)));
+				array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID, 'corporationID' => $ceo->corporationID)));
 		}
 		return ! (bool) JError::getError();
 		
