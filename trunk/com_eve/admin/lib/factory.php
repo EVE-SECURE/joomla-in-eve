@@ -3,6 +3,22 @@ defined('_JEXEC') or die();
 
 class EveFactory {
 	static $instances = array();
+	static $config = array(
+		'config'			=> false,
+		
+		'main.class' 		=> 'EVEOnline',
+		'main.host' 		=> "http://api.eve-online.com/",
+		'main.suffix' 		=> ".xml.aspx",
+		'main.parserClass'	=> "AleParserXMLElement",
+		'main.requestError' => "throwException",
+		'main.serverError' 	=> "throwException",
+	
+		'cache.class' 		=> 'Joomla',
+		'cache.table' 		=> '#__eve_alecache',
+		
+		'request.class' 	=> null,
+		'request.timeout'	=> 30,
+	);
 	
 	static function getQuery($dbo = null) {
 		if (!isset($dbo)) {
@@ -18,8 +34,11 @@ class EveFactory {
 			$dbo = JFactory::getDBO();
 		}
 		if (!isset($instance)) {
+			$params = &JComponentHelper::getParams('com_eve');
+			
 			require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'ale'.DS.'factory.php';
-			$instance = AleFactory::getEVEOnline(array('db' => $dbo));
+			self::$config['request.class'] = $params->get('ale_requestclass', 'Curl');
+			$instance = AleFactory::getEVEOnline(self::$config);
 		}
 		return $instance;
 	}

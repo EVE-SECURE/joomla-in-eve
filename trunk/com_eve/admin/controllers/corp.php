@@ -141,4 +141,3 @@ class EveControllerCorp extends EveController {
 	}
 	
 }
-?>

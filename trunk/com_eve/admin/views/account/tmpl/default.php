@@ -36,6 +36,14 @@ defined('_JEXEC') or die();
 				</tr>
 				<tr>
 					<td class="key">
+						<label for="apiStatus"><?php echo JText::_('API KEY STATUS'); ?></label>
+					</td>
+					<td>
+						<?php echo JHTML::_('select.genericlist', $this->apiStates, 'apiStatus', null, 'value', 'value', $this->item->apiStatus); ?>
+					</td>
+				</tr>
+				<tr>
+					<td class="key">
 						<label for="userID"><?php echo JText::_('OWNER'); ?></label>
 					</td>
 					<td>

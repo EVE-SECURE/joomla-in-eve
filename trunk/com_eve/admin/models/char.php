@@ -47,10 +47,6 @@ class EveModelChar extends EveModel {
 		return $this->getInstance('Character', $id);
 	}
 	
-	function eveCharId() {
-		return EveHelperIgb::value('charid');
-	}
-	
 	function charCharacterSheet($xml, $fromCache) {
 		$character = $this->getCharacter($xml->result->characterID);
 		$character->save($xml->result->toArray());

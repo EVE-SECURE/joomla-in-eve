@@ -1,4 +1,23 @@
 <?php
+/**
+ * @version $Id: base.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @license GNU/LGPL, see COPYING and COPYING.LESSER
+ * This file is part of Ale - PHP API Library for EVE.
+ * 
+ * Ale is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Ale is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
 
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'util'.DIRECTORY_SEPARATOR.'context.php';
@@ -20,7 +39,8 @@ class AleBase {
 	protected $default = array(
 		'host' => '',
 		'suffix' => '',
-		'parserClass' => 'SimpleXMLElement' 
+		'parserClass' => 'SimpleXMLElement', 
+		'requestError' => 'throwException',
 		);
 	/** 
 	 * @var array
@@ -71,6 +91,9 @@ class AleBase {
 	 * @return mixed 
 	 */
 	protected function handleContent($content, &$useCache = true) {
+		if (is_null($content)) {
+			return null;
+		}
 		if ($this->config['parserClass'] == 'string') {
 			return $content;
 		}
@@ -110,13 +133,36 @@ class AleBase {
 		$this->cache->setCall($path, $params);
 		$this->fromCache = $this->cache->isCached();
 		
+		$useCache = true;
 		if ($this->fromCache == ALE_CACHE_CACHED) {
 			$content = $this->cache->retrieve();
 		} else {
-			$content = $this->request->query($host.$path.$suffix, $params);
+			switch ($this->config['requestError']) {
+				case 'getCached':
+					try {
+						$content = $this->request->query($host.$path.$suffix, $params);
+					}
+					catch (AleExceptionRequest $e) {
+						$content = $this->cache->retrieve();
+						$this->fromCache = ALE_CACHE_FORCED;
+						$useCache = false;
+					}
+					break;
+				case 'returnNull':
+					try {
+						$content = $this->request->query($host.$path.$suffix, $params);
+					}
+					catch (AleExceptionRequest $e) {
+						return null;
+					}
+					break;
+				case 'throwException':
+				default:
+					$content = $this->request->query($host.$path.$suffix, $params);
+					break;
+			}
 		}
 		
-		$useCache = true;
 		$result = $this->handleContent($content, $useCache);
 		
 		if (($this->fromCache != ALE_CACHE_CACHED) && $useCache) {
@@ -172,6 +218,18 @@ class AleBase {
 	 */
 	function isFromCache() {
 		return (bool) $this->fromCache;
+	}
+	
+	/**
+	 * Force result of last call from cache
+	 *
+	 * @return mixed
+	 */
+	function getCached() {
+		$content = $this->cache->retrieve();
+		$useCache = false;
+		$result = $this->handleContent($content, $useCache);
+		return $result;
 	}
 	
 }
