@@ -37,6 +37,7 @@ class plgEveapiEve extends JPlugin {
 	}
 	
 	public function accountCharacters($xml, $fromCache, $options = array()) {
+		$dbo = JFactory::getDBO();
 		$userID = JArrayHelper::getValue($options, 'userID', null, 'int');
 		$sql = 'UPDATE #__eve_characters SET userID=0 WHERE userID='.$userID;
 		$dbo->Execute($sql);
@@ -67,7 +68,7 @@ class plgEveapiEve extends JPlugin {
 	public function corpMemberTracking($xml, $fromCache, $options = array()) {
 		foreach ($xml->result->members as $characterID => $member) {
 			$sheet = $member->toArray();
-			$sheet['corporationID'] = $corporationID;
+			$sheet['corporationID'] = $options['corporationID'];
 			$character = EveFactory::getInstance('Character', $characterID);
 			$character->save($sheet);
 		}

@@ -35,7 +35,7 @@
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.php <joomla root>/plugins/user/eve.php
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.xml <joomla root>/plugins/user/eve.xml
 
-	ln -s <joomla-in-eve root>/plg_eveapi_calls/calls.php <joomla root>/plugins/eveapi/calls.php
+	ln -s <joomla-in-eve root>/plg_eveapi <joomla root>/plugins/eveapi
 
 
 	B) Windonws XP
@@ -44,6 +44,7 @@
 	for components and template. Copy rest files to appropriate location 
 	
 	C) Windows Vista
-	Honestly, I've got no idea.... 
+	Have a look here:
+	http://www.howtogeek.com/howto/windows-vista/using-symlinks-in-windows-vista/
 	
 8. Execute SQL commands to create database tables, insert menu items and include plugins

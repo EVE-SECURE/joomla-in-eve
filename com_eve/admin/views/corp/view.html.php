@@ -50,7 +50,7 @@ class EveViewCorp extends JView {
 		}
 		JToolBarHelper::title($title, 'corp');
 		
-		$item = $model->getCorp($id);
+		$item = $model->getCorporation($id);
 
 		$query = 'SELECT allianceID, name FROM #__eve_alliances ORDER BY name;';
 		$dbo = $model->getDBO();

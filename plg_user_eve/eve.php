@@ -91,21 +91,11 @@ class plgUserEVE extends JPlugin
 		
 		if ($isnew) {
 			$dbo = JFactory::getDBO();
-			$sql = 'UPDATE #__users SET block=1 WHERE id='.$user['id'];
+			$sql = 'UPDATE #__users SET block=1 WHERE id='.intval($user['id']);
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
 		
-		if (!EveHelperIgb::isIgb()) {
-			return;
-		}
-
-		if (!EveHelperIgb::isTrusted()) {
-			return;
-		}
-
-		// convert the user parameters passed to the event
-		// to a format the external application
 		
 	}
 

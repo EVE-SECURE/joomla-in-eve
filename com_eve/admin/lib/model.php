@@ -70,16 +70,20 @@ class EveModel extends JModel {
 	}
 	
 	/**
-	 * Enter description here...
+	 * Update apiStatus based on error code
 	 *
 	 * @param TableAccount $account
 	 * @param int $errorCode
+	 * @param bool $store
 	 */
-	function updateApiStatus($account, $errorCode) {
+	function updateApiStatus($account, $errorCode, $store = false) {
 		
 		switch ($errorCode) {
 			case 200:
 				$account->apiStatus = 'Limited';
+				if ($store) {
+					$account->store();
+				}
 				break;
 			case 202:
 			case 203:
@@ -88,9 +92,15 @@ class EveModel extends JModel {
 			case 210:
 			case 212:
 				$account->apiStatus = 'Invalid';
+				if ($store) {
+					$account->store();
+				}
 				break;
 			case 211:
 				$account->apiStatus = 'Inactive';
+				if ($store) {
+					$account->store();
+				}
 				break;
 		}
 		 

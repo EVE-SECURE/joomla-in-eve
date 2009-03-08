@@ -74,30 +74,13 @@ class EveControllerAlliance extends EveController {
 
 		$this->setRedirect( 'index.php?option=com_eve' );
 
-		$post = JRequest::get('post');
-		
 		$model = & $this->getModel('Alliance');
-		$table = $model->getTable('Alliances');
-		
-		$table->load(JRequest::getInt('allianceID')); 
-		
-		if (!$table->bind( $post )) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->store()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-				
+		$model->store();				
 		$task = $this->getTask();
 		
 		switch ($task) {
 			case 'apply':
-				$link = 'index.php?option=com_eve&control=alliance&task=edit&cid[]='. $table->allianceID ;
+				$link = 'index.php?option=com_eve&control=alliance&task=edit&cid[]='. JRequest::getInt('allianceID', 0, 'post') ;
 				break;
 
 			case 'save':
@@ -106,7 +89,7 @@ class EveControllerAlliance extends EveController {
 				break;
 		}
 
-		$this->setRedirect( JRoute::_($link, false), JText::_( 'ALLIANCE SAVED' ) );	
+		$this->setRedirect( JRoute::_($link, false));	
 	}
 	
 	function getAllianceList() {

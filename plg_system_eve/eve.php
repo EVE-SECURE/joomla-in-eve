@@ -59,5 +59,3 @@ class  plgSystemEVE extends JPlugin {
 	}
 
 }
-
-?>

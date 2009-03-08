@@ -42,9 +42,9 @@ class EveModelAccount extends EveModel {
 	
 	function store() {
 		global $mainframe;
-		$post = JRequest::get('post');
 		
 		$account = $this->getAccount(JRequest::getInt('userID'));
+		$post = JRequest::get('post');
 		
 		if (!$account->bind( $post )) {
 			return JError::raiseWarning( 500, $account->getError() );
@@ -126,8 +126,7 @@ class EveModelAccount extends EveModel {
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode());
-				$account->store();
+				$this->updateApiStatus($account, $e->getCode(), true);
 				JError::raiseWarning($e->getCode(), $e->getMessage());
 			}
 			catch (RuntimeException $e) {

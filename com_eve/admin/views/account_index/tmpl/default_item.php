@@ -21,7 +21,8 @@ defined('_JEXEC') or die();
 		<?php echo $this->item->userName; ?>
 	</td>
 	<td>
-		<?php echo $this->item->apiStatus; ?>
+		<span class="apiStatus apiStatus-<?php echo $this->item->apiStatus; ?>"><?php echo $this->item->apiStatus; ?></span>
+		
 	</td>
 	<td>
 		<?php echo $this->item->characters; ?>

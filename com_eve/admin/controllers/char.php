@@ -73,28 +73,10 @@ class EveControllerChar extends EveController {
 	
 	function applysave() {
 		JRequest::checkToken() or die( 'Invalid Token' );
-
+		
 		$this->setRedirect( 'index.php?option=com_eve' );
-
-		$post = JRequest::get('post');
-		
 		$model = & $this->getModel('Char');
-		$table = $model->getTable('Character');
-		
-		$table->load(JRequest::getInt('characterID'));
-		 
-		if (!$table->bind( $post )) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->store()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-				
+		$model->store();
 		$task = $this->getTask();
 		
 		switch ($task)
@@ -109,7 +91,7 @@ class EveControllerChar extends EveController {
 				break;
 		}
 
-		$this->setRedirect( JRoute::_($url, false), JText::_( 'CHARACTER SAVED' ) );
+		$this->setRedirect(JRoute::_($url, false));
 	}
 	
 	function getCharacterSheet() {
