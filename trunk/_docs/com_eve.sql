@@ -7,16 +7,6 @@ CREATE TABLE IF NOT EXISTS `jos_eve_alecache` (
   PRIMARY KEY  (`host`,`path`,`params`)
 ) DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `jos_eve_apicalls`;
-CREATE TABLE IF NOT EXISTS `jos_eve_apicalls` (
-  `id` int(11) NOT NULL auto_increment,
-  `component` varchar(64) NOT NULL default '',
-  `model` varchar(64) NOT NULL default '',
-  `apicall` varchar(64) NOT NULL default '',
-  `enabled` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY (`id`)
-) CHARSET=utf8;
-
 DROP TABLE IF EXISTS `jos_eve_accounts`;
 CREATE TABLE IF NOT EXISTS `jos_eve_accounts` (
   `userID` int(10) unsigned NOT NULL default '0',

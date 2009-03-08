@@ -32,10 +32,6 @@ class EveModelCorp extends EveModel {
 		parent::__construct($config);
 	}
 	
-	function getCorp($id = null) {
-		return $this->getInstance('Corporation', $id);
-	}
-	
 	/**
 	 * Enter description here...
 	 *
@@ -46,7 +42,34 @@ class EveModelCorp extends EveModel {
 		return $this->getInstance('Corporation', $id);
 	}
 	
+	function store() {
+		global $mainframe;
+		
+		$corporation = $model->getCorporation(JRequest::getInt('corporationID'));
+		$post = JRequest::get('post');
+		
+		if (!$corporation->bind( $post )) {
+			return JError::raiseWarning( 500, $corporation->getError() );
+		}
+		
+		if ($corporation->standings === '') {
+			$corporation->standings = null;
+		}
+		
+		if (!$corporation->check()) {
+			return JError::raiseWarning( 500, $corporation->getError() );
+		}
+		
+		if (!$corporation->store(true)) {
+			return JError::raiseWarning( 500, $corporation->getError() );
+		}
+		
+		$mainframe->enqueueMessage(JText::_('CORPORATION STORED'));
+		
+	}
+	
 	function apiGetCorporationSheet($cid) {
+		global $mainframe;
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
@@ -56,28 +79,45 @@ class EveModelCorp extends EveModel {
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
+		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $corporationID) {
-			$corporation = $this->getCorporation($corporationID);
-			$ceo = $this->getInstance('Character', $corporation->ceoID);
-			$account = $this->getInstance('Account', $ceo->userID);
-			
 			try {
-				$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
-				$xml = $ale->corp->CorporationSheet();
+				$corporation = $this->getCorporation($corporationID);
+				$ceo = $this->getInstance('Character', $corporation->ceoID);
+				$account = $this->getInstance('Account', $ceo->userID);
+				if ($ceo->apiKey) {
+					try {
+						$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
+						$xml = $ale->corp->CorporationSheet();
+					}
+					catch (AleExceptionEVEAuthentication $e) {
+						$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
+					}
+				} else {
+					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
+				}
+				$dispatcher->trigger('corpCorporationSheet', 
+					array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
+				$count += 1;
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
 			}
 			catch (Exception $e) {
-				$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
+				JError::raiseError($e->getCode(), $e->getMessage());
 			}
-			
-			$dispatcher->trigger('corpCorporationSheet', 
-				array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
-			
 		}
-		return ! (bool) JError::getError();
+		if ($count == 1) {
+			$mainframe->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
+		}
+		if ($count > 1) {
+			$mainframe->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
+		}
 	}
 	
 	function apiGetMemberTracking($cid) {
+		global $mainframe;
 		JArrayHelper::toInteger($cid);
 				
 		if (!count($cid)) {
@@ -87,20 +127,38 @@ class EveModelCorp extends EveModel {
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
+		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $corporationID) {
-			$corporation = $this->getCorporation($corporationID);
-			$ceo = $this->getInstance('Character', $corporation->ceoID);
-			$account = $this->getInstance('Account', $ceo->userID);
-			
-			$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
-			$xml = $ale->corp->MemberTracking();
-
-			$dispatcher->trigger('corpMemberTracking', 
-				array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID, 'corporationID' => $ceo->corporationID)));
+			try {
+				$corporation = $this->getCorporation($corporationID);
+				$ceo = $this->getInstance('Character', $corporation->ceoID);
+				$account = $this->getInstance('Account', $ceo->userID);
+				
+				$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
+				$xml = $ale->corp->MemberTracking();
+	
+				$dispatcher->trigger('corpMemberTracking', 
+					array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID, 'corporationID' => $ceo->corporationID)));
+				$count += 1;
+			}
+			catch (AleExceptionEVEAuthentication $e) {
+				$this->updateApiStatus($account, $e->getCode(), true);
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (Exception $e) {
+				JError::raiseError($e->getCode(), $e->getMessage());
+			}
 		}
-		return ! (bool) JError::getError();
-		
+		if ($count == 1) {
+			$mainframe->enqueueMessage(JText::_('MEMBERS FROM CORPORATION SUCCESSFULLY IMPORTED'));
+		}
+		if ($count > 1) {
+			$mainframe->enqueueMessage(JText::sprintf('MEMBERS FROM %s CORPORATIONS SUCCESSFULLY IMPORTED', $count));
+		}
 	}
 	
 }

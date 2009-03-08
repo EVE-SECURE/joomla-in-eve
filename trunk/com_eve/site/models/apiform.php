@@ -28,87 +28,138 @@ jimport('joomla.application.component.model');
 class EveModelApiform  extends EveModel {
 	
 	function processForm($hash) {
-		$user = JFactory::getUser();
-		
-		if (!$user->id) {
-			$credentials = array();
-			$credentials['username'] = JRequest::getVar('username', '', 'method', 'username');
-			$credentials['password'] = JRequest::getString('passwd', '', 'post', JREQUEST_ALLOWRAW);
+		global $mainframe;
+		try {
+			$user = JFactory::getUser();
 			
-			$options = array();
-			jimport( 'joomla.user.authentication');
-			$authenticate = & JAuthentication::getInstance();
-			$response	  = $authenticate->authenticate($credentials, $options);
-			if ($response->status !== JAUTHENTICATE_STATUS_SUCCESS) {
-				JError::raiseWarning('SOME_ERROR_CODE', JText::_("AUTHENTICATION FAILED"));
+			if (!$user->id) {
+				$credentials = array();
+				$credentials['username'] = JRequest::getVar('username', '', 'method', 'username');
+				$credentials['password'] = JRequest::getString('passwd', '', 'post', JREQUEST_ALLOWRAW);
+				
+				$options = array();
+				jimport( 'joomla.user.authentication');
+				$authenticate = & JAuthentication::getInstance();
+				$response	  = $authenticate->authenticate($credentials, $options);
+				if ($response->status !== JAUTHENTICATE_STATUS_SUCCESS) {
+					JError::raiseWarning('SOME_ERROR_CODE', JText::_("AUTHENTICATION FAILED"));
+					return false;
+				}
+				$user = JFactory::getUser($credentials['username']);
+			}
+	
+			$userID = JArrayHelper::getValue($hash, 'userID', '', 'int');
+			$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
+			if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
 				return false;
 			}
-			$user = JFactory::getUser($credentials['username']);
-		}
 
-		$userID = JArrayHelper::getValue($hash, 'userID', '', 'int');
-		$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
-		if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
-			JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
-			return false;
-		}
-		$ale = $this->getAleEVEOnline();
-		$ale->setCredentials($userID, $apiKey);
-		
-		$xml = $ale->account->Characters();
-		
-		JPluginHelper::importPlugin('eveapi');
-		$dispatcher =& JDispatcher::getInstance();
-		
-		$dispatcher->trigger('accountCharacters', 
-			array($xml, $ale->isFromCache(), array('userID' => $userID)));
-		
-		
-		$corps = array();
-		foreach ($xml->result->characters as $characterID => $character) {
-			$corps[] = $character->corporationID;;
-		}
-		
-		
-		$account = $this->getInstance('Account', $userID);
-		$account->apiKey = $apiKey;
-		$account->store();
-		
-		if ($account->owner > 0 && $account->owner != $user->id) {
-			JError::raiseWarning('SOME_ERROR_CODE', JText::_("ACCOUNT ALREADY ASSIGNED TO ANOTHER OWNER"));
-			return false;
-		}
-		
-		$account->owner = $user->id;
-		$account->store();
-		
-		if (!$user->block) {
-			return true;
-		}
-		
-		if (!count($corps)) {
-			JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION"));
-		}
-
-		$q = $this->getQuery();
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
-		$q->addQuery('co.id');
-		$q->addWhere('co.corporationID IN ('.implode(',', $corps).')');
-		$q->addWhere('(co.owner OR al.owner)');
-		$ok = (int) $q->loadResult();
-		if (!$ok) {
-			JError::raiseWarning( "SOME_ERROR_CODE", JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION") );
-			return false;
-		}
-		$user->set('block', '0');
-		$user->set('activation', '');
-		if (!$user->save()) {
-			JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
-			return false;
-		}
-		
-		return true;
-	}
+			$account = $this->getInstance('Account', $userID);
+			
+			$ale = $this->getAleEVEOnline();
+			$ale->setCredentials($userID, $apiKey);
+			$xml = $ale->account->Characters();
+			
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			
+			$dispatcher->trigger('accountCharacters', 
+				array($xml, $ale->isFromCache(), array('userID' => $userID)));
+			
+			$corps = array();
+			foreach ($xml->result->characters as $characterID => $character) {
+				$corps[] = $character->corporationID;;
+			}
+			
+			try {
+				$charRow = reset($xml->result->characters->getIterator());
+				if ($charRow !== false) {
+					$ale->setCharacterID($charRow->characterID);
+					$xml = $ale->char->AccountBalance();
+					$dispatcher->trigger('charAccountBalance', 
+						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
+				}
+				$account->apiStatus = 'Full';
+			}
+			catch (AleExceptionEVEAuthentication $e) {
+				$this->updateApiStatus($account, $e->getCode());
+				switch ($account->apiStatus) {
+					case 'Limited':
+						JError::raiseNotice(0, JText::_('API key offers limited access'));
+						break;
+					case 'Invalid':
+						JError::raiseWarning(0, JText::_('API key is invalid'));
+						break;
+					case 'Inactive':
+						JError::raiseWarning(0, JText::_('Account is inactive'));
+						break;
+				}
+			}
+				
+			$account->store();
+			$mainframe->enqueueMessage(JText::_('API key offers full access'));
+			
+			$account->apiKey = $apiKey;
+			$account->store();
+			
+			if ($account->owner > 0 && $account->owner != $user->id) {
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("ACCOUNT ALREADY ASSIGNED TO ANOTHER OWNER"));
+				return false;
+			}
+			
+			$account->owner = $user->id;
+			$account->store();
+			
+			if (!$user->block) {
+				return true;
+			}
+			
+			if (!count($corps)) {
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION"));
+			}
 	
+			$q = $this->getQuery();
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
+			$q->addQuery('co.id');
+			$q->addWhere('co.corporationID IN ('.implode(',', $corps).')');
+			$q->addWhere('(co.owner OR al.owner)');
+			$ok = (int) $q->loadResult();
+			if (!$ok) {
+				JError::raiseWarning( "SOME_ERROR_CODE", JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION") );
+				return false;
+			}
+			$user->set('block', '0');
+			$user->set('activation', '');
+			if (!$user->save()) {
+				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
+				return false;
+			}
+			$mainframe->enqueueMessage(JText::_('Account unblocked'));
+			return true;
+			
+		}
+		catch (AleExceptionEVEAuthentication $e) {
+			$this->updateApiStatus($account, $e->getCode());
+			switch ($account->apiStatus) {
+				case 'Limited':
+					JError::raiseNotice(0, JText::_('API key offers limited access'));
+					break;
+				case 'Invalid':
+					JError::raiseWarning(0, JText::_('API key is invalid'));
+					break;
+				case 'Inactive':
+					JError::raiseWarning(0, JText::_('Account is inactive'));
+					break;
+			}
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}	
+	
+	}
 }

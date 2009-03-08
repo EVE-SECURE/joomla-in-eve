@@ -31,3 +31,29 @@
 .icon-16-star-blue {
 	 background-image: url(icon-star-blue-16.png);
 }
+
+.apiStatus {
+	background-position: 0 50%; 
+	background-repeat: no-repeat;
+	padding-left: 16px;
+}
+.apiStatus-Invalid {
+	background-image: url(status-red.png);
+}
+
+.apiStatus-Limited {
+	background-image: url(status-yellow.png);
+}
+
+.apiStatus-Full {
+	background-image: url(status-green.png);
+}
+
+.apiStatus-Unknown {
+	background-image: url(status-white.png);
+}
+
+.apiStatus-Inactive {
+	background-image: url(status-white.png);
+}
+

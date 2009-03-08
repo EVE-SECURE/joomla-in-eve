@@ -36,6 +36,25 @@ class EveModelAlliance extends EveModel {
 		return $this->getInstance('Alliance', $id);
 	}
 	
+	function store() {
+		global $mainframe;
+		$alliance = $this->getAlliance(JRequest::getInt('allianceID'));
+		$post = JRequest::get('post');
+		if (!$alliance->bind( $post )) {
+			return JError::raiseWarning( 500, $alliance->getError() );
+		}
+		
+		if (!$alliance->check()) {
+			return JError::raiseWarning( 500, $alliance->getError() );
+		}
+		
+		if (!$alliance->store()) {
+			return JError::raiseWarning( 500, $alliance->getError() );
+		}
+		$mainframe->enqueueMessage(JText::_('ALLIANCE STORED'));
+		
+	}
+	
 	function apiGetAllianceList() {
 		global $mainframe;
 		$ale = $this->getAleEVEOnline();

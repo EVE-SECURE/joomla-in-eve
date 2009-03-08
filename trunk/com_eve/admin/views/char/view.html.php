@@ -50,7 +50,7 @@ class EveViewChar extends JView {
 		}
 		JToolBarHelper::title($title, 'char');
 		
-		$item = $model->getChar($id);
+		$item = $model->getCharacter($id);
 		$dbo = $model->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_accounts', 'u');

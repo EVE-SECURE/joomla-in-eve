@@ -74,28 +74,8 @@ class EveControllerCorp extends EveController {
 
 		$this->setRedirect( 'index.php?option=com_eve' );
 
-		$post = JRequest::get('post');
-		
 		$model = & $this->getModel('Corp');
-		$table = $model->getTable('Corporation');
-		
-		$table->load(JRequest::getInt('corporationID')); 
-				
-		if (!$table->bind( $post )) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if ($table->standings === '') {
-			$table->standings = null;
-		}
-		
-		if (!$table->check()) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
-		
-		if (!$table->store(true)) {
-			return JError::raiseWarning( 500, $table->getError() );
-		}
+		$model->store();
 				
 		$task = $this->getTask();
 		
@@ -117,27 +97,17 @@ class EveControllerCorp extends EveController {
 	}
 	
 	function getCorporationSheet() {
-		$model = & $this->getModel('Corp', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
-		$msg = null;
-		if ($model->apiGetCorporationSheet($cid)) {
-			$msg = JText::_('CORPORATIONS SUCCESSFULLY IMPORTED');
-		}
-		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false), $msg);
+		$model = & $this->getModel('Corp', 'EveModel');
+		$model->apiGetCorporationSheet($cid);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false));
 	}
 	
 	function getMemberTracking() {
-		$model = & $this->getModel('Corp', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
-		$msg = null;
-		if ($model->apiGetMemberTracking($cid)) {
-			$msg = JText::_('CHARACTERS SUCCESSFULLY IMPORTED');
-		}
-		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false), $msg);
+		$model = & $this->getModel('Corp', 'EveModel');
+		$model->apiGetMemberTracking($cid);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false));
 	}
 	
 }

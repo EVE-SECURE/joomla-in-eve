@@ -49,7 +49,7 @@ class EveFactory {
 		}
 		
 		if (!$id) {
-			$instance =& JTable::getInstance($name, 'Table', $config);
+			$instance =& JTable::getInstance($table, 'Table', $config);
 			return $instance;
 		}
 		
