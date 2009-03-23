@@ -23,27 +23,12 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EvecharsheetModelSheet extends EveModel {
+jimport('joomla.application.component.controller');
+
+class EvecharsheetController extends JController {
 	
-	function charCharacterSheet($xml, $fromCache, $options = array()) {
-		$characterID = (int) $xml->result->characterID;
-		$values = '';
-		foreach ($xml->result->skills as $skill) {
-			if ($values) {
-				$values .= ",\n"; 
-			}
-			$values .= sprintf("('%s', '%s', '%s', '%s')", $characterID, 
-				intval($skill->typeID), intval($skill->skillpoints), intval($skill->level));
-		}
-		
-		if (!$values) {
-			return;
-		}
-		
-		$dbo = $this->getDBO();
-		$sql = 'INSERT INTO #__eve_charskills (characterID, typeID, skillpoints, level) VALUES '.$values;
-		$dbo->Execute('DELETE FROM #__eve_charskills WHERE characterID = '. $characterID);
-		$dbo->Execute($sql);
+	function __construct($config = array()) {
+		parent::__construct($config);
 	}
 	
 }

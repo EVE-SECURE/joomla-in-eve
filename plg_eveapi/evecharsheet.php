@@ -58,4 +58,12 @@ class plgEveapiEvecharsheet extends JPlugin {
 		$dbo->Execute($sql);
 	}
 	
+	public function charSkillInTraining($xml, $fromCache, $options = array()) {
+		 
+	}
+	
+	public function charSkillQueue($xml, $fromCache, $options = array()) {
+		
+	}
+	
 }

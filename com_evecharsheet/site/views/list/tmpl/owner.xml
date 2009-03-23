@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Owner List Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Owner List Layout</name>
+		<description>DESC HERE</description>
+		<params>
+			<param name="owner" type="text" label="User ID" description="User ID to display" />
+		</params>
+	</state>
+</metadata>

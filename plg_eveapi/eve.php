@@ -53,14 +53,14 @@ class plgEveapiEve extends JPlugin {
 		}
 	}
 	
-	public function charCharacterTracking($xml, $fromCache, $options = array()) {
-		$character = EveFactory::getInstance('Character', $xml->result->characterID);
+	public function charCharacterSheet($xml, $fromCache, $options = array()) {
+		$character = EveFactory::getInstance('Character', (string) $xml->result->characterID);
 		$sheet = $xml->result->toArray();
 		$character->save($sheet);
 	}
 	
 	public function corpCorporationSheet($xml, $fromCache, $options = array()) {
-		$corporation = EveFactory::getInstance('Corporation', $xml->result->corporationID);
+		$corporation = EveFactory::getInstance('Corporation', (string) $xml->result->corporationID);
 		$sheet = $xml->result->toArray();
 		$corporation->save($sheet);
 	}

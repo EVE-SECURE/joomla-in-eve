@@ -270,17 +270,17 @@ class JQuery extends JObject {
 	}
 	
 	function loadResult() {
-		$this->query();
+		$this->dbo->setQuery($this->prepare());
 		return $this->dbo->loadResult();
 	}
 	
 	function loadResultArray($numinarray = 0) {
-		$this->query();
+		$this->dbo->setQuery($this->prepare());
 		return $this->dbo->loadResultArray($numinarray);
 	}
 	
 	function loadObjectList($key = '') {
-		$this->query();
+		$this->dbo->setQuery($this->prepare());
 		return $this->dbo->loadObjectList($key);
 	}
 	

@@ -31,11 +31,23 @@ class EveModel extends JModel {
 		parent::__construct($config);
 	}
 	
+	/**
+	 * Get instance of JQuery
+	 *
+	 * @return JQuery
+	 */
 	function getQuery() {
 		$dbo = $this->getDBO();
 		return EveFactory::getQuery($dbo);
 	}
 	
+	/**
+	 * Get possible options of enum type fields
+	 *
+	 * @param string $table
+	 * @param string $field
+	 * @return array
+	 */
 	function getEnumOptions($table, $field) {
 		$dbo = $this->getDBO();
 		$sql = "SHOW COLUMNS FROM `".$table."` LIKE '".$field."'";

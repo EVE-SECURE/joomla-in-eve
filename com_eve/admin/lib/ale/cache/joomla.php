@@ -43,7 +43,6 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 		if ($result === false) {
 			throw new AleExceptionCache($this->db->getErrorMsg(), $this->db-getErrorNum());
 		}
-		$result = $this->db->loadAssoc();
 		return $result;
 	}
 	
@@ -53,5 +52,22 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 	
 	protected function freeResult(&$result) {
 	}
-			
+
+	/**
+	 * Set call parameters
+	 *
+	 * @param string $path
+	 * @param array $params
+	 */
+	public function setCall($path, array $params = array()) {
+		$this->path = $path;
+		$this->paramsRaw = $params;
+		$this->params = sha1(http_build_query($params, '', '&'));
+		
+		$query = sprintf("SELECT * FROM %s WHERE %s", $this->table, $this->getWhere());
+		$result = $this->db->setQuery($query);
+		$this->row = $this->db->loadAssoc();
+		$this->freeResult($result);
+	}
+	
 }

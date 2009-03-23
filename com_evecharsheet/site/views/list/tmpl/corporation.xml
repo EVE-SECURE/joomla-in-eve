@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Character Sheet Layout">
+	<layout title="Corporation Members Layout">
 		<message>
 			<![CDATA[MESSAGE HERE]]>
 		</message>
 	</layout>
 	<state>
-		<name>Character Sheet Layout</name>
+		<name>Corporation Members Layout</name>
 		<description>DESC HERE</description>
 		<!--url addpath="/administrator/components/com_contact/elements">
 			<param name="catid" type="category" scope="com_contact_details" default="0" label="Select Category" description="A contacts category" />
 		</url-->
 		<params>
-			<param name="characterID" type="text" label="Character ID" description="Character ID to display" />
+			<param name="corporationID" type="text" label="Corporation ID" description="Corporation ID to display" />
+			<param name="displayFilter" type="radio" label="DISPLAY FILTER" description="" default="0">
+				<option value="0">NO</option>
+				<option value="1">YES</option>
+			</param>
 		</params>
 	</state>
 </metadata>

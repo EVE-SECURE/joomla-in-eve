@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `jos_eve_accounts` (
   `userID` int(10) unsigned NOT NULL default '0',
   `owner` int(10) unsigned NOT NULL default '0',
   `apiKey` varchar(64) NOT NULL default '',
-  `apiStatus` enum('Invalid','Limited','Full', 'Inactive') NOT NULL default 'Invalid',
+  `apiStatus` enum('Unknown', 'Invalid','Limited','Full', 'Inactive') NOT NULL default 'Unknown',
   PRIMARY KEY (`userID`),
   KEY `eve_accounts_fk_owner` (`owner`)
 ) CHARSET=utf8;

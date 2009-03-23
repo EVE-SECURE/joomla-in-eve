@@ -82,7 +82,7 @@ class EveControllerCorp extends EveController {
 		switch ($task)
 		{
 			case 'apply':
-				$link = 'index.php?option=com_eve&control=corp&task=edit&cid[]='. $table->corporationID ;
+				$link = 'index.php?option=com_eve&control=corp&task=edit&cid[]='. JRequest::getInt('corporationID');
 				break;
 
 			case 'save':
@@ -91,7 +91,7 @@ class EveControllerCorp extends EveController {
 				break;
 		}
 
-		$this->setRedirect( JRoute::_($link, false), JText::_( 'CORPORATION SAVED' ) );
+		$this->setRedirect( JRoute::_($link, false));
 				
 		
 	}

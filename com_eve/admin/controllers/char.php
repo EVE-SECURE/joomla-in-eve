@@ -82,7 +82,7 @@ class EveControllerChar extends EveController {
 		switch ($task)
 		{
 			case 'apply':
-				$url = 'index.php?option=com_eve&control=char&task=edit&cid[]='. $table->characterID ;
+				$url = 'index.php?option=com_eve&control=char&task=edit&cid[]='. JRequest::getInt('characterID');
 				break;
 
 			case 'save':

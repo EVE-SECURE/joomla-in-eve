@@ -33,6 +33,37 @@ class EvecharsheetModelSheet extends EveModel {
 		return $this->getInstance('Corporation', $corporationID);
 	}
 	
+	function getOwner($characterID) {
+		$character = $this->getCharacter($characterID);
+		$account = $this->getInstance('account', $character->userID);
+		if (!$account->owner) {
+			return null; 
+		} else {
+			return JFactory::getUser($account->owner);
+		}
+	}
+	
+	function getOwnersCharacters($characterID, $showAll = false) {
+		$owner = $this->getOwner($characterID);
+		if (is_null($owner)) {
+			return array();
+		}
+		$q = $this->getQuery();
+		$q->addTable('#__eve_characters', 'ch');
+		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID = ch.userID');
+		$q->addWhere('ac.owner = %s', $owner->id);
+		if (!$showAll) {
+			$corps = EveFactory::getOwnerCoroprationIDs($this->getDBO());
+			if (!$corps) {
+				return array();
+			} else {
+				$q->addWhere('corporationID IN (%s)', implode(', ', $corps));
+			}
+			
+		}
+		return $q->loadObjectList();
+	}
+	
 	function getGroups($characterID) {
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
@@ -48,13 +79,14 @@ class EvecharsheetModelSheet extends EveModel {
 		$q->addOrder('groupName', 'ASC');
 		$groups = $q->loadObjectList('groupID');
 		
+		foreach ($groups as &$group) {
+			$group->skills = array();
+			$group->skillCount = 0;
+			$group->skillpoints = 0;
+			$group->skillPrice = 0;
+		}
+		
 		foreach ($skills as $skill) {
-			if (!isset($groups[$skill->groupID]->skills)) {
-				$groups[$skill->groupID]->skills = array();
-				$groups[$skill->groupID]->skillCount = 0;
-				$groups[$skill->groupID]->skillpoints = 0;
-				$groups[$skill->groupID]->skillPrice = 0;
-			}
 			$groups[$skill->groupID]->skills[] = $skill;
 			$groups[$skill->groupID]->skillCount += 1;
 			$groups[$skill->groupID]->skillpoints += $skill->skillpoints;
