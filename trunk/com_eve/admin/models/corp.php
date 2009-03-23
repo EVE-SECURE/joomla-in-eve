@@ -45,7 +45,7 @@ class EveModelCorp extends EveModel {
 	function store() {
 		global $mainframe;
 		
-		$corporation = $model->getCorporation(JRequest::getInt('corporationID'));
+		$corporation = $this->getCorporation(JRequest::getInt('corporationID'));
 		$post = JRequest::get('post');
 		
 		if (!$corporation->bind( $post )) {

@@ -39,12 +39,15 @@ class EvecharsheetViewSheet extends JView {
 		$model = $this->getModel();
 		
 		$characterID = JRequest::getInt('characterID');
+		$paramCharacterID = $params->get('characterID');
 		if (!$characterID) {
-			$characterID = $params->get('characterID');
+			$characterID = $paramCharacterID;
 		}
-		
-		$character = $model->getCharacter($characterID);
-				
+		$model->set('characterID', $characterID);
+		$character = $model->getInstance('character', $characterID);
+		//$this->assignRef('character', $character);
+		$title = $characterID == $paramCharacterID ? $this->params->get('page_title') : $character->name;
+						
 		if (!$character) {
 			$this->display('none');
 			return;
@@ -52,6 +55,16 @@ class EvecharsheetViewSheet extends JView {
 		$corporation = $model->getCorporation($character->corporationID);
 		
 		$groups = $model->getGroups($characterID);
+		$show_owner = $params->get('show_owner');
+		$show_all = $params->get('show_all');
+		$this->assign('show_owner', $show_owner);
+		if ($show_owner) {
+			$owner = $model->getOwner($characterID);
+			$owners_chars = $model->getOwnersCharacters($characterID, $show_all);
+			$this->assignRef('owner', $owner);
+			$this->assignRef('owners_chars', $owners_chars);
+		}
+		$this->assign('title', $title);
 		$this->assignRef('character', $character);
 		$this->assignRef('corporation', $corporation);
 		$this->assignRef('groups', $groups);

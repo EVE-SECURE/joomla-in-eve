@@ -3,7 +3,7 @@
  * @version		$Id$
  * @author		Pavol Kovalik
  * @package		Joomla! in EVE
- * @subpackage	Character Tracking
+ * @subpackage	Character Sheet
  * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
  * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,10 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-class EvechartrackingModelDbcheck  extends JModel {
+class EvecharsheetModelEvecharsheet extends JModel {
 	
-	//check for required tables
 	function getTableCheck() {
-		$tables = array('mapDenormalize', 'staStations', 'invTypes');
+		$tables = array('invTypes', 'invGroups');
 		
 		$result = array();
 		$db = $this->getDBO();
