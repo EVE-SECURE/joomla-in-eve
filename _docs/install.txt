@@ -35,6 +35,9 @@
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.php <joomla root>/plugins/user/eve.php
 	ln -s <joomla-in-eve root>/plg_user_eve/eve.xml <joomla root>/plugins/user/eve.xml
 
+	ln -s <joomla-in-eve root>/plg_search/evecharsheet.xml <joomla root>/plugins/search/evecharsheet.xml
+	ln -s <joomla-in-eve root>/plg_search/evecharsheet.php <joomla root>/plugins/search/evecharsheet.php
+	
 	ln -s <joomla-in-eve root>/plg_eveapi <joomla root>/plugins/eveapi
 
 
