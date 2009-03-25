@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0">
 	<name>EVE</name>
-	<version>0.1 Alpha</version>
-	<description>Joomla! in EVE</description>
+	<version>0.2</version>
+	<description>Joomla! in EVE - Core</description>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<author>Pavol Kovalik</author>
 	<creationDate>April 2008</creationDate>
 	<authoremail>kovalikp@gmail.com</authoremail>
 	<authorurl>http://eve.webnamieru.sk</authorurl>
-	<copyright>(C) 2008 Pavol Kovalik</copyright>
+	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
 	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
@@ -43,7 +43,7 @@
 			<menu link="option=com_eve&amp;control=char" img="components/com_eve/assets/icon-char-16.png">Characters</menu>
 			<menu link="option=com_eve&amp;control=corp" img="components/com_eve/assets/icon-corp-16.png">Corporations</menu>
 			<menu link="option=com_eve&amp;control=alliance" img="components/com_eve/assets/icon-alliance-16.png">Alliances</menu>
-			<menu link="option=com_eve&amp;control=user" img="components/com_eve/assets/icon-user-16.png">Users</menu>
+			<menu link="option=com_eve&amp;control=account" img="components/com_eve/assets/icon-account-16.png">Account</menu>
 		</submenu>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_eve.ini</language>
