@@ -69,7 +69,7 @@ class EveModelApiform  extends EveModel {
 			
 			$corps = array();
 			foreach ($xml->result->characters as $characterID => $character) {
-				$corps[] = $character->corporationID;;
+				$corps[] = (string) $character->corporationID;;
 			}
 			
 			try {
@@ -81,6 +81,7 @@ class EveModelApiform  extends EveModel {
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
+				$mainframe->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				$this->updateApiStatus($account, $e->getCode());
@@ -98,7 +99,6 @@ class EveModelApiform  extends EveModel {
 			}
 				
 			$account->store();
-			$mainframe->enqueueMessage(JText::_('API key offers full access'));
 			
 			$account->apiKey = $apiKey;
 			$account->store();
@@ -116,13 +116,13 @@ class EveModelApiform  extends EveModel {
 			}
 			
 			if (!count($corps)) {
-				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION"));
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF NO CORPORATION"));
 			}
 	
 			$q = $this->getQuery();
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
-			$q->addQuery('co.id');
+			$q->addQuery('co.corporationID');
 			$q->addWhere('co.corporationID IN ('.implode(',', $corps).')');
 			$q->addWhere('(co.owner OR al.owner)');
 			$ok = (int) $q->loadResult();
