@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <install version="1.5" type="plugin" group="eveapi">
-	<name>eveapi - EVE</name>
+	<name>eveapi - EVE Character Sheet</name>
 	<version>0.2</version>
 	<description>Joomla! in EVE</description>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
@@ -11,7 +11,7 @@
 	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
 	<description></description>
 	<files>
-		<filename plugin="eve">eve.php</filename>
+		<filename plugin="evecharsheet">evecharsheet.php</filename>
 	</files>
 	<params>
 	</params>

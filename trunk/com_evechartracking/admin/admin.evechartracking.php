@@ -23,7 +23,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once(JPATH_COMPONENT.DS.'controllers'.DS.'evechartracking.php');
+require_once(JPATH_COMPONENT.DS.'controller.php');
 
 $controller = new EvechartrackingController();
 

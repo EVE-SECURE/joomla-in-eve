@@ -1,9 +1,7 @@
 <?php
 
 $plugins = array(
-	array('user', 'eve'),
-	array('eveapi', 'eve'),
-	array('system', 'eve'),
+	array('eveapi', 'evecharsheet'),
 );
 
 $where = array();

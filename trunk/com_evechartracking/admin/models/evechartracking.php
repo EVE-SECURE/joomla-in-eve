@@ -23,32 +23,25 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.view');
+jimport('joomla.application.component.model');
 
-class EvechartrackingViewDbcheck extends JView {
-	function display($tmpl = null) {
-		global $mainframe;
-		$template = $mainframe->getTemplate();
+class EvechartrackingModelEvechartracking  extends JModel {
+	
+	//check for required tables
+	function getTableCheck() {
+		$tables = array('mapDenormalize', 'staStations', 'invTypes');
 		
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet('components/com_eve/assets/common.css');
-		$document->addStyleDeclaration('.icon-32-refresh { background-image: url(templates/'.$template.'/images/toolbar/icon-32-refresh.png); }');
+		$result = array();
+		$db = $this->getDBO();
 		
-		$title = JText::_('EVE CHARACTER TRACKING');
-		JToolBarHelper::title($title, 'char');
-		JToolBarHelper::preferences('com_evechartracking', 480, 640);
-		JToolBarHelper::custom('', 'refresh', 'refresh', 'Refresh', false);
-
+		$sql = "SHOW TABLES LIKE '%s'";
+		foreach ($tables as $table) {
+			$_sql = sprintf($sql, $table);
+			$db->Execute($_sql);
+			$result[$table] = $db->loadObject();
+		}
 		
-		$model = $this->getModel();
-		$tables = $model->getTableCheck();
-		
-		
-		$this->assignRef('tables', $tables);
-		
-		parent::display($tmpl);
-
+		return $result;
 	}
+	
 }
-
-?>
