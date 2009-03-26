@@ -23,25 +23,12 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.model');
+jimport('joomla.application.component.controller');
 
-class EvechartrackingModelDbcheck  extends JModel {
+class EvechartrackingController extends JController {
 	
-	//check for required tables
-	function getTableCheck() {
-		$tables = array('mapDenormalize', 'staStations', 'invTypes');
-		
-		$result = array();
-		$db = $this->getDBO();
-		
-		$sql = "SHOW TABLES LIKE '%s'";
-		foreach ($tables as $table) {
-			$_sql = sprintf($sql, $table);
-			$db->Execute($_sql);
-			$result[$table] = $db->loadObject();
-		}
-		
-		return $result;
+	function __construct($config = array()) {
+		parent::__construct($config);
 	}
 	
 }
