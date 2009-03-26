@@ -1,7 +1,7 @@
 <?php
 global $mainframe;
 
-$plugins = array('eveapi_evecharsheet');
+$plugins = array('eveapi_evecharsheet', 'search_evecharsheet');
 foreach ($plugins as $plugin) {
 	$p_dir = $this->parent->getPath('source').DS.'plugins'.DS.$plugin;
 	

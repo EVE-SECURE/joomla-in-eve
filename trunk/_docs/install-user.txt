@@ -1,0 +1,11 @@
+1. Get fresh install of Joomla 1.5 here: http://www.joomla.org/download.html
+2. Unpack it to directory on your local test machine
+3. Install it and delete installation folder
+	(use default jos_ prefix, otherwise you'll have to change prefix in .sql commands)
+4. Get EVE MySQL db dump here: http://eve.no-ip.de/apo100/ (or check eve-id.net wiki, or google it)
+5. Import it to joomla database (strongly recommend to use commandline)
+6. Check-out joomla-in-eve from SVN into separate folder and use it as project root
+7. Export com_eve, com_evechartracking, com_evecharsheet and tmpl_eve_igb
+8. Install them using standart joomla installation interface, either directly from drive or as zipped archive
+9. REMEMBER TO ENABLE PLUGINS
+10. report bugs

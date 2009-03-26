@@ -28,12 +28,12 @@
 		<filename>index.html</filename>
 		<filename>index.php</filename>
 		<filename>params.ini</filename>
-		<filename>templatedetails.xml</filename>
+		<filename>templateDetails.xml</filename>
 		<filename>template_thumbnail.png</filename>
 	</files>
-	<languages>
+	<!-- languages>
 		<language tag="en-GB"></language>
-	</languages>
+	</languages-->
 	<administration></administration>
 	<positions>
 		<position>top</position>
