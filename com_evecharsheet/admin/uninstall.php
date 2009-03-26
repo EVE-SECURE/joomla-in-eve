@@ -2,6 +2,7 @@
 
 $plugins = array(
 	array('eveapi', 'evecharsheet'),
+	array('search', 'evecharsheet'),
 );
 
 $where = array();
