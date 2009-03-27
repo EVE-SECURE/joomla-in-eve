@@ -15,6 +15,9 @@
 	ln -s <joomla-in-eve root>/com_evechartracking/admin <joomla root>/administrator/components/com_evechartracking 
 	ln -s <joomla-in-eve root>/com_evechartracking/site <joomla root>/components/com_evechartracking 
 
+	ln -s <joomla-in-eve root>/com_evecharsheet/admin <joomla root>/administrator/components/com_evecharsheet 
+	ln -s <joomla-in-eve root>/com_evecharsheet/site <joomla root>/components/com_evecharsheet
+
 	language files:
 	ln -s <joomla-in-eve root>/com_eve/admin/languages/en-GB.com_eve.menu.ini <joomla root>/administrator/language/en-GB/en-GB.com_eve.menu.ini 
 	ln -s <joomla-in-eve root>/com_eve/admin/languages/en-GB.com_eve.ini <joomla root>/administrator/language/en-GB/en-GB.com_eve.ini 
