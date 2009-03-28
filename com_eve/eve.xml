@@ -9,7 +9,7 @@
 	<creationDate>April 2008</creationDate>
 	<authoremail>kovalikp@gmail.com</authoremail>
 	<authorurl>http://eve.webnamieru.sk</authorurl>
-	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
+	<copyright>(C) 2008 - 2009 Pavol Kovalik </copyright>
 	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
