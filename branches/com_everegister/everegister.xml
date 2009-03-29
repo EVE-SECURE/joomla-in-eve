@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0">
-	<name>EVE Custom Registration</name>
+	<name>EVE Register</name>
 	<creationDate>2008-03-27</creationDate>
 	<author>Nigel Bazzeghin</author>
 	<authorEmail>nbazzeghin@gmail.com</authorEmail>
 	<authorUrl>http://www.eve-corp.info</authorUrl>
-	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
+	<copyright>(C) 2009 Nigel Bazzeghin</copyright>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>0.1</version>
-	<description>Custom registration component to allow only copr/alliance members to join site.</description>
+	<description>Custom registration component to allow only corp/alliance members to join site.</description>
 
 	<files folder="site">
+	 <filename>controller.php</filename>
+	 <filename>everegister.php</filename>
 	 <filename>index.html</filename>
+	 <filename>models/everegister.php</filename>
+	 <filename>models/index.html</filename>
+	 <filename>views/index.html</filename>
+	 <filename>views/everegister/index.html</filename>
+	 <filename>views/everegister/view.html.php</filename>
+	 <filename>views/everegister/tmpl/default.php</filename>
+	 <filename>views/everegister/tmpl/index.html</filename>
 	</files>
 	
 	<administration>
-	<menu>EVE Register</menu>
+	<menu>EVE Custom Registration</menu>
 	
 	 <files folder="admin">
 	  <filename>index.html</filename>
+	  <filename>everegister.php</filename>
+	  <filename>models/index.html</filename>
+	  <filename>controllers/index.html</filename>
+	  <filename>views/index.html</filename>
 	 </files>  
-	
 	</administration>
+	<params>
+		<param name="everegister" default="Corp"/>
+	</params>
 </install>
