@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<params>
+		<param type="list" name="everegister" default="Corp" label="EVE Custom Registration" description="Select who should be allowed to join, corp members or alliance members.">
+			<option value="Corp">Corp</option>
+			<option value="Alliance">Alliance</option>
+		</param>
+		
+	</params>
+</config>
