@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @package    EVE Custom Registration
  * @subpackage Core
  */
-class EVERegistersModelEVERegisters extends JModel
+class EVERegistersModelEVERegisters extends EveModel
 {
     /**
     * Gets the Owner CorpID from the database

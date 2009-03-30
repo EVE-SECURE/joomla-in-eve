@@ -11,28 +11,27 @@ defined('_JEXEC') or die('Restricted access'); ?>
 	<?php echo $this->escape($this->params->get('page_title')); ?>
 </div>
 <?php endif; ?>
-<!-- 
 <h1>Vallid Corporation ID:<?php echo $this->v_corpID; ?></h1>
-<h1>Vallid Alliance ID:<?php echo $this->v_allianceID; ?></h1> -->
+<h1>Vallid Alliance ID:<?php echo $this->v_allianceID; ?></h1> 
 <h2>Registration allowed for <?php echo $this->params->get('everegister')?> members</h2>
 <div>
 <form action="<?php echo JRoute::_('index.php?option=com_everegister'); ?>" method="post">
-	<input type="hidden" name="task" value="apicheck" />
+	<input type="hidden" name="task" value="chkAPI" />
 	<table>
 		<tr>
 			<td>
-				<label for="userID"><?php echo JText::_('API User ID'); ?></label>
+				<label for="APIUser"><?php echo JText::_('API User ID'); ?></label>
 			</td>
 			<td>
-				<input name="userID" id="userID" value="" />
+				<input name="APIUser" id="userID" value="" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="apiKey"><?php echo JText::_('API Key'); ?></label>
+				<label for="APIKey"><?php echo JText::_('API Key'); ?></label>
 			</td>
 			<td>
-				<input name="apiKey" value="" />
+				<input name="APIKey" value="" />
 			</td>
 		</tr>
 	</table>

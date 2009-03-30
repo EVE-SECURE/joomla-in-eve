@@ -41,6 +41,7 @@ class EVERegistersViewEVERegisters extends JView
     	
     	$model =& $this->getModel();
         
+    	// TODO Change valid corpID and allianceID to allow multiple owner corps/alliances.
     	$ValidCoprID = $model->getOwnerCorpID();
         $ValidAllianceID = $model->getOwnerAllianceID();
         

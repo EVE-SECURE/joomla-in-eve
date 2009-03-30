@@ -38,14 +38,28 @@ class EVERegisterViewEVERegister extends JView
     {
         global $mainframe;
 		$params = &$mainframe->getParams();
-    	
+        
     	$model =& $this->getModel();
+        if(!JRequest::getInt('APIUser')){
+        	
+	    	$ValidCoprID = $model->getOwnerCorpID();
+	        $ValidAllianceID = $model->getOwnerAllianceID();
+	        
+	        $this->assignRef( 'v_corpID', $ValidCoprID );
+	        $this->assignRef( 'v_allianceID', $ValidAllianceID );
+        }
+        else {
+        	
+        	$APIUser = JRequest::getInt('APIUser');
+        	$APIKey = JRequest::getInt('APIKey');
+        	
+        	//$xml = $model->getXML($APIUser,$APIKey);
+        	//$this->assignRef('xml',$xml);
+        	
+        	$this->assignRef('APIUser',$APIUser);
+        	$this->assignRef('APIKey',$APIKey);
+        }
         
-    	$ValidCoprID = $model->getOwnerCorpID();
-        $ValidAllianceID = $model->getOwnerAllianceID();
-        
-        $this->assignRef( 'v_corpID', $ValidCoprID );
-        $this->assignRef( 'v_allianceID', $ValidAllianceID );
         $this->assignRef('params',		 $params);
  
         parent::display($tpl);

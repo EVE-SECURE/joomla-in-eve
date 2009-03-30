@@ -34,6 +34,35 @@ jimport('joomla.application.component.controller');
  */
 class EVERegisterController extends JController
 {
+    
+	function __construct($config = array()) {
+		parent::__construct($config);
+		$this->registerTask('chkAPI', 'chkAPI');
+		$this->registerTask('register', 'register');
+	}
+	/** 
+	 * Method to check for valid API Key and if user is in proper corp/alliance
+	 * @return unknown_type
+	 */
+	function chkAPI() {
+		$model = $this->getModel('EVERegister');
+		if ($model->chkAPI($_POST)) {
+			//$this->setRedirect(JRoute::_('index.php?option=com_everegister&view=everegister&layout=chkapi_success', false));
+			JRequest::setVar( 'view', 'everegister' );
+			JRequest::setVar( 'layout', 'chkapi_success'  );
+			parent::display();
+			
+		} else {
+			$this->setRedirect(JRoute::_('index.php?option=com_everegister&view=everegister&layout=chkapi_failure', false));
+		}
+		
+	}
+	function register() {
+		$model = $this->getModel('EVERegister');
+		JRequest::setVar( 'view', 'everegister' );
+		JRequest::setVar( 'layout', 'register'  );
+		parent::display();
+	}
     /**
      * Method to display the view
      *
@@ -43,5 +72,5 @@ class EVERegisterController extends JController
     {
         parent::display();
     }
- 
+
 }
