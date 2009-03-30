@@ -32,7 +32,7 @@ jimport('joomla.application.component.model');
  * @package    EVE Custom Registration
  * @subpackage Core
  */
-class EVERegisterModelEVERegister extends JModel
+class EVERegisterModelEVERegister extends EveModel
 {
     /**
     * Gets the Owner CorpID from the database
@@ -63,6 +63,35 @@ class EVERegisterModelEVERegister extends JModel
         
         return $allianceID;
         
+    }
+    /**
+     * Processes API Form to see if account is allowed to register
+     * @param $hash ($_POST)
+     * @return boolean 
+     */
+    function chkAPI($hash) {
+    	// TODO Get corp/alliance ID's that are allowed to register and check against chars from API data.
+    	$APIUser = JArrayHelper::getValue($hash, 'APIUser', '', 'int');
+		$APIKey = JArrayHelper::getValue($hash, 'APIKey', '', 'string');
+		if (!preg_match('/[a-zA-Z0-9]{64}/', $APIKey)) {
+			JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
+			return false;
+		}
+		
+		// TODO Check ALE Cache vice hiting API server every time
+		//$ale = $this->getAleEVEOnline();
+		//$ale->setCredentials($APIUser, $APIKey);
+		//$xml = $ale->account->Characters();
+		
+		return true;
+    }
+    function getXML($APIUser, $APIKey){
+    	 
+    	$ale = $this->getAleEVEOnline();
+		$ale->setCredentials($APIUser, $APIKey);
+		$xml = $ale->account->Characters();
+		return $xml;
+		
     }
 	
 }

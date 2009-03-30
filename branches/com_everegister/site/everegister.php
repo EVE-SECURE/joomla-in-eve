@@ -1,4 +1,5 @@
 <?php
+// FIXME Update install xml file
 /**
  * @version		$Id$
  * @author		Nigel Bazzeghin
