@@ -21,6 +21,9 @@
 	 <filename>views/everegister/index.html</filename>
 	 <filename>views/everegister/view.html.php</filename>
 	 <filename>views/everegister/tmpl/default.php</filename>
+	 <filename>views/everegister/tmpl/chkapi_failure.php</filename>
+	 <filename>views/everegister/tmpl/chkapi_success.php</filename>
+	 <filename>views/everegister/tmpl/register.php</filename>
 	 <filename>views/everegister/tmpl/index.html</filename>
 	</files>
 	
@@ -30,6 +33,8 @@
 	 <files folder="admin">
 	  <filename>index.html</filename>
 	  <filename>everegister.php</filename>
+	  <filename>controller.php</filename>
+	  <filename>config.xml</filename>
 	  <filename>models/index.html</filename>
 	  <filename>controllers/index.html</filename>
 	  <filename>views/index.html</filename>
