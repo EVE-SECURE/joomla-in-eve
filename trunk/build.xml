@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Joomla! in EVE" default="copy_all" basedir=".">
+	<property file="joomla-in-eve.properties" />
+	
+	<fileset dir="${project.basedir}/com_eve/site" id="site.com_eve">
+		<include name="*"/>
+	</fileset>
+	
+	<target name="copy_cron">
+		<!-- copy cron -->
+		<copy todir="${testdir}/cron">
+			<fileset dir="${project.basedir}/cron">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="copy_component">
+		
+		<!-- copy compnent site -->
+		<copy todir="${testdir}/components/${component.name}">
+			<fileset dir="${project.basedir}/${component.name}/site">
+				<exclude name="languages/*" />
+				<exclude name="languages" />
+				<include name="**"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy compnent admin -->
+		<copy todir="${testdir}/administrator/components/${component.name}">
+			<fileset dir="${project.basedir}/${component.name}/admin">
+				<exclude name="languages/*" />
+				<exclude name="languages" />
+				<include name="**"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy component site languages -->
+		<copy todir="${testdir}/language/en-GB" overwrite="true">
+			<fileset dir="${project.basedir}/${component.name}/site/languages">
+				<include name="en-GB.*.ini"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy component site languages -->
+		<copy todir="${testdir}/administrator/language/en-GB" overwrite="true">
+			<fileset dir="${project.basedir}/${component.name}/admin/languages">
+				<include name="en-GB.*.ini"/>
+			</fileset>
+		</copy>
+		
+		<!-- copy plugins -->
+		<property name="component.plugins" value="false" override="true" />
+		<available file="${project.basedir}/${component.name}/plugins" type="dir" property="component.plugins"/>
+		<if>
+			<equals arg1="${component.plugins}" arg2="true" />
+			<then>
+				<!-- language files -->
+				<copy todir="${testdir}/administrator/language/en-GB" overwrite="true">
+					<mapper type="flatten" />
+					<fileset dir="${project.basedir}/${component.name}/plugins/">
+						<include name="**/en-GB.*.ini"/>
+					</fileset>
+				</copy>
+
+				<!-- other files -->
+				<copy todir="${testdir}/plugins" overwrite="true">
+					<mapper type="regexp" from="([a-z]+)_[a-z]+(.*)" to="\1\2"/>
+					<fileset dir="${project.basedir}/${component.name}/plugins/">
+						<exclude name="**/en-GB.*.ini"/>
+						<include name="**"/>
+					</fileset>
+				</copy>
+				
+			</then>
+			<else>
+				<echo message="No plugins for ${component.name}" />
+			</else>
+		</if>
+		
+	</target>
+	
+	<target name="copy_all">
+		<phingcall target="copy_cron" />
+		<foreach list="${components}" param="component.name" target="copy_component" />
+		
+	</target>
+	
+</project>

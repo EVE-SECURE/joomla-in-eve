@@ -22,13 +22,22 @@
  
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
+jimport('joomla.plugin.plugin');
 
-JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
-//JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'html');
-//JLoader::register('AleFactory', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'ale'.DS.'factory.php');
-JLoader::register('EveFactory', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'factory.php');
-JLoader::register('EveTable', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'table.php');
-JLoader::register('EveModel', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'model.php');
-JLoader::register('JQuery', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'query.php');
-
-require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'igb.php';
+/**
+ * Joomla! in EVE Api core plugin
+ *
+ * @author		Pavol Kovalik  <kovalikp@gmail.com>
+ * @package		Joomla! in EVE		
+ * @subpackage	Core
+ */
+class plgCronEve extends JPlugin {
+	function __construct($subject, $config = array()) {
+		parent::__construct($subject, $config);
+	}
+	
+	public function onCronTick() {
+		
+	}
+	
+}
