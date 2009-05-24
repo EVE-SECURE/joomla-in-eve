@@ -19,6 +19,11 @@
 		</languages>
 	</administration>
 	<params>
+		<param name="run_scheduler" type="radio" default="1" label="PARAM_RUN_SCHEDULER" description="DESC_RUN_SCHEDULER">
+			<option value="0">DISABLE</option>
+			<option value="1">CLI_ONLY</option>
+			<option value="2">ALWAYS</option>			
+		</param>
 		<param name="igb_template" type="text" default="eve_igb" label="PARAM_IGB_TEMPLATE" description="DESC_IGB_TEMPLATE" />
 		<param name="trustme" type="text" label="PARAM_IGB_TRUSTME_MESSAGE" description="DESC_IGB_TRUSTME_MESSAGE" 
 			default="Add this site to your trusted sites to allow more advanced features.">

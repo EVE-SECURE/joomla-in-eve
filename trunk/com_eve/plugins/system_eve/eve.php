@@ -35,10 +35,11 @@ class  plgSystemEVE extends JPlugin {
 
 	function onAfterInitialise() {
 		global $mainframe;
+		require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'loader.php';
+		
 		if( $mainframe->isAdmin()) {
 		 	return;
 		}
-		require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'loader.php';
 		
 		if (!EveHelperIgb::isIgb()) {
 			return;
@@ -57,5 +58,6 @@ class  plgSystemEVE extends JPlugin {
 		}
 		
 	}
+	
 
 }

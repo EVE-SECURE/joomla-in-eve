@@ -89,7 +89,7 @@ class EveModel extends JModel {
 	 * @param bool $store
 	 */
 	function updateApiStatus($account, $errorCode, $store = false) {
-		
+		//TODO: move logic to helper beacause plugins uses it too
 		switch ($errorCode) {
 			case 200:
 				$account->apiStatus = 'Limited';

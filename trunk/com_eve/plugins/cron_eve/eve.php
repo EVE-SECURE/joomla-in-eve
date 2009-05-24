@@ -36,8 +36,77 @@ class plgCronEve extends JPlugin {
 		parent::__construct($subject, $config);
 	}
 	
-	public function onCronTick() {
+	function onCronTick() {
+		//
+		$dbo = JFactory::getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_schedule', 'sc');
+		$q->addJoin('#__eve_apicalls', 'ap', 'ap.id=sc.apicall');
+		$q->addWhere('next <= NOW()');
+		$q->addWhere('published');
+		$q->addQuery('ap.*', 'sc.*');
+		$list = $q->loadObjectList();
 		
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		//$ale = new AleEVEOnline();
+		$ale = EveFactory::getAleEVEOnline($dbo);
+		
+		$this_tz = new DateTimeZone(date_default_timezone_get());
+		$utc_tz = new DateTimeZone('UTC');
+		//JDate::toMySQL()
+		
+		foreach ($list as $row) {
+			if ($row->authentication != 'None') {
+				$account = EveFactory::getInstance('account', $row->userID);
+				if ($row->authorization == 'Limited' && ($account->apiStatus != 'Limited' && $account->apiStatus != 'Full')) {
+					continue;
+				}
+				if ($row->authorization == 'Full' && $account->apiStatus != 'Full') {
+					continue;
+				}
+			}
+			$ale->setCredentials($account->userID, $account->apiKey);
+			if ($row->authentication == 'Character') {
+				$ale->setCharacterID($row->characterID);
+			} else {
+				$ale->setCharacterID(null);
+			}
+			$type = $row->type;
+			$call = $row->call;
+			try {
+				$xml = $ale->$type->$call();
+				$dispatcher->trigger($type.$call,  
+					array($xml, $ale->isFromCache(), array('userID' => $row->userID, 'characterID' => $row->characterID)));
+				$next = new DateTime((string) $xml->cachedUntil, $utc_tz);
+				$next->modify('+'.$row->delay.' minutes');
+				$next->setTimezone($this_tz);
+				$schedule = EveFactory::getInstance('schedule', $row->id);
+				$schedule->next = $next->format('Y-m-d H:i:s');
+				$schedule->store();
+			}
+			//TODO: update cacheUntil on error
+			catch (AleExceptionEVEAuthentication $e) {
+				//FIXME: use helper when available
+				EveModel::updateApiStatus($account, $e->getCode());
+				switch ($account->apiStatus) {
+					case 'Limited':
+						JError::raiseNotice(0, JText::_('API key offers limited access'));
+						break;
+					case 'Invalid':
+						JError::raiseWarning(0, JText::_('API key is invalid'));
+						break;
+					case 'Inactive':
+						JError::raiseWarning(0, JText::_('Account is inactive'));
+						break;
+				}
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (Exception $e) {
+				JError::raiseError($e->getCode(), $e->getMessage());
+			}	
+		}
 	}
-	
 }

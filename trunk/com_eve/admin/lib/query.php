@@ -279,6 +279,35 @@ class JQuery extends JObject {
 		return $this->dbo->loadResultArray($numinarray);
 	}
 	
+	/**
+	* Fetch a result row as an associative array
+	*
+	* @access	public
+	* @return array
+	*/
+	function loadAssoc() {
+		$this->dbo->setQuery($this->prepare());
+		return $this->dbo->loadAssoc();
+	}
+
+	/**
+	* Load a assoc list of database rows
+	*
+	* @access	public
+	* @param string The field name of a primary key
+	* @return array If <var>key</var> is empty as sequential list of returned records.
+	*/
+	function loadAssocList($key='') {
+		$this->dbo->setQuery($this->prepare());
+		return $this->dbo->loadAssocList($key);
+	}
+	
+	
+	function loadObject() {
+		$this->dbo->setQuery($this->prepare());
+		return $this->dbo->loadObject();
+	}
+	
 	function loadObjectList($key = '') {
 		$this->dbo->setQuery($this->prepare());
 		return $this->dbo->loadObjectList($key);

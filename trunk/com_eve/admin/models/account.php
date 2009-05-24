@@ -91,8 +91,11 @@ class EveModelAccount extends EveModel {
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
+			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
+			
 		}
 		
+			
 		if (!$account->check()) {
 			return JError::raiseWarning( 500, $account->getError() );
 		}	

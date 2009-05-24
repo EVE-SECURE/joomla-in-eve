@@ -23,45 +23,39 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableCorporation extends EveTable {
-	//information sent by eve client
-	/** @var int */
-	var $corporationID		= null;
-	/** @var int */
-	var $corporationName	= null;
-	/** @var string */
-	var $ticker				= null;
-	/** @var int */
-	var $ceoID 				= null;
-	/** @var int */
-	var $stationID			= null;
-	/** @var string */
-	var $description		= null;
-	/** @var string */
-	var $url				= null;
-	/** @var float */
-	var $taxRate			= null;
-	/** @var int */
-	var $memberCount		= null;
-	/** @var int */
-	var $memberLimit		= null;
-	/** @var int */
-	var $shares				= null;
-	/** @var int */
-	var $allianceID			= null;
-	
-	/** @var int */
-	var $standings		= null;
-	var $owner			= null;
-	
-	
+jimport('joomla.application.component.model');
 
-	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$dbo )
-	{
-		parent::__construct( '#__eve_corporations', 'corporationID', $dbo );
+class EveModelSchedule extends EveModel {
+	
+	function __construct($config = array()) {
+		$config['table_path'] = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables';
+		parent::__construct($config);
 	}
+	
+	function setEnabled($cid, $enabled) {
+		JRequest::checkToken() or jexit( 'Invalid Token' );
 
+		// Initialize variables
+		$dbo = $this->getDBO();
+
+		if (empty($cid)) {
+			JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			return false;
+		}
+
+		JArrayHelper::toInteger( $cid );
+		$cids = implode( ',', $cid );
+
+		$query = 'UPDATE #__eve_schedule'
+		. ' SET published = ' . (int) $enabled
+		. ' WHERE id IN ( '. $cids.'  )';
+		$dbo->setQuery( $query );
+		if (!$dbo->query()) {
+			JError::raiseWarning( 500, $dbo->getError() );
+			return false;
+		}
+		return true;
+	}
+	
+		
 }

@@ -52,5 +52,3 @@ class TableAlliance extends EveTable {
 	}
 	
 }
-
-?>

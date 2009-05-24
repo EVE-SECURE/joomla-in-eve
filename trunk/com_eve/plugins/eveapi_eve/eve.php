@@ -36,7 +36,58 @@ class plgEveapiEve extends JPlugin {
 		parent::__construct($subject, $config);
 	}
 	
+	public function onRegisterAccount($userID, $apiStatus) {
+		$schedule = JTable::getInstance('schedule', 'Table');
+		$schedule->loadExtra('account', 'Characters', $userID);
+		if (!$schedule->id && $schedule->apicall) {
+			$now = JFactory::getDate();
+			$schedule->next = $now->toMySQL();
+			$schedule->store();
+		}
+		$query = null;
+		$dbo = JFactory::getDBO();
+		switch ($apiStatus) {
+			case 'Inactive':
+				break;
+			case 'Invalid':
+				$query = 'UPDATE #__eve_schedule AS sc SET sc.published=0 WHERE userID='.intval($userID);
+				break;
+			case 'Limited':
+				$query = 'UPDATE #__eve_schedule AS sc LEFT JOIN #__eve_apicalls AS ap ON ch.apicall=sc.id 
+					SET sc.published=IF(ap.authorization=\'Full\', 0, 1) WHERE userID='.intval($userID);
+				break;
+			case 'Full':
+				$query = 'UPDATE #__eve_schedule AS sc SET sc.published=1 WHERE userID='.intval($userID);
+				break;
+		}
+		if ($query) {
+			$dbo->Execute($query);
+		}
+	}
+	
+	public function onRegisterCharacter($userID, $characterID, $director = false) {
+		$schedule = JTable::getInstance('schedule', 'Table');
+		$schedule->loadExtra('char', 'CharacterSheet', $userID, $characterID);
+		if (!$schedule->id && $schedule->apicall) {
+			$now = JFactory::getDate();
+			$schedule->next = $now->toMySQL();
+			$schedule->store();
+		}
+		if (!$director) {
+			return;
+		}
+		$schedule = JTable::getInstance('Schedule');
+		$schedule->loadExtra('corp', 'CorporationSheet', $userID, $characterID);
+		if (!$schedule->id && $schedule->apicall) {
+			$now = JFactory::getDate();
+			$schedule->next = $now->toMySQL();
+			$schedule->store();
+		}
+	}
+	
 	public function accountCharacters($xml, $fromCache, $options = array()) {
+		//JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
 		$dbo = JFactory::getDBO();
 		$userID = JArrayHelper::getValue($options, 'userID', null, 'int');
 		$sql = 'UPDATE #__eve_characters SET userID=0 WHERE userID='.$userID;
@@ -45,6 +96,8 @@ class plgEveapiEve extends JPlugin {
 			$character = EveFactory::getInstance('Character', $characterID);
 			$character->userID = $userID;
 			$character->save($array);
+			
+			$dispatcher->trigger('onRegisterCharacter', array($userID, $characterID));
 			
 			$corporation = EveFactory::getInstance('Corporation', $array['corporationID']);
 			if (!$corporation->isLoaded()) {
@@ -65,15 +118,6 @@ class plgEveapiEve extends JPlugin {
 		$corporation->save($sheet);
 	}
 	
-	public function corpMemberTracking($xml, $fromCache, $options = array()) {
-		foreach ($xml->result->members as $characterID => $member) {
-			$sheet = $member->toArray();
-			$sheet['corporationID'] = $options['corporationID'];
-			$character = EveFactory::getInstance('Character', $characterID);
-			$character->save($sheet);
-		}
-	}
-	
 	public function eveAlianceList($xml, $fromCache, $options = array()) {
 		if ($fromCache) {
 			return;
@@ -85,5 +129,4 @@ class plgEveapiEve extends JPlugin {
 		}
 	}
 	
-
 }
