@@ -41,9 +41,6 @@ class EveViewAccount_Index extends JView {
 		JToolBarHelper::editList();
 		JToolBarHelper::deleteList();
 		
-		JToolBarHelper::spacer();
-		JToolBarHelper::preferences('com_eve', 480, 640);
-		
 		$context = 'com_eve.accounts.index.';
 		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',		'c.name',	'cmd' );
 		$filter_order_dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',				'word' );

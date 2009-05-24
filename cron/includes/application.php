@@ -46,6 +46,7 @@ class JCron extends JApplication
 	 *
 	 */
 	function render() {
+		//TODO: make better templating for debug
 		$template = file_get_contents(JPATH_CRON.DS.'html'.DS.'render.html');
 		JResponse::setBody($template);
 	}

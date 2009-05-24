@@ -103,6 +103,8 @@ class EveModelApiform  extends EveModel {
 			$account->apiKey = $apiKey;
 			$account->store();
 			
+			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
+			
 			if ($account->owner > 0 && $account->owner != $user->id) {
 				JError::raiseWarning('SOME_ERROR_CODE', JText::_("ACCOUNT ALREADY ASSIGNED TO ANOTHER OWNER"));
 				return false;

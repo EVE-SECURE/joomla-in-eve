@@ -41,6 +41,9 @@ class EveFactory {
 			$dbo = JFactory::getDBO();
 		}
 		if (!isset($instance)) {
+			if (!class_exists('JComponentHelper')) {
+				jimport( 'joomla.application.component.helper');
+			}
 			$params = &JComponentHelper::getParams('com_eve');
 			
 			require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'ale'.DS.'factory.php';

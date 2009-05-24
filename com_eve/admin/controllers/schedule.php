@@ -19,49 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableCorporation extends EveTable {
-	//information sent by eve client
-	/** @var int */
-	var $corporationID		= null;
-	/** @var int */
-	var $corporationName	= null;
-	/** @var string */
-	var $ticker				= null;
-	/** @var int */
-	var $ceoID 				= null;
-	/** @var int */
-	var $stationID			= null;
-	/** @var string */
-	var $description		= null;
-	/** @var string */
-	var $url				= null;
-	/** @var float */
-	var $taxRate			= null;
-	/** @var int */
-	var $memberCount		= null;
-	/** @var int */
-	var $memberLimit		= null;
-	/** @var int */
-	var $shares				= null;
-	/** @var int */
-	var $allianceID			= null;
+class EveControllerSchedule extends EveController {
 	
-	/** @var int */
-	var $standings		= null;
-	var $owner			= null;
-	
-	
-
-	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$dbo )
+	function __construct( $config = array() )
 	{
-		parent::__construct( '#__eve_corporations', 'corporationID', $dbo );
+		//$config['name'] = 'char';
+		parent::__construct( $config );
+		
+		$this->registerTask('unpublish', 'publish');
 	}
-
+	
+	function publish() {
+		JRequest::checkToken() or jexit('Invalid Token');
+		$cid		= JRequest::getVar( 'cid', array(), 'post', 'array' );
+		$task		= JRequest::getCmd( 'task' );
+		$enable		= ($task == 'publish');
+		$model		= $this->getModel('Schedule');
+		$result 	= $model->setEnabled($cid, $enable);
+		if ($result) {
+			$n = count( $cid );
+			$this->setMessage( JText::sprintf( $enable ? 'Items enabled' : 'Items disabled', $n ) );
+		}
+		$url = 'index.php?option=com_eve&control=schedule';
+		$this->setRedirect(JRoute::_($url, false));
+	}
+	
 }

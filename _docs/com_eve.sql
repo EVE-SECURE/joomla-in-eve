@@ -74,6 +74,30 @@ CREATE TABLE IF NOT EXISTS `jos_eve_alliances` (
   PRIMARY KEY (`allianceID`)
 ) CHARSET=utf8;
 
+DROP TABLE IF EXISTS `jos_eve_apicalls`;
+CREATE TABLE IF NOT EXISTS `jos_eve_apicalls` (
+  `id` int(11) NOT NULL auto_increment,
+  `type` varchar(15) NOT NULL,
+  `call` varchar(15) NOT NULL,
+  `authentication` enum('None','User','Character') NOT NULL default 'None',
+  `authorization` enum('None','Limited','Full') NOT NULL default 'None',
+  `pagination` varchar(20) default NULL,
+  `delay` int(11) NOT NULL default '0',
+  `params` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `jos_eve_schedule`;
+CREATE TABLE IF NOT EXISTS `jos_eve_schedule` (
+  `id` int(11) NOT NULL auto_increment,
+  `apicall` int(11) NOT NULL,
+  `userID` int(11) default NULL,
+  `characterID` int(11) default NULL,
+  `next` datetime NOT NULL,
+  `published` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 
 DELETE FROM `jos_components` WHERE `option` = 'com_eve';
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
@@ -84,4 +108,11 @@ INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_li
 ('Characters', '', 0, @lastid, 'option=com_eve&control=char', 'Characters', 'com_eve', 0, 'components/com_eve/assets/icon-char-16.png', 0, '', 1),
 ('Corporations', '', 0, @lastid, 'option=com_eve&control=corp', 'Corporations', 'com_eve', 1, 'components/com_eve/assets/icon-corp-16.png', 0, '', 1),
 ('Alliances', '', 0, @lastid, 'option=com_eve&control=alliance', 'Alliances', 'com_eve', 2, 'components/com_eve/assets/icon-alliance-16.png', 0, '', 1),
-('Account', '', 0, @lastid, 'option=com_eve&control=account', 'Account', 'com_eve', 3, 'components/com_eve/assets/icon-account-16.png', 0, '', 1);
+('Accounts', '', 0, @lastid, 'option=com_eve&control=account', 'Accounts', 'com_eve', 3, 'components/com_eve/assets/icon-account-16.png', 0, '', 1),
+('Schedule', '', 0, @lastid, 'option=com_eve&control=schedule', 'Accounts', 'com_eve', 4, 'components/com_eve/assets/icon-schedule-16.png', 0, '', 1);
+
+
+INSERT INTO `jos_eve_apicalls` (`id`, `type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES
+(1, 'account', 'Characters', 'User', 'Limited', NULL, 1440, ''),
+(2, 'char', 'CharacterSheet', 'Character', 'Limited', NULL, 1440, '');
+
