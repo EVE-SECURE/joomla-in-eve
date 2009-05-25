@@ -64,7 +64,19 @@ class EvecharsheetModelSheet extends EveModel {
 		return $q->loadObjectList();
 	}
 	
+	function getQueue($characterID) {
+		$q = $this->getQuery();
+		$q->addTable('#__eve_skillqueue', 'sq');
+		$q->addJoin('invTypes', 'it', 'it.typeID=sq.typeID');
+		$q->addWhere("characterID='%s'", $characterID);
+		$q->addOrder('queuePosition', 'ASC');
+		$queue =  $q->loadObjectList();
+		
+		return $queue;
+	}
+	
 	function getGroups($characterID) {
+		
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
 		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID');

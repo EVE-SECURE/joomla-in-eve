@@ -76,7 +76,7 @@ class EveControllerCorp extends EveController {
 
 		$model = & $this->getModel('Corp');
 		$model->store();
-				
+		
 		$task = $this->getTask();
 		
 		switch ($task)

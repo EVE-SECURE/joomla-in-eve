@@ -37,11 +37,11 @@ class plgEveapiEve extends JPlugin {
 	}
 	
 	public function onRegisterAccount($userID, $apiStatus) {
-		$schedule = JTable::getInstance('schedule', 'Table');
+		$schedule = JTable::getInstance('Schedule', 'Table');
 		$schedule->loadExtra('account', 'Characters', $userID);
 		if (!$schedule->id && $schedule->apicall) {
-			$now = JFactory::getDate();
-			$schedule->next = $now->toMySQL();
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
 		}
 		$query = null;
@@ -65,23 +65,34 @@ class plgEveapiEve extends JPlugin {
 		}
 	}
 	
-	public function onRegisterCharacter($userID, $characterID, $director = false) {
-		$schedule = JTable::getInstance('schedule', 'Table');
+	public function onRegisterCharacter($userID, $characterID) {
+		//TODO: superclass this
+		$next = new DateTime();
+		$schedule = JTable::getInstance('Schedule', 'Table');
 		$schedule->loadExtra('char', 'CharacterSheet', $userID, $characterID);
 		if (!$schedule->id && $schedule->apicall) {
-			$now = JFactory::getDate();
-			$schedule->next = $now->toMySQL();
+			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
 		}
-		if (!$director) {
-			return;
-		}
-		$schedule = JTable::getInstance('Schedule');
-		$schedule->loadExtra('corp', 'CorporationSheet', $userID, $characterID);
+		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule->loadExtra('char', 'SkillQueue', $userID, $characterID);
 		if (!$schedule->id && $schedule->apicall) {
-			$now = JFactory::getDate();
-			$schedule->next = $now->toMySQL();
+			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
+		}
+	}
+	
+	public function onSetOwnerCorporation($userID, $characterID, $owner) {
+		//TODO: superclass EveapiPlugin
+		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule->loadExtra('corp', 'CorporationSheet', $userID, $characterID);
+		if ($owner && !$schedule->id && $schedule->apicall) {
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
+		if (!$owner && $schedule->id) {
+			$schedule->delete();
 		}
 	}
 	
