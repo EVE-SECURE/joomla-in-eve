@@ -38,6 +38,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 	}
 	
 	public function charCharacterSheet($xml, $fromCache, $options = array()) {
+		//TODO: update(starTime) and delete(endTime) skills in skillquee queue 
 		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
 		$values = '';
 		foreach ($xml->result->skills as $skill) {
@@ -58,11 +59,28 @@ class plgEveapiEvecharsheet extends JPlugin {
 		$dbo->Execute($sql);
 	}
 	
-	public function charSkillInTraining($xml, $fromCache, $options = array()) {
-		 
-	}
-	
 	public function charSkillQueue($xml, $fromCache, $options = array()) {
+		//TODO: update skills
+		$dbo = JFactory::getDBO();
+		
+		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
+		$values = '';
+		foreach ($xml->result->skillqueue as $skill) {
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("('%s', '%s', '%s', '%s', '%s', '%s', %s, %s)", $characterID, 
+				intval($skill->queuePosition), intval($skill->typeID), intval($skill->level), 
+				intval($skill->startSP), intval($skill->endSP), $dbo->Quote($skill->startTime), $dbo->Quote($skill->endTime));
+		}
+		
+		if (!$values) {
+			return;
+		}
+		
+		$sql = 'INSERT INTO #__eve_skillqueue (characterID, queuePosition, typeID, level, startSP, endSP, startTime, endTime) VALUES '.$values;
+		$dbo->Execute('DELETE FROM #__eve_skillqueue WHERE characterID = '. $characterID);
+		$dbo->Execute($sql);
 		
 	}
 	

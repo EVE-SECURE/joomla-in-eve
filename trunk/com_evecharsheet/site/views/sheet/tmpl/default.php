@@ -44,6 +44,31 @@ defined('_JEXEC') or die();
 </div>
 
 <div>
+	<h3><?php echo JText::_('Skill Queue'); ?></h3>
+	<table>
+	<?php foreach ($this->queue as $skill): ?>
+		<tr>
+			<td>
+				<?php echo $skill->queuePosition + 1; ?>
+			</td>
+			<td class="skill-label" title="<?php echo $skill->description; ?>" >
+				<?php echo $skill->typeName; ?>
+			</td>
+			<td class="skill-level">
+				<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
+			</td>
+			<td>
+				<?php echo $skill->startTime; ?>
+			</td>
+			<td>
+				<?php echo $skill->endTime; ?>
+			</td>
+		</tr>
+	<?php endforeach; ?>
+	</table>
+</div>
+
+<div>
 <?php foreach ($this->groups as $group): ?>
 	<h3>
 	<?php echo $group->groupName; ?>

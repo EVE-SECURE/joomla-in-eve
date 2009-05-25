@@ -40,6 +40,8 @@ class EveModelAlliance extends EveModel {
 		global $mainframe;
 		$alliance = $this->getAlliance(JRequest::getInt('allianceID'));
 		$post = JRequest::get('post');
+		$ownerPast = $alliance->owner;
+		
 		if (!$alliance->bind( $post )) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
@@ -51,6 +53,25 @@ class EveModelAlliance extends EveModel {
 		if (!$alliance->store()) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
+		$ownerNow = $alliance->owner;
+		if ($ownerNow != $ownerPast) {
+			$q = $this->getQuery();
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+			$q->addWhere('co.owner = 0');
+			$q->addWhere('co.allianceID=%s', intval($alliance->allianceID));
+			$q->addQuery('ch.characterID', 'ch.userID');
+			$ceos = $q->loadObjectList();
+			
+			JPluginHelper::importPlugin('eveapi');
+			foreach ($ceos as $ceo) {
+				if ($ceo->userID && $ceo->characterID) {
+					$dispatcher =& JDispatcher::getInstance();
+					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
+				}
+			}
+		}
+		
 		$mainframe->enqueueMessage(JText::_('ALLIANCE STORED'));
 		
 	}

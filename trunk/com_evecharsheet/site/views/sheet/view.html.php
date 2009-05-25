@@ -55,6 +55,7 @@ class EvecharsheetViewSheet extends JView {
 		$corporation = $model->getCorporation($character->corporationID);
 		
 		$groups = $model->getGroups($characterID);
+		$queue = $model->getQueue($characterID);
 		$show_owner = $params->get('show_owner');
 		$show_all = $params->get('show_all');
 		$this->assign('show_owner', $show_owner);
@@ -68,6 +69,7 @@ class EvecharsheetViewSheet extends JView {
 		$this->assignRef('character', $character);
 		$this->assignRef('corporation', $corporation);
 		$this->assignRef('groups', $groups);
+		$this->assignRef('queue', $queue);
 		
 		parent::display($tmpl);
 	}

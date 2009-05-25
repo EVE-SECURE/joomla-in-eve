@@ -47,6 +47,7 @@ class EveModelCorp extends EveModel {
 		
 		$corporation = $this->getCorporation(JRequest::getInt('corporationID'));
 		$post = JRequest::get('post');
+		$ownerPast = $corporation->owner;
 		
 		if (!$corporation->bind( $post )) {
 			return JError::raiseWarning( 500, $corporation->getError() );
@@ -62,6 +63,26 @@ class EveModelCorp extends EveModel {
 		
 		if (!$corporation->store(true)) {
 			return JError::raiseWarning( 500, $corporation->getError() );
+		}
+		
+		$ownerNow = $corporation->owner; 
+		if ($ownerNow != $ownerPast) {
+			$q = $this->getQuery();
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addWhere('(al.owner = 0 OR al.owner IS NULL)');
+			$q->addWhere('co.corporationID=%s', intval($corporation->corporationID));
+			$q->addQuery('ch.characterID', 'ch.userID');
+			$ceos = $q->loadObjectList();
+			
+			JPluginHelper::importPlugin('eveapi');
+			foreach ($ceos as $ceo) {
+				if ($ceo->userID && $ceo->characterID) {
+					$dispatcher =& JDispatcher::getInstance();
+					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
+				}
+			}
 		}
 		
 		$mainframe->enqueueMessage(JText::_('CORPORATION STORED'));

@@ -37,25 +37,45 @@ class plgEveapiEvechartracking extends JPlugin {
 	}
 	
 	
-	public function onRegisterCharacter($userID, $chracterID, $director = false) {
-		if (!$director) {
-			return;
-		}
-		$schedule = JTable::getInstance('Schedule');
+	public function onSetOwnerCorporation($userID, $characterID, $owner) {
+		//TODO: superclass EveapiPlugin
+		$schedule = JTable::getInstance('Schedule', 'Table');
 		$schedule->loadExtra('corp', 'MemberTracking', $userID, $characterID);
-		if (!$schedule->id && $schedule->apicall) {
-			$now = JFactory::getDate();
-			$schedule->next = $now->toMySQL();
+		if ($owner && !$schedule->id && $schedule->apicall) {
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
+		}
+		if (!$owner && $schedule->id) {
+			$schedule->delete();
 		}
 	}
 	
 	public function corpMemberTracking($xml, $fromCache, $options = array()) {
+		if (!isset($options['corporationID'])) {
+			$characterID = JArrayHelper::getValue($options, 'characterID');
+			$character = EveFactory::getInstance('Character', $characterID);
+			$corporationID = $character->corporationID;
+		} else {
+			$corporationID = $options['corporationID'];
+		}
+		if (!$corporationID) {
+			//TODO: some reasonable error?
+			return;
+		}
+		$memberIDs = array();
 		foreach ($xml->result->members as $characterID => $member) {
 			$sheet = $member->toArray();
-			$sheet['corporationID'] = $options['corporationID'];
+			$sheet['corporationID'] = $corporationID;
 			$character = EveFactory::getInstance('Character', $characterID);
 			$character->save($sheet);
+			$memberIDs[] = $characterID;
+		}
+		if (!empty($memberIDs)) {
+			$sql = sprintf('UPDATE #__eve_characters SET corporationID=0 WHERE corporationID=%s AND characterID NOT IN(%s)', 
+				intval($corporationID), implode(', ', $memberIDs));
+			$dbo = JFactory::getDBO();
+			$dbo->Execute($sql);
 		}
 	}
 	
