@@ -53,7 +53,7 @@ class plgEveapiEve extends JPlugin {
 				$query = 'UPDATE #__eve_schedule AS sc SET sc.published=0 WHERE userID='.intval($userID);
 				break;
 			case 'Limited':
-				$query = 'UPDATE #__eve_schedule AS sc LEFT JOIN #__eve_apicalls AS ap ON ch.apicall=sc.id 
+				$query = 'UPDATE #__eve_schedule AS sc LEFT JOIN #__eve_apicalls AS ap ON sc.apicall=ap.id 
 					SET sc.published=IF(ap.authorization=\'Full\', 0, 1) WHERE userID='.intval($userID);
 				break;
 			case 'Full':

@@ -32,6 +32,12 @@ class EveModelAccount extends EveModel {
 		parent::__construct($config);
 	}
 	
+	/**
+	 * Get instance of TableAccount
+	 *
+	 * @param int $id
+	 * @return TableAccount
+	 */
 	function getAccount($id = null) {
 		return $this->getInstance('Account', $id);
 	}
@@ -44,10 +50,16 @@ class EveModelAccount extends EveModel {
 		global $mainframe;
 		
 		$account = $this->getAccount(JRequest::getInt('userID'));
+		$apiKeyPast = $account->apiKey;
 		$post = JRequest::get('post');
 		
 		if (!$account->bind( $post )) {
 			return JError::raiseWarning( 500, $account->getError() );
+		}
+		
+		$apiKeyNow = $account->apiKey;
+		if ($apiKeyPast != $apiKeyNow) {
+			$account->apiStatus = 'Unknown';
 		}
 		
 		//check status of apiKey
@@ -95,7 +107,6 @@ class EveModelAccount extends EveModel {
 			
 		}
 		
-			
 		if (!$account->check()) {
 			return JError::raiseWarning( 500, $account->getError() );
 		}	

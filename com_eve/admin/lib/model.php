@@ -64,7 +64,6 @@ class EveModel extends JModel {
 			}
 		}
 		return $result;
-		
 	}
 	
 	/**

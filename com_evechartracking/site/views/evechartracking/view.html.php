@@ -29,6 +29,7 @@ class EvechartrackingViewEvechartracking extends JView {
 	function display() {
 		global $mainframe;
 		
+		$breadcrumbs = $mainframe->getPathWay();
 		$params = &$mainframe->getParams();
 		
 		$user = JFactory::getUser();
@@ -44,6 +45,7 @@ class EvechartrackingViewEvechartracking extends JView {
 		$defaultColums = $model->getColumns(true);
 		if ($layout == 'corp') {
 			$corporationID = $mainframe->getUserStateFromRequest( $context.'corporationID', 'corporationID', 0, 'int' );
+			
 			if (JRequest::getInt('reset') && is_null(JRequest::getVar('selectedColumns'))) {
 				$mainframe->setUserState($context.'selectedColumns', array());
 			}
@@ -52,6 +54,8 @@ class EvechartrackingViewEvechartracking extends JView {
 			$corps = $model->getCorps();
 			if (!isset($corps[$corporationID])) {
 				$corporationID = 0;
+			} else {
+				$breadcrumbs->addItem($corps[$corporationID]->corporationName, JRoute::_('index.php?view=evechartracking&layout=corp&corporationID='.$corporationID));
 			}
 			
 			if (empty($corps)) {
@@ -80,6 +84,8 @@ class EvechartrackingViewEvechartracking extends JView {
 			$users = $model->getUsers();
 			if (!isset($users[$owner])) {
 				$owner = 0;
+			} else {
+				$breadcrumbs->addItem($users[$owner]->name, JRoute::_('index.php?view=evechartracking&layout=user&owner='.$owner));
 			}
 			
 			if (empty($users)) {

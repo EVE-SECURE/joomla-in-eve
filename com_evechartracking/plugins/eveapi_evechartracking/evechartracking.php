@@ -77,6 +77,7 @@ class plgEveapiEvechartracking extends JPlugin {
 			$dbo = JFactory::getDBO();
 			$dbo->Execute($sql);
 		}
+		//TODO: block user that are not in owner corps
 	}
 	
 }

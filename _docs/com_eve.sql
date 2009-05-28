@@ -112,7 +112,16 @@ INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_li
 ('Schedule', '', 0, @lastid, 'option=com_eve&control=schedule', 'Accounts', 'com_eve', 4, 'components/com_eve/assets/icon-schedule-16.png', 0, '', 1);
 
 
-INSERT INTO `jos_eve_apicalls` (`id`, `type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES
-(1, 'account', 'Characters', 'User', 'Limited', NULL, 1440, ''),
-(2, 'char', 'CharacterSheet', 'Character', 'Limited', NULL, 1440, '');
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('account', 'Characters', 'User', 'Limited', NULL, 0, '');
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, '');
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('corp', 'CorporationSheet', 'Character', 'Limited', NULL, 0, '');
+
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('eve', 'AllianceList', 'None', 'None', NULL, 0, '');
+SET @lastid = LAST_INSERT_ID();
+INSERT INTO `jos_eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
+(@lastid, NULL, NULL, NOW(), 1);
 
