@@ -98,8 +98,6 @@ class EveModelApiform  extends EveModel {
 				}
 			}
 				
-			$account->store();
-			
 			$account->apiKey = $apiKey;
 			$account->store();
 			
