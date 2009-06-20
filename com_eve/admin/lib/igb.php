@@ -35,21 +35,6 @@ class EveHelperIgb extends JObject {
 		return ($trusted == 'yes');
 	}
 	
-	function &getCharModel() {
-		$instance = new EveModelChar();
-		return $instance;
-	}
-	
-	function &getCorpModel() {
-		$instance = new EveModelCorp();
-		return $instance;
-	}
-	
-	function &getAllianceModel() {
-		$instance = new EveModelAlliance();
-		return $instance;
-	}
-	
 	function value($name, $type = 'string') {
 		$name = strtoupper($name);
 		$result = JRequest::getVar('HTTP_EVE_'.$name, null, 'server');
