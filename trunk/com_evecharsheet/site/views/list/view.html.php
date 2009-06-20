@@ -59,6 +59,10 @@ class EvecharsheetViewList extends JView {
 			if (!$ownerID) {
 				$ownerID = $paramOwnerID;
 			}
+			if (!$ownerID) {
+				$user = JFactory::getUser();
+				$ownerID = $user->id;
+			}
 			$model->set('owner', $ownerID);
 			$owner = JFactory::getUser($ownerID);
 			//$this->assignRef('owner', $owner);

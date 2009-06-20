@@ -38,12 +38,13 @@
 	</files>
 	
 	<administration>
-		<menu img="components/com_eve/assets/icon-eve-16.png">EVE</menu>
+		<menu view="chars" img="components/com_eve/assets/icon-eve-16.png">EVE</menu>
 		<submenu>
-			<menu link="option=com_eve&amp;control=char" img="components/com_eve/assets/icon-char-16.png">Characters</menu>
-			<menu link="option=com_eve&amp;control=corp" img="components/com_eve/assets/icon-corp-16.png">Corporations</menu>
-			<menu link="option=com_eve&amp;control=alliance" img="components/com_eve/assets/icon-alliance-16.png">Alliances</menu>
-			<menu link="option=com_eve&amp;control=account" img="components/com_eve/assets/icon-account-16.png">Account</menu>
+			<menu view="chars" img="components/com_eve/assets/icon-char-16.png">Characters</menu>
+			<menu view="corps" img="components/com_eve/assets/icon-corp-16.png">Corporations</menu>
+			<menu view="alliances" img="components/com_eve/assets/icon-alliance-16.png">Alliances</menu>
+			<menu view="accounts" img="components/com_eve/assets/icon-account-16.png">Account</menu>
+			<menu view="schedule" img="components/com_eve/assets/icon-schedule-16.png">Account</menu>
 		</submenu>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_eve.ini</language>

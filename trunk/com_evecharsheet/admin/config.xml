@@ -5,7 +5,6 @@
 			<option value="0">NO</option>
 			<option value="1">YES</option>
 		</param>
-		<param name="@spacer" type="spacer" default="" label="" description="" />
 		<param name="show_all" type="radio" label="Show All characters" description="Show all characters, including those not from owner corporation in character sheet" default="0">
 			<option value="0">NO</option>
 			<option value="1">YES</option>
