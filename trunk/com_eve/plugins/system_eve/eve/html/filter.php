@@ -23,47 +23,27 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableCorporation extends EveTable {
-	//information sent by eve client
-	/** @var int */
-	var $corporationID		= null;
-	/** @var int */
-	var $corporationName	= null;
-	/** @var string */
-	var $ticker				= null;
-	/** @var int */
-	var $ceoID 				= null;
-	/** @var int */
-	var $stationID			= null;
-	/** @var string */
-	var $description		= null;
-	/** @var string */
-	var $url				= null;
-	/** @var float */
-	var $taxRate			= null;
-	/** @var int */
-	var $memberCount		= null;
-	/** @var int */
-	var $memberLimit		= null;
-	/** @var int */
-	var $shares				= null;
-	/** @var int */
-	var $allianceID			= null;
+class JHTMLFilter {
 	
-	/** @var int */
-	var $standings		= null;
-	var $owner			= null;
-
-	/* checkout values */
-	var $checked_out = null;
-	var $checked_out_time = null;
-
-	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$dbo )
-	{
-		parent::__construct( '#__eve_corporations', 'corporationID', $dbo );
+	function select($name, $selected = null, $definition = null) {
+		if (empty($definition)) {
+			$definition = JPATH_COMPONENT.DS.'filters.xml';
+		}
+		
+		$filter_data = file_get_contents($definition);
+		$xml = new SimpleXMLElement($filter_data);
+		$xpath = $xml->xpath('/filters/filter[@name="'.$name.'"]/option');
+		return JHTML::_('select.genericlist', $xpath, $name, 'onchange="document.adminForm.submit()"', 'key', 'text', $selected, false, true);
 	}
-
+	
+	function search($value, $name = 'filter_search', $id = null) {
+		if (is_null($id)) {
+			$id = $name;
+		}
+		return '<label for="'.$id.'">'.JText::_('Filter'). ':</label>'.
+		'<input type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" />'.
+		'<button onclick="this.form.submit();">'.JText::_( 'Go' ).'</button>'.
+		'<button onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button>';
+		
+	}
 }

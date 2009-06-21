@@ -313,4 +313,11 @@ class JQuery extends JObject {
 		return $this->dbo->loadObjectList($key);
 	}
 	
+	function toString() {
+		return $this->prepare();
+	}
+	
+	function __toString() {
+		return $this->prepare();
+	}
 }

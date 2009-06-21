@@ -64,7 +64,10 @@ class TableCharacter extends EveTable {
 	/** @var  int */
 	var $grantableRoles	= null;
 	
-
+	/* checkout values */
+	var $checked_out = null;
+	var $checked_out_time = null;
+	
 	/**
 	* @param database A database connector object
 	*/

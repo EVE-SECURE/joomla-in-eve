@@ -25,55 +25,46 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view');
 
-class EveViewAccount extends JView {
-	public $apiStates = null;
-	public $user = null;
-	
+class EveViewAlliances extends JView {
+	public $state;
+	public $items;
+	public $pagination;
+
 	
 	function display($tpl = null) {
-		
 		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 		
-		$item = $this->get('Item');
-		$apiStates = $this->get('ApiStates');;
+		$state		= $this->get('State');
+		$items		= $this->get('Items');
+		$pagination	= $this->get('Pagination');
+
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
+
+		$this->assignRef('state',			$state);
+		$this->assignRef('items',			$items);
+		$this->assignRef('pagination',		$pagination);
 		
-		$model = $this->getModel();
-		$dbo = $this->get('DBO');
-		$q = new JQuery($dbo);
-		$q->addTable('#__users');
-		$q->addQuery('id, name');
-		$users = $q->loadObjectList();
-		
-		
-		$nouser = array('id' => '0', 'name'=>JText::_('UNKNOWN OWNER'));
-		$nouser = array('0' => JArrayHelper::toObject($nouser));
-		$users = array_merge($nouser, $users);
-		
-		$this->assignRef('apiStates', $apiStates);
-		$this->assignRef('users', $users);
-		$this->assignRef('item', $item);
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
-	
-	protected function _setToolbar() {
-		JRequest::setVar('hidemainmenu', 1);
 
-		if ($this->item->userID > 0) {
-			$title = JText::_('EDIT ACCOUNT');
-		} else {
-			$title = JText::_('NEW ACCOUNT');
-		}
-		JToolBarHelper::title($title, 'account');
-		
-		JToolBarHelper::apply('account.apply');
-		JToolBarHelper::save('account.save');
-		JToolBarHelper::addNew('account.save2new', 'Save and new');
-		if ($this->item->userID > 0) {
-			JToolBarHelper::cancel('account.cancel');
-		} else {
-			JToolBarHelper::cancel('account.cancel', 'Close');
-		}
-		
+	
+	/**
+	 * Setup the Toolbar
+	 */
+	protected function _setToolbar()
+	{
+		$title = JText::_('EVE CHARACTER MANAGER');
+		JToolBarHelper::title($title, 'char');
+		JToolBarHelper::custom('get_corporation_sheet', 'corp', 'corp', 'Corporation Sheet', true);
+		JToolBarHelper::custom('get_character_sheet', 'char', 'char', 'Character Sheet', true);
+		JToolBarHelper::addNew();
+		JToolBarHelper::editList();
+		JToolBarHelper::deleteList();
 	}
+
 }

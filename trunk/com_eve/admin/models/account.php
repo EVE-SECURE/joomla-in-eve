@@ -27,42 +27,116 @@ jimport('joomla.application.component.model');
 
 class EveModelAccount extends EveModel {
 	
-	function __construct($config = array()) {
-		$config['table_path'] = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables';
-		parent::__construct($config);
-	}
-	
 	/**
-	 * Get instance of TableAccount
-	 *
-	 * @param int $id
-	 * @return TableAccount
+	 * Override to get the account table
 	 */
-	function getAccount($id = null) {
-		return $this->getInstance('Account', $id);
+	public function &getTable()
+	{
+		$dbo = $this->getDBO();
+		$table =  EveFactory::getInstance('Account', null, array('dbo'=>$dbo));
+		return $table;
 	}
-	
-	function getApiStates() {
-		return $this->getEnumOptions('#__eve_accounts', 'apiStatus');
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	protected function _populateState()
+	{
+		$app		= &JFactory::getApplication('administrator');
+		$params		= &JComponentHelper::getParams('com_eve');
+
+		// Load the User state.
+		if (JRequest::getWord('layout') === 'edit') {
+			$userID = (int) $app->getUserState('com_eve.edit.account.userID');
+			$this->setState('account.userID', $userID);
+		} else {
+			$userID = (int) JRequest::getInt('userID');
+			$this->setState('account.userID', $userID);
+		}
+
+		// Load the parameters.
+		$this->setState('params', $params);
 	}
-	
-	function store() {
-		global $mainframe;
+
+
+
+	/**
+	 * Method to get a member item.
+	 *
+	 * @access	public
+	 * @param	integer	The id of the member to get.
+	 * @return	mixed	User data object on success, false on failure.
+	 * @since	1.0
+	 */
+	public function &getItem($userID = null)
+	{
+		// Initialize variables.
+		$userID	= (!empty($userID)) ? $userID : (int) $this->getState('account.userID');
+		$false		= false;
+
+		// Attempt to load the row.
+		$return = $this->getAccount($userID);
 		
-		$account = $this->getAccount(JRequest::getInt('userID'));
-		$apiKeyPast = $account->apiKey;
-		$post = JRequest::get('post');
+		// Check for a table object error.
+		if ($return === false && $table->getError()) {
+			$this->setError($table->getError());
+			return $false;
+		}
+
+		// Convert the params field to an array.
+		return $return;
+	}
+
+
+	public function save($data)
+	{
+		$userID	= (int) $this->getState('account.userID');
+		$isNew		= true;
+
+		// Get a account row instance.
+		$table = &$this->getItem($userID);
 		
-		if (!$account->bind( $post )) {
-			return JError::raiseWarning( 500, $account->getError() );
+		$apiKeyPast = $table->apiKey;
+		// Bind the data
+		if (!$table->bind($data)) {
+			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
+			return false;
 		}
 		
-		$apiKeyNow = $account->apiKey;
+		//compare apiKey with one stored in database
+		$apiKeyNow = $table->apiKey;
 		if ($apiKeyPast != $apiKeyNow) {
-			$account->apiStatus = 'Unknown';
+			$table->apiStatus = 'Unknown';
 		}
 		
-		//check status of apiKey
+		// Prepare the row for saving
+		$this->_prepareTable($table);
+
+		// Check the data
+		if (!$table->check()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Store the data
+		if (!$table->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return $table->userID;
+	}
+
+	protected function _prepareTable(&$account)
+	{
+		$app = JFactory::getApplication();
 		if ($account->apiStatus == 'Unknown') {
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
@@ -81,7 +155,7 @@ class EveModelAccount extends EveModel {
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
-				$mainframe->enqueueMessage(JText::_('API key offers full access'));
+				$app->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				$this->updateApiStatus($account, $e->getCode());
@@ -105,16 +179,174 @@ class EveModelAccount extends EveModel {
 			}
 			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
 			
-		}
-		
-		if (!$account->check()) {
-			return JError::raiseWarning( 500, $account->getError() );
 		}	
-		if (!$account->store()) {
-			return JError::raiseWarning( 500, $account->getError() );
+	}
+	
+	public function validate($data = null)
+	{
+		if (!is_numeric($data['userID'])) {
+			$this->setError(JText::_('Invalid userID'));
+			return false;
 		}
-		$mainframe->enqueueMessage(JText::_('ACCOUNT STORED'));
-		
+		return $data;
+	}
+	
+	/**
+	 * Method to checkin a row.
+	 *
+	 * @param	integer	$id		The numeric id of a row
+	 * @return	boolean	True on success/false on failure
+	 * @since	1.6
+	 */
+	public function checkin($userID = null)
+	{
+		// Initialize variables.
+		$user		= &JFactory::getUser();
+		$juserId	= (int) $user->get('id');
+		$userID	= (int) $userID;
+
+		if ($userID === 0) {
+			$userID = $this->getState('account.userID');
+		}
+
+		if (empty($userID)) {
+			return true;
+		}
+
+		// Get a accountsTableaccount instance.
+		$table = &$this->getTable();
+
+		// Attempt to check-in the row.
+		$return = $table->checkin($userID);
+		// Check for a database error.
+		if ($return === false) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to check-out a account for editing.
+	 *
+	 * @param	int		$userID	The numeric id of the account to check-out.
+	 * @return	bool	False on failure or error, success otherwise.
+	 * @since	1.6
+	 */
+	public function checkout($userID)
+	{
+		// Initialize variables.
+		$user		= &JFactory::getUser();
+		$juserId	= (int) $user->get('id');
+		$userID	= (int) $userID;
+
+		// Check for a new account id.
+		if ($userID === -1) {
+			return true;
+		}
+
+		$table = &$this->getTable();
+
+		// Attempt to check-out the row.
+		$return = $table->checkout($juserId, $userID);
+
+		// Check for a database error.
+		if ($return === false) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Check if the row is checked-out by someone else.
+		if ($return === null) {
+			$this->setError(JText::_('JCommon_Item_is_checked_out'));
+			return false;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Tests if account is checked out
+	 *
+	 * @access	public
+	 * @param	int	A user id
+	 * @return	boolean	True if checked out
+	 * @since	1.5
+	 */
+	public function isCheckedOut($juserId = 0)
+	{
+		if ($juserId === 0) {
+			$user		= &JFactory::getUser();
+			$juserId	= (int) $user->get('id');
+		}
+
+		$userID = (int) $this->getState('account.userID');
+
+		if (empty($userID)) {
+			return true;
+		}
+
+		$table = &$this->getTable();
+
+		$return = $table->load($userID);
+
+		if ($return === false && $table->getError()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		return $table->isCheckedOut($juserId);
+	}
+	
+
+	/**
+	 * Method to delete accounts from the database.
+	 *
+	 * @param	integer	$cid	An array of	numeric ids of the rows.
+	 * @return	boolean	True on success/false on failure.
+	 */
+	public function delete($cid)
+	{
+		// Get a account row instance
+		$table = $this->getTable();
+
+		for ($i = 0, $c = count($cid); $i < $c; $i++) {
+			// Load the row.
+			$return = $table->load($cid[$i]);
+
+			// Check for an error.
+			if ($return === false) {
+				$this->setError($table->getError());
+				return false;
+			}
+
+			// Delete the row.
+			$return = $table->delete();
+
+			// Check for an error.
+			if ($return === false) {
+				$this->setError($table->getError());
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Get instance of TableAccount
+	 *
+	 * @param int $id
+	 * @return TableAccount
+	 */
+	function getAccount($id = null) {
+		return $this->getInstance('Account', $id);
+	}
+	
+	function getApiStates() {
+		return $this->getEnumOptions('#__eve_accounts', 'apiStatus');
 	}
 	
 	function apiGetCharacters($cid) {

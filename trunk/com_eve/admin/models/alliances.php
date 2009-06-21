@@ -25,46 +25,39 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-class EveModelSchedule extends JModelList {
-
+class EveModelAlliances extends JModelList {
+	
 	/**
 	 * Model context string.
 	 *
 	 * @access	protected
 	 * @var		string
 	 */
-	protected $_context = 'com_eve.schedule';
+	protected $_context = 'com_eve.alliances';
 	
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
-		$apicall = intval($this->getState('filter.apicall'));
-		$state = $this->getState('filter.state');
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
-		$q->addTable('#__eve_schedule', 'sc');
-		$q->addJoin('#__eve_apicalls', 'ap', 'ap.id=sc.apicall');
-		$q->addJoin('#__eve_accounts', 'a', 'sc.userID=a.userID');
-		$q->addJoin('#__users', 'u', 'a.owner=u.id');
-		$q->addJoin('#__eve_characters', 'c', 'sc.characterID=c.characterID');
-		$q->addQuery('ap.*', 'sc.*');
-		$q->addQuery('CONCAT(`type`, \'/\',`call`) AS typeCall');
-		$q->addQuery('u.name AS userName');
-		$q->addQuery('c.name AS characterName');
+		$q->addTable('#__eve_alliances', 'al');
+		$q->addQuery('al.*');
 		if ($search) {
 			$q->addWhere('al.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}
-		if ($apicall) {
-			$q->addWhere('sc.apicall='.$apicall);
+		switch ($this->getState('filter.standings')) {
+			case 'owner':
+				$q->addWhere('al.owner');
+				break;
+			case 'friendly':
+				$q->addWhere('al.standings > 0');
+				break;
+			case 'hostile':
+				$q->addWhere('al.standings < 0');
+				break;
 		}
-		if ($state == 'P') {
-			$q->addWhere('sc.published');
-		}
-		if ($state == 'U') {
-			$q->addWhere('sc.published = 0');
-		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'typeCall')), 
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'al.name')), 
 			$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
 	}
@@ -88,9 +81,7 @@ class EveModelSchedule extends JModelList {
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.state');
-		$id	.= ':'.$this->getState('filter.apicall');
-		
+
 		return md5($id);
 	}
 	
@@ -112,58 +103,15 @@ class EveModelSchedule extends JModelList {
 
 		// Load the filter state.
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-		$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', ''));
-		$this->setState('filter.apicall', $app->getUserStateFromRequest($context.'filter.apicall', 'filter_apicall', ''));
-		
+
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
-		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'typeCall', 'cmd'));
+		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'al.name', 'cmd'));
 		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
 
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
-	
-	public function &getApiCalls() {
-		$dbo = $this->getDBO();
-		$q = new JQuery($dbo);
-		$q->addTable('#__eve_apicalls');
-		$q->addOrder('`type`');
-		$q->addOrder('`call`');
-		$q->addQuery('`id`', 'CONCAT(`type`, \'/\', `call`) AS typeCall');
-		$apiCalls = $q->loadObjectList();
-		$empty = array('id'=>'0', 'typeCall'=>JText::_('Select API call'));
-		//$empty = ;
-		array_unshift($apiCalls, JArrayHelper::toObject($empty));
-		return $apiCalls;
-		
-	}
-	
-	public function setEnabled($cid, $enabled) {
-		JRequest::checkToken() or jexit( 'Invalid Token' );
 
-		// Initialize variables
-		$dbo = $this->getDBO();
-
-		if (empty($cid)) {
-			JError::raiseWarning( 500, JText::_( 'No items selected' ) );
-			return false;
-		}
-
-		JArrayHelper::toInteger( $cid );
-		$cids = implode( ',', $cid );
-
-		$query = 'UPDATE #__eve_schedule'
-		. ' SET published = ' . (int) $enabled
-		. ' WHERE id IN ( '. $cids.'  )';
-		$dbo->setQuery( $query );
-		if (!$dbo->query()) {
-			JError::raiseWarning( 500, $dbo->getError() );
-			return false;
-		}
-		return true;
-	}
-	
-		
 }
