@@ -11,6 +11,9 @@ class TableAccount extends EveTable {
 	var $apiStatus 	= null;
 	/** @var int */
 	var $owner 		= null;
+	/* checkout values */
+	var $checked_out = null;
+	var $checked_out_time = null;
 	
 	
 	/**

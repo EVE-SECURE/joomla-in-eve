@@ -7,6 +7,8 @@ CREATE TABLE `#__eve_accounts` (
   `owner` int(10) unsigned NOT NULL default '0',
   `apiKey` varchar(64) NOT NULL default '',
   `apiStatus` enum('Unknown','Inactive','Invalid','Limited','Full') NOT NULL default 'Unknown',
+  `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY  (`userID`),
   KEY `eve_accounts_fk_owner` (`owner`)
 ) DEFAULT CHARSET=utf8;
@@ -41,6 +43,8 @@ CREATE TABLE `#__eve_alliances` (
   `logo` varchar(5) NOT NULL default '',
   `standings` tinyint(4) unsigned NOT NULL default '0',
   `owner` tinyint(1) NOT NULL default '0',
+  `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY  (`allianceID`)
 ) DEFAULT CHARSET=utf8;
 
@@ -68,6 +72,8 @@ CREATE TABLE `#__eve_characters` (
   `shipTypeID` int(10) unsigned NOT NULL default '0',
   `roles` bigint(20) NOT NULL default '0',
   `grantableRoles` bigint(20) NOT NULL default '0',
+  `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY  (`characterID`),
   KEY `eve_characters_fk_corporationID` (`corporationID`),
   KEY `eve_characters_fk_userID` (`userID`)
@@ -94,6 +100,8 @@ CREATE TABLE `#__eve_corporations` (
   `allianceID` int(10) unsigned NOT NULL default '0',
   `standings` tinyint(4) default NULL,
   `owner` tinyint(1) NOT NULL default '0',
+  `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY  (`corporationID`),
   KEY `eve_corporations_fk_allianceID` (`allianceID`)
 ) DEFAULT CHARSET=utf8;

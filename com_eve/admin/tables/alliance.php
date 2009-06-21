@@ -42,6 +42,10 @@ class TableAlliance extends EveTable {
 	/** @var int */
 	var $owner			= null;
 	
+	/* checkout values */
+	var $checked_out = null;
+	var $checked_out_time = null;
+	
 
 	/**
 	* @param database A database connector object

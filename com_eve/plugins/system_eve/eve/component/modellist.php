@@ -20,6 +20,9 @@ jimport('joomla.database.query');
  */
 class JModelList extends JModel
 {
+	//missing from 1.6 JModel
+	protected $__state_set	= null;
+	
 	/**
 	 * An array of totals for the lists.
 	 *
@@ -158,4 +161,26 @@ class JModelList extends JModel
 	{
 		$this->setState('list.start', 0);
 	}
+	
+	/**
+	 * Method to get model state variables
+	 * 1.6 JModel override
+	 *
+	 * @param	string	Optional parameter name
+	 * @param   mixed	Optional default value
+	 * @return	object	The property where specified, the state object where omitted
+	 */
+	public function getState($property = null, $default = null)
+	{
+		if (!$this->__state_set) {
+			// Private method to auto-populate the model state.
+			$this->_populateState();
+
+			// Set the model state set flat to true.
+			$this->__state_set = true;
+		}
+
+		return $property === null ? $this->_state : $this->_state->get($property, $default);
+	}
+	
 }

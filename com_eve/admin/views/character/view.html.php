@@ -25,55 +25,52 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view');
 
-class EveViewAccount extends JView {
-	public $apiStates = null;
-	public $user = null;
-	
+class EveViewCharacter extends JView {
 	
 	function display($tpl = null) {
+		$document =& JFactory::getDocument();
+		$document->addStyleSheet('components/com_eve/assets/common.css');
 		
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
-		$item = $this->get('Item');
-		$apiStates = $this->get('ApiStates');;
+		JToolBarHelper::save();
+		JToolBarHelper::apply();
+		JToolBarHelper::cancel();
+		JToolBarHelper::back();
 		
 		$model = $this->getModel();
-		$dbo = $this->get('DBO');
+		
+		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		JArrayHelper::toInteger($cid);
+		
+		$id = reset($cid);
+		
+		if ($id > 0) {
+			$title = JText::_('EDIT CHARACTER');
+		} else {
+			$title = JText::_('NEW CHARACTER');
+		}
+		JToolBarHelper::title($title, 'char');
+		
+		$item = $model->getCharacter($id);
+		$dbo = $model->getDBO();
 		$q = new JQuery($dbo);
-		$q->addTable('#__users');
-		$q->addQuery('id, name');
+		$q->addTable('#__eve_accounts', 'u');
+		$q->addJoin('#__users', 'owner', 'u.owner=owner.id');
+		$q->addQuery('u.userID, owner.name');
+		$q->addOrder('name');
+		$q->addOrder('userID');
 		$users = $q->loadObjectList();
+		foreach ($users as $user) {
+			$user->name = sprintf('%s (%s)', $user->name, $user->userID);
+		}
 		
-		
-		$nouser = array('id' => '0', 'name'=>JText::_('UNKNOWN OWNER'));
+		$nouser = array('userID' => '0', 'name'=>JText::_('CHARACTER NOT ASSIGNED'));
 		$nouser = array('0' => JArrayHelper::toObject($nouser));
 		$users = array_merge($nouser, $users);
 		
-		$this->assignRef('apiStates', $apiStates);
-		$this->assignRef('users', $users);
+		$html_users = JHTML::_('select.genericlist', $users, 'userID', null, 'userID', 'name', $item->userID);
+		
+		$this->assignRef('html_users', $html_users);
 		$this->assignRef('item', $item);
 		parent::display($tpl);
-		$this->_setToolbar();
-	}
-	
-	protected function _setToolbar() {
-		JRequest::setVar('hidemainmenu', 1);
-
-		if ($this->item->userID > 0) {
-			$title = JText::_('EDIT ACCOUNT');
-		} else {
-			$title = JText::_('NEW ACCOUNT');
-		}
-		JToolBarHelper::title($title, 'account');
-		
-		JToolBarHelper::apply('account.apply');
-		JToolBarHelper::save('account.save');
-		JToolBarHelper::addNew('account.save2new', 'Save and new');
-		if ($this->item->userID > 0) {
-			JToolBarHelper::cancel('account.cancel');
-		} else {
-			JToolBarHelper::cancel('account.cancel', 'Close');
-		}
-		
 	}
 }

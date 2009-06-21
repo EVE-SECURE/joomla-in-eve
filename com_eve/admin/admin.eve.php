@@ -23,12 +23,15 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-// Set the table directory
-require_once (JPATH_COMPONENT.DS.'loader.php');
-
-JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
-
-// Get the controller name, default is the smartsef cpannel controller;
+$controller = EveController::getInstance('Eve');
+if (!JError::isError($controller)) {
+	$controller->execute(JRequest::getVar('task'));
+	$controller->redirect();
+} else {
+	$app = JFactory::getApplication();
+	$app->enqueueMessage($controller->getMessage, 'error');
+}
+/*
 $controllerName = JRequest::getCmd( 'control', 'char' );
 
 $default_view = $controllerName.'_index';
@@ -42,7 +45,6 @@ $controllerName = 'EveController' . $controllerName;
 $controller = new $controllerName();
 
 // Perform the Request task
-$controller->execute( JRequest::getVar('task'));
 
 // Redirect if set by the controller
-$controller->redirect();
+*/

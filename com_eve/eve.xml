@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0">
+<install type="component" version="1.5">
 	<name>EVE</name>
+	<creationDate>April 2008</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2008 - 2009 Pavol Kovalik </copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>0.2</version>
 	<description>Joomla! in EVE - Core</description>
-	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<author>Pavol Kovalik</author>
-	<creationDate>April 2008</creationDate>
-	<authoremail>kovalikp@gmail.com</authoremail>
-	<authorurl>http://eve.webnamieru.sk</authorurl>
-	<copyright>(C) 2008 - 2009 Pavol Kovalik </copyright>
 	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
@@ -26,9 +26,6 @@
 		</sql>
 	</uninstall>
 	
-	<languages folder="site/languages">
-		<language tag="en-GB">en-GB.com_eve.ini</language>
-	</languages>
 	<files folder="site">
 		<filename>eve.php</filename>
 		<filename>controller.php</filename>
@@ -36,6 +33,9 @@
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB.com_eve.ini</language>
+	</languages>
 	
 	<administration>
 		<menu view="chars" img="components/com_eve/assets/icon-eve-16.png">EVE</menu>
@@ -44,12 +44,8 @@
 			<menu view="corps" img="components/com_eve/assets/icon-corp-16.png">Corporations</menu>
 			<menu view="alliances" img="components/com_eve/assets/icon-alliance-16.png">Alliances</menu>
 			<menu view="accounts" img="components/com_eve/assets/icon-account-16.png">Account</menu>
-			<menu view="schedule" img="components/com_eve/assets/icon-schedule-16.png">Account</menu>
+			<menu view="schedule" img="components/com_eve/assets/icon-schedule-16.png">Schedule</menu>
 		</submenu>
-		<languages folder="admin/languages">
-			<language tag="en-GB">en-GB.com_eve.ini</language>
-			<language tag="en-GB">en-GB.com_eve.menu.ini</language>
-		</languages>
 		<files folder="admin">
 			<filename>admin.eve.php</filename>
 			<filename>config.xml</filename>
@@ -60,12 +56,15 @@
 			<filename>uninstall.php</filename>
 			<folder>assets</folder>
 			<folder>controllers</folder>
-			<folder>html</folder>
 			<folder>lib</folder>
 			<folder>models</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
 			<folder>sql</folder>
 		</files>
+		<languages folder="admin/languages">
+			<language tag="en-GB">en-GB.com_eve.ini</language>
+			<language tag="en-GB">en-GB.com_eve.menu.ini</language>
+		</languages>
 	</administration>
 </install>
