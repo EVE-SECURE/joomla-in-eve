@@ -43,6 +43,8 @@ class EveModelAlliances extends JModelList {
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_alliances', 'al');
 		$q->addQuery('al.*');
+		$q->addQuery('editor.name AS editor');
+		$q->addJoin('#__users', 'editor', 'al.checked_out=editor.id');
 		if ($search) {
 			$q->addWhere('al.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}

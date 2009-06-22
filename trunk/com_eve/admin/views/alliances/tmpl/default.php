@@ -6,6 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHtml::_('behavior.tooltip');
+$user	= &JFactory::getUser();
+$userId	= $user->get('id');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>" method="post" name="adminForm">
 	<table>
@@ -42,12 +45,16 @@ defined('_JEXEC') or die();
 			<tr class="row<?php echo $i % 2; ?>">
 				<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, 'allianceID'); ?>
+					<?php echo JHtml::_('grid.checkedout', $item, $i, 'allianceID'); ?>
 				</td>
 				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_eve&task=alliance.edit&cid[]='.$item->allianceID); ?>">
-						<b><?php echo $item->name; ?></b>
-					</a>
+					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
+						<?php echo $item->name; ?> (<?php echo $item->allianceID; ?>)
+					<?php else : ?>
+					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->name; ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=alliance.edit&allianceID='.$item->allianceID); ?>">
+							<?php echo $item->name; ?></a></span> (<?php echo $item->allianceID; ?>)
+					<?php endif; ?>
 				</td>
 				<td>
 					<?php echo $item->shortName; ?>

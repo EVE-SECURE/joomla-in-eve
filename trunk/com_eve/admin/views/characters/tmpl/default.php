@@ -6,6 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHtml::_('behavior.tooltip');
+$user	= &JFactory::getUser();
+$userId	= $user->get('id');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=characters'); ?>" method="post" name="adminForm">
 	<fieldset class="filter">
@@ -47,12 +50,16 @@ defined('_JEXEC') or die();
 			<tr class="row<?php echo $i % 2; ?>">
 				<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, 'characterID'); ?>
+					<?php echo JHtml::_('grid.checkedout', $item, $i, 'characterID'); ?>
 				</td>
 				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_eve&task=character.edit&cid[]='.$item->characterID); ?>">
-						<b><?php echo $item->name; ?></b>
-					</a>
+					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
+						<?php echo $item->name; ?> (<?php echo $item->characterID; ?>)
+					<?php else : ?>
+					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->name; ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=character.edit&characterID='.$item->characterID); ?>">
+							<?php echo $item->name; ?></a></span> (<?php echo $item->characterID; ?>)
+					<?php endif; ?>
 				</td>
 				<td align="center">
 					<?php echo $item->userName; ?>
