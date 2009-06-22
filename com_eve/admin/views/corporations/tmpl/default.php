@@ -6,7 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-
+JHtml::_('behavior.tooltip');
+$user	= &JFactory::getUser();
+$userId	= $user->get('id');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=corporations'); ?>" method="post" name="adminForm">
 	<fieldset class="filter">
@@ -42,12 +44,16 @@ defined('_JEXEC') or die();
 			<tr class="row<?php echo $i % 2; ?>">
 				<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, 'corporationID'); ?>
+					<?php echo JHtml::_('grid.checkedout', $item, $i, 'corporationID'); ?>
 				</td>
 				<td>
-					<a href="<?php echo JRoute::_('index.php?option=com_eve&task=character.edit&cid[]='.$item->corporationID); ?>">
-						<b><?php echo $item->corporationName; ?></b>
-					</a>
+					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
+						<?php echo $item->corporationName; ?> (<?php echo $item->corporationID; ?>)
+					<?php else : ?>
+					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->corporationName; ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=coropration.edit&corporationID='.$item->corporationID); ?>">
+							<?php echo $item->corporationName; ?></a></span> (<?php echo $item->corporationID; ?>)
+					<?php endif; ?>
 				</td>
 				<td align="center">
 					<?php echo $item->ticker; ?>

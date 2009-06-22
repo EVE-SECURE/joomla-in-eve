@@ -43,7 +43,9 @@ class EveModelCorporations extends JModelList {
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_corporations', 'co');
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
+		$q->addJoin('#__users', 'editor', 'co.checked_out=editor.id');
 		$q->addQuery('co.*');
+		$q->addQuery('editor.name AS editor');
 		$q->addQuery('al.name');
 		$q->addQuery('al.owner AS derived_owner');
 		$q->addQuery('COALESCE(co.standings, al.standings, 0) AS derived_standings');

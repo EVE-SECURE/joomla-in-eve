@@ -46,9 +46,11 @@ class EveModelCharacters extends JModelList {
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
 		$q->addJoin('#__eve_accounts', 'us', 'us.userID=c.userID');
 		$q->addJoin('#__users', 'u', 'us.owner=u.id');
+		$q->addJoin('#__users', 'editor', 'c.checked_out=editor.id');
 		$q->addQuery('c.*');
 		$q->addQuery('co.corporationName, co.ticker');
 		$q->addQuery('al.name AS allianceName, al.shortName');
+		$q->addQuery('editor.name AS editor');
 		$q->addQuery('u.name AS userName');
 		if ($search) {
 			$q->addWhere('c.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
