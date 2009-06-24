@@ -30,13 +30,12 @@ $userId	= $user->get('id');
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CORPORATION NAME' ), 'co.corporationName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CORPORATION TAG' ), 'co.ticker', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'ALLIANCE' ), 'al.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'STANDINGS' ), 'derived_standings', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JText::_('OWNER'); ?></th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
-			<td colspan="7"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td colspan="6"><?php echo $this->pagination->getListFooter(); ?></td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -60,9 +59,6 @@ $userId	= $user->get('id');
 				</td>
 				<td>
 					<?php echo $item->name; ?>
-				</td>
-				<td>
-					<?php echo $item->derived_standings; ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>

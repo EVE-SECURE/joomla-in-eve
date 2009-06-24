@@ -48,19 +48,12 @@ class EveModelCorporations extends JModelList {
 		$q->addQuery('editor.name AS editor');
 		$q->addQuery('al.name');
 		$q->addQuery('al.owner AS derived_owner');
-		$q->addQuery('COALESCE(co.standings, al.standings, 0) AS derived_standings');
 		if ($search) {
 			$q->addWhere('co.corporationName LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}
 		switch ($this->getState('filter.standings')) {
 			case 'owner':
 				$q->addWhere('(co.owner OR al.owner)');
-				break;
-			case 'friendly':
-				$q->addWhere('COALESCE(co.standings, al.standings, 0) > 0');
-				break;
-			case 'hostile':
-				$q->addWhere('COALESCE(co.standings, al.standings, 0) < 0');
 				break;
 		}
 		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'co.corporationName')), 

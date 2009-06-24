@@ -26,32 +26,16 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
 
 class EveViewCharacter extends JView {
+	public $item;
+	public $html_users;
 	
-	function display($tpl = null) {
+	public function display($tpl = null) {
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet('components/com_eve/assets/common.css');
 		
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-		JToolBarHelper::cancel();
-		JToolBarHelper::back();
+		$item = $this->get('Item');
 		
-		$model = $this->getModel();
-		
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		JArrayHelper::toInteger($cid);
-		
-		$id = reset($cid);
-		
-		if ($id > 0) {
-			$title = JText::_('EDIT CHARACTER');
-		} else {
-			$title = JText::_('NEW CHARACTER');
-		}
-		JToolBarHelper::title($title, 'char');
-		
-		$item = $model->getCharacter($id);
-		$dbo = $model->getDBO();
+		$dbo = $this->get('DBO');
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_accounts', 'u');
 		$q->addJoin('#__users', 'owner', 'u.owner=owner.id');
@@ -67,10 +51,32 @@ class EveViewCharacter extends JView {
 		$nouser = array('0' => JArrayHelper::toObject($nouser));
 		$users = array_merge($nouser, $users);
 		
-		$html_users = JHTML::_('select.genericlist', $users, 'userID', null, 'userID', 'name', $item->userID);
+		$html_users = JHTML::_('select.genericlist', $users, 'jform[userID]', null, 'userID', 'name', $item->userID, 'jformuserID');
 		
 		$this->assignRef('html_users', $html_users);
 		$this->assignRef('item', $item);
 		parent::display($tpl);
+		$this->_setToolbar();
 	}
+
+	protected function _setToolbar() {
+		JRequest::setVar('hidemainmenu', 1);
+
+		if ($this->item->characterID > 0) {
+			$title = JText::_('EDIT CHARACTER');
+		} else {
+			$title = JText::_('NEW CHARACTER');
+		}
+		JToolBarHelper::title($title, 'character');
+		
+		JToolBarHelper::apply('character.apply');
+		JToolBarHelper::save('character.save');
+		JToolBarHelper::addNew('character.save2new', 'Save and new');
+		if ($this->item->userID > 0) {
+			JToolBarHelper::cancel('character.cancel');
+		} else {
+			JToolBarHelper::cancel('character.cancel', 'Close');
+		}
+	}
+	
 }

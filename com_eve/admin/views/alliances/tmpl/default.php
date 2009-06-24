@@ -31,7 +31,6 @@ $userId	= $user->get('id');
 				</th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_('ALLIANCE NAME'), 'al.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_('ALLIANCE TAG'), 'al.shortName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-				<th class="title"><?php echo JHTML::_('grid.sort', JText::_('STANDINGS'), 'al.standings', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JText::_('OWNER'); ?></th>
 			</tr>
 		</thead>
@@ -58,9 +57,6 @@ $userId	= $user->get('id');
 				</td>
 				<td>
 					<?php echo $item->shortName; ?>
-				</td>
-				<td>
-					<?php echo $item->standings; ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>

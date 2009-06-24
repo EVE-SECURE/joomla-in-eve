@@ -27,30 +27,185 @@ class EveControllerCharacter extends EveController {
 	
 	function __construct( $config = array() )
 	{
-		//$config['name'] = 'char';
 		parent::__construct( $config );
 		
-		//$this->setRedirect('?option=com_eve&control=char');
-		
-		$this->registerTask('remove', 'remove');
-		$this->registerTask('add', 'addedit');
-		$this->registerTask('edit', 'addedit');
-		$this->registerTask('apply', 'applysave');
-		$this->registerTask('save', 'applysave');
+		$this->registerTask('save2new', 'save');
+		$this->registerTask('apply', 'save');
 		$this->registerTask('get_character_sheet', 'getCharacterSheet');
 		$this->registerTask('get_corporation_sheet', 'getCorporationSheet');
 	}
 	
-	function addedit() {
-		JRequest::setVar('view', 'char');
-		$this->display();
+	function add() {
+		$app = &JFactory::getApplication();
 
+		// Clear the level edit information from the session.
+		$app->setUserState('com_eve.edit.character.characterID', null);
+		$app->setUserState('com_eve.edit.character.data', null);
+
+		// Redirect to the edit screen.
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
 	}
+	
+	function edit() {
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Character', 'EveModel');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
+		
+		$previousId		= (int) $app->getUserState('com_eve.edit.character.characterID');
+		$characterID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('characterID'));
+		// If character ids do not match, checkin previous character.
+		if (($previousId > 0) && ($characterID != $previousId)) {
+			if (!$model->checkin($previousId)) {
+				// Check-in failed, go back to the character and display a notice.
+				$message = JText::sprintf('JError_Checkin_failed', $model->getError());
+				$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
+				return false;
+			}
+		}
+		
+		// Attempt to check-out the new character for editing and redirect.
+		if (!$model->checkout($characterID)) {
+			// Check-out failed, go back to the list and display a notice.
+			$message = JText::sprintf('JError_Checkout_failed', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=character&characterID='.$characterID, $message, 'error');
+			return false;
+		}
+		else {
+			// Check-out succeeded, push the new character id into the session.
+			$app->setUserState('com_eve.edit.character.characterID',	$characterID);
+			$app->setUserState('com_eve.edit.character.data', null);
+			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit');
+			return true;
+		}		
+	}
+
+	/**
+	 * Method to cancel an edit
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	1.0
+	 */
+	public function cancel()
+	{
+		JRequest::checkToken() or jExit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Character', 'EveModel');
+
+		// Get the character id.
+		$characterID = (int) $app->getUserState('com_eve.edit.character.characterID');
+
+		// Attempt to check-in the current character.
+		if ($characterID) {
+			if (!$model->checkin($characterID)) {
+				// Check-in failed, go back to the character and display a notice.
+				$message = JText::sprintf('JError_Checkin_failed', $model->getError());
+				$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
+				return false;
+			}
+		}
+		// Clean the session data and redirect.
+		$app->setUserState('com_eve.edit.character.characterID',		null);
+		$app->setUserState('com_eve.edit.character.data',	null);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false));
+	}
+
+	/**
+	 * Method to save a character.
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	1.0
+	 */
+	public function save()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+		$model	= $this->getModel('Character');
+		$data	= JRequest::getVar('jform', array(), 'post', 'array');
+
+		// Validate the posted data.
+		$data	= $model->validate($data);
+		
+		// Check for validation errors.
+		if ($data === false)
+		{
+			// Get the validation messages.
+			$errors	= $model->getErrors();
+
+			// Push up to three validation messages out to the user.
+			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+				if (JError::isError($errors[$i])) {
+					$app->enqueueMessage($errors[$i]->getMessage(), 'notice');
+				} else {
+					$app->enqueueMessage($errors[$i], 'notice');
+				}
+			}
+
+			// Save the data in the session.
+			$app->setUserState('com_eve.edit.character.data', $data);
+
+			// Redirect back to the edit screen.
+			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
+			return false;
+		}
+
+		// Attempt to save the character.
+		$return = $model->save($data);
+
+		if ($return === false) {
+			// Save failed, go back to the character and display a notice.
+			$message = JText::sprintf('JError_Save_failed', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
+			return false;
+		}
+
+		// Save succeeded, check-in the character.
+		if (!$model->checkin()) {
+			// Check-in failed, go back to the character and display a notice.
+			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
+			return false;
+		}
+
+		$this->setMessage(JText::_('JController_Save_success'));
+
+		// Redirect the user and adjust session state based on the chosen task.
+		switch ($this->_task) {
+			case 'apply':
+				// Redirect back to the edit screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
+				break;
+
+			case 'save2new':
+				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.edit.character.characterID', null);
+				$app->setUserState('com_eve.edit.character.data', null);
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
+				break;
+
+			default:
+				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.edit.character.characterID', null);
+				$app->setUserState('com_eve.edit.character.data', null);
+
+				// Redirect to the list screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false));
+				break;
+		}
+	}	
 	
 	function remove() {
 		JRequest::checkToken() or die( 'Invalid Token' );
 
-		$this->setRedirect( 'index.php?option=com_eve&control=char' );
+		$this->setRedirect( 'index.php?option=com_eve&view=characters' );
 		
 		$db 			=& JFactory::getDBO();
 		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
@@ -67,32 +222,10 @@ class EveControllerCharacter extends EveController {
 			$table->delete($id);
 		}
 		
-		$url = JRoute::_('index.php?option=com_eve&control=char', false);
+		$url = JRoute::_('index.php?option=com_eve&view=characters', false);
 		$this->setRedirect($url, JText::_('CHARACTER DELETED'));
 	}
 	
-	function applysave() {
-		JRequest::checkToken() or die( 'Invalid Token' );
-		
-		$this->setRedirect( 'index.php?option=com_eve' );
-		$model = & $this->getModel('Char');
-		$model->store();
-		$task = $this->getTask();
-		
-		switch ($task)
-		{
-			case 'apply':
-				$url = 'index.php?option=com_eve&control=char&task=edit&cid[]='. JRequest::getInt('characterID');
-				break;
-
-			case 'save':
-			default:
-				$url = 'index.php?option=com_eve&control=char';
-				break;
-		}
-
-		$this->setRedirect(JRoute::_($url, false));
-	}
 	
 	function getCharacterSheet() {
 		$model = & $this->getModel('Char', 'EveModel');
@@ -103,7 +236,7 @@ class EveControllerCharacter extends EveController {
 			$msg = JText::_('CHARACTERS SUCCESSFULLY IMPORTED');
 		}
 		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=char', false), $msg);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
 	}
 	
 	function getCorporationSheet() {
@@ -114,7 +247,7 @@ class EveControllerCharacter extends EveController {
 			$msg = JText::_('CORPORATIONS SUCCESSFULLY IMPORTED');
 		}
 		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=char', false), $msg);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
 		
 	}
 	

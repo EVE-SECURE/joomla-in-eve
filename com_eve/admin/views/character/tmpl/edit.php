@@ -7,7 +7,7 @@
 defined('_JEXEC') or die();
 
 ?>
-<form action="index.php?option=com_eve&amp;control=char" method="post" name="adminForm">
+<form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<div class="col100">
 	<fieldset>
 		<legend><?php echo JText::_('CHARACTER DETAILS'); ?></legend>
@@ -15,29 +15,29 @@ defined('_JEXEC') or die();
 			<tbody>
 				<tr>
 					<td class="key">
-						<label for="characterID"><?php echo JText::_('CHARACTER ID'); ?></label>
+						<label for="jformcharacterID"><?php echo JText::_('CHARACTER ID'); ?></label>
 					</td>
 					<td>
 						<?php if ($this->item->characterID): ?>
-							<input type="hidden" name="characterID" value="<?php echo $this->item->characterID; ?>" />
+							<input type="hidden" name="jform[characterID]" id="jformcharacterID" value="<?php echo $this->item->characterID; ?>" />
 							<strong><?php echo $this->item->characterID; ?></strong>
 						<?php else: ?>
-							<input type="text" name="characterID" value="<?php echo $this->item->characterID; ?>" />
+							<input type="text" name="jform[characterID]" id="jformcharacterID" value="<?php echo $this->item->characterID; ?>" />
 						<?php endif; ?>
 					</td>
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="name"><?php echo JText::_('CHARACTER NAME'); ?></label>
+						<label for="jformname"><?php echo JText::_('CHARACTER NAME'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="name" value="<?php echo $this->item->name; ?>" />
+						<input type="text" name="jform[name]" id="jformname" value="<?php echo $this->item->name; ?>" />
 					</td>
 				</tr>
 				<?php /*endif;*/ ?>
 				<tr>
 					<td class="key">
-						<label for="userID"><?php echo JText::_('USER NAME'); ?></label>
+						<label for="jformuserID"><?php echo JText::_('USER NAME'); ?></label>
 					</td>
 					<td>
 						<?php echo $this->html_users; ?>
@@ -48,9 +48,6 @@ defined('_JEXEC') or die();
 	</fieldset>
 	</div>
 		
-	
-
 	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="boxchecked" value="0" />
 	<?php echo JHTML::_( 'form.token' ); ?>
 </form>

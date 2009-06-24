@@ -27,7 +27,7 @@ jimport( 'joomla.application.component.view');
 
 class EveViewAccount extends JView {
 	public $apiStates = null;
-	public $user = null;
+	public $item = null;
 	
 	
 	function display($tpl = null) {
@@ -37,20 +37,7 @@ class EveViewAccount extends JView {
 		$item = $this->get('Item');
 		$apiStates = $this->get('ApiStates');;
 		
-		$model = $this->getModel();
-		$dbo = $this->get('DBO');
-		$q = new JQuery($dbo);
-		$q->addTable('#__users');
-		$q->addQuery('id, name');
-		$users = $q->loadObjectList();
-		
-		
-		$nouser = array('id' => '0', 'name'=>JText::_('UNKNOWN OWNER'));
-		$nouser = array('0' => JArrayHelper::toObject($nouser));
-		$users = array_merge($nouser, $users);
-		
 		$this->assignRef('apiStates', $apiStates);
-		$this->assignRef('users', $users);
 		$this->assignRef('item', $item);
 		parent::display($tpl);
 		$this->_setToolbar();
@@ -74,6 +61,6 @@ class EveViewAccount extends JView {
 		} else {
 			JToolBarHelper::cancel('account.cancel', 'Close');
 		}
-		
 	}
+	
 }
