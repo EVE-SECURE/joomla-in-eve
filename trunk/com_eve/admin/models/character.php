@@ -25,9 +25,8 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-class EveModelAccount extends EveModel {
+class EveModelCharacter extends EveModel {
 	
-
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -45,11 +44,11 @@ class EveModelAccount extends EveModel {
 
 		// Load the User state.
 		if (JRequest::getWord('layout') === 'edit') {
-			$userID = (int) $app->getUserState('com_eve.edit.account.userID');
-			$this->setState('account.userID', $userID);
+			$characterID = (int) $app->getUserState('com_eve.edit.character.characterID');
+			$this->setState('character.characterID', $characterID);
 		} else {
-			$userID = (int) JRequest::getInt('userID');
-			$this->setState('account.userID', $userID);
+			$characterID = (int) JRequest::getInt('characterID');
+			$this->setState('character.characterID', $characterID);
 		}
 
 		// Load the parameters.
@@ -66,14 +65,14 @@ class EveModelAccount extends EveModel {
 	 * @return	mixed	User data object on success, false on failure.
 	 * @since	1.0
 	 */
-	public function &getItem($userID = null)
+	public function &getItem($characterID = null)
 	{
 		// Initialize variables.
-		$userID	= (!empty($userID)) ? $userID : (int) $this->getState('account.userID');
+		$characterID	= (!empty($characterID)) ? $characterID : (int) $this->getState('character.characterID');
 		$false		= false;
 
 		// Attempt to load the row.
-		$return = $this->getAccount($userID);
+		$return = $this->getCharacter($characterID);
 		
 		// Check for a table object error.
 		if ($return === false && $table->getError()) {
@@ -88,23 +87,16 @@ class EveModelAccount extends EveModel {
 
 	public function save($data)
 	{
-		$userID	= (int) $this->getState('account.userID');
+		$characterID	= (int) $this->getState('character.characterID');
 		$isNew		= true;
 
-		// Get a account row instance.
-		$table = &$this->getItem($userID);
+		// Get a character row instance.
+		$table = &$this->getItem($characterID);
 		
-		$apiKeyPast = $table->apiKey;
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
 			return false;
-		}
-		
-		//compare apiKey with one stored in database
-		$apiKeyNow = $table->apiKey;
-		if ($apiKeyPast != $apiKeyNow) {
-			$table->apiStatus = 'Unknown';
 		}
 		
 		// Prepare the row for saving
@@ -122,35 +114,35 @@ class EveModelAccount extends EveModel {
 			return false;
 		}
 
-		return $table->userID;
+		return $table->characterID;
 	}
 
-	protected function _prepareTable(&$account)
+	protected function _prepareTable(&$character)
 	{
 		$app = JFactory::getApplication();
-		if ($account->apiStatus == 'Unknown') {
+		if ($character->apiStatus == 'Unknown') {
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
 			$ale = $this->getAleEVEOnline();
 			try {
-				$ale->setCredentials($account->userID, $account->apiKey);
-				$xml = $ale->account->Characters();
-				$dispatcher->trigger('accountCharacters', 
-					array($xml, $ale->isFromCache(), array('userID' => $account->userID)));
+				$ale->setCredentials($character->characterID, $character->apiKey);
+				$xml = $ale->character->Characters();
+				$dispatcher->trigger('characterCharacters', 
+					array($xml, $ale->isFromCache(), array('characterID' => $character->characterID)));
 				
 				$charRow = reset($xml->result->characters->getIterator());
 				if ($charRow !== false) {
 					$ale->setCharacterID($charRow->characterID);
-					$xml = $ale->char->AccountBalance();
-					$dispatcher->trigger('charAccountBalance', 
+					$xml = $ale->char->CharacterBalance();
+					$dispatcher->trigger('charCharacterBalance', 
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
-				$account->apiStatus = 'Full';
+				$character->apiStatus = 'Full';
 				$app->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode());
-				switch ($account->apiStatus) {
+				$this->updateApiStatus($character, $e->getCode());
+				switch ($character->apiStatus) {
 					case 'Limited':
 						JError::raiseNotice(0, JText::_('API key offers limited access'));
 						break;
@@ -158,7 +150,7 @@ class EveModelAccount extends EveModel {
 						JError::raiseWarning(0, JText::_('API key is invalid'));
 						break;
 					case 'Inactive':
-						JError::raiseWarning(0, JText::_('Account is inactive'));
+						JError::raiseWarning(0, JText::_('Character is inactive'));
 						break;
 				}
 			}
@@ -168,15 +160,15 @@ class EveModelAccount extends EveModel {
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
-			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
+			$dispatcher->trigger('onRegisterCharacter', array($character->characterID, $character->apiStatus));
 			
 		}	
 	}
 	
 	public function validate($data = null)
 	{
-		if (!is_numeric($data['userID'])) {
-			$this->setError(JText::_('Invalid userID'));
+		if (!is_numeric($data['characterID'])) {
+			$this->setError(JText::_('Invalid characterID'));
 			return false;
 		}
 		return $data;
@@ -189,26 +181,26 @@ class EveModelAccount extends EveModel {
 	 * @return	boolean	True on success/false on failure
 	 * @since	1.6
 	 */
-	public function checkin($userID = null)
+	public function checkin($characterID = null)
 	{
 		// Initialize variables.
 		$user		= &JFactory::getUser();
 		$juserId	= (int) $user->get('id');
-		$userID	= (int) $userID;
+		$characterID	= (int) $characterID;
 
-		if ($userID === 0) {
-			$userID = $this->getState('account.userID');
+		if ($characterID === 0) {
+			$characterID = $this->getState('character.characterID');
 		}
 
-		if (empty($userID)) {
+		if (empty($characterID)) {
 			return true;
 		}
 
-		// Get a accountsTableaccount instance.
-		$table = &$this->getAccount();
+		// Get a charactersTablecharacter instance.
+		$table = &$this->getCharacter();
 
 		// Attempt to check-in the row.
-		$return = $table->checkin($userID);
+		$return = $table->checkin($characterID);
 		// Check for a database error.
 		if ($return === false) {
 			$this->setError($table->getError());
@@ -219,28 +211,28 @@ class EveModelAccount extends EveModel {
 	}
 
 	/**
-	 * Method to check-out a account for editing.
+	 * Method to check-out a character for editing.
 	 *
-	 * @param	int		$userID	The numeric id of the account to check-out.
+	 * @param	int		$characterID	The numeric id of the character to check-out.
 	 * @return	bool	False on failure or error, success otherwise.
 	 * @since	1.6
 	 */
-	public function checkout($userID)
+	public function checkout($characterID)
 	{
 		// Initialize variables.
 		$user		= &JFactory::getUser();
 		$juserId	= (int) $user->get('id');
-		$userID	= (int) $userID;
+		$characterID	= (int) $characterID;
 
-		// Check for a new account id.
-		if ($userID === -1) {
+		// Check for a new character id.
+		if ($characterID === -1) {
 			return true;
 		}
 
-		$table = &$this->getAccount();
+		$table = &$this->getCharacter();
 
 		// Attempt to check-out the row.
-		$return = $table->checkout($juserId, $userID);
+		$return = $table->checkout($juserId, $characterID);
 
 		// Check for a database error.
 		if ($return === false) {
@@ -258,7 +250,7 @@ class EveModelAccount extends EveModel {
 	}
 	
 	/**
-	 * Tests if account is checked out
+	 * Tests if character is checked out
 	 *
 	 * @access	public
 	 * @param	int	A user id
@@ -272,15 +264,15 @@ class EveModelAccount extends EveModel {
 			$juserId	= (int) $user->get('id');
 		}
 
-		$userID = (int) $this->getState('account.userID');
+		$characterID = (int) $this->getState('character.characterID');
 
-		if (empty($userID)) {
+		if (empty($characterID)) {
 			return true;
 		}
 
-		$table = &$this->getAccount();
+		$table = &$this->getCharacter();
 
-		$return = $table->load($userID);
+		$return = $table->load($characterID);
 
 		if ($return === false && $table->getError()) {
 			$this->setError($table->getError());
@@ -292,15 +284,15 @@ class EveModelAccount extends EveModel {
 	
 
 	/**
-	 * Method to delete accounts from the database.
+	 * Method to delete characters from the database.
 	 *
 	 * @param	integer	$cid	An array of	numeric ids of the rows.
 	 * @return	boolean	True on success/false on failure.
 	 */
 	public function delete($cid)
 	{
-		// Get a account row instance
-		$table = $this->getAccount();
+		// Get a character row instance
+		$table = $this->getCharacter();
 
 		for ($i = 0, $c = count($cid); $i < $c; $i++) {
 			// Load the row.
@@ -324,42 +316,42 @@ class EveModelAccount extends EveModel {
 
 		return true;
 	}
-
-
+	
 	/**
-	 * Get instance of TableAccount
+	 * Get TableCharacter
 	 *
 	 * @param int $id
-	 * @return TableAccount
+	 * @return TableCharacter
 	 */
-	function getAccount($userID = null) {
-		return $this->getInstance('Account', $userID);
+	function getCharacter($characterID = null) {
+		return $this->getInstance('Character', $characterID);
 	}
 	
-	function getApiStates() {
-		return $this->getEnumOptions('#__eve_accounts', 'apiStatus');
-	}
-	
-	function apiGetCharacters($cid) {
+	function apiGetCharacterSheet($cid) {
 		global $mainframe;
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO ACCOUNTS SELECTED'));
+			JError::raiseWarning(500, JText::_('NO CHARACTER SELECTED'));
 			return false;
 		}
+		
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
 		$count = 0;
 		$ale = $this->getAleEVEOnline();
-		foreach ($cid as $userID) {
+		foreach ($cid as $characterID) {
 			try {
-				$account = $this->getAccount($userID);
-				$ale->setCredentials($account->userID, $account->apiKey);
-				$xml = $ale->account->Characters();
-				$dispatcher->trigger('accountCharacters', 
-					array($xml, $ale->isFromCache(), array('userID' => $userID)));
+				$character  = $this->getCharacter($characterID);
+				$account = $this->getInstance('Account', $character->userID);
+				if (!$account->apiKey) {
+					continue;
+				}
+				$ale->setCredentials($account->userID, $account->apiKey, $character->characterID);
+				$xml = $ale->char->CharacterSheet();
+				$dispatcher->trigger('charCharacterSheet', 
+					array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
@@ -372,14 +364,61 @@ class EveModelAccount extends EveModel {
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
-			
 		}
 		if ($count == 1) {
-			$mainframe->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
+			$mainframe->enqueueMessage(JText::_('CHARACTER SHEET SUCCESSFULLY IMPORTED'));
 		}
 		if ($count > 1) {
-			$mainframe->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
+			$mainframe->enqueueMessage(JText::sprintf('%s CHARACTER SHEETS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
 	
+	function apiGetCorporationSheet($cid) {
+		global $mainframe;
+		JArrayHelper::toInteger($cid);
+		
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('NO CHARACTER SELECTED'));
+			return false;
+		}
+		
+		JPluginHelper::importPlugin('eveapi');
+		$dispatcher =& JDispatcher::getInstance();
+		
+		$count = 0;
+		$ale = $this->getAleEVEOnline();
+		$finishedCorps = array();
+		foreach ($cid as $characterID) {
+			try {
+				$character = $this->getCharacter($characterID);
+				if (in_array($character->corporationID, $finishedCorps)) {
+					continue;
+				}
+				$account = $this->getInstance('Account', $character->userID);
+				$ale->setCredentials($account->userID, $account->apiKey, $character->characterID);
+				$xml = $ale->corp->CorporationSheet();
+				$dispatcher->trigger('corpCorporationSheet', 
+					array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
+				$finishedCorps[] = $character->corporationID;
+				$count += 1;
+			}
+			catch (AleExceptionEVEAuthentication $e) {
+				$this->updateApiStatus($account, $e->getCode(), true);
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (RuntimeException $e) {
+				JError::raiseWarning($e->getCode(), $e->getMessage());
+			}
+			catch (Exception $e) {
+				JError::raiseError($e->getCode(), $e->getMessage());
+			}
+		}
+		if ($count == 1) {
+			$mainframe->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
+		}
+		if ($count > 1) {
+			$mainframe->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
+		}
+	}
+		
 }

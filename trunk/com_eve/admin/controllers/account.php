@@ -27,7 +27,6 @@ class EveControllerAccount extends EveController {
 	
 	function __construct( $config = array() )
 	{
-		//$config['name'] = 'char';
 		parent::__construct( $config );
 		
 		$this->registerTask('save2new', 'save');
@@ -202,54 +201,8 @@ class EveControllerAccount extends EveController {
 		}
 	}	
 	
-	
-	
-	function x_remove() {
-		JRequest::checkToken() or die( 'Invalid Token' );
-
-		$this->setRedirect( 'index.php?option=com_eve&control=account' );
+	function remove() {
 		
-		$db 			=& JFactory::getDBO();
-		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
-		$model 			= & $this->getModel('Account');
-		$table 			= $model->getTable('Account');
-
-		JArrayHelper::toInteger( $cid );
-		
-		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select a Account to delete', true ) );
-		}
-		
-		foreach ($cid as $id) {
-			$table->delete($id);
-		}
-		
-		$url = JRoute::_('index.php?option=com_eve&control=account', false);
-		$this->setRedirect($url, JText::_('USER DELETED'));
-	}
-	
-	function x_save() {
-		JRequest::checkToken() or die( 'Invalid Token' );
-
-		$this->setRedirect( 'index.php?option=com_eve&control=account' );
-
-		$model = & $this->getModel('Account');
-		
-		$model->store();
-				
-		$task = $this->getTask();
-		
-		switch ($task) {
-			case 'apply':
-				$url = 'index.php?option=com_eve&control=account&task=edit&cid[]='. JRequest::getInt('userID', 0, 'POST'); 
-				break;
-			case 'save':
-			default:
-				$url = 'index.php?option=com_eve&control=account';
-				break;
-		}
-
-		$this->setRedirect( JRoute::_($url, false) );
 	}
 	
 	function getCharacters() {

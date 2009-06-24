@@ -15,39 +15,39 @@ defined('_JEXEC') or die();
 			<tbody>
 				<tr>
 					<td class="key">
-						<label for="userID"><?php echo JText::_('USER ID'); ?></label>
+						<label for="jformuserID"><?php echo JText::_('USER ID'); ?></label>
 					</td>
 					<td>
 						<?php if ($this->item->userID): ?>
-							<input type="hidden" name="jform[userID]" value="<?php echo $this->item->userID; ?>" />
+							<input type="hidden" name="jform[userID]" id="jformuserID" value="<?php echo $this->item->userID; ?>" />
 							<strong><?php echo $this->item->userID; ?></strong>
 						<?php else: ?>
-							<input type="text" name="jform[userID]" value="<?php echo $this->item->userID; ?>" />
+							<input type="text" name="jform[userID]" id="jformuserID" value="<?php echo $this->item->userID; ?>" />
 						<?php endif; ?>
 					</td>
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="name"><?php echo JText::_('API KEY'); ?></label>
+						<label for="jformapiKey"><?php echo JText::_('API KEY'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[apiKey]" value="<?php echo $this->item->apiKey; ?>" size="96" maxlength="64" />
+						<input type="text" name="jform[apiKey]" id="jformapiKey" value="<?php echo $this->item->apiKey; ?>" size="96" maxlength="64" />
 					</td>
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="apiStatus"><?php echo JText::_('API KEY STATUS'); ?></label>
+						<label for="jformapiStatus"><?php echo JText::_('API KEY STATUS'); ?></label>
 					</td>
 					<td>
-						<?php echo JHTML::_('select.genericlist', $this->apiStates, 'jform[apiStatus]', null, 'value', 'value', $this->item->apiStatus); ?>
+						<?php echo JHTML::_('select.genericlist', $this->apiStates, 'jform[apiStatus]', null, 'value', 'value', $this->item->apiStatus, 'jformapiStatus'); ?>
 					</td>
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="userID"><?php echo JText::_('OWNER'); ?></label>
+						<label for="jformowner"><?php echo JText::_('OWNER'); ?></label>
 					</td>
 					<td>
-						<?php echo JHTML::_('select.genericlist', $this->users, 'jform[owner]', null, 'id', 'name', $this->item->owner); ?>
+						<?php echo JHTML::_('list.users', 'jform[owner]', $this->item->owner, 1); ?>
 					</td>
 				</tr>
 			</tbody>
@@ -55,6 +55,5 @@ defined('_JEXEC') or die();
 	</fieldset>
 	</div>
 	<input type="hidden" name="task" value="" />
-	<input type="hidden" name="boxchecked" value="0" />
 	<?php echo JHTML::_( 'form.token' ); ?>
 </form>
