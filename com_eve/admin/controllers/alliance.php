@@ -31,20 +31,177 @@ class EveControllerAlliance extends EveController {
 		
 		//$this->setRedirect('?option=com_eve&control=alliance');
 		
-		$this->registerTask('remove', 'remove');
-		$this->registerTask('add', 'addedit');
-		$this->registerTask('edit', 'addedit');
-		$this->registerTask('apply', 'applysave');
-		$this->registerTask('save', 'applysave');
 		$this->registerTask('get_alliance_list', 'getAllianceList');
 		$this->registerTask('get_alliance_members', 'getAllianceMembers');
 	}
 	
-	function addedit() {
-		JRequest::setVar('view', 'alliance');
-		$this->display();
+	function add() {
+		$app = &JFactory::getApplication();
+
+		// Clear the level edit information from the session.
+		$app->setUserState('com_eve.edit.alliance.allianceID', null);
+		$app->setUserState('com_eve.edit.alliance.data', null);
+
+		// Redirect to the edit screen.
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliance&layout=edit', false));
 	}
 	
+	function edit() {
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Alliance', 'EveModel');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
+		
+		$previousId		= (int) $app->getUserState('com_eve.edit.alliance.allianceID');
+		$allianceID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('allianceID'));
+		// If alliance ids do not match, checkin previous alliance.
+		if (($previousId > 0) && ($allianceID != $previousId)) {
+			if (!$model->checkin($previousId)) {
+				// Check-in failed, go back to the alliance and display a notice.
+				$message = JText::sprintf('JError_Checkin_failed', $model->getError());
+				$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit', $message, 'error');
+				return false;
+			}
+		}
+		
+		// Attempt to check-out the new alliance for editing and redirect.
+		if (!$model->checkout($allianceID)) {
+			// Check-out failed, go back to the list and display a notice.
+			$message = JText::sprintf('JError_Checkout_failed', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=alliance&allianceID='.$allianceID, $message, 'error');
+			return false;
+		}
+		else {
+			// Check-out succeeded, push the new alliance id into the session.
+			$app->setUserState('com_eve.edit.alliance.allianceID',	$allianceID);
+			$app->setUserState('com_eve.edit.alliance.data', null);
+			$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit');
+			return true;
+		}		
+	}
+
+	/**
+	 * Method to cancel an edit
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	1.0
+	 */
+	public function cancel()
+	{
+		JRequest::checkToken() or jExit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Alliance', 'EveModel');
+
+		// Get the alliance id.
+		$allianceID = (int) $app->getUserState('com_eve.edit.alliance.allianceID');
+
+		// Attempt to check-in the current alliance.
+		if ($allianceID) {
+			if (!$model->checkin($allianceID)) {
+				// Check-in failed, go back to the alliance and display a notice.
+				$message = JText::sprintf('JError_Checkin_failed', $model->getError());
+				$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit', $message, 'error');
+				return false;
+			}
+		}
+		// Clean the session data and redirect.
+		$app->setUserState('com_eve.edit.alliance.allianceID',		null);
+		$app->setUserState('com_eve.edit.alliance.data',	null);
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+	}
+
+	/**
+	 * Method to save a alliance.
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	1.0
+	 */
+	public function save()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+		$model	= $this->getModel('Alliance');
+		$data	= JRequest::getVar('jform', array(), 'post', 'array');
+
+		// Validate the posted data.
+		$data	= $model->validate($data);
+		
+		// Check for validation errors.
+		if ($data === false)
+		{
+			// Get the validation messages.
+			$errors	= $model->getErrors();
+
+			// Push up to three validation messages out to the user.
+			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+				if (JError::isError($errors[$i])) {
+					$app->enqueueMessage($errors[$i]->getMessage(), 'notice');
+				} else {
+					$app->enqueueMessage($errors[$i], 'notice');
+				}
+			}
+
+			// Save the data in the session.
+			$app->setUserState('com_eve.edit.alliance.data', $data);
+
+			// Redirect back to the edit screen.
+			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliance&layout=edit', false));
+			return false;
+		}
+
+		// Attempt to save the alliance.
+		$return = $model->save($data);
+
+		if ($return === false) {
+			// Save failed, go back to the alliance and display a notice.
+			$message = JText::sprintf('JError_Save_failed', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit', $message, 'error');
+			return false;
+		}
+
+		// Save succeeded, check-in the alliance.
+		if (!$model->checkin()) {
+			// Check-in failed, go back to the alliance and display a notice.
+			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit', $message, 'error');
+			return false;
+		}
+
+		$this->setMessage(JText::_('JController_Save_success'));
+
+		// Redirect the user and adjust session state based on the chosen task.
+		switch ($this->_task) {
+			case 'apply':
+				// Redirect back to the edit screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliance&layout=edit', false));
+				break;
+
+			case 'save2new':
+				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.edit.alliance.allianceID', null);
+				$app->setUserState('com_eve.edit.alliance.data', null);
+
+				// Redirect back to the edit screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliance&layout=edit', false));
+				break;
+
+			default:
+				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.edit.alliance.allianceID', null);
+				$app->setUserState('com_eve.edit.alliance.data', null);
+
+				// Redirect to the list screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+				break;
+		}
+	}
+		
 	function remove() {
 		JRequest::checkToken() or die( 'Invalid Token' );
 
@@ -67,29 +224,6 @@ class EveControllerAlliance extends EveController {
 		
 		$url = JRoute::_('index.php?option=com_eve&control=alliance', false);
 		$this->setRedirect($url, JText::_('ALLIANCE DELETED'));
-	}
-	
-	function applysave() {
-		JRequest::checkToken() or die( 'Invalid Token' );
-
-		$this->setRedirect( 'index.php?option=com_eve' );
-
-		$model = & $this->getModel('Alliance');
-		$model->store();				
-		$task = $this->getTask();
-		
-		switch ($task) {
-			case 'apply':
-				$link = 'index.php?option=com_eve&control=alliance&task=edit&cid[]='. JRequest::getInt('allianceID', 0, 'post') ;
-				break;
-
-			case 'save':
-			default:
-				$link = 'index.php?option=com_eve&control=alliance';
-				break;
-		}
-
-		$this->setRedirect( JRoute::_($link, false));	
 	}
 	
 	function getAllianceList() {

@@ -38,6 +38,7 @@ class EveModelAlliances extends JModelList {
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
+		$owner = $this->getState('filter.owner');
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
@@ -48,16 +49,8 @@ class EveModelAlliances extends JModelList {
 		if ($search) {
 			$q->addWhere('al.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}
-		switch ($this->getState('filter.standings')) {
-			case 'owner':
-				$q->addWhere('al.owner');
-				break;
-			case 'friendly':
-				$q->addWhere('al.standings > 0');
-				break;
-			case 'hostile':
-				$q->addWhere('al.standings < 0');
-				break;
+		if ($owner) {
+			$q->addWhere('al.owner');
 		}
 		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'al.name')), 
 			$q->getEscaped($this->getState('list.direction', 'ASC')));
@@ -83,7 +76,8 @@ class EveModelAlliances extends JModelList {
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-
+		$id	.= ':'.$this->getState('filter.owner');
+		
 		return md5($id);
 	}
 	
@@ -105,7 +99,8 @@ class EveModelAlliances extends JModelList {
 
 		// Load the filter state.
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-
+		$this->setState('filter.owner', $app->getUserStateFromRequest($context.'filter.owner', 'filter_owner', 0, 'int'));
+		
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));

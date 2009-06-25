@@ -119,50 +119,6 @@ class EveModelCharacter extends EveModel {
 
 	protected function _prepareTable(&$character)
 	{
-		$app = JFactory::getApplication();
-		if ($character->apiStatus == 'Unknown') {
-			JPluginHelper::importPlugin('eveapi');
-			$dispatcher =& JDispatcher::getInstance();
-			$ale = $this->getAleEVEOnline();
-			try {
-				$ale->setCredentials($character->characterID, $character->apiKey);
-				$xml = $ale->character->Characters();
-				$dispatcher->trigger('characterCharacters', 
-					array($xml, $ale->isFromCache(), array('characterID' => $character->characterID)));
-				
-				$charRow = reset($xml->result->characters->getIterator());
-				if ($charRow !== false) {
-					$ale->setCharacterID($charRow->characterID);
-					$xml = $ale->char->CharacterBalance();
-					$dispatcher->trigger('charCharacterBalance', 
-						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
-				}
-				$character->apiStatus = 'Full';
-				$app->enqueueMessage(JText::_('API key offers full access'));
-			}
-			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($character, $e->getCode());
-				switch ($character->apiStatus) {
-					case 'Limited':
-						JError::raiseNotice(0, JText::_('API key offers limited access'));
-						break;
-					case 'Invalid':
-						JError::raiseWarning(0, JText::_('API key is invalid'));
-						break;
-					case 'Inactive':
-						JError::raiseWarning(0, JText::_('Character is inactive'));
-						break;
-				}
-			}
-			catch (RuntimeException $e) {
-				JError::raiseWarning($e->getCode(), $e->getMessage());
-			}
-			catch (Exception $e) {
-				JError::raiseError($e->getCode(), $e->getMessage());
-			}
-			$dispatcher->trigger('onRegisterCharacter', array($character->characterID, $character->apiStatus));
-			
-		}	
 	}
 	
 	public function validate($data = null)

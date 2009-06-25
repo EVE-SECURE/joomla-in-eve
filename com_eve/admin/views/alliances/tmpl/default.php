@@ -9,6 +9,8 @@ defined('_JEXEC') or die();
 JHtml::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
+
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html')
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>" method="post" name="adminForm">
 	<table>
@@ -17,7 +19,7 @@ $userId	= $user->get('id');
 				<?php echo JHTML::_('filter.search', $this->state->get('filter_search')); ?>
 			</td>
 			<td nowrap="nowrap">
-				<?php echo JHTML::_('filter.select', 'filter_standings', $this->state->get('filter.standings')); ?>
+				<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'something'); ?>
 			</td>
 		</tr>
 	</table>
