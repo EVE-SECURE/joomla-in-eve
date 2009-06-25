@@ -31,42 +31,36 @@ class EveViewCorporation extends JView {
 		$document =& JFactory::getDocument();
 		$document->addStyleSheet('components/com_eve/assets/common.css');
 		
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-		JToolBarHelper::cancel();
-		JToolBarHelper::back();
+		$item = $this->get('Item');
 		
-		$model = $this->getModel();
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
 		
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		JArrayHelper::toInteger($cid);
+		$this->assignRef('item', $item);
 		
-		$id = reset($cid);
-		
-		if ($id > 0) {
+		parent::display($tpl);
+	}
+
+	protected function _setToolbar() {
+		JRequest::setVar('hidemainmenu', 1);
+
+		if ($this->item->corporationID > 0) {
 			$title = JText::_('EDIT CORPORATION');
 		} else {
 			$title = JText::_('NEW CORPORATION');
 		}
-		JToolBarHelper::title($title, 'corp');
+		JToolBarHelper::title($title, 'corporation');
 		
-		$item = $model->getCorporation($id);
-
-		$query = 'SELECT allianceID, name FROM #__eve_alliances ORDER BY name;';
-		$dbo = $model->getDBO();
-		$dbo->setQuery($query);
-		$alliances = $dbo->loadObjectList();
-		
-		$noalliance = array('allianceID' => '0', 'name'=>JText::_('NOT MEMBER OF ALLIANCE'));
-		$noalliance = array('0' => JArrayHelper::toObject($noalliance));
-		$alliances = array_merge($noalliance, $alliances);
-		
-		$html_alliance = JHTML::_('select.genericlist', $alliances, 'allianceID', null, 'allianceID', 'name', $item->allianceID);
-		$html_owner = JHTML::_('select.booleanlist', 'owner', null, $item->owner);
-		
-		$this->assignRef('html_alliance', $html_alliance);
-		$this->assignRef('html_owner', $html_owner);
-		$this->assignRef('item', $item);
-		parent::display($tpl);
+		JToolBarHelper::apply('corporation.apply');
+		JToolBarHelper::save('corporation.save');
+		JToolBarHelper::addNew('corporation.save2new', 'Save and new');
+		if ($this->item->userID > 0) {
+			JToolBarHelper::cancel('corporation.cancel');
+		} else {
+			JToolBarHelper::cancel('corporation.cancel', 'Close');
+		}
 	}
 }

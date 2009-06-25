@@ -55,7 +55,7 @@ defined('_JEXEC') or die();
 						<label for="jformowner"><?php echo JText::_('OWNER?'); ?></label>
 					</td>
 					<td>
-						<?php echo $this->html_owner; ?>
+						<?php echo JHTML::_('select.booleanlist', 'owner', null, $item->owner); ?>
 					</td>
 				</tr>				
 			</tbody>

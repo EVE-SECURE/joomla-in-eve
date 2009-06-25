@@ -35,26 +35,14 @@ class EveViewCharacter extends JView {
 		
 		$item = $this->get('Item');
 		
-		$dbo = $this->get('DBO');
-		$q = new JQuery($dbo);
-		$q->addTable('#__eve_accounts', 'u');
-		$q->addJoin('#__users', 'owner', 'u.owner=owner.id');
-		$q->addQuery('u.userID, owner.name');
-		$q->addOrder('name');
-		$q->addOrder('userID');
-		$users = $q->loadObjectList();
-		foreach ($users as $user) {
-			$user->name = sprintf('%s (%s)', $user->name, $user->userID);
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
 		}
 		
-		$nouser = array('userID' => '0', 'name'=>JText::_('CHARACTER NOT ASSIGNED'));
-		$nouser = array('0' => JArrayHelper::toObject($nouser));
-		$users = array_merge($nouser, $users);
-		
-		$html_users = JHTML::_('select.genericlist', $users, 'jform[userID]', null, 'userID', 'name', $item->userID, 'jformuserID');
-		
-		$this->assignRef('html_users', $html_users);
 		$this->assignRef('item', $item);
+		
 		parent::display($tpl);
 		$this->_setToolbar();
 	}

@@ -35,11 +35,9 @@ class  plgSystemEVE extends JPlugin {
 
 	function onAfterInitialise() {
 		global $mainframe;
-		jimport('joomla.html');
 		//require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'loader.php';
 		$base = JPATH_PLUGINS.DS.'system'.DS.'eve'.DS;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
-		JHTML::addIncludePath($base.'html');
 		JLoader::register('EveFactory', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'factory.php');
 		JLoader::register('EveTable', $base.'database'.DS.'table.php');
 		JLoader::register('JQuery', $base.'database'.DS.'query.php');

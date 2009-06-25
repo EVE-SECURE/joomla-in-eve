@@ -23,27 +23,27 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class JHTMLFilter {
+
+abstract class JHTMLFilter {
 	
-	function select($name, $selected = null, $definition = null) {
-		if (empty($definition)) {
-			$definition = JPATH_COMPONENT.DS.'filters.xml';
-		}
-		
-		$filter_data = file_get_contents($definition);
-		$xml = new SimpleXMLElement($filter_data);
-		$xpath = $xml->xpath('/filters/filter[@name="'.$name.'"]/option');
-		return JHTML::_('select.genericlist', $xpath, $name, 'onchange="document.adminForm.submit()"', 'key', 'text', $selected, false, true);
-	}
-	
-	function search($value, $name = 'filter_search', $id = null) {
+	static function search($value, $name = 'filter_search', $id = null) {
 		if (is_null($id)) {
 			$id = $name;
 		}
 		return '<label for="'.$id.'">'.JText::_('Filter'). ':</label>'.
 		'<input type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" />'.
-		'<button onclick="this.form.submit();">'.JText::_( 'Go' ).'</button>'.
+		'<button onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button>'.
 		'<button onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button>';
-		
+	}
+	
+	
+	static function owner($active, $option) {
+		$options = array();
+		$options[]	= JHtml::_('select.option', '0', JText::_('Show all'));
+		$options[]	= JHtml::_('select.option', '1', JText::_($option));
+
+		$attr = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
+		$html = JHtml::_('select.genericlist', $options, 'filter_owner', $attr, 'value', 'text', $active);
+		echo $html;
 	}
 }
