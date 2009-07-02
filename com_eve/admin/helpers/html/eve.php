@@ -40,20 +40,21 @@ abstract class JHTMLEve {
 	}
 	
 	static function accountlist($name, $attribs = null, $selected = null, $idtag = false) {
-		$dbo = $this->get('DBO');
+		$dbo = JFactory::getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_accounts', 'u');
 		$q->addJoin('#__users', 'owner', 'u.owner=owner.id');
-		$q->addQuery('CONCAT(owner.name, \'(\', u.userID, \')\') as name');
+		$q->addQuery('userID');
+		$q->addQuery('COALESCE(CONCAT(owner.name, \'(\', u.userID, \')\'), u.userID) as name');
 		$q->addOrder('name');
-		$q->addOrder('userID');
 		$users = $q->loadObjectList();
+		//FIXME: in case owner.name is NULL
 		
 		$nouser = array('userID' => '0', 'name'=>JText::_('CHARACTER NOT ASSIGNED'));
 		$nouser = array('0' => JArrayHelper::toObject($nouser));
 		$users = array_merge($nouser, $users);
 		
-		return JHTML::_('select.genericlist', $name, $attribs, 'userID', 'name', $selected, $idtag);
+		return JHTML::_('select.genericlist',$users, $name, $attribs, 'userID', 'name', $selected, $idtag);
 		
 	}
 	

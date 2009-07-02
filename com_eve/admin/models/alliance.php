@@ -27,9 +27,276 @@ jimport('joomla.application.component.model');
 
 class EveModelAlliance extends EveModel {
 	
-	function __construct($config = array()) {
-		$config['table_path'] = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables';
-		parent::__construct($config);
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	protected function _populateState()
+	{
+		$app		= &JFactory::getApplication('administrator');
+		$params		= &JComponentHelper::getParams('com_eve');
+
+		// Load the User state.
+		if (JRequest::getWord('layout') === 'edit') {
+			$allianceID = (int) $app->getUserState('com_eve.edit.alliance.allianceID');
+			$this->setState('alliance.allianceID', $allianceID);
+		} else {
+			$allianceID = (int) JRequest::getInt('allianceID');
+			$this->setState('alliance.allianceID', $allianceID);
+		}
+
+		// Load the parameters.
+		$this->setState('params', $params);
+	}
+
+
+
+	/**
+	 * Method to get a member item.
+	 *
+	 * @access	public
+	 * @param	integer	The id of the member to get.
+	 * @return	mixed	User data object on success, false on failure.
+	 * @since	1.0
+	 */
+	public function &getItem($allianceID = null)
+	{
+		// Initialize variables.
+		$allianceID	= (!empty($allianceID)) ? $allianceID : (int) $this->getState('alliance.allianceID');
+		$false		= false;
+
+		// Attempt to load the row.
+		$return = $this->getAlliance($allianceID);
+		
+		// Check for a table object error.
+		if ($return === false && $table->getError()) {
+			$this->setError($table->getError());
+			return $false;
+		}
+
+		// Convert the params field to an array.
+		return $return;
+	}
+
+
+	public function save($data)
+	{
+		$allianceID	= (int) $this->getState('alliance.allianceID');
+		$isNew		= true;
+
+		// Get a alliance row instance.
+		$table = &$this->getItem($allianceID);
+		
+		$ownerPast = $alliance->owner;
+		
+		// Bind the data
+		if (!$table->bind($data)) {
+			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
+			return false;
+		}
+
+		if ($alliance->standings === '') {
+			$alliance->standings = null;
+		}
+		
+		// Prepare the row for saving
+		$this->_prepareTable($table);
+
+		// Check the data
+		if (!$table->check()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Store the data
+		if (!$table->store(true)) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+		
+		$ownerNow = $alliance->owner;
+		if ($ownerNow != $ownerPast) {
+			$q = $this->getQuery();
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+			$q->addWhere('co.owner = 0');
+			$q->addWhere('co.allianceID=%s', intval($alliance->allianceID));
+			$q->addQuery('ch.characterID', 'ch.userID');
+			$ceos = $q->loadObjectList();
+			
+			JPluginHelper::importPlugin('eveapi');
+			foreach ($ceos as $ceo) {
+				if ($ceo->userID && $ceo->characterID) {
+					$dispatcher =& JDispatcher::getInstance();
+					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
+				}
+			}
+		}
+	
+		return $table->allianceID;
+	}
+
+	protected function _prepareTable(&$alliance)
+	{
+
+	}
+	
+	public function validate($data = null)
+	{
+		if (!is_numeric($data['allianceID'])) {
+			$this->setError(JText::_('Invalid allianceID'));
+			return false;
+		}
+		return $data;
+	}
+	
+	/**
+	 * Method to checkin a row.
+	 *
+	 * @param	integer	$id		The numeric id of a row
+	 * @return	boolean	True on success/false on failure
+	 * @since	1.6
+	 */
+	public function checkin($allianceID = null)
+	{
+		// Initialize variables.
+		$user		= &JFactory::getUser();
+		$juserId	= (int) $user->get('id');
+		$allianceID	= (int) $allianceID;
+
+		if ($allianceID === 0) {
+			$allianceID = $this->getState('alliance.allianceID');
+		}
+
+		if (empty($allianceID)) {
+			return true;
+		}
+
+		// Get a alliancesTablealliance instance.
+		$table = &$this->getAlliance();
+
+		// Attempt to check-in the row.
+		$return = $table->checkin($allianceID);
+		// Check for a database error.
+		if ($return === false) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Method to check-out a alliance for editing.
+	 *
+	 * @param	int		$allianceID	The numeric id of the alliance to check-out.
+	 * @return	bool	False on failure or error, success otherwise.
+	 * @since	1.6
+	 */
+	public function checkout($allianceID)
+	{
+		// Initialize variables.
+		$user		= &JFactory::getUser();
+		$juserId	= (int) $user->get('id');
+		$allianceID	= (int) $allianceID;
+
+		// Check for a new alliance id.
+		if ($allianceID === -1) {
+			return true;
+		}
+
+		$table = &$this->getAlliance();
+
+		// Attempt to check-out the row.
+		$return = $table->checkout($juserId, $allianceID);
+
+		// Check for a database error.
+		if ($return === false) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Check if the row is checked-out by someone else.
+		if ($return === null) {
+			$this->setError(JText::_('JCommon_Item_is_checked_out'));
+			return false;
+		}
+
+		return true;
+	}
+	
+	/**
+	 * Tests if alliance is checked out
+	 *
+	 * @access	public
+	 * @param	int	A user id
+	 * @return	boolean	True if checked out
+	 * @since	1.5
+	 */
+	public function isCheckedOut($juserId = 0)
+	{
+		if ($juserId === 0) {
+			$user		= &JFactory::getUser();
+			$juserId	= (int) $user->get('id');
+		}
+
+		$allianceID = (int) $this->getState('alliance.allianceID');
+
+		if (empty($allianceID)) {
+			return true;
+		}
+
+		$table = &$this->getAlliance();
+
+		$return = $table->load($allianceID);
+
+		if ($return === false && $table->getError()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		return $table->isCheckedOut($juserId);
+	}
+	
+
+	/**
+	 * Method to delete alliances from the database.
+	 *
+	 * @param	integer	$cid	An array of	numeric ids of the rows.
+	 * @return	boolean	True on success/false on failure.
+	 */
+	public function delete($cid)
+	{
+		// Get a alliance row instance
+		$table = $this->getAlliance();
+
+		for ($i = 0, $c = count($cid); $i < $c; $i++) {
+			// Load the row.
+			$return = $table->load($cid[$i]);
+
+			// Check for an error.
+			if ($return === false) {
+				$this->setError($table->getError());
+				return false;
+			}
+
+			// Delete the row.
+			$return = $table->delete();
+
+			// Check for an error.
+			if ($return === false) {
+				$this->setError($table->getError());
+				return false;
+			}
+		}
+
+		return true;
 	}
 	
 	function getAlliance($id = null) {
@@ -53,24 +320,7 @@ class EveModelAlliance extends EveModel {
 		if (!$alliance->store()) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
-		$ownerNow = $alliance->owner;
-		if ($ownerNow != $ownerPast) {
-			$q = $this->getQuery();
-			$q->addTable('#__eve_corporations', 'co');
-			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-			$q->addWhere('co.owner = 0');
-			$q->addWhere('co.allianceID=%s', intval($alliance->allianceID));
-			$q->addQuery('ch.characterID', 'ch.userID');
-			$ceos = $q->loadObjectList();
-			
-			JPluginHelper::importPlugin('eveapi');
-			foreach ($ceos as $ceo) {
-				if ($ceo->userID && $ceo->characterID) {
-					$dispatcher =& JDispatcher::getInstance();
-					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
-				}
-			}
-		}
+
 		
 		$mainframe->enqueueMessage(JText::_('ALLIANCE STORED'));
 		

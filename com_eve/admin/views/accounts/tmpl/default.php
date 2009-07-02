@@ -6,7 +6,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.tooltip');
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 ?>
@@ -54,14 +55,14 @@ $userId	= $user->get('id');
 					<?php endif; ?>
 				</td>
 				<td align="center">
-					<?php echo $item->userName; ?>
+					<?php echo $this->escape($item->userName); ?>
 				</td>
 				<td>
 					<span class="apiStatus apiStatus-<?php echo $item->apiStatus; ?>"><?php echo $item->apiStatus; ?></span>
 					
 				</td>
 				<td>
-					<?php echo $item->characters; ?>
+					<?php echo $this->escape($item->characters); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

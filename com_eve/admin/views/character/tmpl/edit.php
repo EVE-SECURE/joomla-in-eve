@@ -6,6 +6,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 ?>
 <form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<div class="col100">
@@ -31,7 +33,7 @@ defined('_JEXEC') or die();
 						<label for="jformname"><?php echo JText::_('CHARACTER NAME'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[name]" id="jformname" value="<?php echo $this->item->name; ?>" />
+						<input type="text" name="jform[name]" id="jformname" value="<?php echo $this->escape($this->item->name); ?>" />
 					</td>
 				</tr>
 				<?php /*endif;*/ ?>
@@ -40,7 +42,7 @@ defined('_JEXEC') or die();
 						<label for="jformuserID"><?php echo JText::_('USER NAME'); ?></label>
 					</td>
 					<td>
-						<?php echo $this->html_users; ?>
+						<?php echo JHTML::_('eve.accountlist', 'jform[userID]', null, $this->item->userID, 'jformuserID'); ?>
 					</td>
 				</tr>
 			</tbody>

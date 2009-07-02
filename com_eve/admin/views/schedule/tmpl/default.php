@@ -6,6 +6,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::_('behavior.tooltip');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=schedule'); ?>" method="post" name="adminForm">
 	<fieldset class="filter">

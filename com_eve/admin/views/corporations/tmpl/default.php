@@ -6,7 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.tooltip');
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
+JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 ?>
@@ -16,7 +18,7 @@ $userId	= $user->get('id');
 			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
 		</div>
 		<div class="right">
-				<?php echo JHTML::_('filter.select', 'filter_standings', $this->state->get('filter.standings')); ?>
+			<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'Owner corporations only'); ?>
 		</div>
 	</fieldset>
 	<?php if (count($this->items)) : ?>
@@ -47,18 +49,18 @@ $userId	= $user->get('id');
 				</td>
 				<td>
 					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
-						<?php echo $item->corporationName; ?> (<?php echo $item->corporationID; ?>)
+						<?php echo $this->escape($item->corporationName); ?> (<?php echo $item->corporationID; ?>)
 					<?php else : ?>
 					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->corporationName; ?>">
-						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=coropration.edit&corporationID='.$item->corporationID); ?>">
-							<?php echo $item->corporationName; ?></a></span> (<?php echo $item->corporationID; ?>)
+						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=corporation.edit&corporationID='.$item->corporationID); ?>">
+							<?php echo $this->escape($item->corporationName); ?></a></span> (<?php echo $item->corporationID; ?>)
 					<?php endif; ?>
 				</td>
 				<td align="center">
-					<?php echo $item->ticker; ?>
+					<?php echo $this->escape($item->ticker); ?>
 				</td>
 				<td>
-					<?php echo $item->name; ?>
+					<?php echo $this->escape($item->name); ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>

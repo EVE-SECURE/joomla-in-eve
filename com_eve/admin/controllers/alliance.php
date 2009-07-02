@@ -29,8 +29,8 @@ class EveControllerAlliance extends EveController {
 	{
 		parent::__construct( $config );
 		
-		//$this->setRedirect('?option=com_eve&control=alliance');
-		
+		$this->registerTask('save2new', 'save');
+		$this->registerTask('apply', 'save');
 		$this->registerTask('get_alliance_list', 'getAllianceList');
 		$this->registerTask('get_alliance_members', 'getAllianceMembers');
 	}

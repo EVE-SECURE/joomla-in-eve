@@ -6,6 +6,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 ?>
 <form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<div class="col100">
@@ -31,7 +33,7 @@ defined('_JEXEC') or die();
 						<label for="jformname"><?php echo JText::_('ALLIANCE NAME'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[name]" id="jformname" value="<?php echo $this->item->name; ?>" />
+						<input type="text" name="jform[name]" id="jformname" value="<?php echo $this->escape($this->item->name); ?>" />
 					</td>
 				</tr>
 				<tr>
@@ -39,15 +41,15 @@ defined('_JEXEC') or die();
 						<label for="jformshortName"><?php echo JText::_('ALLIANCE TAG'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[shortName]" id="jformshortName" value="<?php echo $this->item->shortName; ?>" />
+						<input type="text" name="jform[shortName]" id="jformshortName" value="<?php echo $this->escape($this->item->shortName); ?>" />
 					</td>
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="owner"><?php echo JText::_('OWNER?'); ?></label>
+						<label for="jformowner1"><?php echo JText::_('OWNER?'); ?></label>
 					</td>
 					<td>
-						<?php echo $this->html_owner; ?>
+						<?php echo JHTML::_('select.booleanlist', 'jform[owner]', null, $this->item->owner, 'yes', 'no', 'jformowner'); ?>
 					</td>
 				</tr>				
 			</tbody>

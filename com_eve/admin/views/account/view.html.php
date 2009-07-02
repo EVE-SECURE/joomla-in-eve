@@ -31,11 +31,14 @@ class EveViewAccount extends JView {
 	
 	
 	function display($tpl = null) {
-		
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$item = $this->get('Item');
 		$apiStates = $this->get('ApiStates');;
+		
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
 		
 		$this->assignRef('apiStates', $apiStates);
 		$this->assignRef('item', $item);

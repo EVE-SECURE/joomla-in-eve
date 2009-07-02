@@ -29,11 +29,10 @@ class EveViewSchedule extends JView {
 	public $state;
 	public $items;
 	public $pagination;
+	public $apiCalls;
 
 	
 	function display($tpl = null) {
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
@@ -63,8 +62,8 @@ class EveViewSchedule extends JView {
 		$title = JText::_('API SCHEDULE');
 		JToolBarHelper::title($title, 'schedule');
 		
-		JToolBarHelper::publishList('publish', 'Enable');
-		JToolBarHelper::unpublishList('unpublish', 'Disable');
+		JToolBarHelper::publishList('schedule.publish', 'Enable');
+		JToolBarHelper::unpublishList('schedule.unpublish', 'Disable');
 		
 		JToolBarHelper::divider();
 		JToolBarHelper::preferences('com_eve', 480, 640);

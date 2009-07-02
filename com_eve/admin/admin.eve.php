@@ -29,7 +29,7 @@ if (!JError::isError($controller)) {
 	$controller->redirect();
 } else {
 	$app = JFactory::getApplication();
-	$app->enqueueMessage($controller->getMessage, 'error');
+	$app->enqueueMessage($controller->getMessage(), 'error');
 }
 /*
 $controllerName = JRequest::getCmd( 'control', 'char' );
