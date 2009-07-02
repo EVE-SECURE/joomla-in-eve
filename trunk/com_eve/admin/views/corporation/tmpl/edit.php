@@ -6,8 +6,10 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 ?>
-<form action="i<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
+<form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<div class="col100">
 	<fieldset>
 		<legend><?php echo JText::_('CORPORATION DETAILS'); ?></legend>
@@ -31,7 +33,7 @@ defined('_JEXEC') or die();
 						<label for="jformcorporationName"><?php echo JText::_('CORPORATION NAME'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[corporationName]" id="jformcorporationName" value="<?php echo $this->item->corporationName; ?>" />
+						<input type="text" name="jform[corporationName]" id="jformcorporationName" value="<?php echo $this->escape($this->item->corporationName); ?>" />
 					</td>
 				</tr>
 				<tr>
@@ -39,7 +41,7 @@ defined('_JEXEC') or die();
 						<label for="jformticker"><?php echo JText::_('CORPORATION TAG'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[ticker]" id="jformticker" value="<?php echo $this->item->ticker; ?>" />
+						<input type="text" name="jform[ticker]" id="jformticker" value="<?php echo $this->escape($this->item->ticker); ?>" />
 					</td>
 				</tr>
 				<tr>
@@ -47,7 +49,7 @@ defined('_JEXEC') or die();
 						<label for="jformallianceID"><?php echo JText::_('ALLIANCE'); ?></label>
 					</td>
 					<td>
-						<?php echo $this->html_alliance; ?>
+						<?php echo JHTML::_('eve.alliancelist', 'jform[allianceID]', null, $this->item->allianceID, 'jformallianceID'); ?>
 					</td>
 				</tr>
 				<tr>
@@ -55,7 +57,7 @@ defined('_JEXEC') or die();
 						<label for="jformowner"><?php echo JText::_('OWNER?'); ?></label>
 					</td>
 					<td>
-						<?php echo JHTML::_('select.booleanlist', 'owner', null, $item->owner); ?>
+						<?php echo JHTML::_('select.booleanlist', 'owner', null, $this->item->owner); ?>
 					</td>
 				</tr>				
 			</tbody>

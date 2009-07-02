@@ -32,8 +32,6 @@ class EveViewCorporations extends JView {
 
 	
 	function display($tpl = null) {
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
@@ -60,88 +58,11 @@ class EveViewCorporations extends JView {
 	{
 		$title = JText::_('EVE CORPORATION MANAGER');
 		JToolBarHelper::title($title, 'corp');
-		JToolBarHelper::custom('getCorporationSheet', 'corp', 'corp', 'Corporation Sheet', true);
-		JToolBarHelper::custom('getMemberTracking', 'char', 'char', 'Member Tracking', true);
-		JToolBarHelper::addNew();
-		JToolBarHelper::editList();
-		JToolBarHelper::deleteList();
+		JToolBarHelper::custom('corporation.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
+		JToolBarHelper::custom('corporation.getMemberTracking', 'character', 'character', 'Member Tracking', true);
+		JToolBarHelper::addNew('corporation.add');
+		JToolBarHelper::editList('corporation.edit');
+		JToolBarHelper::deleteList('', 'corporation.remove');
 	}
 	
-	
-	function _display($tpl = null) {
-		global $mainframe;
-		
-		require_once JPATH_COMPONENT.DS.'html'.DS.'filter.php';
-		
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet('components/com_eve/assets/common.css');
-		
-		
-		$context = 'com_eve.corps.index.';
-		$filter_order		= $mainframe->getUserStateFromRequest( $context.'filter_order',		'filter_order',     'corporationName',	'cmd' );
-		$filter_order_dir	= $mainframe->getUserStateFromRequest( $context.'filter_order_Dir',	'filter_order_Dir',	'',					'word' );
-		$filter_standings	= $mainframe->getUserStateFromRequest( $context.'filter_standings',	'filter_standings',	'',					'word' );
-		
-		$search 	= $mainframe->getUserStateFromRequest( $context.'filter_search', 'filter_search', '', 'string' );
-		$search 	= JString::strtolower( $search );
-		
-		$limit		= $mainframe->getUserStateFromRequest( 'global.list.limit', 'limit', $mainframe->getCfg('list_limit'), 'int' );
-		$limitstart = $mainframe->getUserStateFromRequest( $context.'limitstart', 'limitstart', 0, 'int' );
-		
-		$q = new JQuery();
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addQuery('COUNT(*)');
-		if ($search) {
-			$q->addWhere('co.corporationName LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
-		}
-		$total = $q->loadResult();
-		
-		jimport('joomla.html.pagination');
-		$pagination = new JPagination( $total, $limitstart, $limit );
-		
-		$q = new JQuery();
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
-		$q->addQuery('co.*');
-		$q->addQuery('al.name');
-		$q->addQuery('al.owner AS derived_owner');
-		$q->addQuery('COALESCE(co.standings, al.standings, 0) AS derived_standings');
-		$q->addOrder($filter_order, $filter_order_dir);
-		$q->setLimit($limit, $limitstart);
-		if ($search) {
-			$q->addWhere('co.corporationName LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
-		}
-		switch ($filter_standings) {
-			case 'owner':
-				$q->addWhere('(co.owner OR al.owner)');
-				break;
-			case 'friendly':
-				$q->addWhere('COALESCE(co.standings, al.standings, 0) > 0');
-				break;
-			case 'hostile':
-				$q->addWhere('COALESCE(co.standings, al.standings, 0) < 0');
-				break;
-		}
-		$this->items = $q->loadObjectList();
-		
-		$this->assign('filter_search', $search);
-		$this->assign('filter_standings', $filter_standings);
-		$this->assign('filter_order', $filter_order);
-		$this->assign('filter_order_dir', $filter_order_dir);
-		$this->assignRef('items', $this->items);
-		$this->assignRef('pagination', $pagination);
-		parent::display($tpl);
-	}
-
-	function loadItem($index=0)
-	{
-		$item =& $this->items[$index];
-		$item->index	= $index;
-		
-		$item->url		= JRoute::_('index.php?option=com_eve&control=corp&task=edit&cid[]='.$item->corporationID);
-
-		$this->assignRef('item', $item);
-	}
 }
-
-?>

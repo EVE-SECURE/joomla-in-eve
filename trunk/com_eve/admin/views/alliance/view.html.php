@@ -28,36 +28,38 @@ jimport( 'joomla.application.component.view');
 class EveViewAlliance extends JView {
 	
 	function display($tpl = null) {
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet('components/com_eve/assets/common.css');
+		$item = $this->get('Item');
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
 		
-		JToolBarHelper::save();
-		JToolBarHelper::apply();
-		JToolBarHelper::cancel();
-		JToolBarHelper::back();
-		
-		$model = $this->getModel();
-		
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		JArrayHelper::toInteger($cid);
-		
-		$id = reset($cid);
-		
-		if ($id > 0) {
+		$this->assignRef('item', $item);
+		parent::display($tpl);
+		$this->_setToolBar();
+	}
+	
+	protected function _setToolBar()
+	{
+		JRequest::setVar('hidemainmenu', 1);
+		if ($this->item->allianceID > 0) {
 			$title = JText::_('EDIT ALLIANCE');
 		} else {
 			$title = JText::_('NEW ALLIANCE');
 		}
 		JToolBarHelper::title($title, 'alliance');
 		
-		$item = $model->getAlliance($id);
+		JToolBarHelper::apply('alliance.apply');
+		JToolBarHelper::save('alliance.save');
+		JToolBarHelper::addNew('alliance.save2new', 'Save and new');
+		if ($this->item->allianceID > 0) {
+			JToolBarHelper::cancel('alliance.cancel');
+		} else {
+			JToolBarHelper::cancel('alliance.cancel', 'Close');
+		}
 		
-		$html_owner = JHTML::_('select.booleanlist', 'owner', null, $item->owner);
-		
-		$this->assignRef('html_owner', $html_owner);
-		$this->assignRef('item', $item);
-		parent::display($tpl);
 	}
+
 }
 
-?>

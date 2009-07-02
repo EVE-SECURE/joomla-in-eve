@@ -32,8 +32,6 @@ class EveViewAlliances extends JView {
 
 	
 	function display($tpl = null) {
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
@@ -58,13 +56,13 @@ class EveViewAlliances extends JView {
 	 */
 	protected function _setToolbar()
 	{
-		$title = JText::_('EVE CHARACTER MANAGER');
-		JToolBarHelper::title($title, 'char');
-		JToolBarHelper::custom('get_corporation_sheet', 'corp', 'corp', 'Corporation Sheet', true);
-		JToolBarHelper::custom('get_character_sheet', 'char', 'char', 'Character Sheet', true);
-		JToolBarHelper::addNew();
-		JToolBarHelper::editList();
-		JToolBarHelper::deleteList();
+		$title = JText::_('EVE ALLIANCE MANAGER');
+		JToolBarHelper::title($title, 'alliance');
+		JToolBarHelper::custom('alliance.getAllianceList', 'alliance', 'alliance', 'Get Alliance List', false);
+		JToolBarHelper::custom('alliance.getAllianceMembers', 'corporation', 'corporation', 'Get Alliance Members', true);
+		JToolBarHelper::addNew('alliance.add');
+		JToolBarHelper::editList('alliance.edit');
+		JToolBarHelper::deleteList('', 'alliance.remove');
 	}
 
 }

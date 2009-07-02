@@ -6,20 +6,21 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-JHtml::_('behavior.tooltip');
+JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
+JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 
-JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html')
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>" method="post" name="adminForm">
 	<table>
 		<tr>
 			<td align="left" width="100%">
-				<?php echo JHTML::_('filter.search', $this->state->get('filter_search')); ?>
+				<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
 			</td>
 			<td nowrap="nowrap">
-				<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'something'); ?>
+				<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'Owner alliances only'); ?>
 			</td>
 		</tr>
 	</table>
@@ -50,15 +51,15 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html')
 				</td>
 				<td>
 					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
-						<?php echo $item->name; ?> (<?php echo $item->allianceID; ?>)
+						<?php echo $this->escape($item->name); ?> (<?php echo $item->allianceID; ?>)
 					<?php else : ?>
-					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->name; ?>">
+					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $this->escape($item->name); ?>">
 						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=alliance.edit&allianceID='.$item->allianceID); ?>">
-							<?php echo $item->name; ?></a></span> (<?php echo $item->allianceID; ?>)
+							<?php echo $this->escape($item->name); ?></a></span> (<?php echo $item->allianceID; ?>)
 					<?php endif; ?>
 				</td>
 				<td>
-					<?php echo $item->shortName; ?>
+					<?php echo $this->escape($item->shortName); ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>

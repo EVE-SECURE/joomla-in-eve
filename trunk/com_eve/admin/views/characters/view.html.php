@@ -32,8 +32,6 @@ class EveViewCharacters extends JView {
 
 	
 	function display($tpl = null) {
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
@@ -60,10 +58,10 @@ class EveViewCharacters extends JView {
 	{
 		$title = JText::_('EVE CHARACTER MANAGER');
 		JToolBarHelper::title($title, 'char');
-		JToolBarHelper::custom('get_corporation_sheet', 'corp', 'corp', 'Corporation Sheet', true);
-		JToolBarHelper::custom('get_character_sheet', 'char', 'char', 'Character Sheet', true);
-		JToolBarHelper::addNew();
-		JToolBarHelper::editList();
-		JToolBarHelper::deleteList();
+		JToolBarHelper::custom('character.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
+		JToolBarHelper::custom('getCharacterSheet', 'character', 'character', 'Character Sheet', true);
+		JToolBarHelper::addNew('character.add');
+		JToolBarHelper::editList('character.edit');
+		JToolBarHelper::deleteList('', 'character.remove');
 	}
 }

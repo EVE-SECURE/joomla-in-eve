@@ -27,12 +27,8 @@ jimport( 'joomla.application.component.view');
 
 class EveViewCharacter extends JView {
 	public $item;
-	public $html_users;
 	
 	public function display($tpl = null) {
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet('components/com_eve/assets/common.css');
-		
 		$item = $this->get('Item');
 		
 		// Check for errors.

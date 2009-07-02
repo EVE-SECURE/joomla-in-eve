@@ -30,10 +30,7 @@ class EveViewAccounts extends JView {
 	public $items;
 	public $pagination;
 
-	
 	function display($tpl = null) {
-		JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
-		
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
@@ -59,7 +56,7 @@ class EveViewAccounts extends JView {
 	protected function _setToolbar() {
 		$title = JText::_('EVE ACCOUNT MANAGER');
 		JToolBarHelper::title($title, 'account');
-		JToolBarHelper::custom('get_characters', 'char', 'char', 'Characters', true);
+		JToolBarHelper::custom('account.getCharacters', 'character', 'character', 'Characters', true);
 		JToolBarHelper::addNew('account.add');
 		JToolBarHelper::editList('account.edit');
 		JToolBarHelper::deleteList('', 'account.remove');

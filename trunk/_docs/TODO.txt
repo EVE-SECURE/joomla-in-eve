@@ -1,3 +1,1 @@
-[ ] Refactor character MVC
-[ ] Refactor corporation MVC
-[ ] Refactor alliance MVC
+option=com_eve&view=accounts - filter by api status

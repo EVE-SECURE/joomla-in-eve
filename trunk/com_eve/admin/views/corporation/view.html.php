@@ -26,6 +26,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
 
 class EveViewCorporation extends JView {
+	public $item;
 	
 	function display($tpl = null) {
 		$document =& JFactory::getDocument();
@@ -42,6 +43,7 @@ class EveViewCorporation extends JView {
 		$this->assignRef('item', $item);
 		
 		parent::display($tpl);
+		$this->_setToolbar();
 	}
 
 	protected function _setToolbar() {
@@ -57,7 +59,7 @@ class EveViewCorporation extends JView {
 		JToolBarHelper::apply('corporation.apply');
 		JToolBarHelper::save('corporation.save');
 		JToolBarHelper::addNew('corporation.save2new', 'Save and new');
-		if ($this->item->userID > 0) {
+		if ($this->item->corporationID > 0) {
 			JToolBarHelper::cancel('corporation.cancel');
 		} else {
 			JToolBarHelper::cancel('corporation.cancel', 'Close');

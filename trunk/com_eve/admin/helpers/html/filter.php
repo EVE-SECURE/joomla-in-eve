@@ -42,8 +42,12 @@ abstract class JHTMLFilter {
 		$options[]	= JHtml::_('select.option', '0', JText::_('Show all'));
 		$options[]	= JHtml::_('select.option', '1', JText::_($option));
 
-		$attr = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
-		$html = JHtml::_('select.genericlist', $options, 'filter_owner', $attr, 'value', 'text', $active);
+		$attribs = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
+		$html = JHtml::_('select.genericlist', $options, 'filter_owner', $attribs, 'value', 'text', $active);
 		echo $html;
+	}
+	
+	static function ownerCorporations($active, $attrubs = null) {
+		
 	}
 }
