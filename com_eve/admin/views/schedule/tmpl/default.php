@@ -7,6 +7,7 @@
 defined('_JEXEC') or die();
 
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 JHTML::_('behavior.tooltip');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=schedule'); ?>" method="post" name="adminForm">
@@ -53,7 +54,7 @@ JHTML::_('behavior.tooltip');
 					</a>
 				</td>
 				<td>
-					<?php echo $item->next; ?>
+					<?php echo JHTML::_('date', $item->next, JText::_('DATE_FORMAT_LC2')); ?>
 				</td>
 				<td>
 					<?php if ($item->userID): ?>

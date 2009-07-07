@@ -189,7 +189,7 @@ class EvechartrackingViewEvechartracking extends JView {
 			case 'startDateTime':
 			case 'logonDateTime':
 			case 'logoffDateTime':
-				return JHTML::_('date', $member->$column);
+				return JHTML::_('date', $member->$column, JText::_('DATE_FORMAT_LC2'));
 				break;
 			default:
 				if (isset($member->$column)) {

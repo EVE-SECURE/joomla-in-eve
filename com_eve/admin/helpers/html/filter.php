@@ -47,7 +47,40 @@ abstract class JHTMLFilter {
 		echo $html;
 	}
 	
-	static function ownerCorporations($active, $attrubs = null) {
-		
+	static function membersof($active, $name = 'filter_membersof', $idtag = false) {
+		$options = array();
+		$options[] = JHtml::_('select.option', '', JText::_('Show all'));
+		$options[] = JHtml::_('select.option', '*', JText::_('Members'));
+		$q = EveFactory::getQuery();
+		$q->addTable('#__eve_alliances');
+		$q->addQuery('allianceID AS value', 'name AS text');
+		$q->addWhere('owner > 0');
+		$q->addOrder('name');
+		$list = $q->loadObjectList();
+		if (!empty($list)) {
+			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'Member Alliances' ) );
+			foreach ($list as $item) {
+				$options[] = JHtml::_('select.option', 'a'.$item->value, $item->text);
+			}
+			$options[] = JHTML::_('select.option',  '</OPTGROUP>' );
+		}
+		$q = EveFactory::getQuery();
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addQuery('corporationID AS value');
+		$q->addQuery('IF(al.allianceID IS NULL, corporationName, CONCAT(corporationName, \' [\', al.shortName, \']\')) AS text');
+		$q->addWhere('al.owner > 0 OR co.owner > 0');
+		$q->addOrder('corporationName');
+		$list = $q->loadObjectList();
+		if (!empty($list)) {
+			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'Member Corporations' ) );
+			foreach ($list as $item) {
+				$options[] = JHtml::_('select.option', 'c'.$item->value, $item->text);
+			}
+			$options[] = JHTML::_('select.option',  '</OPTGROUP>' );
+		}
+		$attribs = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
+		$html = JHtml::_('select.genericlist', $options, $name, $attribs, 'value', 'text', $active, $idtag);
+		echo $html;
 	}
 }

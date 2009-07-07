@@ -58,10 +58,10 @@ defined('_JEXEC') or die();
 				<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
 			</td>
 			<td>
-				<?php echo $skill->startTime; ?>
+				<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>
 			</td>
 			<td>
-				<?php echo $skill->endTime; ?>
+				<?php echo JHTML::_('date', $skill->endTime, JText::_('DATE_FORMAT_LC2')); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>

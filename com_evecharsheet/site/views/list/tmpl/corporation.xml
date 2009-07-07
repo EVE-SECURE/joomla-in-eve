@@ -9,8 +9,10 @@
 		<name>Corporation Members Layout</name>
 		<description>DESC HERE</description>
 		<params>
-			<param name="corporationID" type="sql" label="Corporation ID" description="Corporation ID to display"
-				query="SELECT corporationID, corporationName FROM #__eve_corporations AS c LEFT JOIN #__eve_alliances AS a USING (allianceID) WHERE a.owner OR c.owner ORDER BY corporationName" key_field="corporationID" value_field="corporationName"/>
+			<url>
+				<param name="corporationID" type="sql" label="Corporation ID" description="Corporation ID to display"
+					query="SELECT corporationID, corporationName FROM #__eve_corporations AS c LEFT JOIN #__eve_alliances AS a USING (allianceID) WHERE a.owner OR c.owner ORDER BY corporationName" key_field="corporationID" value_field="corporationName"/>
+			</url>
 			<param name="displayFilter" type="radio" label="DISPLAY FILTER" description="" default="0">
 				<option value="0">NO</option>
 				<option value="1">YES</option>
