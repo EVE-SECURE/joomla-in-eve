@@ -38,6 +38,9 @@ class EveModelCharacters extends JModelList {
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
+		$membersof = $this->getState('filter.membersof');
+		$membersofpref = substr($membersof, 0, 1);
+		$membersofnum = intval(substr($membersof, 1));
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
@@ -55,6 +58,14 @@ class EveModelCharacters extends JModelList {
 		if ($search) {
 			$q->addWhere('c.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}
+		if ($membersofpref == '*') {
+			$q->addWhere('(co.owner > 0 OR al.owner >  0)');
+		} elseif ($membersofpref == 'c') {
+			$q->addWhere('co.corporationID = %s', $membersofnum);
+		} elseif ($membersofpref == 'a') {
+			$q->addWhere('al.allianceID = %s', $membersofnum);
+		}
+		
 		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'c.name')), 
 			$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
@@ -79,7 +90,8 @@ class EveModelCharacters extends JModelList {
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-
+		$id	.= ':'.$this->getState('filter.membersof');
+		
 		return md5($id);
 	}
 	
@@ -101,7 +113,8 @@ class EveModelCharacters extends JModelList {
 
 		// Load the filter state.
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
-
+		$this->setState('filter.membersof', $app->getUserStateFromRequest($context.'filter.membersof', 'filter_membersof', ''));
+		
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));

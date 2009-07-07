@@ -53,7 +53,9 @@ class EveModelSchedule extends JModelList {
 		$q->addQuery('u.name AS userName');
 		$q->addQuery('c.name AS characterName');
 		if ($search) {
-			$q->addWhere('al.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$searchString = sprintf('u.name LIKE %1$s OR c.name LIKE %1$s', 
+				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$q->addWhere($searchString);
 		}
 		if ($apicall) {
 			$q->addWhere('sc.apicall='.$apicall);
@@ -163,6 +165,10 @@ class EveModelSchedule extends JModelList {
 			return false;
 		}
 		return true;
+	}
+	
+	public function run() {
+		
 	}
 	
 		

@@ -62,6 +62,8 @@ class EveViewSchedule extends JView {
 		$title = JText::_('API SCHEDULE');
 		JToolBarHelper::title($title, 'schedule');
 		
+		JToolBarHelper::custom('schedule.run', 'run', 'run', 'Run now');
+		
 		JToolBarHelper::publishList('schedule.publish', 'Enable');
 		JToolBarHelper::unpublishList('schedule.unpublish', 'Disable');
 		

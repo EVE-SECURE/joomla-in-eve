@@ -7,6 +7,7 @@
 defined('_JEXEC') or die();
 
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');

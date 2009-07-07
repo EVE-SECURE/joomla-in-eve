@@ -107,15 +107,15 @@ CREATE TABLE IF NOT EXISTS `jos_eve_schedule` (
 
 DELETE FROM `jos_components` WHERE `option` = 'com_eve';
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
-('EVE', 'option=com_eve', 0, 0, 'option=com_eve&control=char', 'EVE', 'com_eve', 0, 'components/com_eve/assets/icon-eve-16.png', 0, '', 1);
+('EVE', 'option=com_eve', 0, 0, 'option=com_eve&view=characters', 'EVE', 'com_eve', 0, 'components/com_eve/assets/icon-eve-16.png', 0, '', 1);
 
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
-('Characters', '', 0, @lastid, 'option=com_eve&control=char', 'Characters', 'com_eve', 0, 'components/com_eve/assets/icon-char-16.png', 0, '', 1),
-('Corporations', '', 0, @lastid, 'option=com_eve&control=corp', 'Corporations', 'com_eve', 1, 'components/com_eve/assets/icon-corp-16.png', 0, '', 1),
-('Alliances', '', 0, @lastid, 'option=com_eve&control=alliance', 'Alliances', 'com_eve', 2, 'components/com_eve/assets/icon-alliance-16.png', 0, '', 1),
-('Accounts', '', 0, @lastid, 'option=com_eve&control=account', 'Accounts', 'com_eve', 3, 'components/com_eve/assets/icon-account-16.png', 0, '', 1),
-('Schedule', '', 0, @lastid, 'option=com_eve&control=schedule', 'Accounts', 'com_eve', 4, 'components/com_eve/assets/icon-schedule-16.png', 0, '', 1);
+('Characters', '', 0, @lastid, 'option=com_eve&view=characters', 'Characters', 'com_eve', 0, 'components/com_eve/assets/icon-char-16.png', 0, '', 1),
+('Corporations', '', 0, @lastid, 'option=com_eve&view=corporations', 'Corporations', 'com_eve', 1, 'components/com_eve/assets/icon-corp-16.png', 0, '', 1),
+('Alliances', '', 0, @lastid, 'option=com_eve&view=alliances', 'Alliances', 'com_eve', 2, 'components/com_eve/assets/icon-alliance-16.png', 0, '', 1),
+('Accounts', '', 0, @lastid, 'option=com_eve&view=accounts', 'Accounts', 'com_eve', 3, 'components/com_eve/assets/icon-account-16.png', 0, '', 1),
+('Schedule', '', 0, @lastid, 'option=com_eve&view=schedule', 'Accounts', 'com_eve', 4, 'components/com_eve/assets/icon-schedule-16.png', 0, '', 1);
 
 
 INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 

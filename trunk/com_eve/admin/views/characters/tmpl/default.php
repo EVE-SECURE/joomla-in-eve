@@ -7,6 +7,7 @@
 defined('_JEXEC') or die();
 
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
@@ -17,6 +18,7 @@ $userId	= $user->get('id');
 			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
 		</div>
 		<div class="right">
+			<?php echo JHTML::_('filter.membersof', $this->state->get('filter.membersof')) ?>
 			<!-- <ol>
 				<li>
 					make
