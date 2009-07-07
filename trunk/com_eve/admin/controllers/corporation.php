@@ -205,7 +205,7 @@ class EveControllerCorporation extends EveController {
 	function remove() {
 		JRequest::checkToken() or die( 'Invalid Token' );
 
-		$this->setRedirect( 'index.php?option=com_eve&control=corp' );
+		$this->setRedirect( 'index.php?option=com_eve&view=corporations' );
 		
 		$db 			=& JFactory::getDBO();
 		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
@@ -222,7 +222,7 @@ class EveControllerCorporation extends EveController {
 			$table->delete($id);
 		}
 		
-		$url = JRoute::_('index.php?option=com_eve&control=corp', false);
+		$url = JRoute::_('index.php?option=com_eve&view=corporations', false);
 		$this->setRedirect($url, JText::_('CORPORATION DELETED'));
 	}
 	
@@ -230,14 +230,14 @@ class EveControllerCorporation extends EveController {
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		$model = & $this->getModel('Corp', 'EveModel');
 		$model->apiGetCorporationSheet($cid);
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
 	
 	function getMemberTracking() {
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		$model = & $this->getModel('Corp', 'EveModel');
 		$model->apiGetMemberTracking($cid);
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=corp', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
 	
 }

@@ -205,7 +205,7 @@ class EveControllerAlliance extends EveController {
 	function remove() {
 		JRequest::checkToken() or die( 'Invalid Token' );
 
-		$this->setRedirect( 'index.php?option=com_eve&control=alliance' );
+		$this->setRedirect( 'index.php?option=com_eve&view=alliances' );
 		
 		$db 			=& JFactory::getDBO();
 		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
@@ -222,21 +222,21 @@ class EveControllerAlliance extends EveController {
 			$table->delete($id);
 		}
 		
-		$url = JRoute::_('index.php?option=com_eve&control=alliance', false);
+		$url = JRoute::_('index.php?option=com_eve&view=alliances', false);
 		$this->setRedirect($url, JText::_('ALLIANCE DELETED'));
 	}
 	
 	function getAllianceList() {
 		$model = & $this->getModel('Alliance', 'EveModel');
 		$model->apiGetAllianceList();
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
 	
 	function getAllianceMembers() {
 		$model = & $this->getModel('Alliance', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		$model->apiGetAllianceMembers($cid);
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=alliance', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
 	
 }

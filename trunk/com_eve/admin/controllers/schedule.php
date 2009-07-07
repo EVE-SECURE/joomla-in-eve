@@ -44,7 +44,7 @@ class EveControllerSchedule extends EveController {
 			$n = count( $cid );
 			$this->setMessage( JText::sprintf( $enable ? 'Items enabled' : 'Items disabled', $n ) );
 		}
-		$url = 'index.php?option=com_eve&control=schedule';
+		$url = 'index.php?option=com_eve&view=schedule';
 		$this->setRedirect(JRoute::_($url, false));
 	}
 	
@@ -52,7 +52,7 @@ class EveControllerSchedule extends EveController {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$model = $this->getModel('Schedule');
 		$model->run();
-		$url = 'index.php?option=com_eve&control=schedule';
+		$url = 'index.php?option=com_eve&view=schedule';
 		$this->setRedirect(JRoute::_($url, false));
 	}
 	
