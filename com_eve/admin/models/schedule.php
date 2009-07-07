@@ -168,7 +168,9 @@ class EveModelSchedule extends JModelList {
 	}
 	
 	public function run() {
-		
+		JPluginHelper::importPlugin('cron', 'eve');
+		$dispatcher	=& JDispatcher::getInstance();
+		$results	= $dispatcher->trigger('onCronTick', array());
 	}
 	
 		

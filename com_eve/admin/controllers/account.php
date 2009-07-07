@@ -211,7 +211,7 @@ class EveControllerAccount extends EveController {
 		
 		$model->apiGetCharacters($cid);
 		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&control=account', false));
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
 		
 	}
 
