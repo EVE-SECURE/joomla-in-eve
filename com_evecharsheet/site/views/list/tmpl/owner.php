@@ -1,10 +1,12 @@
 <?php
 // Check to ensure this file is within the rest of the framework
 defined('JPATH_BASE') or die();
+
+JHTML::_('script', 'sheet.css', 'components/com_evecharsheet/');
 ?>
 <?php if ($this->params->get('show_page_title')) : ?>
-	<div class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-		<?php echo $this->escape($this->title); ?>
+	<div class="componentheading<?php echo $this->params->get('pageclass_sfx'); ?>">
+		<?php echo $this->escape($this->params->get('page_title')); ?>
 	</div>
 <?php endif; ?>
 

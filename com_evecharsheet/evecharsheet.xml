@@ -2,14 +2,14 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install type="component" version="1.5.0">
 	<name>EVECharSheet</name>
+	<creationDate>March 2009</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2009 Pavol Kovalik</copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>0.2</version>
 	<description>Joomla! in EVE - Character Sheets</description>
-	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<author>Pavol Kovalik</author>
-	<creationDate>March 2009</creationDate>
-	<authoremail>kovalikp@gmail.com</authoremail>
-	<authorurl>http://code-box.sk</authorurl>
-	<copyright>(C) 2009 Pavol Kovalik</copyright>
 	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
@@ -26,9 +26,6 @@
 		</sql>
 	</uninstall>
 	
-	<languages folder="site/languages">
-		<language tag="en-GB">en-GB.com_evecharsheet.ini</language>
-	</languages>
 	<files folder="site">
 		<filename>evecharsheet.php</filename>
 		<filename>controller.php</filename>
@@ -37,6 +34,9 @@
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
+	<languages folder="site/languages">
+		<language tag="en-GB">en-GB.com_evecharsheet.ini</language>
+	</languages>
 	
 	<administration>
 		<menu img="components/com_eve/assets/icon-char-16.png">EVE Character Sheet</menu>

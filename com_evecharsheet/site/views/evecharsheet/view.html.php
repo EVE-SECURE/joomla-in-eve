@@ -25,23 +25,11 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class EvecharsheetViewList extends JView {
+class EvecharsheetViewEvecharsheet extends JView {
 	function display($tmpl = null) {
-		
-		$params = $this->get('State')->params;	
-		$characters = $this->get('Items');
-		$pagination = $this->get('Pagination');
-		
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-		
-		$this->assignRef('params',	$params);
-		$this->assignRef('pagination',	$pagination);
-		$this->assignRef('characters', $characters);
-
+		$app = JFactory::getApplication();
+		$params = $app->getParams();
+		$this->assignRef('params', $params);
 		parent::display();
 	}
 	

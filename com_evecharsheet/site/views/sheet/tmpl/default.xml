@@ -8,14 +8,11 @@
 	<state>
 		<name>Character Sheet Layout</name>
 		<description>DESC HERE</description>
-		<!--url addpath="/administrator/components/com_contact/elements">
-			<param name="catid" type="category" scope="com_contact_details" default="0" label="Select Category" description="A contacts category" />
-		</url-->
+		<url>
+			<param name="characterID" type="sql" label="Character ID" description="Character ID to display" 
+				query="SELECT characterID, name FROM #__eve_characters WHERE userID > 0 ORDER BY name" key_field="characterID" value_field="name"/>
+		</url>		
 		<params>
-			<url>
-				<param name="characterID" type="sql" label="Character ID" description="Character ID to display" 
-					query="SELECT characterID, name FROM #__eve_characters WHERE userID > 0 ORDER BY name" key_field="characterID" value_field="name"/>
-			</url>		
 		</params>
 	</state>
 </metadata>

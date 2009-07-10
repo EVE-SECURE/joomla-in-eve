@@ -9,8 +9,10 @@
 		<name>Owner List Layout</name>
 		<description>DESC HERE</description>
 		<params>
-			<param name="owner" type="sql" label="OWNER" description="OWNER_DESC"
-				query="SELECT 0 AS id, '' AS name UNION SELECT id, name FROM #__users ORDER BY name" key_field="id" value_field="name"/>
+			<url>
+				<param name="owner" type="sql" label="OWNER" description="OWNER_DESC"
+					query="SELECT 0 AS id, '' AS name UNION SELECT id, name FROM #__users ORDER BY name" key_field="id" value_field="name"/>
+			</url>
 		</params>
 	</state>
 </metadata>
