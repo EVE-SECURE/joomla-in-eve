@@ -38,7 +38,17 @@ class EvecharsheetViewSheet extends JView {
 		
 		$model = $this->getModel();
 		
-		$characterID = JRequest::getInt('characterID');
+		$characterID = JRequest::getString('characterID');
+		$characterID = JRequest::getString('characterID');
+		if (strpos($characterID, ':') !== false) {
+			$characterID = preg_replace('/:.*/', '', $characterID); 
+		}
+		if (!is_numeric($characterID)) {
+			$dbo = $this->get('DBO');
+			$sql = 'SELECT characterID FROM #__eve_characters WHERE name LIKE '.$dbo->quote($characterID);
+			$dbo->setQuery($sql);
+			$characterID = $dbo->loadResult();
+		}
 		$paramCharacterID = $params->get('characterID');
 		if (!$characterID) {
 			$characterID = $paramCharacterID;

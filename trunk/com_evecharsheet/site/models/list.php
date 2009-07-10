@@ -23,7 +23,118 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EvecharsheetModelList extends EveModel {
+class EvecharsheetModelList extends JModelList {
+	
+	/**
+	 * Model context string.
+	 *
+	 * @access	protected
+	 * @var		string
+	 */
+	protected $_context = 'com_evecharsheet.list';
+	
+	/**
+	 * Method to build an SQL query to load the list data.
+	 *
+	 * @return	string		An SQL query
+	 */
+	protected function _getListQuery()
+	{
+		$dbo = $this->getDBO();
+		$q = new JQuery($dbo);
+		$q->addTable('#__eve_characters', 'ch');
+		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
+		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
+		
+		$q->addQuery('ch.characterID', 'ch.name AS characterName');
+		$q->addQuery('co.corporationID', 'co.corporationName');
+		$q->addQuery('al.allianceID', 'al.name AS allianceName');
+		$q->addQuery('ac.owner', 'us.name AS ownerName');
+		$q->addOrder('characterName');
+
+		$owner = $this->getState('filter.owner');
+		$corporationID = $this->getState('filter.corporationID');
+		if ($owner && is_numeric($owner)) {
+			$q->addWhere('ac.owner = %s', intval($owner));
+		} elseif ($owner) {
+			$q->addWhere('us.name LIKE \'%s\'', $owner);
+		} elseif ($corporationID && is_numeric($corporationID)) {
+			$q->addWhere('ch.corporationID = %s', intval($corporationID));
+		} elseif ($corporationID) {
+			$q->addWhere('co.corporationName LIKE \'%s\'', $corporationID);
+		} else {
+			$this->setError(JText::_('Invalid filter'));
+		}
+		
+		$q->prepare();
+		return $q;
+	}
+
+	/**
+	 * Method to get a store id based on model configuration state.
+	 *
+	 * This is necessary because the model is used by the component and
+	 * different modules that might need different sets of data or different
+	 * ordering requirements.
+	 *
+	 * @param	string		$context	A prefix for the store id.
+	 * @return	string		A store id.
+	 */
+	protected function _getStoreId($id = '')
+	{
+		// Compile the store id.
+		$id	.= ':'.$this->getState('list.start');
+		$id	.= ':'.$this->getState('list.limit');
+		$id	.= ':'.$this->getState('list.ordering');
+		$id	.= ':'.$this->getState('list.direction');
+		$id	.= ':'.$this->getState('list.owner');
+		$id	.= ':'.$this->getState('list.corporationID');
+		
+		return md5($id);
+	}
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	protected function _populateState() {
+		// Initialize variables.
+		$app		= &JFactory::getApplication('administrator');
+		$params		= JComponentHelper::getParams('com_eve');
+		$context	= $this->_context.'.';
+		$layout		= JRequest::getCmd('layout');
+		
+		if ($layout == 'owner') {
+			$owner = JRequest::getString('owner');
+			if (strpos($owner, ':') !== false) {
+				$owner = preg_replace('/:.*/', '', $owner); 
+			}
+			$this->setState('filter.owner', $owner);
+		} elseif ($layout == 'corporation') {
+			$corporationID = JRequest::getString('corporationID');
+			if (strpos($corporationID, ':') !== false) {
+				$corporationID = preg_replace('/:.*/', '', $corporationID); 
+			}
+			$this->setState('filter.corporationID', $corporationID);
+		}
+
+		// Load the list state.
+		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
+		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
+		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'co.corporationName', 'cmd'));
+		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
+
+		// Load the parameters.
+		$this->setState('params', $params);
+	}	
 	
 	function _setWhere(&$q) {
 		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
@@ -46,28 +157,6 @@ class EvecharsheetModelList extends EveModel {
 		}
 	}
 	
-	function getCharacterCount() {
-		$q = $this->getQuery();
-		$q->addTable('#__eve_characters', 'ch');
-		$this->_setWhere($q);
-		$q->addQuery('COUNT(characterID)');
-		return $q->loadResult();
-	}
-	
-	function getCharacters($limitstart, $limit) {
-		$q = $this->getQuery();
-		$q->addTable('#__eve_characters', 'ch');
-		$this->_setWhere($q);
-		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
-		$q->addQuery('ch.characterID', 'ch.name AS characterName');
-		$q->addQuery('co.corporationID', 'co.corporationName');
-		$q->addQuery('al.allianceID', 'al.name AS allianceName');
-		$q->addQuery('ac.owner', 'us.name AS ownerName');
-		$q->addOrder('characterName');
-		$q->setLimit($limit, $limitstart);
-		
-		return $q->loadObjectList();
-	}
-	
+
 }
 
