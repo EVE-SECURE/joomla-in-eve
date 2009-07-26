@@ -105,3 +105,55 @@ CREATE TABLE `#__eve_corporations` (
   PRIMARY KEY  (`corporationID`),
   KEY `eve_corporations_fk_allianceID` (`allianceID`)
 ) DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `#__eve_apicalls`
+-- 
+
+CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
+  `id` int(11) NOT NULL auto_increment,
+  `type` varchar(15) NOT NULL,
+  `call` varchar(15) NOT NULL,
+  `authentication` enum('None','User','Character') NOT NULL default 'None',
+  `authorization` enum('None','Limited','Full') NOT NULL default 'None',
+  `pagination` varchar(20) default NULL,
+  `delay` int(11) NOT NULL default '0',
+  `params` varchar(255) NOT NULL,
+  PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `#__eve_schedule`
+-- 
+
+CREATE TABLE IF NOT EXISTS `#__eve_schedule` (
+  `id` int(11) NOT NULL auto_increment,
+  `apicall` int(11) NOT NULL,
+  `userID` int(11) default NULL,
+  `characterID` int(11) default NULL,
+  `next` datetime NOT NULL,
+  `published` tinyint(1) NOT NULL default '1',
+  PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=utf8;
+
+-- 
+-- Data for table `#__eve_schedule`
+-- 
+
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('account', 'Characters', 'User', 'Limited', NULL, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('corp', 'CorporationSheet', 'Character', 'Limited', NULL, 0, '');
+
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('eve', 'AllianceList', 'None', 'None', NULL, 0, '');
+SET @lastid = LAST_INSERT_ID();
+INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
+(@lastid, NULL, NULL, NOW(), 1);
+

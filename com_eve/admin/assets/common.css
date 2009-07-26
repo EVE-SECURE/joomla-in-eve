@@ -1,27 +1,49 @@
 .icon-48-character {
-	background: url(icon-character-64.png) no-repeat;
-	background-position: -8px 50%
+	background: url(icon-48-character.png) no-repeat;
 }
 
 .icon-48-corporation {
-	background: url(icon-corporation-64.png) no-repeat;
-	background-position: -8px 50%
+	background: url(icon-48-corporation.png) no-repeat;
 }
 
 .icon-48-alliance {
-	background: url(icon-alliance-64.png) no-repeat;
-	background-position: -8px 50%
+	background: url(icon-48-alliance.png) no-repeat;
+}
+
+.icon-48-eve {
+	background: url(icon-48-eve.png) no-repeat;
+}
+
+.icon-48-account {
+	background: url(icon-48-account.png) no-repeat;
+}
+
+.icon-48-schedule {
+	background: url(icon-48-schedule.png) no-repeat;
+}
+
+.icon-32-eve {
+	 background-image: url(icon-32-eve.png);
+}
+
+.icon-32-run {
+	 background-image: url(icon-32-run.png);
 }
 
 .icon-32-alliance {
-	 background-image: url(icon-alliance-32.png);
+	 background-image: url(icon-32-alliance.png);
 }
 
 .icon-32-corporation {
-	 background-image: url(icon-corporation-32.png);
+	 background-image: url(icon-32-corporation.png);
 }
+
 .icon-32-character {
-	 background-image: url(icon-character-32.png);
+	 background-image: url(icon-32-character.png);
+}
+
+.icon-32-schedule {
+	 background-image: url(icon-32-schedule.png);
 }
 
 .icon-16-star-yellow {
@@ -57,3 +79,6 @@
 	background-image: url(status-white.png);
 }
 
+#cpanel div {
+	float:left;
+}

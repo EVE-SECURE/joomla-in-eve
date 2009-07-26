@@ -27,8 +27,8 @@ jimport('joomla.application.component.model');
 
 class EveModelApiform  extends EveModel {
 	
-	function processForm($hash) {
-		global $mainframe;
+	public function processForm($hash) {
+		$app = JFactory::getApplication();
 		try {
 			$user = JFactory::getUser();
 			
@@ -81,7 +81,7 @@ class EveModelApiform  extends EveModel {
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
-				$mainframe->enqueueMessage(JText::_('API key offers full access'));
+				$app->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				$this->updateApiStatus($account, $e->getCode());
@@ -136,7 +136,7 @@ class EveModelApiform  extends EveModel {
 				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
 				return false;
 			}
-			$mainframe->enqueueMessage(JText::_('Account unblocked'));
+			$app->enqueueMessage(JText::_('Account unblocked'));
 			return true;
 			
 		}
@@ -161,5 +161,27 @@ class EveModelApiform  extends EveModel {
 			JError::raiseError($e->getCode(), $e->getMessage());
 		}	
 	
+	}
+	
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 * @since	1.6
+	 */
+	protected function _populateState()
+	{
+		$params		= &JComponentHelper::getParams('com_eve');
+		// Load the parameters.
+		$this->setState('params', $params);
+	}
+	
+	
+	public function getParams() {
+		return $this->getState('params');
 	}
 }

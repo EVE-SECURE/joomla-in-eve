@@ -34,19 +34,19 @@ class  plgSystemEVE extends JPlugin {
 	 */
 
 	function onAfterInitialise() {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		//require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'loader.php';
 		$base = JPATH_PLUGINS.DS.'system'.DS.'eve'.DS;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
-		JLoader::register('EveFactory', JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'factory.php');
+		JLoader::register('EveFactory', $base.'lib'.DS.'factory.php');
 		JLoader::register('EveTable', $base.'database'.DS.'table.php');
 		JLoader::register('JQuery', $base.'database'.DS.'query.php');
 		JLoader::register('EveModel', $base.'component'.DS.'model.php');
 		JLoader::register('JModelList', $base.'component'.DS.'modellist.php');
 		JLoader::register('EveController', $base.'component'.DS.'controller.php');
-		require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'lib'.DS.'igb.php';
+		JLoader::register('EveHelperIgb', $base.'lib'.DS.'igb.php');
 				
-		if( $mainframe->isAdmin()) {
+		if( $app->isAdmin()) {
 		 	return;
 		}
 		
@@ -56,7 +56,7 @@ class  plgSystemEVE extends JPlugin {
 		
 		
 		$igb_template = $this->params->get('igb_template');
-		$mainframe->setTemplate($igb_template);
+		$app->setTemplate($igb_template);
 
 		if (!EveHelperIgb::isTrusted()) {
 			$trustme = $this->params->get('trustme'); 

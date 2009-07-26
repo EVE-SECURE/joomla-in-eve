@@ -66,9 +66,6 @@ class EveViewSchedule extends JView {
 		
 		JToolBarHelper::publishList('schedule.publish', 'Enable');
 		JToolBarHelper::unpublishList('schedule.unpublish', 'Disable');
-		
-		JToolBarHelper::divider();
-		JToolBarHelper::preferences('com_eve', 480, 640);
 	}
 	
 }

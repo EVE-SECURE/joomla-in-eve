@@ -83,9 +83,9 @@ class plgUserEVE extends JPlugin
 	 */
 	function onAfterStoreUser($user, $isnew, $succes, $msg)
 	{
-		global $mainframe;
+		$app = JFactory::getApplication();
 		
-		if( $mainframe->isAdmin()) {
+		if( $app->isAdmin()) {
 		 	return false;
 		}
 		

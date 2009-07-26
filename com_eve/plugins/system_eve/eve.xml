@@ -12,6 +12,7 @@
 	<description>Initializes stuff when accessing site from EVE IGB</description>
 	<files>
 		<filename plugin="eve">eve.php</filename>
+		<folder>eve</folder>
 	</files>
 	<administration>
 		<languages>

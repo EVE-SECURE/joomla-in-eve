@@ -57,7 +57,7 @@ class EveViewCorporations extends JView {
 	protected function _setToolbar()
 	{
 		$title = JText::_('EVE CORPORATION MANAGER');
-		JToolBarHelper::title($title, 'corp');
+		JToolBarHelper::title($title, 'corporation');
 		JToolBarHelper::custom('corporation.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
 		JToolBarHelper::custom('corporation.getMemberTracking', 'character', 'character', 'Member Tracking', true);
 		JToolBarHelper::addNew('corporation.add');
