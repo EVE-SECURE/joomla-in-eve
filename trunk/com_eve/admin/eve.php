@@ -23,6 +23,16 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EveHelper {
-	
+if (!JPluginHelper::isEnabled('system', 'eve')) {
+	$app = JFactory::getApplication();
+	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
+} else {
+	$controller = EveController::getInstance('Eve');
+	if (!JError::isError($controller)) {
+		$controller->execute(JRequest::getVar('task'));
+		$controller->redirect();
+	} else {
+		$app = JFactory::getApplication();
+		$app->enqueueMessage($controller->getMessage(), 'error');
+	}
 }

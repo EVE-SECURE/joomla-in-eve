@@ -23,28 +23,22 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-$controller = EveController::getInstance('Eve');
-if (!JError::isError($controller)) {
-	$controller->execute(JRequest::getVar('task'));
-	$controller->redirect();
-} else {
-	$app = JFactory::getApplication();
-	$app->enqueueMessage($controller->getMessage(), 'error');
+class EveHelper {
+	static $ownerCorporationIDs = null;
+	
+	static function getOwnerCoroprationIDs($dbo = null) {
+		if (is_null(self::$ownerCorporationIDs)) {
+			if (empty($dbo)) {
+				$dbo = JFactory::getDBO();
+			}
+			$q = self::getQuery($dbo);
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addWhere('(co.owner OR al.owner)');
+			$q->addQuery('co.corporationID');
+			self::$ownerCorporationIDs = $q->loadResultArray();
+		}
+		return self::$ownerCorporationIDs;
+	}
+
 }
-/*
-$controllerName = JRequest::getCmd( 'control', 'char' );
-
-$default_view = $controllerName.'_index';
-JRequest::setVar('view', $default_view, 'method', false);
-
-require_once (JPATH_COMPONENT.DS.'lib'.DS.'controller.php');
-require_once (JPATH_COMPONENT.DS.'controllers'.DS.$controllerName.'.php');
-
-$controllerName = 'EveController' . $controllerName;
-// Create the controller
-$controller = new $controllerName();
-
-// Perform the Request task
-
-// Redirect if set by the controller
-*/

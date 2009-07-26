@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS `jos_eve_characters` (
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`characterID`),
   KEY `eve_characters_fk_corporationID` (`corporationID`),
-  KEY `eve_characters_fk_userID` (`userID`)
+  KEY `eve_characters_fk_userID` (`userID`),
+  KEY `eve_characters_name` (`name`)
 ) CHARSET=utf8;
 
 DROP TABLE IF EXISTS `jos_eve_corporations`;
@@ -63,7 +64,8 @@ CREATE TABLE IF NOT EXISTS `jos_eve_corporations` (
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`corporationID`),
-  KEY `eve_corporations_fk_allianceID` (`allianceID`)
+  KEY `eve_corporations_fk_allianceID` (`allianceID`),
+  KEY `eve_corporations_corporationName` (`corporationName`)
 ) CHARSET=utf8;
 
 DROP TABLE IF EXISTS `jos_eve_alliances`;
@@ -77,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `jos_eve_alliances` (
   `owner` tinyint(1) NOT NULL default '0',
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`allianceID`)
+  PRIMARY KEY (`allianceID`),
+  KEY `eve_alliances_name` (`name`)
 ) CHARSET=utf8;
 
 DROP TABLE IF EXISTS `jos_eve_apicalls`;

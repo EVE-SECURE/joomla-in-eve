@@ -304,7 +304,7 @@ class EveModelAlliance extends EveModel {
 	}
 	
 	function store() {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		$alliance = $this->getAlliance(JRequest::getInt('allianceID'));
 		$post = JRequest::get('post');
 		$ownerPast = $alliance->owner;
@@ -322,12 +322,12 @@ class EveModelAlliance extends EveModel {
 		}
 
 		
-		$mainframe->enqueueMessage(JText::_('ALLIANCE STORED'));
+		$app->enqueueMessage(JText::_('ALLIANCE STORED'));
 		
 	}
 	
 	function apiGetAllianceList() {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		$ale = $this->getAleEVEOnline();
 		try {
 			$xml = $ale->eve->AllianceList();
@@ -338,7 +338,7 @@ class EveModelAlliance extends EveModel {
 			$dispatcher->trigger('eveAlianceList', 
 				array($xml, $ale->isFromCache(), array()));
 			
-			$mainframe->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());
@@ -349,7 +349,7 @@ class EveModelAlliance extends EveModel {
 	}
 	
 	function apiGetAllianceMembers($cid) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		
 		JArrayHelper::toInteger($cid);
 		if (!count($cid)) {
@@ -390,7 +390,7 @@ class EveModelAlliance extends EveModel {
 					JError::raiseError($e->getCode(), $e->getMessage());
 				}
 			}
-			$mainframe->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());

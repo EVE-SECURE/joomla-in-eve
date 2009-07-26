@@ -27,9 +27,9 @@ jimport('joomla.application.component.view');
 
 class EveViewApiform extends JView {
 	function display($tmpl = null) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		
-		$params = &$mainframe->getParams();
+		$params = $this->get('Params');
 		
 		$user = JFactory::getUser();
 		$require_credentials = !$user->id;

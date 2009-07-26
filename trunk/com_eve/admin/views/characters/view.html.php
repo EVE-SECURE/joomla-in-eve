@@ -57,7 +57,7 @@ class EveViewCharacters extends JView {
 	protected function _setToolbar()
 	{
 		$title = JText::_('EVE CHARACTER MANAGER');
-		JToolBarHelper::title($title, 'char');
+		JToolBarHelper::title($title, 'character');
 		JToolBarHelper::custom('character.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
 		JToolBarHelper::custom('getCharacterSheet', 'character', 'character', 'Character Sheet', true);
 		JToolBarHelper::addNew('character.add');

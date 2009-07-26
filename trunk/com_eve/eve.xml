@@ -38,29 +38,28 @@
 	</languages>
 	
 	<administration>
-		<menu view="chars" img="components/com_eve/assets/icon-eve-16.png">EVE</menu>
+		<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
 		<submenu>
-			<menu view="chars" img="components/com_eve/assets/icon-char-16.png">Characters</menu>
-			<menu view="corps" img="components/com_eve/assets/icon-corp-16.png">Corporations</menu>
-			<menu view="alliances" img="components/com_eve/assets/icon-alliance-16.png">Alliances</menu>
-			<menu view="accounts" img="components/com_eve/assets/icon-account-16.png">Account</menu>
-			<menu view="schedule" img="components/com_eve/assets/icon-schedule-16.png">Schedule</menu>
+			<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
+			<menu view="characters" img="components/com_eve/assets/icon-16-character.png">Characters</menu>
+			<menu view="corporations" img="components/com_eve/assets/icon-16-corporation.png">Corporations</menu>
+			<menu view="alliances" img="components/com_eve/assets/icon-16-alliance.png">Alliances</menu>
+			<menu view="accounts" img="components/com_eve/assets/icon-16-account.png">Account</menu>
+			<menu view="schedule" img="components/com_eve/assets/icon-16-schedule.png">Schedule</menu>
 		</submenu>
 		<files folder="admin">
-			<filename>admin.eve.php</filename>
+			<filename>eve.php</filename>
 			<filename>config.xml</filename>
-			<filename>filters.xml</filename>
 			<filename>index.html</filename>
-			<filename>loader.php</filename>
 			<filename>install.php</filename>
 			<filename>uninstall.php</filename>
 			<folder>assets</folder>
 			<folder>controllers</folder>
-			<folder>lib</folder>
+			<folder>helpers</folder>
 			<folder>models</folder>
+			<folder>sql</folder>
 			<folder>tables</folder>
 			<folder>views</folder>
-			<folder>sql</folder>
 		</files>
 		<languages folder="admin/languages">
 			<language tag="en-GB">en-GB.com_eve.ini</language>

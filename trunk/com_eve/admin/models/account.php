@@ -341,7 +341,7 @@ class EveModelAccount extends EveModel {
 	}
 	
 	function apiGetCharacters($cid) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
@@ -375,10 +375,10 @@ class EveModelAccount extends EveModel {
 			
 		}
 		if ($count == 1) {
-			$mainframe->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
 		}
 		if ($count > 1) {
-			$mainframe->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
 	

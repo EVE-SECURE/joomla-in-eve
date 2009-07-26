@@ -284,7 +284,7 @@ class EveModelCharacter extends EveModel {
 	}
 	
 	function apiGetCharacterSheet($cid) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
@@ -322,15 +322,15 @@ class EveModelCharacter extends EveModel {
 			}
 		}
 		if ($count == 1) {
-			$mainframe->enqueueMessage(JText::_('CHARACTER SHEET SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('CHARACTER SHEET SUCCESSFULLY IMPORTED'));
 		}
 		if ($count > 1) {
-			$mainframe->enqueueMessage(JText::sprintf('%s CHARACTER SHEETS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('%s CHARACTER SHEETS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
 	
 	function apiGetCorporationSheet($cid) {
-		global $mainframe;
+		$app = JFactory::getApplication();
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
@@ -370,10 +370,10 @@ class EveModelCharacter extends EveModel {
 			}
 		}
 		if ($count == 1) {
-			$mainframe->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
 		}
 		if ($count > 1) {
-			$mainframe->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
 		
