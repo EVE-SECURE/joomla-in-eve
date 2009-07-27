@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 ?>
-<form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<div class="col100">
 	<fieldset>
 		<legend><?php echo JText::_('USER DETAILS'); ?></legend>

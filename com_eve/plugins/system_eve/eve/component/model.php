@@ -117,43 +117,6 @@ class EveModel extends JModel {
 		return EveFactory::getInstance($table, $id, $config);
 	}
 	
-	/**
-	 * Update apiStatus based on error code
-	 *
-	 * @param TableAccount $account
-	 * @param int $errorCode
-	 * @param bool $store
-	 */
-	function updateApiStatus($account, $errorCode, $store = false) {
-		//TODO: move logic to helper beacause plugins uses it too
-		switch ($errorCode) {
-			case 200:
-				$account->apiStatus = 'Limited';
-				if ($store) {
-					$account->store();
-				}
-				break;
-			case 202:
-			case 203:
-			case 204:
-			case 205:
-			case 210:
-			case 212:
-				$account->apiStatus = 'Invalid';
-				if ($store) {
-					$account->store();
-				}
-				break;
-			case 211:
-				$account->apiStatus = 'Inactive';
-				if ($store) {
-					$account->store();
-				}
-				break;
-		}
-		 
-	}
-	
 	function getOwnerCorporations() {
 		$user = JFactory::getUser();
 		if (!$user->id) {

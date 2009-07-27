@@ -33,6 +33,16 @@ class EveControllerSchedule extends EveController {
 		$this->registerTask('unpublish', 'publish');
 	}
 	
+	/**
+	 * Dummy method to redirect back to standard controller
+	 *
+	 * @return	void
+	 */
+	public function display()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=schedule', false));
+	}
+	
 	function publish() {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$cid		= JRequest::getVar( 'cid', array(), 'post', 'array' );

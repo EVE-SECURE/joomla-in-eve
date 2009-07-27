@@ -84,7 +84,7 @@ class EveModelApiform  extends EveModel {
 				$app->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode());
+				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
 						JError::raiseNotice(0, JText::_('API key offers limited access'));

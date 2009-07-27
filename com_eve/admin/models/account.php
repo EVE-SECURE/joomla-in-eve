@@ -149,7 +149,7 @@ class EveModelAccount extends EveModel {
 				$app->enqueueMessage(JText::_('API key offers full access'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode());
+				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
 						JError::raiseNotice(0, JText::_('API key offers limited access'));
@@ -290,21 +290,21 @@ class EveModelAccount extends EveModel {
 		return $table->isCheckedOut($juserId);
 	}
 	
-
 	/**
 	 * Method to delete accounts from the database.
 	 *
 	 * @param	integer	$cid	An array of	numeric ids of the rows.
-	 * @return	boolean	True on success/false on failure.
+	 * @return	int|False	int on success/false on failure.
 	 */
 	public function delete($cid)
 	{
+		$i = 0;
 		// Get a account row instance
-		$table = $this->getAccount();
-
-		for ($i = 0, $c = count($cid); $i < $c; $i++) {
+		$table = $this->getInstance('Account');
+		
+		foreach ($cid as $id) {
 			// Load the row.
-			$return = $table->load($cid[$i]);
+			$return = $table->load($id);
 
 			// Check for an error.
 			if ($return === false) {
@@ -320,11 +320,10 @@ class EveModelAccount extends EveModel {
 				$this->setError($table->getError());
 				return false;
 			}
+			$i += 1;
 		}
-
-		return true;
+		return $i;
 	}
-
 
 	/**
 	 * Get instance of TableAccount
@@ -363,7 +362,7 @@ class EveModelAccount extends EveModel {
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode(), true);
+				EveHelper::updateApiStatus($account, $e->getCode(), true);
 				JError::raiseWarning($e->getCode(), $e->getMessage());
 			}
 			catch (RuntimeException $e) {

@@ -35,6 +35,16 @@ class EveControllerCorporation extends EveController {
 		$this->registerTask('getMemberTracking', 'getMemberTracking');
 	}
 	
+	/**
+	 * Dummy method to redirect back to standard controller
+	 *
+	 * @return	void
+	 */
+	public function display()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+	}
+	
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -202,40 +212,51 @@ class EveControllerCorporation extends EveController {
 		}
 	}
 	
-	function remove() {
-		JRequest::checkToken() or die( 'Invalid Token' );
+	function delete() {
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
-		$this->setRedirect( 'index.php?option=com_eve&view=corporations' );
-		
-		$db 			=& JFactory::getDBO();
-		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
-		$model 			= & $this->getModel('Corp', 'EveModel');
-		$table 			= $model->getTable('Corporation');
+		$model	= &$this->getModel('Corporation');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
 
-		JArrayHelper::toInteger( $cid );
-		
-		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select a Corporation to delete', true ) );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+
+		// Attempt to delete the corporations
+		$return = $model->delete($cid);
+
+		// Delete the weblinks
+		if ($return === false) {
+			$message = JText::sprintf('JError_Occurred', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=corporations', $message, 'error');
+			return false;
 		}
-		
-		foreach ($cid as $id) {
-			$table->delete($id);
+		else {
+			$message = JText::sprintf('JSuccess_N_items_deleted', $return);
+			$this->setRedirect('index.php?option=com_eve&view=corporations', $message);
+			return true;
 		}
-		
-		$url = JRoute::_('index.php?option=com_eve&view=corporations', false);
-		$this->setRedirect($url, JText::_('CORPORATION DELETED'));
 	}
 	
 	function getCorporationSheet() {
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		$model = & $this->getModel('Corp', 'EveModel');
+		$model = & $this->getModel('Corporation', 'EveModel');
+		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		//@todo: message, error output
 		$model->apiGetCorporationSheet($cid);
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
 	
 	function getMemberTracking() {
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		$model = & $this->getModel('Corp', 'EveModel');
+		$model = & $this->getModel('Corporation', 'EveModel');
+		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		//@todo: message, error output
 		$model->apiGetMemberTracking($cid);
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}

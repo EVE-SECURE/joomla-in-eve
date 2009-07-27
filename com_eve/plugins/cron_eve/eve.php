@@ -88,7 +88,7 @@ class plgCronEve extends JPlugin {
 			//TODO: update cacheUntil on error
 			catch (AleExceptionEVEAuthentication $e) {
 				//FIXME: use helper when available
-				EveModel::updateApiStatus($account, $e->getCode());
+				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
 						JError::raiseNotice(0, JText::_('API key offers limited access'));

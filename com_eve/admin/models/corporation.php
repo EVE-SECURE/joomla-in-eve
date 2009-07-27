@@ -269,16 +269,17 @@ class EveModelCorporation extends EveModel {
 	 * Method to delete corporations from the database.
 	 *
 	 * @param	integer	$cid	An array of	numeric ids of the rows.
-	 * @return	boolean	True on success/false on failure.
+	 * @return	int|False	int on success/false on failure.
 	 */
 	public function delete($cid)
 	{
+		$i = 0;
 		// Get a corporation row instance
-		$table = $this->getCorporation();
-
-		for ($i = 0, $c = count($cid); $i < $c; $i++) {
+		$table = $this->getInstance('Corporation');
+		
+		foreach ($cid as $id) {
 			// Load the row.
-			$return = $table->load($cid[$i]);
+			$return = $table->load($id);
 
 			// Check for an error.
 			if ($return === false) {
@@ -294,9 +295,9 @@ class EveModelCorporation extends EveModel {
 				$this->setError($table->getError());
 				return false;
 			}
+			$i += 1;
 		}
-
-		return true;
+		return $i;
 	}
 	
 	/**
@@ -384,7 +385,7 @@ class EveModelCorporation extends EveModel {
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
-				$this->updateApiStatus($account, $e->getCode(), true);
+				EveHelper::updateApiStatus($account, $e->getCode(), true);
 				JError::raiseWarning($e->getCode(), $e->getMessage());
 			}
 			catch (RuntimeException $e) {

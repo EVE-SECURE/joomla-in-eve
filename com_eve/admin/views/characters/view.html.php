@@ -62,6 +62,6 @@ class EveViewCharacters extends JView {
 		JToolBarHelper::custom('getCharacterSheet', 'character', 'character', 'Character Sheet', true);
 		JToolBarHelper::addNew('character.add');
 		JToolBarHelper::editList('character.edit');
-		JToolBarHelper::deleteList('', 'character.remove');
+		JToolBarHelper::deleteList('', 'character.delete');
 	}
 }
