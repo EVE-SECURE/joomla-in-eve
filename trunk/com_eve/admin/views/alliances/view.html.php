@@ -62,7 +62,7 @@ class EveViewAlliances extends JView {
 		JToolBarHelper::custom('alliance.getAllianceMembers', 'corporation', 'corporation', 'Get Alliance Members', true);
 		JToolBarHelper::addNew('alliance.add');
 		JToolBarHelper::editList('alliance.edit');
-		JToolBarHelper::deleteList('', 'alliance.remove');
+		JToolBarHelper::deleteList('', 'alliance.delete');
 	}
 
 }

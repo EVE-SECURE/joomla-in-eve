@@ -264,21 +264,21 @@ class EveModelAlliance extends EveModel {
 		return $table->isCheckedOut($juserId);
 	}
 	
-
 	/**
 	 * Method to delete alliances from the database.
 	 *
 	 * @param	integer	$cid	An array of	numeric ids of the rows.
-	 * @return	boolean	True on success/false on failure.
+	 * @return	int|False	int on success/false on failure.
 	 */
 	public function delete($cid)
 	{
+		$i = 0;
 		// Get a alliance row instance
-		$table = $this->getAlliance();
-
-		for ($i = 0, $c = count($cid); $i < $c; $i++) {
+		$table = $this->getInstance('Alliance');
+		
+		foreach ($cid as $id) {
 			// Load the row.
-			$return = $table->load($cid[$i]);
+			$return = $table->load($id);
 
 			// Check for an error.
 			if ($return === false) {
@@ -294,9 +294,9 @@ class EveModelAlliance extends EveModel {
 				$this->setError($table->getError());
 				return false;
 			}
+			$i += 1;
 		}
-
-		return true;
+		return $i;
 	}
 	
 	function getAlliance($id = null) {

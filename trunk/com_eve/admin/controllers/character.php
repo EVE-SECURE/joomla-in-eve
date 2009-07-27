@@ -35,6 +35,16 @@ class EveControllerCharacter extends EveController {
 		$this->registerTask('get_corporation_sheet', 'getCorporationSheet');
 	}
 	
+	/**
+	 * Dummy method to redirect back to standard controller
+	 *
+	 * @return	void
+	 */
+	public function display()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false));
+	}
+	
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -202,34 +212,39 @@ class EveControllerCharacter extends EveController {
 		}
 	}	
 	
-	function remove() {
-		JRequest::checkToken() or die( 'Invalid Token' );
+	function delete() {
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
-		$this->setRedirect( 'index.php?option=com_eve&view=characters' );
-		
-		$db 			=& JFactory::getDBO();
-		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
-		$model 			= & $this->getModel('Char');
-		$table 			= $model->getTable('Character');
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Character');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
 
-		JArrayHelper::toInteger( $cid );
-		
-		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select a Character to delete', true ) );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+
+		// Attempt to delete the characters
+		$return = $model->delete($cid);
+
+		// Delete the weblinks
+		if ($return === false) {
+			$message = JText::sprintf('JError_Occurred', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=characters', $message, 'error');
+			return false;
 		}
-		
-		foreach ($cid as $id) {
-			$table->delete($id);
+		else {
+			$message = JText::sprintf('JSuccess_N_items_deleted', $return);
+			$this->setRedirect('index.php?option=com_eve&view=characters', $message);
+			return true;
 		}
-		
-		$url = JRoute::_('index.php?option=com_eve&view=characters', false);
-		$this->setRedirect($url, JText::_('CHARACTER DELETED'));
 	}
 	
 	
 	function getCharacterSheet() {
-		$model = & $this->getModel('Char', 'EveModel');
+		$model = & $this->getModel('Character', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
 		
 		$msg = null;
 		if ($model->apiGetCharacterSheet($cid)) {
@@ -240,15 +255,17 @@ class EveControllerCharacter extends EveController {
 	}
 	
 	function getCorporationSheet() {
-		$model = & $this->getModel('Char', 'EveModel');
+		$model = & $this->getModel('Character', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
 		
 		if ($model->apiGetCorporationSheet($cid)) {
 			$msg = JText::_('CORPORATIONS SUCCESSFULLY IMPORTED');
 		}
 		
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
-		
 	}
 	
 }

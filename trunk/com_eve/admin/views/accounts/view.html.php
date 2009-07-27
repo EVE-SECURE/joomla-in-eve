@@ -59,7 +59,7 @@ class EveViewAccounts extends JView {
 		JToolBarHelper::custom('account.getCharacters', 'character', 'character', 'Characters', true);
 		JToolBarHelper::addNew('account.add');
 		JToolBarHelper::editList('account.edit');
-		JToolBarHelper::deleteList('', 'account.remove');
+		JToolBarHelper::deleteList('', 'account.delete');
 	}
 
 }

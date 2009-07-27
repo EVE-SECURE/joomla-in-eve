@@ -34,6 +34,16 @@ class EveControllerAccount extends EveController {
 		$this->registerTask('get_characters', 'getCharacters');
 	}
 	
+	/**
+	 * Dummy method to redirect back to standard controller
+	 *
+	 * @return	void
+	 */
+	public function display()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
+	}
+	
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -147,7 +157,7 @@ class EveControllerAccount extends EveController {
 			}
 
 			// Save the data in the session.
-			$app->setUserState('com_eve.edit.account.data', $data);
+			$app->setUserState('.edit.account.data', $data);
 
 			// Redirect back to the edit screen.
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=account&layout=edit', false));
@@ -201,18 +211,43 @@ class EveControllerAccount extends EveController {
 		}
 	}	
 	
-	function remove() {
-		
+	function delete() {
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('Account');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
+
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+
+		// Attempt to delete the accounts
+		$return = $model->delete($cid);
+
+		// Delete the weblinks
+		if ($return === false) {
+			$message = JText::sprintf('JError_Occurred', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=accounts', $message, 'error');
+			return false;
+		}
+		else {
+			$message = JText::sprintf('JSuccess_N_items_deleted', $return);
+			$this->setRedirect('index.php?option=com_eve&view=accounts', $message);
+			return true;
+		}
 	}
 	
 	function getCharacters() {
 		$model = & $this->getModel('Account');
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		$cid = JRequest::getVar('cid', array(), '', 'array');
 		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		//@todo: message, error output
 		$model->apiGetCharacters($cid);
 		
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
-		
 	}
 
 }

@@ -62,7 +62,7 @@ class EveViewCorporations extends JView {
 		JToolBarHelper::custom('corporation.getMemberTracking', 'character', 'character', 'Member Tracking', true);
 		JToolBarHelper::addNew('corporation.add');
 		JToolBarHelper::editList('corporation.edit');
-		JToolBarHelper::deleteList('', 'corporation.remove');
+		JToolBarHelper::deleteList('', 'corporation.delete');
 	}
 	
 }

@@ -35,6 +35,16 @@ class EveControllerAlliance extends EveController {
 		$this->registerTask('get_alliance_members', 'getAllianceMembers');
 	}
 	
+	/**
+	 * Dummy method to redirect back to standard controller
+	 *
+	 * @return	void
+	 */
+	public function display()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+	}
+	
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -202,39 +212,48 @@ class EveControllerAlliance extends EveController {
 		}
 	}
 		
-	function remove() {
-		JRequest::checkToken() or die( 'Invalid Token' );
+	function delete() {
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
-		$this->setRedirect( 'index.php?option=com_eve&view=alliances' );
-		
-		$db 			=& JFactory::getDBO();
-		$cid 			= JRequest::getVar( 'cid', array(), '', 'array' );
-		$model 			= & $this->getModel('Alliance', 'EveModel');
-		$table 			= $model->getTable('Alliances');
+		$app	= &JFactory::getApplication();
+		$model	= &$this->getModel('alliance');
+		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
 
-		JArrayHelper::toInteger( $cid );
-		
-		if (count( $cid ) < 1) {
-			JError::raiseError(500, JText::_( 'Select an Alliance to delete', true ) );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+
+		// Attempt to delete the alliances
+		$return = $model->delete($cid);
+
+		// Delete the weblinks
+		if ($return === false) {
+			$message = JText::sprintf('JError_Occurred', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=alliances', $message, 'error');
+			return false;
 		}
-		
-		foreach ($cid as $id) {
-			$table->delete($id);
+		else {
+			$message = JText::sprintf('JSuccess_N_items_deleted', $return);
+			$this->setRedirect('index.php?option=com_eve&view=alliances', $message);
+			return true;
 		}
-		
-		$url = JRoute::_('index.php?option=com_eve&view=alliances', false);
-		$this->setRedirect($url, JText::_('ALLIANCE DELETED'));
 	}
 	
 	function getAllianceList() {
 		$model = & $this->getModel('Alliance', 'EveModel');
 		$model->apiGetAllianceList();
+		
+		//@todo: message, error output
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
 	
 	function getAllianceMembers() {
 		$model = & $this->getModel('Alliance', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		//@todo: message, error output
 		$model->apiGetAllianceMembers($cid);
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}

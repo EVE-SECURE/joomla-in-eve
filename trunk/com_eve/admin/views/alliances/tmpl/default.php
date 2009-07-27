@@ -13,7 +13,7 @@ $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
 	<table>
 		<tr>
 			<td align="left" width="100%">
