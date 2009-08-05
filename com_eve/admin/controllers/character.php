@@ -189,6 +189,7 @@ class EveControllerCharacter extends EveController {
 		switch ($this->_task) {
 			case 'apply':
 				// Redirect back to the edit screen.
+				$app->setUserState('com_eve.edit.character.characterID', $return);
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
 				break;
 

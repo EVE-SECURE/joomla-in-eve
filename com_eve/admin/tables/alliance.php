@@ -38,8 +38,6 @@ class TableAlliance extends EveTable {
 	/** @var string */
 	var $logo 			= null;
 	/** @var int */
-	var $standings		= null;
-	/** @var int */
 	var $owner			= null;
 	
 	/* checkout values */

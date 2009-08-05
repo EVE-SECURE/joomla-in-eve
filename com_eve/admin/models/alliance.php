@@ -93,7 +93,7 @@ class EveModelAlliance extends EveModel {
 		// Get a alliance row instance.
 		$table = &$this->getItem($allianceID);
 		
-		$ownerPast = $alliance->owner;
+		$ownerPast = $table->owner;
 		
 		// Bind the data
 		if (!$table->bind($data)) {
@@ -101,10 +101,6 @@ class EveModelAlliance extends EveModel {
 			return false;
 		}
 
-		if ($alliance->standings === '') {
-			$alliance->standings = null;
-		}
-		
 		// Prepare the row for saving
 		$this->_prepareTable($table);
 
@@ -120,13 +116,13 @@ class EveModelAlliance extends EveModel {
 			return false;
 		}
 		
-		$ownerNow = $alliance->owner;
+		$ownerNow = $table->owner;
 		if ($ownerNow != $ownerPast) {
 			$q = $this->getQuery();
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
 			$q->addWhere('co.owner = 0');
-			$q->addWhere('co.allianceID=%s', intval($alliance->allianceID));
+			$q->addWhere('co.allianceID=%s', intval($table->allianceID));
 			$q->addQuery('ch.characterID', 'ch.userID');
 			$ceos = $q->loadObjectList();
 			
@@ -335,7 +331,7 @@ class EveModelAlliance extends EveModel {
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
 			
-			$dispatcher->trigger('eveAlianceList', 
+			$dispatcher->trigger('eveAllianceList', 
 				array($xml, $ale->isFromCache(), array()));
 			
 			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
@@ -363,7 +359,7 @@ class EveModelAlliance extends EveModel {
 			
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
-			$dispatcher->trigger('eveAlianceList', 
+			$dispatcher->trigger('eveAllianceList', 
 				array($xml, $ale->isFromCache(), array()));
 			
 			$conditions = array();

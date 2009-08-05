@@ -93,7 +93,7 @@ class EveModelCorporation extends EveModel {
 		// Get a corporation row instance.
 		$table = &$this->getItem($corporationID);
 		
-		$ownerPast = $corporation->owner;
+		$ownerPast = $table->owner;
 		
 		// Bind the data
 		if (!$table->bind($data)) {
@@ -101,10 +101,6 @@ class EveModelCorporation extends EveModel {
 			return false;
 		}
 
-		if ($corporation->standings === '') {
-			$corporation->standings = null;
-		}
-		
 		// Prepare the row for saving
 		$this->_prepareTable($table);
 
@@ -120,14 +116,14 @@ class EveModelCorporation extends EveModel {
 			return false;
 		}
 			
-		$ownerNow = $corporation->owner; 
+		$ownerNow = $table->owner; 
 		if ($ownerNow != $ownerPast) {
 			$q = $this->getQuery();
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
 			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 			$q->addWhere('(al.owner = 0 OR al.owner IS NULL)');
-			$q->addWhere('co.corporationID=%s', intval($corporation->corporationID));
+			$q->addWhere('co.corporationID=%s', intval($table->corporationID));
 			$q->addQuery('ch.characterID', 'ch.userID');
 			$ceos = $q->loadObjectList();
 			

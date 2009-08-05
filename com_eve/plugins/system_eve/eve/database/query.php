@@ -24,14 +24,14 @@
 defined('_JEXEC') or die();
 
 class JQuery extends JObject {
-	var $type = null;
-	var $dbo = null;
-	var $_limit = 0;
-	var $_offset = 0;
-	var $_query = '';
+	protected $type = null;
+	protected $dbo = null;
+	protected $_limit = 0;
+	protected $_offset = 0;
+	protected $_query = '';
 	
 	
-	function __construct($dbo = null) {
+	public function __construct($dbo = null) {
 		parent::__construct();
 		if (is_null($dbo)) {
 			$this->dbo =& JFactory::getDBO();
@@ -41,11 +41,11 @@ class JQuery extends JObject {
 		$this->type = 'select';
 	}
 	
-	function _checkMap($name) {
+	protected function _checkMap($name) {
 		return isset($this->$name) && is_array($this->$name) && !empty($this->$name);
 	}
 	
-	function _addMap($name, $value, $id = null) {
+	protected function _addMap($name, $value, $id = null) {
 		if (!isset($this->$name)) {
 			$this->$name = array();
 		}
@@ -146,7 +146,7 @@ class JQuery extends JObject {
 		
 	}
 	
-	function _prepareQuery() {
+	protected function _prepareQuery() {
 		if ($this->_checkMap('query')) {
 			$tmp = array();
 			foreach ($this->query as $query) {
@@ -158,7 +158,7 @@ class JQuery extends JObject {
 		}
 	}
 	
-	function _prepareTable() {
+	protected function _prepareTable() {
 		$q = ' (';
 		$tmp = array();
 		foreach ($this->table as $table) {
@@ -173,7 +173,7 @@ class JQuery extends JObject {
 		return $q;
 	}
 	
-	function _prepareJoin() {
+	protected function _prepareJoin() {
 		if (!$this->_checkMap('join')) {
 			return '';
 		}
@@ -185,7 +185,7 @@ class JQuery extends JObject {
 		
 	}
 	
-	function _prepareWhere() {
+	protected function _prepareWhere() {
 		if (!$this->_checkMap('where')) {
 			return '';
 		}
@@ -196,7 +196,7 @@ class JQuery extends JObject {
 		return ' WHERE '.implode(' AND ', $tmp);		
 	}
 	
-	function _prepareGroup() {
+	protected function _prepareGroup() {
 		if (!$this->_checkMap('group')) {
 			return '';
 		}
@@ -208,7 +208,7 @@ class JQuery extends JObject {
 		
 	}
 	
-	function _prepareHaving() {
+	protected function _prepareHaving() {
 		if (!$this->_checkMap('having')) {
 			return '';
 		}
@@ -220,7 +220,7 @@ class JQuery extends JObject {
 		
 	}
 	
-	function _prepareOrder() {
+	protected function _prepareOrder() {
 		if (!$this->_checkMap('order')) {
 			return '';
 		}
@@ -232,7 +232,7 @@ class JQuery extends JObject {
 		return ' ORDER BY '.implode(', ', $tmp);
 	}
 	
-	function _prepareLimit() {
+	protected function _prepareLimit() {
 		if ($this->_limit > 0 || $this->_offset > 0) {
 			return ' LIMIT '.$this->_offset.', '.$this->_limit;
 		} else {
@@ -240,15 +240,7 @@ class JQuery extends JObject {
 		}
 	}
 	
-	function prepare() {
-		switch ($this->type) {
-			case 'select':
-			default:
-				return $this->prepareSelect();
-		}
-	}
-	
-	function prepareSelect() {
+	public function prepareSelect() {
 		$q = 'SELECT';
 		$q .= $this->_prepareQuery();
 		$q .= ' FROM';
@@ -263,19 +255,19 @@ class JQuery extends JObject {
 		return $q;
 	}
 	
-	function query() {
-		//echo $this->prepare(),'.', $this->_limit, '.', $this->_offset; exit;
-		$this->dbo->setQuery($this->prepare());
+	public function query() {
+		//echo $this->toString(),'.', $this->_limit, '.', $this->_offset; exit;
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->query();
 	}
 	
-	function loadResult() {
-		$this->dbo->setQuery($this->prepare());
+	public function loadResult() {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadResult();
 	}
 	
-	function loadResultArray($numinarray = 0) {
-		$this->dbo->setQuery($this->prepare());
+	public function loadResultArray($numinarray = 0) {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadResultArray($numinarray);
 	}
 	
@@ -285,8 +277,8 @@ class JQuery extends JObject {
 	* @access	public
 	* @return array
 	*/
-	function loadAssoc() {
-		$this->dbo->setQuery($this->prepare());
+	public function loadAssoc() {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadAssoc();
 	}
 
@@ -297,27 +289,32 @@ class JQuery extends JObject {
 	* @param string The field name of a primary key
 	* @return array If <var>key</var> is empty as sequential list of returned records.
 	*/
-	function loadAssocList($key='') {
-		$this->dbo->setQuery($this->prepare());
+	public function loadAssocList($key='') {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadAssocList($key);
 	}
 	
 	
-	function loadObject() {
-		$this->dbo->setQuery($this->prepare());
+	public function loadObject() {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadObject();
 	}
 	
-	function loadObjectList($key = '') {
-		$this->dbo->setQuery($this->prepare());
+	public function loadObjectList($key = '') {
+		$this->dbo->setQuery($this->toString());
 		return $this->dbo->loadObjectList($key);
 	}
 	
-	function toString() {
-		return $this->prepare();
+	public function toString() {
+		switch ($this->type) {
+			case 'select':
+			default:
+				return $this->prepareSelect();
+		}
 	}
 	
-	function __toString() {
-		return $this->prepare();
+	public function __toString() {
+		$this->toString();
 	}
+	
 }
