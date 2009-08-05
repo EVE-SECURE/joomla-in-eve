@@ -1,0 +1,19 @@
+#summary One-sentence summary of this page.
+#labels Phase-Deploy
+= Cron Jobs =
+
+== Setting Up ==
+
+In 3 easy steps.
+  * Download cron.zip
+  * Unpack content directly to Joomla! root
+  * Set your crontab to execute `cron/index.php`
+
+
+== Details ==
+
+For some reason, Joomla! doesn't support scheduling tasks by any _normal_ way. So I had to add another entry point for Joomla!, similar to administration, installation or xmlrpc. So, what does it do:
+  * Load Joomla! framework
+  * Load `cron` plugins (`plugins/cron/*.php`)
+  * Trigger `onCronTick` event
+  * Let the plugins handle their job
