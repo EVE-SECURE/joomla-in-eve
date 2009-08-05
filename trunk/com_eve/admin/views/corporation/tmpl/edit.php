@@ -24,7 +24,7 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 							<input type="hidden" name="jform[corporationID]" id="jformcorporationID" value="<?php echo $this->item->corporationID; ?>" />
 							<strong><?php echo $this->item->corporationID; ?></strong>
 						<?php else: ?>
-							<input type="text" name="jform[corporationID"] id="jformcorporationID" value="<?php echo $this->item->corporationID; ?>" />
+							<input type="text" name="jform[corporationID]" id="jformcorporationID" value="<?php echo $this->item->corporationID; ?>" />
 						<?php endif; ?>
 					</td>
 				</tr>

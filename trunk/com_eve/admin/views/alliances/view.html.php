@@ -58,8 +58,8 @@ class EveViewAlliances extends JView {
 	{
 		$title = JText::_('EVE ALLIANCE MANAGER');
 		JToolBarHelper::title($title, 'alliance');
-		JToolBarHelper::custom('alliance.getAllianceList', 'alliance', 'alliance', 'Get Alliance List', false);
-		JToolBarHelper::custom('alliance.getAllianceMembers', 'corporation', 'corporation', 'Get Alliance Members', true);
+		JToolBarHelper::custom('alliance.getAllianceList', 'alliance', 'alliance', 'Alliance List', false);
+		JToolBarHelper::custom('alliance.getAllianceMembers', 'corporation', 'corporation', 'Alliance Members', true);
 		JToolBarHelper::addNew('alliance.add');
 		JToolBarHelper::editList('alliance.edit');
 		JToolBarHelper::deleteList('', 'alliance.delete');

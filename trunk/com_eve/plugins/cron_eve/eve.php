@@ -65,8 +65,8 @@ class plgCronEve extends JPlugin {
 				if ($row->authorization == 'Full' && $account->apiStatus != 'Full') {
 					continue;
 				}
+				$ale->setCredentials($account->userID, $account->apiKey);
 			}
-			$ale->setCredentials($account->userID, $account->apiKey);
 			if ($row->authentication == 'Character') {
 				$ale->setCharacterID($row->characterID);
 			} else {
