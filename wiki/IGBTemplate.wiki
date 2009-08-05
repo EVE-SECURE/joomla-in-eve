@@ -1,14 +1,15 @@
 #labels Phase-Deploy
 # Setting up the IGB template
 
-= Introduction =
+= Installation =
 
-Add your content here.
+Go to _Extensions_ -> _Install/Uninstall_ and install package.
 
 
-= Details =
+= Setting up =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+*Don't use IGB template as default template*. Go to _Extensions_ -> _Plugin Manager_ -> _System - EVE_ and set _IGB Template_ to name of template you want to use in IGB.
+
+= Overrides =
+
+Standard Joomla! components and modules produce output that IGB isn't able to render. To remedy this issu you'll have to make a template override for almost any module/component you want to use. [http://docs.joomla.org/How_to_override_the_output_from_the_Joomla!_core Please see official Joomla! documentation on the issue]
