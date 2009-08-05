@@ -25,10 +25,13 @@ defined('_JEXEC') or die();
 
 require_once(JPATH_COMPONENT.DS.'controller.php');
 
-$controller = new EveController();
+if (!JPluginHelper::isEnabled('system', 'eve')) {
+	$app = JFactory::getApplication();
+	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
+} else {
+	$controller = new EveController();
+	$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
+	$controller->redirect();
+}
 
-$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
-$controller->redirect();
 
-
-?>

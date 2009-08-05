@@ -35,17 +35,17 @@ class  plgSystemEVE extends JPlugin {
 
 	function onAfterInitialise() {
 		$app = JFactory::getApplication();
-		//require_once JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'loader.php';
 		$base = JPATH_PLUGINS.DS.'system'.DS.'eve'.DS;
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
 		JLoader::register('EveFactory', $base.'lib'.DS.'factory.php');
+		JLoader::register('EveHelperIgb', $base.'lib'.DS.'igb.php');
+		JLoader::register('EveHelper', $base.'lib'.DS.'helper.php');
 		JLoader::register('EveTable', $base.'database'.DS.'table.php');
 		JLoader::register('JQuery', $base.'database'.DS.'query.php');
 		JLoader::register('EveModel', $base.'component'.DS.'model.php');
 		JLoader::register('JModelList', $base.'component'.DS.'modellist.php');
 		JLoader::register('EveController', $base.'component'.DS.'controller.php');
-		JLoader::register('EveHelperIgb', $base.'lib'.DS.'igb.php');
-				
+		
 		if( $app->isAdmin()) {
 		 	return;
 		}

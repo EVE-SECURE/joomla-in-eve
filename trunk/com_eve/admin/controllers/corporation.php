@@ -189,6 +189,7 @@ class EveControllerCorporation extends EveController {
 		switch ($this->_task) {
 			case 'apply':
 				// Redirect back to the edit screen.
+				$app->setUserState('com_eve.edit.corporation.corporationID', $return);
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporation&layout=edit', false));
 				break;
 

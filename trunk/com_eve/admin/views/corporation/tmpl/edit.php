@@ -57,7 +57,7 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 						<label for="jformowner"><?php echo JText::_('OWNER?'); ?></label>
 					</td>
 					<td>
-						<?php echo JHTML::_('select.booleanlist', 'owner', null, $this->item->owner); ?>
+						<?php echo JHTML::_('select.booleanlist', 'jform[owner]', null, $this->item->owner); ?>
 					</td>
 				</tr>				
 			</tbody>

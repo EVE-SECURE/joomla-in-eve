@@ -129,7 +129,7 @@ class plgEveapiEve extends JPlugin {
 		$corporation->save($sheet);
 	}
 	
-	public function eveAlianceList($xml, $fromCache, $options = array()) {
+	public function eveAllianceList($xml, $fromCache, $options = array()) {
 		if ($fromCache) {
 			return;
 		}

@@ -51,7 +51,6 @@ class TableCorporation extends EveTable {
 	var $allianceID			= null;
 	
 	/** @var int */
-	var $standings		= null;
 	var $owner			= null;
 
 	/* checkout values */

@@ -157,7 +157,7 @@ class EveControllerAccount extends EveController {
 			}
 
 			// Save the data in the session.
-			$app->setUserState('.edit.account.data', $data);
+			$app->setUserState('com_eve.edit.account.data', $data);
 
 			// Redirect back to the edit screen.
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=account&layout=edit', false));
@@ -188,6 +188,7 @@ class EveControllerAccount extends EveController {
 		switch ($this->_task) {
 			case 'apply':
 				// Redirect back to the edit screen.
+				$app->setUserState('com_eve.edit.account.userID', $return);
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=account&layout=edit', false));
 				break;
 

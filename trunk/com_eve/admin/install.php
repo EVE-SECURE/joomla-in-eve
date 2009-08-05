@@ -43,7 +43,16 @@ function com_install() {
 			</li>
 			<li>
 				<a href="<?php echo JRoute::_('index.php?option=com_config'); ?>" target="_blank">
-					<?php echo JText::_('Turn off "New User Account Activation"'); ?>
+					<?php echo JText::_('Turn off "New User Account Activation"'); ?> if you want to use API account activation
+				</a>
+			</li>
+			<li>
+				Find &quot;language/en-GB/en-GB.com_user.ini&quot; file.
+				Replace &quot;REG_COMPLETE=You may now log in.&quot; with &quot;REG_COMPLETE=Register your EVE API key to log in.&quot;
+			</li>
+			<li>
+				<a href="<?php echo JRoute::_('index.php?option=com_eve'); ?>">
+					<?php echo JText::_('Go and play'); ?>
 				</a>
 			</li>
 		</ol>
