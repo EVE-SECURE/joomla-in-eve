@@ -1,5 +1,5 @@
 #labels Phase-Deploy
-#Setting up the IGB template
+# Setting up the IGB template
 
 = Introduction =
 
