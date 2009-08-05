@@ -360,8 +360,7 @@ class EveModelCorporation extends EveModel {
 	
 	function apiGetMemberTracking($cid) {
 		$app = JFactory::getApplication();
-		JArrayHelper::toInteger($cid);
-				
+
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('NO CORPORATION SELECTED'));
 			return false;
