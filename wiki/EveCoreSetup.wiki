@@ -1,0 +1,20 @@
+#labels Phase-Deploy
+#Setting up the com_eve component
+
+= Requirements =
+
+Joomla! in EVE requires
+  * PHP 5 or higher. (Tested on 5.2)
+  * MySQL 
+  * Joomla! 1.5
+
+
+= Installation =
+
+Install CronJobs. Then install com_eve.zip as any other component.
+
+= Setting up API account activation =
+  * Enable all EVE related plugins.
+  * Disable _New User Account Activation_ in _Global Configuration_. EVE - User plugin will automatically disable any new Joomla! account.
+  * Register _Owner Corporation_ or _Owner Alliance_. Just enter ID, then fetch details by API.
+  * Create link to API input form in any menu.
