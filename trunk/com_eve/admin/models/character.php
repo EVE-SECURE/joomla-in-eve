@@ -249,7 +249,7 @@ class EveModelCharacter extends EveModel {
 	{
 		$i = 0;
 		// Get a character row instance
-		$table = $this->getInstance('Characters');
+		$table = $this->getInstance('Character');
 		
 		foreach ($cid as $id) {
 			// Load the row.
