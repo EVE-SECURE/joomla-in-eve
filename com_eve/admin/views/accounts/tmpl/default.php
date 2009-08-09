@@ -12,7 +12,7 @@ JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 ?>
-<form action="<?php echo JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
+<form action="<?php echo JRoute::_('index.php?option=com_eve&view=accounts'); ?>" method="post" name="adminForm">
 	<fieldset class="filter">
 		<div class="left">
 			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
