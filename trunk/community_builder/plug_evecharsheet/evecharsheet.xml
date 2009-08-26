@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	/**
+ * @version		$Id$
+ * @author		Pavol Kovalik
+ * @package		Joomla! in EVE
+ * @subpackage	Community Builder - Character Sheet
+ * @copyright	Copyright (C) 2009 Pavol Kovalik. All rights reserved.
+ * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+
+<cbinstall version="1.0.3" type="plugin" group="user">
+	<name>evecharsheet</name>
+	<creationDate>August 2009</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2009 Pavol Kovalik </copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<version>1.2.1</version>
+	<description>Community Builder plugin displays character sheets of EVE online.</description>
+	
+	<files>
+		<filename plugin="evecharsheet">evecharsheet.php</filename>
+		<filename>index.html</filename>
+		<filename>install.evecharsheet.php</filename>
+		<filename>uninstall.evecharsheet.php</filename>
+	</files>
+	<params>
+		<param name="listallcharacters" type="radio" default="0"
+			label="List All Characters" description="Set to No to hide alt characters not in owner corporations">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<!-- 
+		<param name="temptime" type="text" size="10" default="3600"
+			label="Temp time" description="Refresh rate" />
+		
+		<param name="showxml" type="radio" default="1"
+			label="Show xml link to owner"
+			description="Show xml file link to profile owner only or hide.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showbanner" type="radio" default="1"
+			label="Show Banner"
+			description="This fixes the table width to 724px.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="aid" type="text" size="10" default="105304"
+			label="AffiliateID"
+			description="Leave default if you don't know what to fill in" />
+		<param name="tablewidth" type="text" size="5" default="400"
+			label="Table Width"
+			description="If Show Banner is set to No you can set your own tablewidth in pixel or add % if required" />
+		 -->
+		<param name="showskills" type="radio" default="1"
+			label="Show Skills" description="Show Skills Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showcertificates" type="radio" default="1"
+			label="Show Certificates" description="Show Certificates Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showroles" type="radio" default="1"
+			label="Show Roles" description="Show Corporation Roles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showtitles" type="radio" default="1"
+			label="Show Titles" description="Show Corporation Titles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showskillintraining" type="radio" default="1"
+			label="Show Skill In Training"
+			description="Show Skill In Training Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showaccount" type="radio" default="1"
+			label="Show Account" description="Show Account Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+	</params>
+	<tabs>
+		<tab name="My Eve Online Characters" description="Displays Character Sheets from com_charsheet component" class="getEvecharsheetTab" position="cb_tabmain" displaytype="tab">
+			<params></params>
+			<fields></fields>
+		</tab>
+	</tabs>
+	<install>
+		<queries></queries>
+	</install>
+	<uninstall>
+		<queries></queries>
+	</uninstall>
+	<database>
+
+	</database>
+	<installfile>install.evecharsheet.php</installfile>
+	<uninstallfile>uninstall.evecharsheet.php</uninstallfile>
+</cbinstall>
