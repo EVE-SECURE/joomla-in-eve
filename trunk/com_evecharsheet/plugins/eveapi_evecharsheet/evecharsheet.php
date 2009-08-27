@@ -33,6 +33,9 @@ jimport('joomla.plugin.plugin');
  * @since 		1.5
  */
 class plgEveapiEvecharsheet extends JPlugin {
+	static private $attributes;
+	static private $enhancers;
+	
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
@@ -40,23 +43,63 @@ class plgEveapiEvecharsheet extends JPlugin {
 	public function charCharacterSheet($xml, $fromCache, $options = array()) {
 		//TODO: update(starTime) and delete(endTime) skills in skillquee queue 
 		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
+		
 		$values = '';
 		foreach ($xml->result->skills as $skill) {
 			if ($values) {
 				$values .= ",\n"; 
 			}
-			$values .= sprintf("('%s', '%s', '%s', '%s')", $characterID, 
+			$values .= sprintf("(%s, %s, %s, %s)", $characterID, 
 				intval($skill->typeID), intval($skill->skillpoints), intval($skill->level));
 		}
 		
-		if (!$values) {
-			return;
+		if ($values) {
+			$dbo = JFactory::getDBO();
+			$sql = 'INSERT INTO #__eve_charskills (characterID, typeID, skillpoints, level) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charskills WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
 		}
 		
-		$dbo = JFactory::getDBO();
-		$sql = 'INSERT INTO #__eve_charskills (characterID, typeID, skillpoints, level) VALUES '.$values;
-		$dbo->Execute('DELETE FROM #__eve_charskills WHERE characterID = '. $characterID);
-		$dbo->Execute($sql);
+		
+		$values = '';
+		foreach ($xml->result->certificates as $certificate) {
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s)", $characterID, intval($certificate->certificateID));
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charcertificates (characterID, certificateID) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charcertificates WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}
+		
+		$app = JFactory::getApplication();
+		$this->loadAttributes();
+		$values = '';
+		foreach (self::$attributes as $attribute) {
+			$attributeName = strtolower($attribute->attributeName);
+			$enhancer = $xml->xpath('//result/attributeEnhancers/'.$attributeName.'Bonus');
+			$enhancer = reset($enhancer);
+			if ($enhancer !== false) {
+				$augmentatorValue = intval((string) $enhancer->augmentatorValue);
+				$augmentatorID	= $this->getAugmentatorID((string) $enhancer->augmentatorName);
+			} else {
+				$augmentatorValue = 0;
+				$augmentatorID = 'NULL';
+			}
+			$attributeValue = intval((string) $xml->result->attributes->$attributeName);
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s, %s, %s, %s)", $characterID, $attribute->attributeID, $attributeValue, $augmentatorID, $augmentatorValue);
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charattributes (characterID, attributeID, value, augmentatorID, augmentatorValue) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charattributes WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}
+		
 	}
 	
 	public function charSkillQueue($xml, $fromCache, $options = array()) {
@@ -82,6 +125,31 @@ class plgEveapiEvecharsheet extends JPlugin {
 		$dbo->Execute('DELETE FROM #__eve_skillqueue WHERE characterID = '. $characterID);
 		$dbo->Execute($sql);
 		
+	}
+	
+	private function loadAttributes()
+	{
+		if (isset(self::$attributes)) {
+			return;
+		}
+		$sql = 'SELECT * FROM chrAttributes';
+		$dbo = JFactory::getDBO();
+		$dbo->setQuery($sql);
+		self::$attributes = $dbo->loadObjectList();
+	}
+	
+	private function getAugmentatorID($augmentatorName)
+	{
+		if (!isset(self::$enhancers)) {
+			$sql = 'SELECT typeID, typeName FROM invTypes WHERE groupID IN (300, 745)'; 
+			$dbo = JFactory::getDBO();
+			$dbo->setQuery($sql);
+			self::$enhancers = $dbo->loadObjectList('typeName');
+		}
+		if (isset(self::$enhancers[$augmentatorName])) {
+			return self::$enhancers[$augmentatorName]->typeID;
+		}
+		return 'NULL';
 	}
 	
 }

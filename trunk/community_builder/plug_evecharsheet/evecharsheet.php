@@ -120,8 +120,11 @@ class getEvecharsheetTab extends cbTabHandler
 	private function displayCharacter($character)
 	{
 		$this->character = $character;
-		$this->groups = $this->model->getGroups($character->characterID);
+		$this->groups = $this->model->getSkillGroups($character->characterID);
 		$this->queue = $this->model->getQueue($character->characterID);
+		$this->categories = $this->model->getCertificateCategories($character->characterID);
+		$this->attributes = $this->model->getAttributes($character->characterID);
+		
 		ob_start();
 		?>
 		<div>
@@ -135,6 +138,20 @@ class getEvecharsheetTab extends cbTabHandler
 				<a href="<?php echo JRoute::_('index.php?option=com_evecharsheet&view=list&layout=corporation&corporationID='.$this->character->corporationID); ?>">
 					<?php echo $this->character->corporationName; ?> [<?php echo $this->character->ticker; ?>]
 				</a> <br />
+		</div>
+		
+		<div>
+			<h3><?php echo JText::_('Attributes'); ?></h3>
+			<table>
+				<?php foreach ($this->attributes as $attribute): ?>
+					<tr>
+						<td><?php echo $attribute->attributeName; ?></td>
+						<td><?php echo $attribute->value; ?> + <?php echo $attribute->augmentatorValue; ?></td>
+						<td><?php echo $attribute->augmentatorName; ?></td>
+						
+					</tr>
+				<?php endforeach; ?>
+			</table>
 		</div>
 		
 		<div>
@@ -162,11 +179,11 @@ class getEvecharsheetTab extends cbTabHandler
 			</table>
 		</div>
 		
+		
 		<div>
+		<h3><?php echo JText::_('Skills'); ?></h3>
 		<?php foreach ($this->groups as $group): ?>
-			<h3>
-			<?php echo $group->groupName; ?>
-			</h3>
+			<h4><?php echo $group->groupName; ?></h4>
 			<?php if ($group->skills): ?>
 				<table class="skill-group">
 				<?php foreach ($group->skills as $skill): ?>
@@ -189,6 +206,31 @@ class getEvecharsheetTab extends cbTabHandler
 			<?php endif; ?>
 		<?php endforeach; ?>
 		</div>
+
+		
+		<div>
+		<h3><?php echo JText::_('Certificates'); ?></h3>
+		<?php foreach ($this->categories as $category): ?>
+			<h4><?php echo $category->categoryName; ?></h4>
+			<?php if ($category->certificates): ?>
+				<table class="certificate-category">
+				<?php foreach ($category->certificates as $certificate): ?>
+					<tr>
+						<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
+							<?php echo $certificate->className; ?>
+						</td>
+						<td class="certificate-level">
+							<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
+						</td>
+					</tr>
+				<?php endforeach; ?>
+				</table>
+			<?php else: ?>
+				<?php echo JText::_('No certificates in this category'); ?>
+			<?php endif; ?>
+		<?php endforeach; ?>
+		</div>
+		
 		<?php
 		return ob_get_clean();
 	}

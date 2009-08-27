@@ -20,6 +20,24 @@ CREATE TABLE `jos_eve_skillqueue` (
 PRIMARY KEY ( `characterID` , `queuePosition` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+DROP TABLE IF EXISTS `jos_eve_charcertificates`;
+CREATE TABLE `jos_eve_charcertificates` (
+  `characterID` INT NOT NULL ,
+  `certificateID` INT NOT NULL ,
+PRIMARY KEY ( `characterID` , `certificateID` )
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+DROP TABLE IF EXISTS `jos_eve_charattributes`;
+CREATE TABLE `jos_eve_charattributes` (
+  `characterID` INT NOT NULL ,
+  `attributeID` INT NOT NULL ,
+  `value` INT NOT NULL ,
+  `augmentatorValue` INT NOT NULL ,
+  `augmentatorID` INT NULL ,
+PRIMARY KEY ( `characterID` , `attributeID` )
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
 DELETE FROM `jos_components` WHERE `option`='com_evecharsheet';
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
 ('EVE Character Sheet', 'option=com_evecharsheet', 0, 0, 'option=com_evecharsheet', 'EVE Character Sheet', 'com_evecharsheet', 0, 'components/com_eve/assets/icon-char-16.png', 0, '', 1);

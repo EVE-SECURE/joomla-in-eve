@@ -53,13 +53,12 @@ class EvecharsheetModelSheet extends EveModel {
 		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID = ch.userID');
 		$q->addWhere('ac.owner = %s', $owner->id);
 		if (!$showAll) {
-			$corps = EveFactory::getOwnerCoroprationIDs($this->getDBO());
+			$corps = EveHelper::getOwnerCoroprationIDs($this->getDBO());
 			if (!$corps) {
 				return array();
 			} else {
 				$q->addWhere('corporationID IN (%s)', implode(', ', $corps));
 			}
-			
 		}
 		return $q->loadObjectList();
 	}
@@ -75,11 +74,10 @@ class EvecharsheetModelSheet extends EveModel {
 		return $queue;
 	}
 	
-	function getGroups($characterID) {
-		
+	function getSkillGroups($characterID) {
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
-		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID');
+		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
 		$q->addWhere("characterID='%s'", $characterID);
 		$q->addOrder('typeName', 'ASC');
 		$skills =  $q->loadObjectList();
@@ -106,6 +104,48 @@ class EvecharsheetModelSheet extends EveModel {
 		}
 		
 		return $groups;
+	}
+	
+	function getCertificateCategories($characterID)
+	{
+		$q = $this->getQuery();
+		$q->addTable('#__eve_charcertificates', 'cs');
+		$q->addJoin('crtCertificates', 'cr', 'cr.certificateID=cs.certificateID', 'inner');
+		$q->addJoin('crtClasses', 'cl', 'cr.classID=cl.classID');
+		$q->addWhere("characterID='%s'", $characterID);
+		$q->addQuery('cr.*', 'cl.className');
+		$q->addOrder('cr.classID', 'ASC');
+		$q->addOrder('cr.grade', 'ASC');
+		$certificates = $q->loadObjectList('classID');
+
+		$q = $this->getQuery();
+		$q->addTable('crtCategories', 'ct');
+		$q->addOrder('categoryName', 'ASC');
+		$categories = $q->loadObjectList('categoryID');
+		
+		foreach ($categories as $category) {
+			$category->certificates = array();
+		}
+		
+		foreach ($certificates as $certificate) {
+			$categories[$certificate->categoryID]->certificates[] = $certificate; 
+		}
+		
+		return $categories;
+	}
+	
+	function getAttributes($characterID)
+	{
+		$q = $this->getQuery();
+		$q->addTable('#__eve_charattributes', 'cc');
+		$q->addJoin('chrAttributes', 'ca', 'ca.attributeID=cc.attributeID');
+		$q->addJoin('invTypes', 'it', 'it.typeID=cc.augmentatorID');
+		$q->addQuery('cc.*');
+		$q->addQuery('it.typeName AS augmentatorName');
+		$q->addQuery('ca.attributeName', 'ca.description', 'ca.shortDescription');
+		$q->addWhere("characterID='%s'", $characterID);
+		$q->addOrder('ca.attributeName');
+		return $q->loadObjectList();
 	}
 	
 	

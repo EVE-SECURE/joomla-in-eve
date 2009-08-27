@@ -117,6 +117,12 @@
 		</if>
 		<foreach list="${components}" param="component.name" target="copy_component" />
 		
+		<copy todir="${testdir}/components/com_comprofiler/plugin/user">
+			<fileset dir="${project.basedir}/community_builder">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		
 	</target>
 	
 </project>

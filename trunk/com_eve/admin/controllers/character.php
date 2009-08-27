@@ -31,8 +31,6 @@ class EveControllerCharacter extends EveController {
 		
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
-		$this->registerTask('get_character_sheet', 'getCharacterSheet');
-		$this->registerTask('get_corporation_sheet', 'getCorporationSheet');
 	}
 	
 	/**
