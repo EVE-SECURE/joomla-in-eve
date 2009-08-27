@@ -26,12 +26,13 @@ defined('_JEXEC') or die();
 class EveHelper {
 	static $ownerCorporationIDs = null;
 	
-	static function getOwnerCoroprationIDs($dbo = null) {
+	static function getOwnerCoroprationIDs($dbo = null) 
+	{
 		if (is_null(self::$ownerCorporationIDs)) {
 			if (empty($dbo)) {
 				$dbo = JFactory::getDBO();
 			}
-			$q = self::getQuery($dbo);
+			$q = EveFactory::getQuery($dbo);
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 			$q->addWhere('(co.owner OR al.owner)');
@@ -48,7 +49,8 @@ class EveHelper {
 	 * @param int $errorCode
 	 * @param bool $store
 	 */
-	function updateApiStatus($account, $errorCode, $store = false) {
+	function updateApiStatus($account, $errorCode, $store = false) 
+	{
 		switch ($errorCode) {
 			case 200:
 				$account->apiStatus = 'Limited';
