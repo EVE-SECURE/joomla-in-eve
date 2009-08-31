@@ -30,7 +30,7 @@
 	<authorUrl>http://code-box.sk</authorUrl>
 	<copyright>(C) 2009 Pavol Kovalik </copyright>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<version>1.2.1</version>
+	<version>1.2</version>
 	<description>Community Builder plugin displays character sheets of EVE online.</description>
 	
 	<files>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Default Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Default Layout</name>
+		<description>DESC HERE</description>
+		<url>
+			<param name="allianceID" type="sql" label="Alliance ID" description="ID of Alliance to display"
+				query="SELECT allianceID, name FROM #__eve_alliances WHERE owner ORDER BY name" key_field="allianceID" value_field="name"/>
+		</url>
+	</state>
+</metadata>
