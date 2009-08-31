@@ -42,7 +42,7 @@ class JModelList extends JModel
 	 *
 	 * @var		string
 	 */
-	 protected $_context		= 'group.type';
+	protected $_context		= 'group.type';
 
 	/**
 	 * Method to get a list of items.

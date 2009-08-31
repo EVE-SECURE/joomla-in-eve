@@ -44,7 +44,9 @@ class  plgSystemEVE extends JPlugin {
 		JLoader::register('JQuery', $base.'database'.DS.'query.php');
 		JLoader::register('EveModel', $base.'component'.DS.'model.php');
 		JLoader::register('JModelList', $base.'component'.DS.'modellist.php');
+		JLoader::register('JModelItem', $base.'component'.DS.'modelitem.php');
 		JLoader::register('EveController', $base.'component'.DS.'controller.php');
+		JLoader::register('JHTMLEvelink', $base.'html'.DS.'evelink.php');
 		
 		if( $app->isAdmin()) {
 		 	return;
