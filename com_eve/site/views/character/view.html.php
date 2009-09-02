@@ -30,16 +30,12 @@ class EveViewCharacter extends JView
 {
 	public function display($tpl = null)
 	{
-		echo 'pooo';
-		return
 		$model = $this->getModel();
 		$params = $this->get('Params');
-		$corporation = $this->get('Corporation');
-		$members = $this->get('Members');
+		$character = $this->get('Character');
 		
-		$this->assignRef('corporation', $corporation);
+		$this->assignRef('character', $character);
 		$this->assignRef('params', $params);
-		$this->assign('members', $members);
 		
 		parent::display();
 	}

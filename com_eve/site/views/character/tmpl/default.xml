@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Default Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Default Layout</name>
+		<description>DESC HERE</description>
+		<url>
+			<param name="characterID" type="sql" label="Character ID" description="Character ID to display" 
+				query="SELECT ch.characterID, ch.name FROM #__eve_characters AS ch LEFT JOIN #__eve_corporations AS co USING (corporationID) LEFT JOIN #__eve_alliances AS al USING (allianceID) WHERE co.owner OR al.owner ORDER BY name" key_field="characterID" value_field="name"/>
+		</url>
+	</state>
+</metadata>
