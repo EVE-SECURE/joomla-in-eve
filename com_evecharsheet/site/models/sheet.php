@@ -148,5 +148,38 @@ class EvecharsheetModelSheet extends EveModel {
 		return $q->loadObjectList();
 	}
 	
+	function getRoles($characterID)
+	{
+		
+		$q = $this->getQuery();
+		$q->addTable('#__eve_charroles', 'cr');
+		$q->addJoin('#__eve_roles', 'ro', 'cr.roleID=ro.roleID');
+		$q->addGroup('cr.roleID');
+		$q->addQuery('cr.*');
+		$q->addQuery('ro.roleName');
+		foreach ($this->getRoleLocations() as $i => $location) {
+			$q->addQuery(sprintf('MAX(IF(cr.location=%s, 1, 0)) AS %s', $i, $location));
+		}
+		$q->addWhere("characterID='%s'", $characterID);
+		$q->addOrder('cr.roleID');
+		return $q->loadObjectList();
+	}
 	
+	
+	function getRoleLocations()
+	{
+		return array('corporationRoles', 'corporationRolesAtHQ', 'corporationRolesAtBase', 'corporationRolesAtOther');
+	}
+	
+	function getTitles($characterID)
+	{
+		$q = $this->getQuery();
+		$character = $this->getCharacter($characterID);
+		$q->addTable('#__eve_chartitles', 'ch');
+		$q->addTable('#__eve_corptitles', 'co');
+		$q->addWhere('ch.titleID=co.titleID');
+		$q->addWhere("characterID='%s'", $character->characterID);
+		$q->addWhere("corporationID='%s'", $character->corporationID);
+		return $q->loadObjectList();
+	}
 }

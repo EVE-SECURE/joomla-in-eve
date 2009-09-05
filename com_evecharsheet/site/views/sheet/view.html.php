@@ -39,7 +39,6 @@ class EvecharsheetViewSheet extends JView {
 		$model = $this->getModel();
 		
 		$characterID = JRequest::getString('characterID');
-		$characterID = JRequest::getString('characterID');
 		if (strpos($characterID, ':') !== false) {
 			$characterID = preg_replace('/:.*/', '', $characterID); 
 		}

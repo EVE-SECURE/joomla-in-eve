@@ -314,7 +314,7 @@ class JQuery extends JObject {
 	}
 	
 	public function __toString() {
-		$this->toString();
+		return $this->toString();
 	}
 	
 }
