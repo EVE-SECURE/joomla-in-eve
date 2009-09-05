@@ -35,70 +35,60 @@ jimport('joomla.plugin.plugin');
 class plgEveapiEvecharsheet extends JPlugin {
 	static private $attributes;
 	static private $enhancers;
+	static private $clones;
 	
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
+	}
+	
+	
+	public function onSetOwnerCorporation($userID, $characterID, $owner) {
+		//TODO: superclass EveapiPlugin
+		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule->loadExtra('corp', 'Titles', $userID, $characterID);
+		if ($owner && !$schedule->id && $schedule->apicall) {
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
+		if (!$owner && $schedule->id) {
+			$schedule->delete();
+		}
+		
+	}
+	
+	public function corpTitles($xml, $fromCache, $options = array())
+	{
+		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
+		$character = EveFactory::getInstance('Character', $characterID);
+		$corporationID = $character->corporationID;
+		$dbo = JFactory::getDBO();
+		foreach ($xml->result->titles as $title) {
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s, %s)", $corporationID, intval($title->titleID), $dbo->Quote($title->titleName));
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_corptitles (corporationID, titleID, titleName) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_corptitles WHERE corporationID = '. $corporationID);
+			$dbo->Execute($sql);
+		}
 	}
 	
 	public function charCharacterSheet($xml, $fromCache, $options = array()) {
 		//TODO: update(starTime) and delete(endTime) skills in skillquee queue 
 		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
 		
-		$values = '';
-		foreach ($xml->result->skills as $skill) {
-			if ($values) {
-				$values .= ",\n"; 
-			}
-			$values .= sprintf("(%s, %s, %s, %s)", $characterID, 
-				intval($skill->typeID), intval($skill->skillpoints), intval($skill->level));
-		}
+		$this->storeSkills($characterID, $xml);
+			
+		$this->storeAttributes($characterID, $xml);
+			
+		$this->storeCertificates($characterID, $xml);
+			
+		$this->storeRoles($characterID, $xml);
 		
-		if ($values) {
-			$dbo = JFactory::getDBO();
-			$sql = 'INSERT INTO #__eve_charskills (characterID, typeID, skillpoints, level) VALUES '.$values;
-			$dbo->Execute('DELETE FROM #__eve_charskills WHERE characterID = '. $characterID);
-			$dbo->Execute($sql);
-		}
-		
-		
-		$values = '';
-		foreach ($xml->result->certificates as $certificate) {
-			if ($values) {
-				$values .= ",\n"; 
-			}
-			$values .= sprintf("(%s, %s)", $characterID, intval($certificate->certificateID));
-		}
-		if ($values) {
-			$sql = 'INSERT INTO #__eve_charcertificates (characterID, certificateID) VALUES '.$values;
-			$dbo->Execute('DELETE FROM #__eve_charcertificates WHERE characterID = '. $characterID);
-			$dbo->Execute($sql);
-		}
-		
-		$app = JFactory::getApplication();
-		$this->loadAttributes();
-		$values = '';
-		foreach (self::$attributes as $attribute) {
-			$attributeName = strtolower($attribute->attributeName);
-			$enhancer = $xml->xpath('//result/attributeEnhancers/'.$attributeName.'Bonus');
-			$enhancer = reset($enhancer);
-			if ($enhancer !== false) {
-				$augmentatorValue = intval((string) $enhancer->augmentatorValue);
-				$augmentatorID	= $this->getAugmentatorID((string) $enhancer->augmentatorName);
-			} else {
-				$augmentatorValue = 0;
-				$augmentatorID = 'NULL';
-			}
-			$attributeValue = intval((string) $xml->result->attributes->$attributeName);
-			if ($values) {
-				$values .= ",\n"; 
-			}
-			$values .= sprintf("(%s, %s, %s, %s, %s)", $characterID, $attribute->attributeID, $attributeValue, $augmentatorID, $augmentatorValue);
-		}
-		if ($values) {
-			$sql = 'INSERT INTO #__eve_charattributes (characterID, attributeID, value, augmentatorID, augmentatorValue) VALUES '.$values;
-			$dbo->Execute('DELETE FROM #__eve_charattributes WHERE characterID = '. $characterID);
-			$dbo->Execute($sql);
-		}
+		$this->storeTitles($characterID, $xml);
 		
 	}
 	
@@ -152,4 +142,130 @@ class plgEveapiEvecharsheet extends JPlugin {
 		return 'NULL';
 	}
 	
+	private function storeSkills($characterID, $xml)
+	{
+		$dbo = JFactory::getDBO();
+		$values = '';
+		foreach ($xml->result->skills as $skill) {
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s, %s, %s)", $characterID, 
+				intval($skill->typeID), intval($skill->skillpoints), intval($skill->level));
+		}
+		
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charskills (characterID, typeID, skillpoints, level) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charskills WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}		
+	}
+	
+	private function storeCertificates($characterID, $xml)
+	{
+		$dbo = JFactory::getDBO();
+		$values = '';
+		foreach ($xml->result->certificates as $certificate) {
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s)", $characterID, intval($certificate->certificateID));
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charcertificates (characterID, certificateID) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charcertificates WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}
+		
+	}
+	
+	private function storeAttributes($characterID, $xml)
+	{
+		$dbo = JFactory::getDBO();
+		$this->loadAttributes();
+		$values = '';
+		foreach (self::$attributes as $attribute) {
+			$attributeName = strtolower($attribute->attributeName);
+			$enhancer = $xml->xpath('//result/attributeEnhancers/'.$attributeName.'Bonus');
+			$enhancer = reset($enhancer);
+			if ($enhancer !== false) {
+				$augmentatorValue = intval((string) $enhancer->augmentatorValue);
+				$augmentatorID	= $this->getAugmentatorID((string) $enhancer->augmentatorName);
+			} else {
+				$augmentatorValue = 0;
+				$augmentatorID = 'NULL';
+			}
+			$attributeValue = intval((string) $xml->result->attributes->$attributeName);
+			if ($values) {
+				$values .= ",\n"; 
+			}
+			$values .= sprintf("(%s, %s, %s, %s, %s)", $characterID, $attribute->attributeID, $attributeValue, $augmentatorID, $augmentatorValue);
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charattributes (characterID, attributeID, value, augmentatorID, augmentatorValue) VALUES '.$values;
+			$dbo->Execute('DELETE FROM #__eve_charattributes WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}		
+	}
+	
+	private function storeRoles($characterID, $xml)
+	{
+		$dbo = JFactory::getDBO();
+		//TODO: move magical constant
+		$locations = array('', 'AtHQ', 'AtBase', 'AtOther');
+		$del = false;
+		$values = '';
+		foreach ($locations as $location => $locationSuffix) {
+			$roles = 'corporationRoles'.$locationSuffix;
+			if (!is_null($xml->result->$roles)) {
+				$del = true;
+				foreach ($xml->result->$roles as $role) {
+					if ($values) {
+						$values .= ",\n"; 
+					}
+					$values .= sprintf("(%s, %s, %s)", $characterID, $role->roleID, $location);
+				}
+			}
+		}
+		if ($del) {
+			$dbo->Execute('DELETE FROM #__eve_charroles WHERE characterID = '. $characterID);
+		}
+		if ($values) {
+			$sql = 'INSERT INTO #__eve_charroles (characterID, roleID, location) VALUES '.$values;
+			$dbo->Execute($sql);
+		}
+	}
+	
+	private function storeTitles($characterID, $xml)
+	{
+		$character = EveFactory::getInstance('Character', $characterID);
+		$corporationID = $character->corporationID;
+		
+		if (is_null($xml->result->corporationTitles)) {
+			return;
+		}
+		$dbo = JFactory::getDBO();
+		$values1 = '';
+		$values2 = '';
+		foreach ($xml->result->corporationTitles as $title) {
+			if ($values1) {
+				$values1 .= ",\n"; 
+			}
+			$values1 .= sprintf("(%s, %s)", $characterID, intval($title->titleID));
+			if ($values2) {
+				$values2 .= ",\n"; 
+			}
+			$values2 .= sprintf("(%s, %s, %s)", $corporationID, intval($title->titleID), $dbo->Quote($title->titleName));
+		}
+		if ($values1) {
+			$sql = 'INSERT INTO #__eve_chartitles (characterID, titleID) VALUES '.$values1;
+			$dbo->Execute('DELETE FROM #__eve_chartitles WHERE characterID = '. $characterID);
+			$dbo->Execute($sql);
+		}
+		if ($values2) {
+			$sql = 'INSERT INTO #__eve_corptitles (corporationID, titleID, titleName) VALUES '.$values2
+				.' ON DUPLICATE KEY UPDATE titleName = VALUES(titleName)';
+			$dbo->Execute($sql);
+		}
+	}
 }

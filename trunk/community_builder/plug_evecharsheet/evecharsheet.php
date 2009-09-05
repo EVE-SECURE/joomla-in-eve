@@ -124,6 +124,9 @@ class getEvecharsheetTab extends cbTabHandler
 		$this->queue = $this->model->getQueue($character->characterID);
 		$this->categories = $this->model->getCertificateCategories($character->characterID);
 		$this->attributes = $this->model->getAttributes($character->characterID);
+		$this->roles = $this->model->getRoles($character->characterID);
+		$this->roleLocations = $this->model->getRoleLocations();
+		$this->titles = $this->model->getTitles($character->characterID);
 		
 		ob_start();
 		?>
@@ -229,6 +232,39 @@ class getEvecharsheetTab extends cbTabHandler
 				<?php echo JText::_('No certificates in this category'); ?>
 			<?php endif; ?>
 		<?php endforeach; ?>
+		</div>
+		
+		<div>
+		<h3><?php echo JText::_('Roles'); ?></h3>
+		<table>
+			<tr>
+				<th></th>
+				<?php foreach ($this->roleLocations as $location): ?>
+					<th><?php echo JText::_($location); ?></th>
+				<?php endforeach ?>
+			<tr>
+		<?php foreach ($this->roles as $role): ?>
+			<tr>
+				<td><?php echo $role->roleName; ?></td>
+				<?php foreach ($this->roleLocations as $location): ?>
+					<td><?php echo $role->$location; ?></td>
+				<?php endforeach ?>
+			<tr>
+			
+		<?php endforeach; ?>
+		</table>
+		</div>
+		
+		<div>
+		<h3><?php echo JText::_('Titles'); ?></h3>
+		<table>
+		<?php foreach ($this->titles as $title): ?>
+			<tr>
+				<td><?php echo $title->titleName; ?></td>
+			<tr>
+			
+		<?php endforeach; ?>
+		</table>
 		</div>
 		
 		<?php
