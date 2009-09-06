@@ -12,24 +12,6 @@ defined('_JEXEC') or die();
 </div>
 <?php endif; ?>
 
-<?php if ($this->show_owner): ?>
-	<div>
-		<?php echo JText::_('Owner of character'); ?>:
-			<a href="<?php echo JRoute::_('index.php?option=com_evecharsheet&view=list&layout=owner&owner='.$this->owner->id); ?>">
-				<?php echo $this->owner->name; ?>
-			</a>
-			<br />
-		<?php if ($this->owners_chars): ?>
-			<?php echo JText::_('Other characters'); ?>: 
-			<?php foreach ($this->owners_chars as $character): ?>
-				<a href="<?php echo JRoute::_('index.php?option=com_evecharsheet&view=sheet&characterID='.$character->characterID); ?>">
-					<?php echo $character->name; ?>
-				</a>, 
-			<?php endforeach; ?>
-		<?php endif; ?>
-	</div>
-<?php endif; ?>
-
 <div>
 	<img src="http://img.eve.is/serv.asp?s=256&c=<?php echo $this->character->characterID; ?>" /> <br />
 	<?php echo JText::_('Character Name'); ?>: <?php echo $this->character->name; ?> <br />
@@ -38,9 +20,7 @@ defined('_JEXEC') or die();
 	<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
 	<?php echo JText::_('Ballance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
 	<?php echo JText::_('Corporation'); ?>: 
-		<a href="<?php echo JRoute::_('index.php?option=com_evecharsheet&view=list&layout=corporation&corporationID='.$this->corporation->corporationID); ?>">
-			<?php echo $this->corporation->corporationName; ?> [<?php echo $this->corporation->ticker; ?>]
-		</a> <br />
+			<?php echo $this->corporation->corporationName; ?> [<?php echo $this->corporation->ticker; ?>] <br />
 </div>
 
 <div>

@@ -28,7 +28,8 @@ jimport('joomla.application.component.model');
 class EvecharsheetModelEvecharsheet extends JModel {
 	
 	function getTableCheck() {
-		$tables = array('invTypes', 'invGroups');
+		$tables = array('invTypes', 'invGroups', 'chrAttributes', 'crtCertificates', 'crtClasses', 
+			'crtCategories', 'dgmAttributeTypes', 'dgmTypeAttributes', 'staStations');
 		
 		$result = array();
 		$db = $this->getDBO();

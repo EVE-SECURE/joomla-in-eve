@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<params>
+		<param type="radio" name="corporation_">
+			<option value="0">Disabled</option>
+			<option value="1">Private</option>
+			<option value="2">Public</option>
+		</param>	
+	
 		<param type="list" name="ale_requestclass" default="Curl" label="API REQUEST METHOD" description="API REQUEST METHOD">
 			<option value="Curl">Curl</option>
 			<option value="Fsock">Fsock</option>

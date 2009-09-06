@@ -68,6 +68,12 @@ CREATE TABLE `jos_eve_corptitles` (
 PRIMARY KEY ( `corporationID` , `titleID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
+DROP TABLE IF EXISTS `jos_eve_charclone`;
+CREATE TABLE `jos_eve_charclone` (
+  `characterID` INT NOT NULL ,
+  `cloneID` INT NOT NULL ,
+PRIMARY KEY ( `characterID` )
+) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 DELETE FROM `jos_components` WHERE `option`='com_evecharsheet';
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
