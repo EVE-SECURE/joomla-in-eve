@@ -25,7 +25,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class EvecharsheetViewSheet extends JView {
+class EvecharsheetViewCharacter extends JView {
 	function display($tmpl = null) {
 		global $mainframe;
 		

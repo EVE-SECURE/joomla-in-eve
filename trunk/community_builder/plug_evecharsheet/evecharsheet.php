@@ -53,7 +53,11 @@ class getEvecharsheetTab extends cbTabHandler
 		JComponentHelper::isEnabled('com_evecharsheet', true);
 		jimport('joomla.application.component.model');
 		JModel::addIncludePath(JPATH_SITE.DS.'components'.DS.'com_evecharsheet'.DS.'models');
-		$this->model = JModel::getInstance('Sheet', 'EvecharsheetModel');
+		$this->model = JModel::getInstance('Character', 'EvecharsheetModel');
+		if (!$this->model) {
+			//echo JText::_('com_evecharsheet missing');
+			return false;
+		}
 		$characters = $this->getCharacters($user);
 		//return 'hello';
 		
@@ -80,6 +84,11 @@ class getEvecharsheetTab extends cbTabHandler
 		return $result;
 	}
 	
+	private function show($section)
+	{
+		return intval($this->params->get('show'.$section, 0));
+	}
+	
 	private function getCharacters($user)
 	{
 		$owner = $user->user_id;
@@ -90,11 +99,15 @@ class getEvecharsheetTab extends cbTabHandler
 		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
+		$q->addJoin('#__eve_charclone', 'cc', 'cc.characterID=ch.characterID');
+		$q->addJoin('invTypes', 'it', 'cc.cloneID=it.typeID');
+		$q->addJoin('dgmTypeAttributes', 'dta', 'dta.typeID=it.typeID AND dta.attributeID=419'); //FIXME: magical consant
 		
 		$q->addQuery('ch.*');
 		$q->addQuery('co.corporationID', 'co.corporationName', 'co.ticker');
 		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName');
 		$q->addQuery('ac.owner', 'us.name AS ownerName');
+		$q->addQuery('cloneID', 'it.typeName AS cloneName', 'dta.valueInt AS cloneSkillPoints');
 		$q->addOrder('name');
 		$q->addWhere('ac.owner = %s', intval($owner));
 		if (!$this->params->get('listallcharacters', 0)) {
@@ -131,141 +144,151 @@ class getEvecharsheetTab extends cbTabHandler
 		ob_start();
 		?>
 		<div>
-			<img src="http://img.eve.is/serv.asp?s=256&c=<?php echo $this->character->characterID; ?>" /> <br />
+			<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
 			<?php echo JText::_('Character Name'); ?>: <?php echo $this->character->name; ?> <br />
 			<?php echo JText::_('Race'); ?>: <?php echo $this->character->race; ?> <br />
 			<?php echo JText::_('Gender'); ?>: <?php echo $this->character->gender; ?> <br />
 			<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
-			<?php echo JText::_('Ballance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
-			<?php echo JText::_('Corporation'); ?>: 
-				<a href="<?php echo JRoute::_('index.php?option=com_evecharsheet&view=list&layout=corporation&corporationID='.$this->character->corporationID); ?>">
-					<?php echo $this->character->corporationName; ?> [<?php echo $this->character->ticker; ?>]
-				</a> <br />
+			<?php if ($this->show('ballance')): ?>
+				<?php echo JText::_('Ballance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
+			<?php endif; ?>
+			<?php echo JText::_('Corporation'); ?>: <?php echo $this->character->corporationName; ?> [<?php echo $this->character->ticker; ?>] <br />
+			<?php if ($this->show('clone')  && $this->character->cloneID): ?>
+				<?php echo JText::_('Clone'); ?>: <?php echo $this->character->cloneName; ?> (<?php echo number_format($this->character->cloneSkillPoints) . ' ' . JText::_('Skill Points'); ?>)
+			<?php endif; ?>
 		</div>
 		
-		<div>
-			<h3><?php echo JText::_('Attributes'); ?></h3>
-			<table>
-				<?php foreach ($this->attributes as $attribute): ?>
+		<?php if ($this->show('attributes')): ?>
+			<div>
+				<h3><?php echo JText::_('Attributes'); ?></h3>
+				<table>
+					<?php foreach ($this->attributes as $attribute): ?>
+						<tr>
+							<td><?php echo $attribute->attributeName; ?></td>
+							<td><?php echo $attribute->value; ?> + <?php echo $attribute->augmentatorValue; ?></td>
+							<td><?php echo $attribute->augmentatorName; ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</table>
+			</div>
+		<?php endif; ?>
+		
+		<?php if ($this->show('skillqeueu')): ?>
+			<div>
+				<h3><?php echo JText::_('Skill Queue'); ?></h3>
+				<table>
+				<?php foreach ($this->queue as $skill): ?>
 					<tr>
-						<td><?php echo $attribute->attributeName; ?></td>
-						<td><?php echo $attribute->value; ?> + <?php echo $attribute->augmentatorValue; ?></td>
-						<td><?php echo $attribute->augmentatorName; ?></td>
-						
-					</tr>
-				<?php endforeach; ?>
-			</table>
-		</div>
-		
-		<div>
-			<h3><?php echo JText::_('Skill Queue'); ?></h3>
-			<table>
-			<?php foreach ($this->queue as $skill): ?>
-				<tr>
-					<td>
-						<?php echo $skill->queuePosition + 1; ?>
-					</td>
-					<td class="skill-label" title="<?php echo $skill->description; ?>" >
-						<?php echo $skill->typeName; ?>
-					</td>
-					<td class="skill-level">
-						<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
-					</td>
-					<td>
-						<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>
-					</td>
-					<td>
-						<?php echo JHTML::_('date', $skill->endTime, JText::_('DATE_FORMAT_LC2')); ?>
-					</td>
-				</tr>
-			<?php endforeach; ?>
-			</table>
-		</div>
-		
-		
-		<div>
-		<h3><?php echo JText::_('Skills'); ?></h3>
-		<?php foreach ($this->groups as $group): ?>
-			<h4><?php echo $group->groupName; ?></h4>
-			<?php if ($group->skills): ?>
-				<table class="skill-group">
-				<?php foreach ($group->skills as $skill): ?>
-					<tr>
+						<td>
+							<?php echo $skill->queuePosition + 1; ?>
+						</td>
 						<td class="skill-label" title="<?php echo $skill->description; ?>" >
 							<?php echo $skill->typeName; ?>
 						</td>
 						<td class="skill-level">
-							<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->skillpoints); ?>" />
+							<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
+						</td>
+						<td>
+							<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>
+						</td>
+						<td>
+							<?php echo JHTML::_('date', $skill->endTime, JText::_('DATE_FORMAT_LC2')); ?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 				</table>
-				<div>
-					<?php echo JText::sprintf('%s skills trained for total of %s skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
-					<?php echo JText::sprintf('Skill Cost %s', number_format($group->skillPrice)); ?>
-				</div>
-			<?php else: ?>
-				<?php echo JText::_('No skills in this category'); ?>
-			<?php endif; ?>
-		<?php endforeach; ?>
-		</div>
+			</div>
+		<?php endif; ?>
+		
+		<?php if ($this->show('skills')): ?>
+			<div>
+			<h3><?php echo JText::_('Skills'); ?></h3>
+			<?php foreach ($this->groups as $group): ?>
+				<h4><?php echo $group->groupName; ?></h4>
+				<?php if ($group->skills): ?>
+					<table class="skill-group">
+					<?php foreach ($group->skills as $skill): ?>
+						<tr>
+							<td class="skill-label" title="<?php echo $skill->description; ?>" >
+								<?php echo $skill->typeName; ?>
+							</td>
+							<td class="skill-level">
+								<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->skillpoints); ?>" />
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</table>
+					<div>
+						<?php echo JText::sprintf('%s skills trained for total of %s skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
+						<?php echo JText::sprintf('Skill Cost %s', number_format($group->skillPrice)); ?>
+					</div>
+				<?php else: ?>
+					<?php echo JText::_('No skills in this category'); ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
 
+		<?php if ($this->show('certificate')): ?>
+			<div>
+			<h3><?php echo JText::_('Certificates'); ?></h3>
+			<?php foreach ($this->categories as $category): ?>
+				<h4><?php echo $category->categoryName; ?></h4>
+				<?php if ($category->certificates): ?>
+					<table class="certificate-category">
+					<?php foreach ($category->certificates as $certificate): ?>
+						<tr>
+							<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
+								<?php echo $certificate->className; ?>
+							</td>
+							<td class="certificate-level">
+								<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
+							</td>
+						</tr>
+					<?php endforeach; ?>
+					</table>
+				<?php else: ?>
+					<?php echo JText::_('No certificates in this category'); ?>
+				<?php endif; ?>
+			<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
 		
-		<div>
-		<h3><?php echo JText::_('Certificates'); ?></h3>
-		<?php foreach ($this->categories as $category): ?>
-			<h4><?php echo $category->categoryName; ?></h4>
-			<?php if ($category->certificates): ?>
-				<table class="certificate-category">
-				<?php foreach ($category->certificates as $certificate): ?>
-					<tr>
-						<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
-							<?php echo $certificate->className; ?>
-						</td>
-						<td class="certificate-level">
-							<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				</table>
-			<?php else: ?>
-				<?php echo JText::_('No certificates in this category'); ?>
-			<?php endif; ?>
-		<?php endforeach; ?>
-		</div>
+		<?php if ($this->show('roles')): ?>
+			<div>
+			<h3><?php echo JText::_('Roles'); ?></h3>
+			<table>
+				<tr>
+					<th></th>
+					<?php foreach ($this->roleLocations as $location): ?>
+						<th><?php echo JText::_($location); ?></th>
+					<?php endforeach ?>
+				<tr>
+			<?php foreach ($this->roles as $role): ?>
+				<tr>
+					<td><?php echo $role->roleName; ?></td>
+					<?php foreach ($this->roleLocations as $location): ?>
+						<td><?php echo $role->$location; ?></td>
+					<?php endforeach ?>
+				<tr>
+				
+			<?php endforeach; ?>
+			</table>
+			</div>
+		<?php endif; ?>
 		
-		<div>
-		<h3><?php echo JText::_('Roles'); ?></h3>
-		<table>
-			<tr>
-				<th></th>
-				<?php foreach ($this->roleLocations as $location): ?>
-					<th><?php echo JText::_($location); ?></th>
-				<?php endforeach ?>
-			<tr>
-		<?php foreach ($this->roles as $role): ?>
-			<tr>
-				<td><?php echo $role->roleName; ?></td>
-				<?php foreach ($this->roleLocations as $location): ?>
-					<td><?php echo $role->$location; ?></td>
-				<?php endforeach ?>
-			<tr>
-			
-		<?php endforeach; ?>
-		</table>
-		</div>
-		
-		<div>
-		<h3><?php echo JText::_('Titles'); ?></h3>
-		<table>
-		<?php foreach ($this->titles as $title): ?>
-			<tr>
-				<td><?php echo $title->titleName; ?></td>
-			<tr>
-			
-		<?php endforeach; ?>
-		</table>
-		</div>
+		<?php if ($this->show('titles')): ?>
+			<div>
+			<h3><?php echo JText::_('Titles'); ?></h3>
+			<table>
+			<?php foreach ($this->titles as $title): ?>
+				<tr>
+					<td><?php echo $title->titleName; ?></td>
+				<tr>
+			<?php endforeach; ?>
+			</table>
+			</div>
+		<?php endif; ?>
 		
 		<?php
 		return ob_get_clean();

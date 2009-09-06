@@ -45,29 +45,26 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<!-- 
-		<param name="temptime" type="text" size="10" default="3600"
-			label="Temp time" description="Refresh rate" />
-		
-		<param name="showxml" type="radio" default="1"
-			label="Show xml link to owner"
-			description="Show xml file link to profile owner only or hide.">
+		<param name="portraitsize" type="radio" default="256"
+			label="Portrait Size" description="Portrait Size">
+			<option value="64">64 x 64</option>
+			<option value="256">256 x256</option>
+		</param>
+		<param name="showballance" type="radio" default="1"
+			label="Show Ballance" description="Show Account Balance.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showbanner" type="radio" default="1"
-			label="Show Banner"
-			description="This fixes the table width to 724px.">
+		<param name="showclone" type="radio" default="1"
+			label="Show Clone" description="Show Clone Name and Grade.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="aid" type="text" size="10" default="105304"
-			label="AffiliateID"
-			description="Leave default if you don't know what to fill in" />
-		<param name="tablewidth" type="text" size="5" default="400"
-			label="Table Width"
-			description="If Show Banner is set to No you can set your own tablewidth in pixel or add % if required" />
-		 -->
+		<param name="showattributes" type="radio" default="1"
+			label="Show Attributes" description="Show Attributes Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
 		<param name="showskills" type="radio" default="1"
 			label="Show Skills" description="Show Skills Table.">
 			<option value="0">No</option>
@@ -88,14 +85,9 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showskillintraining" type="radio" default="1"
-			label="Show Skill In Training"
-			description="Show Skill In Training Table.">
-			<option value="0">No</option>
-			<option value="1">Yes</option>
-		</param>
-		<param name="showaccount" type="radio" default="1"
-			label="Show Account" description="Show Account Table.">
+		<param name="showskillqeue" type="radio" default="1"
+			label="Show Skill Qeue"
+			description="Show Skill Qeue.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>

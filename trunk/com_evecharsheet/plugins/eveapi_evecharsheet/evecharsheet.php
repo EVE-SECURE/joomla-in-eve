@@ -42,6 +42,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 	}
 	
 	
+	/*
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
 		//TODO: superclass EveapiPlugin
 		$schedule = JTable::getInstance('Schedule', 'Table');
@@ -75,6 +76,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 			$dbo->Execute($sql);
 		}
 	}
+	*/
 	
 	public function charCharacterSheet($xml, $fromCache, $options = array()) {
 		//TODO: update(starTime) and delete(endTime) skills in skillquee queue 
@@ -90,6 +92,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 		
 		$this->storeTitles($characterID, $xml);
 		
+		$this->storeClone($characterID, $xml);
 	}
 	
 	public function charSkillQueue($xml, $fromCache, $options = array()) {
@@ -126,6 +129,17 @@ class plgEveapiEvecharsheet extends JPlugin {
 		$dbo = JFactory::getDBO();
 		$dbo->setQuery($sql);
 		self::$attributes = $dbo->loadObjectList();
+	}
+	
+	private function loadClones()
+	{
+		if (isset(self::$clones)) {
+			return;
+		}
+		$sql = 'SELECT typeID, typeName FROM invTypes WHERE groupID=23';
+		$dbo = JFactory::getDBO();
+		$dbo->setQuery($sql);
+		self::$clones = $dbo->loadObjectList('typeName');
 	}
 	
 	private function getAugmentatorID($augmentatorName)
@@ -267,5 +281,21 @@ class plgEveapiEvecharsheet extends JPlugin {
 				.' ON DUPLICATE KEY UPDATE titleName = VALUES(titleName)';
 			$dbo->Execute($sql);
 		}
+	}
+	
+	private function storeClone($characterID, $xml)
+	{
+		$this->loadClones();
+		$cloneName = (string) $xml->result->cloneName;
+		$clone = JArrayHelper::getValue(self::$clones, $cloneName, null);
+		if (is_null($clone)) {
+			return;
+		}
+		$cloneID = $clone->typeID;
+		
+		$dbo = JFactory::getDBO();
+		$sql = 'INSERT INTO #__eve_charclone (characterID, cloneID) VALUES ('.$characterID.', '.$cloneID.')'
+			.' ON DUPLICATE KEY UPDATE cloneID = VALUES(cloneID)';
+		$dbo->Execute($sql);	
 	}
 }
