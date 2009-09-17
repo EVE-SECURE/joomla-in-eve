@@ -26,10 +26,14 @@ defined('_JEXEC') or die();
 
 function EveBuildRoute(&$query)
 {
+	$app = JFactory::getApplication();
+	$menu = $app->getMenu();
+	$item = $menu->getActive();
+	
 	$segments = array();
 	$uri = JURI::getInstance();
 	if (JArrayHelper::getValue($query, 'view') == 'corporation') {
-		$segments = JRequest::getVar('segments');
+		//$segments = JRequest::getVar('segments');
 		$segments[] = 'c';
 		//TODO: nice url without ID
 		//$segments[] = end(explode(':', $query['characterID'], 2));
@@ -46,19 +50,32 @@ function EveBuildRoute(&$query)
 		unset($query['view']);
 		unset($query['characterID']);
 	}
+	foreach ($item->query as $key => $val) {
+		//echo $key, ';', $val, ';';
+		if ($key == 'option') {
+			continue;
+		}
+		if (isset($query[$key]) && ($query[$key] == $val)) {
+			unset($query[$key]);
+		}
+		if (isset($query[$key]) && (intval($query[$key]) == $val) 
+				&& in_array($key, array('allianceID', 'corporationID', 'characterID'))) {
+			unset($query[$key]);
+		}
+	}
+	
 	return $segments;
 }
 
 function EveParseRoute($segments)
 {
-	$vars = array();
-	$app = JFactory::getApplication();
-	//$app->
-	$router = EveRouter::getInstance();
-	$vars['segments'] = $segments;
 	$app = JFactory::getApplication();
 	$menu = $app->getMenu();
 	$item = $menu->getActive();
+	$vars = $item->query;
+	
+	$router = EveRouter::getInstance();
+	$vars['segments'] = $segments;
 	$view = JArrayHelper::getValue($item->query, 'view');
 	if ($view == 'alliance') {
 		$s1 = JArrayHelper::getValue($segments, 0);
@@ -85,6 +102,7 @@ function EveParseRoute($segments)
 			//TODO: route another component
 		}
 	}
+	
 	return $vars;
 }
 

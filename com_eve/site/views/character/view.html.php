@@ -38,5 +38,24 @@ class EveViewCharacter extends JView
 		$this->assignRef('params', $params);
 		
 		parent::display();
+		$this->_setPathway();
+	}
+	
+	protected function _setPathway()
+	{
+		$app = JFactory::getApplication();
+		$pathway = $app->getPathway();
+		if (JRequest::getInt('allianceID') > 0) {
+			$pathway->setItemName(0, $this->character->allianceName);
+			$pathway->addItem($this->character->corporationName, 
+				JRoute::_('index.php?option=com_eve&view=corporation&corporationID='.$this->character->corporationID.':'.$this->character->corporationName));
+			$pathway->addItem($this->character->name);
+		} elseif (JRequest::getInt('characterID') > 0) {
+			$pathway->setItemName(0, $this->character->corporationName);
+			$pathway->addItem($this->character->name);
+		} else {
+			$pathway->setItemName(0, $this->character->ame);
+		}
+		//JPathwaySite::addItem()
 	}
 }

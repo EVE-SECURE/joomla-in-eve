@@ -40,5 +40,14 @@ class EveViewAlliance extends JView
 		$this->assign('members', $members);
 		
 		parent::display();
+		$this->_setPathway();
+	}
+	
+	protected function _setPathway()
+	{
+		$app = JFactory::getApplication();
+		$pathway = $app->getPathway();
+		$pathway->setItemName(0, $this->alliance->name);
+		//JPathwaySite::addItem()
 	}
 }
