@@ -74,12 +74,6 @@ class plgEveapiEve extends JPlugin {
 			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
 		}
-		$schedule = JTable::getInstance('Schedule', 'Table');
-		$schedule->loadExtra('char', 'SkillQueue', $userID, $characterID);
-		if (!$schedule->id && $schedule->apicall) {
-			$schedule->next = $next->format('Y-m-d H:i:s');
-			$schedule->store();
-		}
 	}
 	
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {

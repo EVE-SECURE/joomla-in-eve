@@ -115,7 +115,7 @@ CREATE TABLE `#__eve_corporations` (
 CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
-  `call` varchar(15) NOT NULL,
+  `call` varchar(30) NOT NULL,
   `authentication` enum('None','User','Character') NOT NULL default 'None',
   `authorization` enum('None','Limited','Full') NOT NULL default 'None',
   `pagination` varchar(20) default NULL,

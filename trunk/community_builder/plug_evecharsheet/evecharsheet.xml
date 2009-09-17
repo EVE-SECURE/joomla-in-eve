@@ -85,9 +85,9 @@
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showskillqeue" type="radio" default="1"
-			label="Show Skill Qeue"
-			description="Show Skill Qeue.">
+		<param name="showskillqueue" type="radio" default="1"
+			label="Show Skill Queue"
+			description="Show Skill Queue.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
