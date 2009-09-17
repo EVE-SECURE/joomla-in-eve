@@ -40,5 +40,19 @@ class EveViewCorporation extends JView
 		$this->assign('members', $members);
 		
 		parent::display();
+		$this->_setPathway();
+	}
+	
+	protected function _setPathway()
+	{
+		$app = JFactory::getApplication();
+		$pathway = $app->getPathway();
+		if (JRequest::getInt('allianceID') > 0) {
+			$pathway->setItemName(0, $this->corporation->allianceName);
+			$pathway->addItem($this->corporation->corporationName);
+		} else {
+			$pathway->setItemName(0, $this->corporation->corporationName);
+		}
+		//JPathwaySite::addItem()
 	}
 }
