@@ -173,7 +173,7 @@ class getEvecharsheetTab extends cbTabHandler
 			</div>
 		<?php endif; ?>
 		
-		<?php if ($this->show('skillqeueu')): ?>
+		<?php if ($this->show('skillqueue')): ?>
 			<div>
 				<h3><?php echo JText::_('Skill Queue'); ?></h3>
 				<table>
@@ -229,7 +229,7 @@ class getEvecharsheetTab extends cbTabHandler
 			</div>
 		<?php endif; ?>
 
-		<?php if ($this->show('certificate')): ?>
+		<?php if ($this->show('certificates')): ?>
 			<div>
 			<h3><?php echo JText::_('Certificates'); ?></h3>
 			<?php foreach ($this->categories as $category): ?>

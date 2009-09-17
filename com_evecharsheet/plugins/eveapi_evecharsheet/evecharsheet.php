@@ -77,6 +77,16 @@ class plgEveapiEvecharsheet extends JPlugin {
 		}
 	}
 	*/
+	public function onRegisterCharacter($userID, $characterID) {
+		//TODO: superclass this
+		$next = new DateTime();
+		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule->loadExtra('char', 'SkillQueue', $userID, $characterID);
+		if (!$schedule->id && $schedule->apicall) {
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
+	}
 	
 	public function charCharacterSheet($xml, $fromCache, $options = array()) {
 		//TODO: update(starTime) and delete(endTime) skills in skillquee queue 
