@@ -33,8 +33,10 @@ class EveViewCharacter extends JView
 		$model = $this->getModel();
 		$params = $this->get('Params');
 		$character = $this->get('Character');
+		$links = $this->get('Links');
 		
 		$this->assignRef('character', $character);
+		$this->assignRef('links', $links);
 		$this->assignRef('params', $params);
 		
 		parent::display();
@@ -43,20 +45,22 @@ class EveViewCharacter extends JView
 	
 	protected function _setPathway()
 	{
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$last = count($pathway->getPathway()) - 1;
-		if (JRequest::getInt('allianceID') > 0) {
-			$pathway->setItemName($last, $this->character->allianceName);
-			$pathway->addItem($this->character->corporationName, 
-				EveRoute::_('index.php?option=com_eve&view=corporation', $this->character, $this->character));
-			$pathway->addItem($this->character->name);
-		} elseif (JRequest::getInt('characterID') > 0) {
-			$pathway->setItemName($last, $this->character->corporationName);
-			$pathway->addItem($this->character->name);
-		} else {
-			$pathway->setItemName($last, $this->character->name);
+		
+		$view = JArrayHelper::getValue($menu->query, 'view');
+		switch ($view) {
+			case null:
+				$pathway->addItem($this->character->alliancenName, 
+					EveRoute::_('', 'alliance', $this->character));
+			case 'alliance':
+				$pathway->addItem($this->character->corporationName, 
+					EveRoute::_('', 'corporation', $this->character, $this->character));
+			case 'corporation':
+				$pathway->addItem($this->character->name, 
+					EveRoute::_('', 'character', $this->character, $this->character, $this->character));
 		}
-		//JPathwaySite::addItem()
 	}
 }

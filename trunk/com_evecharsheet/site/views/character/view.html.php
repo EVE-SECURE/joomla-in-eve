@@ -27,65 +27,80 @@ jimport('joomla.application.component.view');
 
 class EvecharsheetViewCharacter extends JView {
 	function display($tmpl = null) {
-		global $mainframe;
+		$app = JFactory::getApplication();
+		$document = JFactory::getDocument();
 		
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet(JURI::base(). 'components/com_evecharsheet/assets/sheet.css');
-		//$document->addScript('components/com_consulting/assets/product.js');
+		$params = &$app->getParams();
 		
-		$params = &$mainframe->getParams();
+		$character 	= $this->get('Character');
+		$groups 	= $this->get('SkillGroups');
+		$queue 		= $this->get('Queue');
+		$categories = $this->get('CertificateCategories');
+		$attributes = $this->get('Attributes');
+		$roles 		= $this->get('Roles');
+		$roleLocations 	= $this->get('RoleLocations');
+		$titles 	= $this->get('Titles');
+		
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
+		if (is_object($menu)
+				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evecharsheet'
+				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
+				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+			$menu_params = new JParameter($menu->params);
+			if (!$menu_params->get('page_title')) {
+				$params->set('page_title',	$character->name.' - '.JText::_('Character Sheet'));
+			}
+		} else {
+			$params->set('page_title',	$character->name.' - '.JText::_('Character Sheet'));
+		}
+		$document->setTitle($params->get('page_title'));
+		
 		$this->assignRef('params', $params);
-		
-		$model = $this->getModel();
-		
-		$characterID = JRequest::getString('characterID');
-		if (strpos($characterID, ':') !== false) {
-			$characterID = preg_replace('/:.*/', '', $characterID); 
-		}
-		if (!is_numeric($characterID)) {
-			$dbo = $this->get('DBO');
-			$sql = 'SELECT characterID FROM #__eve_characters WHERE name LIKE '.$dbo->quote($characterID);
-			$dbo->setQuery($sql);
-			$characterID = $dbo->loadResult();
-		}
-		$paramCharacterID = $params->get('characterID');
-		if (!$characterID) {
-			$characterID = $paramCharacterID;
-		}
-		$model->set('characterID', $characterID);
-		$character = $model->getInstance('character', $characterID);
-		//$this->assignRef('character', $character);
-		$title = $characterID == $paramCharacterID ? $this->params->get('page_title') : $character->name;
-						
-		if (!$character) {
-			$this->display('none');
-			return;
-		}
-		$corporation = $model->getCorporation($character->corporationID);
-		
-		$groups = $model->getSkillGroups($characterID);
-		$queue = $model->getQueue($characterID);
-		$categories = $model->getCertificateCategories($characterID);
-		$show_owner = $params->get('show_owner');
-		$show_all = $params->get('show_all');
-		$this->assign('show_owner', $show_owner);
-		if ($show_owner) {
-			$owner = $model->getOwner($characterID);
-			$owners_chars = $model->getOwnersCharacters($characterID, $show_all);
-			$this->assignRef('owner', $owner);
-			$this->assignRef('owners_chars', $owners_chars);
-		}
-		$this->assign('title', $title);
 		$this->assignRef('character', $character);
-		$this->assignRef('corporation', $corporation);
 		$this->assignRef('groups', $groups);
 		$this->assignRef('queue', $queue);
 		$this->assignRef('categories', $categories);
+		$this->assignRef('attributes', $attributes);
+		$this->assignRef('roles', $roles);
+		$this->assignRef('roleLocations', $roleLocations);
+		$this->assignRef('titles', $titles);
 		
 		parent::display($tmpl);
+		$this->_setPathway();
 	}
 	
-	function displaySkill() {
+	public function show($section)
+	{
+		return true;
+		return intval($this->params->get('show'.$section, 0));
+	}
+
+	protected function _setPathway()
+	{
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
+		if ($menu->component == 'com_evecharsheet') {
+			return;
+		}
 		
+		$app = JFactory::getApplication();
+		$pathway = $app->getPathway();
+		
+		$view = JArrayHelper::getValue($menu->query, 'view');
+		switch ($view) {
+			case null:
+				$pathway->addItem($this->character->allianceName, 
+					EveRoute::_('', 'alliance', $this->character));
+			case 'alliance':
+				$pathway->addItem($this->character->corporationName, 
+					EveRoute::_('', 'corporation', $this->character, $this->character));
+			case 'corporation':
+				$pathway->addItem($this->character->name, 
+					EveRoute::_('', 'character', $this->character, $this->character, $this->character));
+			case 'character':
+				$pathway->addItem(JText::_('Character Sheet'), 
+					EveRoute::_('charsheet', 'character', $this->character));
+		}
 	}
 }
