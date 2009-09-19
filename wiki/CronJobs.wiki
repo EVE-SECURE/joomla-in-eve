@@ -1,5 +1,5 @@
+#summary Set up cron jobs for EVE API
 #labels Phase-Deploy
-#how and why
 = Cron Jobs =
 
 == Setting Up ==
@@ -8,7 +8,10 @@ In 3 easy steps.
   * Download cron.zip
   * Unpack content directly to Joomla! root
   * Set your crontab to execute `cron/index.php`
-
+Or
+  * Download com_cron.zip
+  * Install extension through Joomla! backend
+  * Set your crontab to execute `cron/index.php`
 
 == Details ==
 
