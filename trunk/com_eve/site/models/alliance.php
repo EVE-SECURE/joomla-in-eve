@@ -95,6 +95,18 @@ class EveModelAlliance extends JModelItem
 		$q->addWhere('allianceID=%s', $id);
 		$q->addOrder('corporationName');
 		return $q->loadObjectList();
-		
 	}
+	
+	public function getLinks()
+	{
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_links');
+		$q->addWhere("entity = 'alliance'");
+		$q->addWhere('published');
+		$q->addOrder('ordering');
+		$result = $q->loadObjectList();
+		return $result;
+	}
+	
 }

@@ -25,10 +25,11 @@ defined('_JEXEC') or die();
 
 <div>
 	<?php echo JText::_('CEO'); ?>: 
-	<a href="<?php echo EveRoute::_('', 'corporation', $this->corporation, $this->corporation, array($this->corporation, 'ceo')); ?>">
+	<a href="<?php echo EveRoute::_('', 'character', $this->corporation, $this->corporation, array($this->corporation, 'ceo')); ?>">
 		<?php echo $this->corporation->ceoName; ?>
 	</a>
 </div>
+
 <div>
 	<?php echo JText::_('Member Count'); ?>: <?php echo $this->corporation->memberCount; ?>
 </div>
@@ -49,11 +50,20 @@ defined('_JEXEC') or die();
 	<?php echo $this->corporation->description; ?>
 </div>
 
-<?php echo JText::_('Members'); ?> <br />
-<?php foreach ($this->members as $member) : ?>
-	<a href="<?php echo EveRoute::_('', 'character', $this->corporation, $this->corporation, $member); ?>">
-		<?php echo $member->name; ?>
-	</a> 
-	<br />
-<?php endforeach; ?>
+<div>
+	<?php foreach ($this->links as $link): ?>
+		<a href="<?php echo EveRoute::_($link->component, $link->entity, $this->corporation, $this->corporation); ?>">
+			<?php echo JText::_($link->name); ?>
+		</a> <br />
+	<?php endforeach; ?>
+</div>
+
+<div>
+	<?php echo JText::_('Members'); ?> <br />
+	<?php foreach ($this->members as $member) : ?>
+		<a href="<?php echo EveRoute::_('', 'character', $this->corporation, $this->corporation, $member); ?>">
+			<?php echo $member->name; ?>
+		</a> <br />
+	<?php endforeach; ?>
+</div>
 

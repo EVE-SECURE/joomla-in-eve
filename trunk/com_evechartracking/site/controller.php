@@ -32,5 +32,3 @@ class EvechartrackingController extends JController {
 	}
 	
 }
-
-?>

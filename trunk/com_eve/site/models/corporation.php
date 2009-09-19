@@ -101,4 +101,17 @@ class EveModelCorporation extends JModelItem
 		return $q->loadObjectList();
 		
 	}
+	
+	public function getLinks()
+	{
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_links');
+		$q->addWhere("entity = 'corporation'");
+		$q->addWhere('published');
+		$q->addOrder('ordering');
+		$result = $q->loadObjectList();
+		return $result;
+	}
+	
 }

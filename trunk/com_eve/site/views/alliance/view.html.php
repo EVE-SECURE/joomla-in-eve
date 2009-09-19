@@ -30,14 +30,33 @@ class EveViewAlliance extends JView
 {
 	public function display($tpl = null)
 	{
-		$model = $this->getModel();
+		$app = JFactory::getApplication();
+		$document = JFactory::getDocument();
+		
 		$params = $this->get('Params');
 		$alliance = $this->get('Alliance');
 		$members = $this->get('Members');
+		$links = $this->get('Links');
+		
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
+		if (is_object($menu)
+				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
+				&& JArrayHelper::getValue($menu->query, 'view') == 'alliance'  
+				&& JArrayHelper::getValue($menu->query, 'allianceID') == $alliance->allianceID) {
+			$menu_params = new JParameter($menu->params);
+			if (!$menu_params->get('page_title')) {
+				$params->set('page_title',	$alliance->name);
+			}
+		} else {
+			$params->set('page_title',	$alliance->name);
+		}
+		$document->setTitle($params->get('page_title'));
 		
 		$this->assignRef('alliance', $alliance);
 		$this->assignRef('params', $params);
 		$this->assign('members', $members);
+		$this->assignRef('links', $links);
 		
 		parent::display();
 		$this->_setPathway();

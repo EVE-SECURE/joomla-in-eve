@@ -30,11 +30,30 @@ class EveViewCorporation extends JView
 {
 	public function display($tpl = null)
 	{
-		$model = $this->getModel();
+		$app = JFactory::getApplication();
+		$document = JFactory::getDocument();
+		
 		$params = $this->get('Params');
 		$corporation = $this->get('Corporation');
 		$members = $this->get('Members');
+		$links = $this->get('Links');
+
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
+		if (is_object($menu)
+				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
+				&& JArrayHelper::getValue($menu->query, 'view') == 'corporation'  
+				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
+			$menu_params = new JParameter($menu->params);
+			if (!$menu_params->get('page_title')) {
+				$params->set('page_title',	$corporation->corporationName);
+			}
+		} else {
+			$params->set('page_title',	$corporation->corporationName);
+		}
+		$document->setTitle($params->get('page_title'));
 		
+		$this->assignRef('links', $links);
 		$this->assignRef('corporation', $corporation);
 		$this->assignRef('params', $params);
 		$this->assign('members', $members);
