@@ -47,11 +47,12 @@ class EveViewCorporation extends JView
 	{
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
+		$last = count($pathway->getPathway()) - 1;
 		if (JRequest::getInt('allianceID') > 0) {
-			$pathway->setItemName(0, $this->corporation->allianceName);
+			$pathway->setItemName($last, $this->corporation->allianceName);
 			$pathway->addItem($this->corporation->corporationName);
 		} else {
-			$pathway->setItemName(0, $this->corporation->corporationName);
+			$pathway->setItemName($last, $this->corporation->corporationName);
 		}
 		//JPathwaySite::addItem()
 	}
