@@ -30,10 +30,27 @@ class EveViewCharacter extends JView
 {
 	public function display($tpl = null)
 	{
-		$model = $this->getModel();
+		$app = JFactory::getApplication();
+		$document = JFactory::getDocument();
+		
 		$params = $this->get('Params');
 		$character = $this->get('Character');
 		$links = $this->get('Links');
+		
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
+		if (is_object($menu)
+				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
+				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
+				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+			$menu_params = new JParameter($menu->params);
+			if (!$menu_params->get('page_title')) {
+				$params->set('page_title',	$character->name);
+			}
+		} else {
+			$params->set('page_title',	$character->name);
+		}
+		$document->setTitle($params->get('page_title'));
 		
 		$this->assignRef('character', $character);
 		$this->assignRef('links', $links);

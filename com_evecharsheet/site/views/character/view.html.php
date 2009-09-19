@@ -30,8 +30,7 @@ class EvecharsheetViewCharacter extends JView {
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		
-		$params = &$app->getParams();
-		
+		$params 	= $this->get('Params');
 		$character 	= $this->get('Character');
 		$groups 	= $this->get('SkillGroups');
 		$queue 		= $this->get('Queue');
@@ -100,7 +99,7 @@ class EvecharsheetViewCharacter extends JView {
 					EveRoute::_('', 'character', $this->character, $this->character, $this->character));
 			case 'character':
 				$pathway->addItem(JText::_('Character Sheet'), 
-					EveRoute::_('charsheet', 'character', $this->character));
+					EveRoute::_('charsheet', 'character', $this->character, $this->character, $this->character));
 		}
 	}
 }

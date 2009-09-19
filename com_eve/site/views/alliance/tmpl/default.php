@@ -27,11 +27,21 @@ defined('_JEXEC') or die();
 	<?php echo JText::_('Member Count'); ?>: <?php echo $this->alliance->memberCount; ?>
 </div>
 
-<?php echo JText::_('Members'); ?> <br />
-<?php foreach ($this->members as $member) : ?>
-	<a href="<?php echo EveRoute::_('', 'corporation', $this->alliance, $member); ?>">
-		<?php echo $member->corporationName; ?> [<?php echo $member->ticker; ?>]
-	</a>
-	
-	<br />
-<?php endforeach; ?>
+<div>
+	<?php foreach ($this->links as $link): ?>
+		<a href="<?php echo EveRoute::_($link->component, $link->entity, $this->alliance); ?>">
+			<?php echo JText::_($link->name); ?>
+		</a> <br />
+	<?php endforeach; ?>
+</div>
+
+<div>
+	<?php echo JText::_('Members'); ?> <br />
+	<?php foreach ($this->members as $member) : ?>
+		<a href="<?php echo EveRoute::_('', 'corporation', $this->alliance, $member); ?>">
+			<?php echo $member->corporationName; ?> [<?php echo $member->ticker; ?>]
+		</a>
+		
+		<br />
+	<?php endforeach; ?>
+</div>
