@@ -18,7 +18,11 @@ defined('_JEXEC') or die();
 </div>
 
 <div>
-	<?php echo JText::_('Executor Corp'); ?>: <?php echo $this->alliance->executorCorpName; ?> [<?php echo $this->alliance->executorTicker; ?>]
+	<?php echo JText::_('Executor Corp'); ?>:
+		<a href="<?php echo EveRoute::_('index.php?option=com_eve&view=corporation', 
+				$this->alliance, array($this->alliance, 'executorCorp')); ?>"> 
+			<?php echo $this->alliance->executorCorpName; ?> [<?php echo $this->alliance->executorTicker; ?>]
+		</a>
 </div>
 <div>
 	<?php echo JText::_('Member Count'); ?>: <?php echo $this->alliance->memberCount; ?>
@@ -26,9 +30,9 @@ defined('_JEXEC') or die();
 
 <?php echo JText::_('Members'); ?> <br />
 <?php foreach ($this->members as $member) : ?>
-	<a href="<?php echo JRoute::_('index.php?option=com_eve&view=corporation&corporationID='.$member->corporationID.':'.$member->corporationName); ?>">
+	<a href="<?php echo EveRoute::_('index.php?option=com_eve&view=corporation', $this->alliance, $member); ?>">
 		<?php echo $member->corporationName; ?> [<?php echo $member->ticker; ?>]
-	</a> 
+	</a>
+	
 	<br />
 <?php endforeach; ?>
-
