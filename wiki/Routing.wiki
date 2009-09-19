@@ -1,0 +1,30 @@
+#summary Don't make corporation and member lists for every new component, if you don't have to.
+#labels Phase-Implementation
+
+= Introduction =
+
+com_eve implements basic basic pages for alliances, corporations and characters. Alliance and corporation contains list of its members, corporation and characters respectively. They also provide links to another components related to displayed entity. E.g. member tracking for corporation or character sheet for character.
+
+= Details =
+
+== Register your component ==
+
+During installation process, insert new record to `#__eve_links`, where
+  * `name` - Name displayed in pathway
+  * `entity` - To what is the component related (currently character, corporation or alliance)
+  * `component` - Component name without `com_eve` prefix, e.g. `charsheet` for `com_evecharsheet`
+
+== Routing URL ==
+
+Use `EveRoute::_()` to build URLs. It will generate path containing all params for SEF URLs, or just necessary ID, if site doesn't use SEF URLs. Input parameters are
+  * `$component`, `$entity` - see above
+  * `$alliance`, `$corporation`, `$character` - $object or array($object, $prefix) containing entity ID and Name. Use _prefix_, if attributes of object are different from standard naming in entity table. E.g. 'ceo' for 'ceoID' and 'ceoName',
+  * `$xhtml' - see `JRoute::_()`
+
+= TODO =
+
+  # user entity (view and list of characters belonging to user
+  # EveRoute - FIX, doesn't allow any other parameters
+  # backend administration for links - publish, unpublish
+  # alias to use in URLS for links
+  # make links for owner corporations only (optional)
