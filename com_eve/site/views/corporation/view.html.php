@@ -45,15 +45,19 @@ class EveViewCorporation extends JView
 	
 	protected function _setPathway()
 	{
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$last = count($pathway->getPathway()) - 1;
-		if (JRequest::getInt('allianceID') > 0) {
-			$pathway->setItemName($last, $this->corporation->allianceName);
-			$pathway->addItem($this->corporation->corporationName);
-		} else {
-			$pathway->setItemName($last, $this->corporation->corporationName);
+		
+		$view = JArrayHelper::getValue($menu->query, 'view');
+		switch ($view) {
+			case null:
+				$pathway->addItem($this->corporation->allianceName, 
+					EveRoute::_('', 'alliance', $this->corporation));
+			case 'alliance':
+				$pathway->addItem($this->corporation->corporationName, 
+					EveRoute::_('', 'corporation', $this->corporation, $this->corporation));
 		}
-		//JPathwaySite::addItem()
 	}
 }

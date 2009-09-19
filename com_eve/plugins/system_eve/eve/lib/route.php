@@ -25,32 +25,43 @@ defined('_JEXEC') or die();
 
 class EveRoute
 {
-	static public function _($url, $alliance = null, $corporation = null, $character = null, $xhtml = true)
+	static public function _($component, $entity, $alliance = null, $corporation = null, $character = null, $xhtml = true)
 	{
 		$app = JFactory::getApplication();
-		$names = array('character' => 'name', 'corporation' => 'corporationName','alliance' => 'name');
-		if ($app->getCfg('sef')) {
+		$sef = $app->getCfg('sef');
+		if ($sef) {
+			$url = 'index.php?option=com_eve&view='.$entity;
+			if ($component) {
+				$url .= '&component='.$component;
+			}
 			$entities = array('alliance', 'corporation', 'character');
 		} else {
-			$entities = array('alliance', 'corporation', 'character');
+			$url = 'index.php?option=com_eve'.$component.'&view='.$entity;
+			$entities = array($entity);
 		}
-		
-		foreach ($entities as $entity) {
-			if ($$entity) {
-				if (is_array($$entity)) {
-					$array = $$entity;
+		foreach ($entities as $ent) {
+			if ($$ent) {
+				if (is_array($$ent)) {
+					$array = $$ent;
 					$obj = $array[0];
 					$id = $array[1].'ID';
 					$name = $array[1].'Name';
 				} else {
-					$obj = $$entity; 
-					$id = $entity.'ID';
-					$name = $entity.'Name';
+					$obj = $$ent; 
+					$id = $ent.'ID';
+					$name = $ent.'Name';
 					$name = isset($obj->$name) ? $name : 'name';
 				}
-				$url .= '&'.$entity.'ID='.$obj->$id.':'.$obj->$name; 
+				if ($sef) {
+					$url .= '&'.$ent.'ID='.$obj->$id.':'.$obj->$name;
+				} else {
+					$url .= '&'.$ent.'ID='.$obj->$id;
+				}
+			}
+			if ($ent == $entity) {
+				break;
 			}
 		}
-		echo JRoute::_($url, $xhtml);
+		return JRoute::_($url, $xhtml);
 	}
 }

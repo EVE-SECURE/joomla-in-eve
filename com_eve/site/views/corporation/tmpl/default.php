@@ -17,7 +17,7 @@ defined('_JEXEC') or die();
 
 <div>
 <?php if ($this->corporation->allianceID) : ?>
-	<a href="<?php echo EveRoute::_('index.php?option=com_eve&view=alliance', $this->corporation); ?>">
+	<a href="<?php echo EveRoute::_('', 'alliance', $this->corporation); ?>">
 		<?php echo $this->corporation->allianceName; ?> &lt;<?php echo $this->corporation->allianceShortName; ?>&gt;
 	</a>
 <?php endif; ?>
@@ -25,8 +25,7 @@ defined('_JEXEC') or die();
 
 <div>
 	<?php echo JText::_('CEO'); ?>: 
-	<a href="<?php echo EveRoute::_('index.php?option=com_eve&view=corporation', 
-			$this->corporation, $this->corporation, array($this->corporation, 'ceo')); ?>">
+	<a href="<?php echo EveRoute::_('', 'corporation', $this->corporation, $this->corporation, array($this->corporation, 'ceo')); ?>">
 		<?php echo $this->corporation->ceoName; ?>
 	</a>
 </div>
@@ -52,7 +51,7 @@ defined('_JEXEC') or die();
 
 <?php echo JText::_('Members'); ?> <br />
 <?php foreach ($this->members as $member) : ?>
-	<a href="<?php echo EveRoute::_('index.php?option=com_eve&view=corporation', $this->corporation, $this->corporation, $member); ?>">
+	<a href="<?php echo EveRoute::_('', 'character', $this->corporation, $this->corporation, $member); ?>">
 		<?php echo $member->name; ?>
 	</a> 
 	<br />

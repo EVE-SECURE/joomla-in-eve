@@ -38,6 +38,10 @@ function EveBuildRoute(&$query)
 		unset($query['view']);
 	}
 	
+	if (isset($query['component'])) {
+		$segments[] = $query['component'];
+		unset($query['component']);
+	}
 	return $segments;
 }
 
@@ -87,9 +91,14 @@ function EveParseRoute($segments)
 		} elseif ($s1 == 'c') {
 			$vars['view'] = $view = 'character';
 			$vars['characterID'] = JArrayHelper::getValue($segments, 1, null, 'int');
+			$segments = array_slice($segments, 2);
 		} else {
 			//TODO: route another component
 		}
+	}
+	$s1 = JArrayHelper::getValue($segments, 0);
+	if ($s1) {
+		$vars['option'] = 'com_eve'.$s1;
 	}
 	
 	return $vars;

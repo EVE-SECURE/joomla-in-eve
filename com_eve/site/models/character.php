@@ -30,7 +30,7 @@ class EveModelCharacter extends JModelItem
 {
 	protected $_character = null;
 	
-	protected $_context = 'com_eve.corporation';
+	protected $_context = 'com_eve.character';
 	
 	protected function _populateState()
 	{
@@ -38,7 +38,6 @@ class EveModelCharacter extends JModelItem
 		$this->setState('character.characterID', $id);
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
-		
 	}
 	
 	protected function _loadCharacter()
@@ -73,7 +72,6 @@ class EveModelCharacter extends JModelItem
 			//TODO: set error when trying to rewite corporationID
 			$this->setError('');
 		}
-		
 	}
 	
 	public function getParams()
@@ -86,6 +84,18 @@ class EveModelCharacter extends JModelItem
 	{
 		$this->_loadCharacter();
 		return $this->_character;
+	}
+	
+	public function getLinks()
+	{
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_links');
+		$q->addWhere("entity = 'character'");
+		$q->addWhere('published');
+		$q->addOrder('ordering');
+		$result = $q->loadObjectList();
+		return $result;
 	}
 	
 }

@@ -5,97 +5,69 @@
  
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
+
+JHTML::_('stylesheet', 'character.css', 'components/com_evecharsheet/assets/');
+
+$pageClass = $this->params->get('pageclass_sfx');
 ?>
+
+<?php if ($pageClass) : ?>
+	<div class="<?php echo $pageClass; ?>">
+<?php endif; ?>
 <?php if ($this->params->get('show_page_title', 1)) : ?>
-<div class="componentheading<?php echo $this->params->get( 'pageclass_sfx' ); ?>">
-	<?php echo $this->escape($this->title); ?>
-</div>
+	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
 
-<div>
+<div class="evecharsheet-heading">
 	<img src="http://img.eve.is/serv.asp?s=256&c=<?php echo $this->character->characterID; ?>" /> <br />
-	<?php echo JText::_('Character Name'); ?>: <?php echo $this->character->name; ?> <br />
-	<?php echo JText::_('Race'); ?>: <?php echo $this->character->race; ?> <br />
-	<?php echo JText::_('Gender'); ?>: <?php echo $this->character->gender; ?> <br />
-	<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
-	<?php echo JText::_('Ballance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
-	<?php echo JText::_('Corporation'); ?>: 
-			<?php echo $this->corporation->corporationName; ?> [<?php echo $this->corporation->ticker; ?>] <br />
-</div>
-
-<div>
-	<h3><?php echo JText::_('Skill Queue'); ?></h3>
-	<table>
-	<?php foreach ($this->queue as $skill): ?>
-		<tr>
-			<td>
-				<?php echo $skill->queuePosition + 1; ?>
-			</td>
-			<td class="skill-label" title="<?php echo $skill->description; ?>" >
-				<?php echo $skill->typeName; ?>
-			</td>
-			<td class="skill-level">
-				<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
-			</td>
-			<td>
-				<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>
-			</td>
-			<td>
-				<?php echo JHTML::_('date', $skill->endTime, JText::_('DATE_FORMAT_LC2')); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-</div>
-
-
-<div>
-<h3><?php echo JText::_('Skills'); ?></h3>
-<?php foreach ($this->groups as $group): ?>
-	<h4><?php echo $group->groupName; ?></h4>
-	<?php if ($group->skills): ?>
-		<table class="skill-group">
-		<?php foreach ($group->skills as $skill): ?>
-			<tr>
-				<td class="skill-label" title="<?php echo $skill->description; ?>" >
-					<?php echo $skill->typeName; ?>
-				</td>
-				<td class="skill-level">
-					<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->skillpoints); ?>" />
-				</td>
-			</tr>
-		<?php endforeach; ?>
-		</table>
-		<div>
-			<?php echo JText::sprintf('%s skills trained for total of %s skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
-			<?php echo JText::sprintf('Skill Cost %s', number_format($group->skillPrice)); ?>
-		</div>
-	<?php else: ?>
-		<?php echo JText::_('No skills in this category'); ?>
+	<span><?php echo JText::_('Character Name'); ?>:</span> 
+		<?php echo $this->character->name; ?> <br />
+	<span><?php echo JText::_('Race'); ?>:</span> 
+		<?php echo $this->character->race; ?> <br />
+	<span><?php echo JText::_('Gender'); ?>:</span>
+		<?php echo $this->character->gender; ?> <br />
+	<span><?php echo JText::_('Blood Line'); ?>:</span>
+		<?php echo $this->character->bloodLine; ?> <br />
+	<span><?php echo JText::_('Ballance'); ?>:</span>
+		<?php echo number_format($this->character->balance); ?> <br />
+	<span><?php echo JText::_('Corporation'); ?>:</span>
+		<a href="<?php echo EveRoute::_('', 'corporation', $this->character, $this->character); ?>">
+			<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
+		</a> <br />
+	
+	<?php if ($this->character->allianceID) : ?>
+		<span><?php echo JText::_('Alliance'); ?>:</span>
+			<a href="<?php echo EveRoute::_('', 'alliance', $this->character); ?>">
+				<?php echo $this->character->allianceName; ?> &lt;<?php echo $this->character->allianceShortName; ?>&gt;
+			</a> <br />
 	<?php endif; ?>
-<?php endforeach; ?>
 </div>
 
 
-<div>
-<h3><?php echo JText::_('Certificates'); ?></h3>
-<?php foreach ($this->categories as $category): ?>
-	<h4><?php echo $category->categoryName; ?></h4>
-	<?php if ($category->certificates): ?>
-		<table class="certificate-category">
-		<?php foreach ($category->certificates as $certificate): ?>
-			<tr>
-				<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
-					<?php echo $certificate->className; ?>
-				</td>
-				<td class="certificate-level">
-					<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
-				</td>
-			</tr>
-		<?php endforeach; ?>
-		</table>
-	<?php else: ?>
-		<?php echo JText::_('No certificates in this category'); ?>
-	<?php endif; ?>
-<?php endforeach; ?>
-</div>
+<?php if ($this->show('attributes')): ?>
+	<?php echo $this->loadTemplate('attributes'); ?>
+<?php endif; ?>
+
+<?php if ($this->show('skillqueue')): ?>
+	<?php echo $this->loadTemplate('skillqueue'); ?>
+<?php endif; ?>
+
+<?php if ($this->show('skills')): ?>
+	<?php echo $this->loadTemplate('skills'); ?>
+<?php endif; ?>
+
+<?php if ($this->show('certificates')): ?>
+	<?php echo $this->loadTemplate('certificates'); ?>
+<?php endif; ?>
+
+<?php if ($this->show('roles')): ?>
+	<?php echo $this->loadTemplate('roles'); ?>
+<?php endif; ?>
+
+<?php if ($this->show('titles')): ?>
+	<?php echo $this->loadTemplate('titles'); ?>
+<?php endif; ?>
+
+<?php if ($pageClass) : ?>
+	</div>
+<?php endif; ?>

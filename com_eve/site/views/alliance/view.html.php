@@ -45,10 +45,20 @@ class EveViewAlliance extends JView
 	
 	protected function _setPathway()
 	{
+		$menus = &JSite::getMenu();
+		$menu  = $menus->getActive();
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$last = count($pathway->getPathway()) - 1;
-		$pathway->setItemName($last, $this->alliance->name);
-		//JPathwaySite::addItem()
+		
+		if ($menu) {
+			$view = JArrayHelper::getValue($menu->query, 'view');
+		} else {
+			$view = null;
+		}
+		switch ($view) {
+			case null:
+				$pathway->addItem($this->alliance->name, 
+					EveRoute::_('', 'alliance', $this->alliance));
+		}
 	}
 }
