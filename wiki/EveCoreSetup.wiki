@@ -1,5 +1,5 @@
+#summary Setting up the com_eve component
 #labels Phase-Deploy
-#Setting up the com_eve component
 
 = Requirements =
 
