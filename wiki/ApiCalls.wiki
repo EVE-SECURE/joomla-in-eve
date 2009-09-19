@@ -1,0 +1,31 @@
+#labels Phase-Implementation
+#EVE API implementation
+
+= Introduction =
+
+Simple _how to_ 
+  # Registering API CALL type
+  # Scheduling API CALL
+  # Processing result
+
+
+= Details =
+
+== Registering API CALL type ==
+
+If extension requires new api call, you'll have to register it first. It's best to do so at component installation. Either in install.sql file, or using intall.php script. Just insert new record to `#__eve_apicalls`
+
+== Scheduling API CALL ==
+
+  * Global calls (/eve/AllianceList) - during component installation process
+  * Character related calls (/char/CharacterSheet) - create eveapi plugin (plugins/eveapi/_name_.php) and use `onRegisterCharacter` method
+  * Owner corporation related calls (/corp/MemberTracking) - create eveapi plugin (plugins/eveapi/_name_.php) and use `onSetOwnerCorporation` method
+
+== Processing result ==
+
+All results should be processed by in eveapi plugin. Method has to be named as call with suffixes and slashes removed: /char/CharacterSheet.xml.aspx -> `function charCharacterSheet($xml, $fromCache, $options = array())`
+
+= TODO = 
+
+  # multipage calls (like assets, kills, etc.)
+  # delays
