@@ -105,7 +105,18 @@ CREATE TABLE IF NOT EXISTS `jos_eve_schedule` (
   `next` datetime NOT NULL,
   `published` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `jos_eve_links`;
+CREATE TABLE IF NOT EXISTS `jos_eve_links` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL,
+  `entity` varchar(50) NOT NULL,
+  `component` varchar(50) NOT NULL,
+  `ordering` int(11) NOT NULL default '0',
+  `published` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=utf8;
 
 
 DELETE FROM `jos_components` WHERE `option` = 'com_eve';

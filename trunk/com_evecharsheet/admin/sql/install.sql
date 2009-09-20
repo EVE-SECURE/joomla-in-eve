@@ -78,6 +78,9 @@ PRIMARY KEY ( `characterID` )
 INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
 ('char', 'SkillQueue', 'Character', 'Limited', NULL, 0, '');
 
+INSERT INTO `#__eve_links` (`name`, `entity`, `component`, `ordering`, `published`) VALUES 
+('Character Sheet', 'character', 'charsheet', 0, 1);
+
 INSERT INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (1, 'roleDirector'),
 -- (2, ''),

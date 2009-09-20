@@ -14,7 +14,10 @@
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
-		<queries></queries>
+		<queries>
+			<query>INSERT INTO `#__eve_links` (`name`, `entity`, `component`, `ordering`, `published`) VALUES ('Member Tracking', 'corporation', 'chartracking', 0, 1);</query>
+			<query>INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', NULL, 0, '');</query>
+		</queries>
 	</install>
 	<uninstall>
 		<queries></queries>
