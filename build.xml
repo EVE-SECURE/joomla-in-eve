@@ -8,7 +8,7 @@
 	
 	<target name="copy_cron">
 		<!-- copy cron -->
-		<copy todir="${testdir}/cron">
+		<copy todir="${testdir}/com_cron/cron" overwrite="${overwrite}">
 			<fileset dir="${project.basedir}/cron">
 				<include name="**" />
 			</fileset>
@@ -18,10 +18,10 @@
 	<target name="build_component">
 		
 		<fileset dir="${project.basedir}/${component.name}/" id="allfiles">
-				<include name="admin/**" />
-                <include name="site/**" />
-                <include name="plugins/**" />
-                <include name="*.*" />
+			<include name="admin/**" />
+            <include name="site/**" />
+            <include name="plugins/**" />
+            <include name="*.*" />
 		</fileset>
 		
 		<delete file="${component.name}.zip" quiet="true" />
@@ -38,18 +38,18 @@
 			<equals arg1="${copy.site}" arg2="yes" />
 			<then>
 				<!-- copy component site -->
-				<copy todir="${testdir}/components/${component.name}">
+				<copy todir="${testdir}/components/${component.name}" overwrite="${overwrite}">
 					<fileset dir="${project.basedir}/${component.name}/site">
-						<exclude name="languages/*" />
-						<exclude name="languages" />
+						<exclude name="language/**" />
+						<exclude name="language" />
 						<include name="**"/>
 					</fileset>
 				</copy>
 				
 				<!-- copy component site languages -->
-				<copy todir="${testdir}/language/en-GB" overwrite="true">
-					<fileset dir="${project.basedir}/${component.name}/site/languages">
-						<include name="en-GB.*.ini"/>
+				<copy todir="${testdir}/language" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/site/language">
+						<include name="**"/>
 					</fileset>
 				</copy>
 			</then>
@@ -62,18 +62,18 @@
 			<equals arg1="${copy.admin}" arg2="yes" />
 			<then>
 				<!-- copy component admin -->
-				<copy todir="${testdir}/administrator/components/${component.name}">
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
 					<fileset dir="${project.basedir}/${component.name}/admin">
-						<exclude name="languages/*" />
-						<exclude name="languages" />
+						<exclude name="language/**" />
+						<exclude name="language" />
 						<include name="**"/>
 					</fileset>
 				</copy>
 				
 				<!-- copy component site languages -->
-				<copy todir="${testdir}/administrator/language/en-GB" overwrite="true">
-					<fileset dir="${project.basedir}/${component.name}/admin/languages">
-						<include name="en-GB.*.ini"/>
+				<copy todir="${testdir}/administrator/language" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/admin/language">
+						<include name="**"/>
 					</fileset>
 				</copy>
 			</then>
@@ -93,7 +93,7 @@
 					<equals arg1="${component.plugins}" arg2="true" />
 					<then>
 						<!-- language files -->
-						<copy todir="${testdir}/administrator/language/en-GB" overwrite="true">
+						<copy todir="${testdir}/administrator/language/en-GB" overwrite="${overwrite}">
 							<mapper type="flatten" />
 							<fileset dir="${project.basedir}/${component.name}/plugins/">
 								<include name="**/en-GB.*.ini"/>
@@ -101,7 +101,7 @@
 						</copy>
 		
 						<!-- other files -->
-						<copy todir="${testdir}/plugins" overwrite="true">
+						<copy todir="${testdir}/plugins" overwrite="${overwrite}">
 							<mapper type="regexp" from="([a-z]+)_[a-z]+(.*)" to="\1\2"/>
 							<fileset dir="${project.basedir}/${component.name}/plugins/">
 								<exclude name="**/en-GB.*.ini"/>

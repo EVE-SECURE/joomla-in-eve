@@ -31,13 +31,13 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<span><?php echo JText::_('Ballance'); ?>:</span>
 		<?php echo number_format($this->character->balance); ?> <br />
 	<span><?php echo JText::_('Corporation'); ?>:</span>
-		<a href="<?php echo EveRoute::_('', 'corporation', $this->character, $this->character); ?>">
+		<a href="<?php echo EveRoute::_('corporation', $this->character, $this->character); ?>">
 			<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
 		</a> <br />
 	
 	<?php if ($this->character->allianceID) : ?>
 		<span><?php echo JText::_('Alliance'); ?>:</span>
-			<a href="<?php echo EveRoute::_('', 'alliance', $this->character); ?>">
+			<a href="<?php echo EveRoute::_('alliance', $this->character); ?>">
 				<?php echo $this->character->allianceName; ?> &lt;<?php echo $this->character->allianceShortName; ?>&gt;
 			</a> <br />
 	<?php endif; ?>

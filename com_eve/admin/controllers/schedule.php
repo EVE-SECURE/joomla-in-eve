@@ -45,8 +45,8 @@ class EveControllerSchedule extends EveController {
 	
 	function publish() {
 		JRequest::checkToken() or jexit('Invalid Token');
-		$cid		= JRequest::getVar( 'cid', array(), 'post', 'array' );
-		$task		= JRequest::getCmd( 'task' );
+		$cid		= JRequest::getVar('cid', array(), 'post', 'array' );
+		$task		= JRequest::getCmd('task');
 		$enable		= ($task == 'publish');
 		$model		= $this->getModel('Schedule');
 		$result 	= $model->setEnabled($cid, $enable);

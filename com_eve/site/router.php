@@ -34,8 +34,9 @@ function EveBuildRoute(&$query)
 		unset($query['Itemid']);
 	}
 	$segments = $router->getSegments($query, $item);
-	if (isset($query['view']) && (isset($query['Itemid']) || !empty($segments))) {
-		unset($query['view']);
+	
+	if (isset($query['entity'])) {
+		unset($query['entity']);
 	}
 	
 	if (isset($query['component'])) {
@@ -96,9 +97,25 @@ function EveParseRoute($segments)
 			//TODO: route another component
 		}
 	}
+	
 	$s1 = JArrayHelper::getValue($segments, 0);
+	$s1 = str_replace(':', '-', $s1);
 	if ($s1) {
-		$vars['option'] = 'com_eve'.$s1;
+		$dbo = JFactory::getDBO();
+		$query = 'SELECT * FROM #__eve_components WHERE alias='.$dbo->Quote($s1);
+		$dbo->setQuery($query);
+		$component = $dbo->loadObject();
+		if (!$component) {
+			JError::raiseError(404, JText::_("Resource Not Found"));
+			return false;
+		}
+		$vars['option'] = 'com_eve'.$component->component;
+		if ($component->view) {
+			$vars['view'] = $component->view;
+		}
+		if ($component->layout) {
+			$vars['layout'] = $component->layout;
+		}
 	}
 	
 	return $vars;
@@ -153,7 +170,7 @@ class EveRouter {
 				$segments = array();
 				$query['Itemid'] = $item->id;
 				unset($query[$entityID]);
-				unset($query['view']);
+				unset($query['entity']);
 				continue;
 			}
 			$segments[] = $entity[0];

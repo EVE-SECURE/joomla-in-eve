@@ -156,7 +156,7 @@ class EveModelSchedule extends JModelList {
 		JArrayHelper::toInteger( $cid );
 		$cids = implode( ',', $cid );
 
-		$query = 'UPDATE #__eve_schedule'
+		echo $query = 'UPDATE #__eve_schedule'
 		. ' SET published = ' . (int) $enabled
 		. ' WHERE id IN ( '. $cids.'  )';
 		$dbo->setQuery( $query );

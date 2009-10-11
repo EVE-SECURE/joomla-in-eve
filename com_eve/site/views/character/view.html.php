@@ -35,7 +35,7 @@ class EveViewCharacter extends JView
 		
 		$params = $this->get('Params');
 		$character = $this->get('Character');
-		$links = $this->get('Links');
+		$components = $this->get('Components');
 		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -53,7 +53,7 @@ class EveViewCharacter extends JView
 		$document->setTitle($params->get('page_title'));
 		
 		$this->assignRef('character', $character);
-		$this->assignRef('links', $links);
+		$this->assignRef('components', $components);
 		$this->assignRef('params', $params);
 		
 		parent::display();
@@ -71,13 +71,13 @@ class EveViewCharacter extends JView
 		switch ($view) {
 			case null:
 				$pathway->addItem($this->character->alliancenName, 
-					EveRoute::_('', 'alliance', $this->character));
+					EveRoute::_('alliance', $this->character));
 			case 'alliance':
 				$pathway->addItem($this->character->corporationName, 
-					EveRoute::_('', 'corporation', $this->character, $this->character));
+					EveRoute::_('corporation', $this->character, $this->character));
 			case 'corporation':
 				$pathway->addItem($this->character->name, 
-					EveRoute::_('', 'character', $this->character, $this->character, $this->character));
+					EveRoute::_('character', $this->character, $this->character, $this->character));
 		}
 	}
 }

@@ -36,7 +36,7 @@ class EveViewAlliance extends JView
 		$params = $this->get('Params');
 		$alliance = $this->get('Alliance');
 		$members = $this->get('Members');
-		$links = $this->get('Links');
+		$components = $this->get('Components');
 		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -56,7 +56,7 @@ class EveViewAlliance extends JView
 		$this->assignRef('alliance', $alliance);
 		$this->assignRef('params', $params);
 		$this->assign('members', $members);
-		$this->assignRef('links', $links);
+		$this->assignRef('components', $components);
 		
 		parent::display();
 		$this->_setPathway();
@@ -77,7 +77,7 @@ class EveViewAlliance extends JView
 		switch ($view) {
 			case null:
 				$pathway->addItem($this->alliance->name, 
-					EveRoute::_('', 'alliance', $this->alliance));
+					EveRoute::_('alliance', $this->alliance));
 		}
 	}
 }

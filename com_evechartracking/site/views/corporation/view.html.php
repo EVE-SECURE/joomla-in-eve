@@ -77,20 +77,20 @@ class EvechartrackingViewCorporation extends JView {
 		switch ($view) {
 			case null:
 				$pathway->addItem($this->corporation->allianceName, 
-					EveRoute::_('', 'alliance', $this->corporation));
+					EveRoute::_('alliance', $this->corporation));
 			case 'alliance':
 				$pathway->addItem($this->corporation->corporationName, 
-					EveRoute::_('', 'corporation', $this->corporation, $this->corporation));
+					EveRoute::_('corporation', $this->corporation, $this->corporation));
 			case 'corporation':
 				$pathway->addItem(JText::_('Member Tracking'), 
-					EveRoute::_('chartracking', 'corporation', $this->corporation, $this->corporation));
+					EveRoute::_('chartracking', $this->corporation, $this->corporation));
 		}
 	}
 	
 	function getMemberColumn(&$member, $column) {
 		switch($column) {
 			case 'name':
-				return sprintf('<a href="%s">%s</a>', EveRoute::_('', 'character', $this->corporation, $this->corporation, $member), $member->name); 
+				return sprintf('<a href="%s">%s</a>', EveRoute::_('character', $this->corporation, $this->corporation, $member), $member->name); 
 				break;
 			case 'baseName':
 				if ($member->baseID == 0) {

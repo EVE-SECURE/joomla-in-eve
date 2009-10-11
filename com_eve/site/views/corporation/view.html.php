@@ -36,7 +36,7 @@ class EveViewCorporation extends JView
 		$params = $this->get('Params');
 		$corporation = $this->get('Corporation');
 		$members = $this->get('Members');
-		$links = $this->get('Links');
+		$components = $this->get('Components');
 
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -53,7 +53,7 @@ class EveViewCorporation extends JView
 		}
 		$document->setTitle($params->get('page_title'));
 		
-		$this->assignRef('links', $links);
+		$this->assignRef('components', $components);
 		$this->assignRef('corporation', $corporation);
 		$this->assignRef('params', $params);
 		$this->assign('members', $members);
@@ -73,10 +73,10 @@ class EveViewCorporation extends JView
 		switch ($view) {
 			case null:
 				$pathway->addItem($this->corporation->allianceName, 
-					EveRoute::_('', 'alliance', $this->corporation));
+					EveRoute::_('alliance', $this->corporation));
 			case 'alliance':
 				$pathway->addItem($this->corporation->corporationName, 
-					EveRoute::_('', 'corporation', $this->corporation, $this->corporation));
+					EveRoute::_('corporation', $this->corporation, $this->corporation));
 		}
 	}
 }

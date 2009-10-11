@@ -1,3 +1,4 @@
+DELETE FROM `#__eve_components` WHERE `component`='charsheet';
 DROP TABLE IF EXISTS `#__eve_charskills`;
 DROP TABLE IF EXISTS `#__eve_skillqueue`;
 DROP TABLE IF EXISTS `#__eve_charcertificates`;
