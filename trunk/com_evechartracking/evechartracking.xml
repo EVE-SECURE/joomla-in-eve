@@ -15,12 +15,14 @@
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<queries>
-			<query>INSERT INTO `#__eve_links` (`name`, `entity`, `component`, `ordering`, `published`) VALUES ('Member Tracking', 'corporation', 'chartracking', 0, 1);</query>
+			<query>INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', null, '0', '1');</query>
 			<query>INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', NULL, 0, '');</query>
 		</queries>
 	</install>
 	<uninstall>
-		<queries></queries>
+		<queries>
+			<query>DELETE FROM `#__eve_components` WHERE `component`='chartracking';</query>
+		</queries>
 	</uninstall>
 	<files folder="site">
 		<filename>evechartracking.php</filename>
@@ -29,8 +31,8 @@
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
-	<languages folder="site/languages">
-		<language tag="en-GB">en-GB.com_evechartracking.ini</language>
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_evechartracking.ini</language>
 	</languages>
 	
 	<administration>
@@ -45,9 +47,9 @@
 			<folder>models</folder>
 			<folder>views</folder>
 		</files>
-		<languages folder="admin/languages">
-			<language tag="en-GB">en-GB.com_evechartracking.ini</language>
-			<language tag="en-GB">en-GB.com_evechartracking.menu.ini</language>
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_evechartracking.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_evechartracking.menu.ini</language>
 		</languages>
 	</administration>
 </install>

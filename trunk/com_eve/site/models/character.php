@@ -86,11 +86,11 @@ class EveModelCharacter extends JModelItem
 		return $this->_character;
 	}
 	
-	public function getLinks()
+	public function getComponents()
 	{
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_links');
+		$q->addTable('#__eve_components');
 		$q->addWhere("entity = 'character'");
 		$q->addWhere('published');
 		$q->addOrder('ordering');

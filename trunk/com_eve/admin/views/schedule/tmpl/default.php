@@ -9,6 +9,7 @@ defined('_JEXEC') or die();
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 JHTML::_('behavior.tooltip');
+
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=schedule'); ?>" method="post" name="adminForm">
 	<fieldset class="filter">
@@ -46,7 +47,7 @@ JHTML::_('behavior.tooltip');
 			<tr class="row<?php echo $i % 2; ?>">
 				<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 				<td>
-					<?php echo JHtml::_('grid.id', $i, 'id'); ?>
+					<?php echo JHtml::_('grid.id', $i, $item->id); ?>
 				</td>
 				<td>
 					<a href="<?php echo JRoute::_('index.php?option=com_eve&task=schedule.edit&cid[]='.$item->id); ?>">

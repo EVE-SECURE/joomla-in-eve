@@ -2,7 +2,7 @@
 -- Table structure for table `#__eve_accounts`
 -- 
 
-CREATE TABLE `#__eve_accounts` (
+CREATE TABLE IF NOT EXISTS `#__eve_accounts` (
   `userID` int(10) unsigned NOT NULL default '0',
   `owner` int(10) unsigned NOT NULL default '0',
   `apiKey` varchar(64) NOT NULL default '',
@@ -19,7 +19,7 @@ CREATE TABLE `#__eve_accounts` (
 -- Table structure for table `#__eve_alecache`
 -- 
 
-CREATE TABLE `#__eve_alecache` (
+CREATE TABLE IF NOT EXISTS `#__eve_alecache` (
   `host` varchar(64) NOT NULL,
   `path` varchar(64) NOT NULL,
   `params` varchar(64) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `#__eve_alecache` (
 -- Table structure for table `#__eve_alliances`
 -- 
 
-CREATE TABLE `#__eve_alliances` (
+CREATE TABLE IF NOT EXISTS `#__eve_alliances` (
   `allianceID` int(10) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
   `shortName` varchar(10) NOT NULL default '',
@@ -54,7 +54,7 @@ CREATE TABLE `#__eve_alliances` (
 -- Table structure for table `#__eve_characters`
 -- 
 
-CREATE TABLE `#__eve_characters` (
+CREATE TABLE IF NOT EXISTS `#__eve_characters` (
   `characterID` int(10) unsigned NOT NULL default '0',
   `userID` int(10) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
@@ -85,7 +85,7 @@ CREATE TABLE `#__eve_characters` (
 -- Table structure for table `#__eve_corporations`
 -- 
 
-CREATE TABLE `#__eve_corporations` (
+CREATE TABLE IF NOT EXISTS `#__eve_corporations` (
   `corporationID` int(10) unsigned NOT NULL default '0',
   `corporationName` varchar(50) NOT NULL default '',
   `ticker` varchar(10) NOT NULL default '',
@@ -112,7 +112,7 @@ CREATE TABLE `#__eve_corporations` (
 -- Table structure for table `#__eve_apicalls`
 -- 
 
-CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
   `call` varchar(30) NOT NULL,
@@ -130,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
 -- Table structure for table `#__eve_schedule`
 -- 
 
-CREATE TABLE IF NOT EXISTS `#__eve_schedule` (
+CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_schedule` (
   `id` int(11) NOT NULL auto_increment,
   `apicall` int(11) NOT NULL,
   `userID` int(11) default NULL,
@@ -140,15 +140,31 @@ CREATE TABLE IF NOT EXISTS `#__eve_schedule` (
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=utf8;
 
+
+-- 
+-- Table structure for table `#__eve_components`
+-- 
+
+CREATE TABLE IF NOT EXISTS `#__eve_components` (
+  `id` varchar(50) NOT NULL,
+  `title` varchar(50) NOT NULL,
+  `alias` varchar(50) NOT NULL,
+  `entity` varchar(50) NOT NULL,
+  `component` varchar(50) NOT NULL,
+  `view` varchar(50) NULL DEFAULT NULL,
+  `layout` varchar(50) NULL DEFAULT NULL,
+  `ordering` int(11) NOT NULL default '0',
+  `published` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`id`)
+) DEFAULT CHARSET=utf8;
+
 -- 
 -- Data for table `#__eve_schedule`
 -- 
 
 INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('account', 'Characters', 'User', 'Limited', NULL, 0, '');
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, '');
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
+('account', 'Characters', 'User', 'Limited', NULL, 0, ''),
+('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, ''),
 ('corp', 'CorporationSheet', 'Character', 'Limited', NULL, 0, '');
 
 INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
@@ -156,4 +172,14 @@ INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
 (@lastid, NULL, NULL, NOW(), 1);
+
+-- 
+-- Data for table `#__eve_components`
+-- 
+
+INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
+('character', 'Character', '', 'character', '', 'character', null, '0', '0'),
+('corporation', 'Corporation', '', 'corporation', '', 'corporation', null, '0', '0'),
+('alliance', 'Alliance', '', 'alliance', '', 'alliance', null, '0', '0');
+
 

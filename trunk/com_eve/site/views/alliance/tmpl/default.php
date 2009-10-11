@@ -19,7 +19,7 @@ defined('_JEXEC') or die();
 
 <div>
 	<?php echo JText::_('Executor Corp'); ?>:
-		<a href="<?php echo EveRoute::_('', 'corporation', $this->alliance, array($this->alliance, 'executorCorp')); ?>"> 
+		<a href="<?php echo EveRoute::_('corporation', $this->alliance, array($this->alliance, 'executorCorp')); ?>"> 
 			<?php echo $this->alliance->executorCorpName; ?> [<?php echo $this->alliance->executorTicker; ?>]
 		</a>
 </div>
@@ -28,9 +28,9 @@ defined('_JEXEC') or die();
 </div>
 
 <div>
-	<?php foreach ($this->links as $link): ?>
-		<a href="<?php echo EveRoute::_($link->component, $link->entity, $this->alliance); ?>">
-			<?php echo JText::_($link->name); ?>
+	<?php foreach ($this->components as $component): ?>
+		<a href="<?php echo EveRoute::_($component->id, $this->alliance); ?>">
+			<?php echo JText::_($component->title); ?>
 		</a> <br />
 	<?php endforeach; ?>
 </div>
@@ -38,7 +38,7 @@ defined('_JEXEC') or die();
 <div>
 	<?php echo JText::_('Members'); ?> <br />
 	<?php foreach ($this->members as $member) : ?>
-		<a href="<?php echo EveRoute::_('', 'corporation', $this->alliance, $member); ?>">
+		<a href="<?php echo EveRoute::_('corporation', $this->alliance, $member); ?>">
 			<?php echo $member->corporationName; ?> [<?php echo $member->ticker; ?>]
 		</a>
 		

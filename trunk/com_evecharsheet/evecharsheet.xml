@@ -34,15 +34,15 @@
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
-	<languages folder="site/languages">
-		<language tag="en-GB">en-GB.com_evecharsheet.ini</language>
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_evecharsheet.ini</language>
 	</languages>
 	
 	<administration>
 		<menu img="components/com_eve/assets/icon-char-16.png">EVE Character Sheet</menu>
-		<languages folder="admin/languages">
-			<language tag="en-GB">en-GB.com_evecharsheet.ini</language>
-			<language tag="en-GB">en-GB.com_evecharsheet.menu.ini</language>
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_evecharsheet.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_evecharsheet.menu.ini</language>
 		</languages>
 		<files folder="admin">
 			<filename>admin.evecharsheet.php</filename>

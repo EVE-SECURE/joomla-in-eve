@@ -25,43 +25,69 @@ defined('_JEXEC') or die();
 
 class EveRoute
 {
-	static public function _($component, $entity, $alliance = null, $corporation = null, $character = null, $xhtml = true)
+	private static $_components;
+	
+	protected function _getComponent($id)
+	{
+		if (!isset(self::$_components)) {
+			$q = EveFactory::getQuery();
+			$q->addTable('#__eve_components');
+			self::$_components = $q->loadObjectList('id');
+		}
+		return self::$_components[$id]; 
+	}
+	
+	static public function _($id, $alliance = null, $corporation = null, $character = null, $xhtml = true)
 	{
 		$app = JFactory::getApplication();
+		$component = self::_getComponent($id);
 		$sef = $app->getCfg('sef');
 		if ($sef) {
-			$url = 'index.php?option=com_eve&view='.$entity;
-			if ($component) {
-				$url .= '&component='.$component;
+			$url = 'index.php?option=com_eve&entity='.$component->entity;
+			if ($component->alias) {
+				$url .= '&component='.$component->alias;
 			}
 			$entities = array('alliance', 'corporation', 'character');
 		} else {
-			$url = 'index.php?option=com_eve'.$component.'&view='.$entity;
-			$entities = array($entity);
+			$url = 'index.php?option=com_eve'.$component->component;
+			if ($component->view) {
+				$url .= '&view='.$component->view; 
+			}
+			if ($component->layout) {
+				$url .= '&layout='.$component->layout; 
+			}
+			$entities = array($component->entity);
 		}
-		foreach ($entities as $ent) {
-			if ($$ent) {
-				if (is_array($$ent)) {
-					$array = $$ent;
+		foreach ($entities as $entity) {
+			if ($$entity) {
+				if (is_array($$entity)) {
+					$array = $$entity;
 					$obj = $array[0];
 					$id = $array[1].'ID';
 					$name = $array[1].'Name';
 				} else {
-					$obj = $$ent; 
-					$id = $ent.'ID';
-					$name = $ent.'Name';
+					$obj = $$entity; 
+					$id = $entity.'ID';
+					$name = $entity.'Name';
 					$name = isset($obj->$name) ? $name : 'name';
 				}
 				if ($sef) {
-					$url .= '&'.$ent.'ID='.$obj->$id.':'.$obj->$name;
+					$url .= '&'.$entity.'ID='.$obj->$id.':'.$obj->$name;
 				} else {
-					$url .= '&'.$ent.'ID='.$obj->$id;
+					$url .= '&'.$entity.'ID='.$obj->$id;
 				}
 			}
-			if ($ent == $entity) {
+			if ($entity == $component->entity) {
 				break;
 			}
 		}
 		return JRoute::_($url, $xhtml);
+	}
+	
+	static public function link($id, $attribs = null, $alliance = null, $corporation = null, $character = null)
+	{
+		$component = EveFactory::getInstance('Component', $id);
+		$href = self::_($component, $alliance, $corporation, $character);
+		return JHTML::_('link', $url, $component->title, $attribs);
 	}
 }

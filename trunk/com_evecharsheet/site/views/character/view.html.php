@@ -90,16 +90,16 @@ class EvecharsheetViewCharacter extends JView {
 		switch ($view) {
 			case null:
 				$pathway->addItem($this->character->allianceName, 
-					EveRoute::_('', 'alliance', $this->character));
+					EveRoute::_('alliance', $this->character));
 			case 'alliance':
 				$pathway->addItem($this->character->corporationName, 
-					EveRoute::_('', 'corporation', $this->character, $this->character));
+					EveRoute::_('corporation', $this->character, $this->character));
 			case 'corporation':
 				$pathway->addItem($this->character->name, 
-					EveRoute::_('', 'character', $this->character, $this->character, $this->character));
+					EveRoute::_('character', $this->character, $this->character, $this->character));
 			case 'character':
 				$pathway->addItem(JText::_('Character Sheet'), 
-					EveRoute::_('charsheet', 'character', $this->character, $this->character, $this->character));
+					EveRoute::_('charsheet', $this->character, $this->character, $this->character));
 		}
 	}
 }

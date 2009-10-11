@@ -2,7 +2,7 @@
 -- Table structure for table `#__eve_charskills`
 --
 
-CREATE TABLE `#__eve_charskills` (
+CREATE TABLE IF NOT EXISTS `#__eve_charskills` (
   `characterID` int(11) NOT NULL,
   `typeID` int(11) NOT NULL,
   `skillpoints` int(11) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE `#__eve_charskills` (
 -- Table structure for table `#__eve_skillqueue`
 --
 
-CREATE TABLE `#__eve_skillqueue` (
+CREATE TABLE IF NOT EXISTS `#__eve_skillqueue` (
   `characterID` int(11) NOT NULL,
   `queuePosition` smallint(5) NOT NULL,
   `typeID` int(11) NOT NULL,
@@ -26,13 +26,21 @@ CREATE TABLE `#__eve_skillqueue` (
   PRIMARY KEY  (`characterID`,`typeID`, `level`)
 ) DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__eve_charcertificates` (
+--
+-- Table structure for table `#__eve_charskills`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_charcertificates` (
   `characterID` INT NOT NULL ,
   `certificateID` INT NOT NULL ,
 PRIMARY KEY ( `characterID` , `certificateID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `#__eve_charattributes` (
+--
+-- Table structure for table `#__eve_charattributes`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_charattributes` (
   `characterID` INT NOT NULL ,
   `attributeID` INT NOT NULL ,
   `value` INT NOT NULL ,
@@ -41,34 +49,54 @@ CREATE TABLE `#__eve_charattributes` (
 PRIMARY KEY ( `characterID` , `attributeID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `#__eve_roles` (
+--
+-- Table structure for table `#__eve_roles`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_roles` (
 `roleID` BIGINT NOT NULL ,
 `roleName` VARCHAR (64) NOT NULL ,
 PRIMARY KEY ( `roleID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-CREATE TABLE `#__eve_charroles` (
+--
+-- Table structure for table `#__eve_charroles`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_charroles` (
 `characterID` INT NOT NULL ,
 `roleID` BIGINT NOT NULL ,
 `location` SMALLINT NOT NULL COMMENT '0:-, 1:atHQ, 2:atBase, 3:atOther',
 PRIMARY KEY ( `characterID` , `roleID` , `location` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `#__eve_chartitles` (
+--
+-- Table structure for table `#__eve_chartitles`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_chartitles` (
   `characterID` INT NOT NULL ,
   `titleID` INT NOT NULL ,
 PRIMARY KEY ( `characterID` , `titleID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `#__eve_corptitles` (
+--
+-- Table structure for table `#__eve_corptitles`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_corptitles` (
   `corporationID` INT NOT NULL ,
   `titleID` INT NOT NULL ,
   `titleName` VARCHAR (64) NOT NULL ,
 PRIMARY KEY ( `corporationID` , `titleID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
-CREATE TABLE `#__eve_charclone` (
+--
+-- Table structure for table `#__eve_charclone`
+--
+
+CREATE TABLE IF NOT EXISTS `#__eve_charclone` (
   `characterID` INT NOT NULL ,
   `cloneID` INT NOT NULL ,
 PRIMARY KEY ( `characterID` )
@@ -78,8 +106,8 @@ PRIMARY KEY ( `characterID` )
 INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
 ('char', 'SkillQueue', 'Character', 'Limited', NULL, 0, '');
 
-INSERT INTO `#__eve_links` (`name`, `entity`, `component`, `ordering`, `published`) VALUES 
-('Character Sheet', 'character', 'charsheet', 0, 1);
+INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
+('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', null, '0', '1');
 
 INSERT INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (1, 'roleDirector'),

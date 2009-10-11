@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
 
 <div>
 <?php echo JText::_('Corporation'); ?>:
-	<a href="<?php echo EveRoute::_('', 'corporation', $this->character, $this->character); ?>">
+	<a href="<?php echo EveRoute::_('corporation', $this->character, $this->character); ?>">
 		<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
 	</a>
 </div>
@@ -32,16 +32,16 @@ defined('_JEXEC') or die();
 <div>
 <?php if ($this->character->allianceID) : ?>
 	<?php echo JText::_('Alliance'); ?>:
-	<a href="<?php echo EveRoute::_('', 'alliance', $this->character); ?>">
+	<a href="<?php echo EveRoute::_('alliance', $this->character); ?>">
 		<?php echo $this->character->allianceName; ?> &lt;<?php echo $this->character->allianceShortName; ?>&gt;
 	</a>
 <?php endif; ?>
 </div>
 
 <div>
-	<?php foreach ($this->links as $link): ?>
-		<a href="<?php echo EveRoute::_($link->component, $link->entity, $this->character, $this->character, $this->character); ?>">
-			<?php echo JText::_($link->name); ?>
+	<?php foreach ($this->components as $component): ?>
+		<a href="<?php echo EveRoute::_($component->id, $this->character, $this->character, $this->character); ?>">
+			<?php echo JText::_($component->title); ?>
 		</a>
 	<?php endforeach; ?>
 </div>
