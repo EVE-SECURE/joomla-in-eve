@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: dummy.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: dummy.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -22,6 +22,7 @@ defined('ALE_BASE') or die('Restricted access');
 
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'interface'.DIRECTORY_SEPARATOR.'cache.php';
 
+require_once ALE_BASE.DIRECTORY_SEPARATOR.'exception'.DIRECTORY_SEPARATOR.'cache.php';
 
 class AleCacheDummy implements AleInterfaceCache {
 	private $host = '';
@@ -74,7 +75,7 @@ class AleCacheDummy implements AleInterfaceCache {
 	 * @param string $time
 	 */
 	public function updateCachedUntil($time) {
-		throw new BadMethodCallException('Not implemented');
+		//pass
 	}
 	
 	/**
@@ -83,7 +84,7 @@ class AleCacheDummy implements AleInterfaceCache {
 	 * @return string
 	 */
 	public function retrieve() {
-		throw new BadMethodCallException('Not implemented');
+		//pass
 	}
 	
 	/**
@@ -93,6 +94,10 @@ class AleCacheDummy implements AleInterfaceCache {
 	 */
 	public function isCached() {
 		return ALE_CACHE_MISSING;
+	}
+	
+	public function purge($all = false) {
+		//pass
 	}
 	
 }

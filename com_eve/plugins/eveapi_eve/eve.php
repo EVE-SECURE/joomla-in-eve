@@ -37,7 +37,7 @@ class plgEveapiEve extends JPlugin {
 	}
 	
 	public function onRegisterAccount($userID, $apiStatus) {
-		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra('account', 'Characters', $userID);
 		if (!$schedule->id && $schedule->apicall) {
 			$next = new DateTime();
@@ -68,7 +68,7 @@ class plgEveapiEve extends JPlugin {
 	public function onRegisterCharacter($userID, $characterID) {
 		//TODO: superclass this
 		$next = new DateTime();
-		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra('char', 'CharacterSheet', $userID, $characterID);
 		if (!$schedule->id && $schedule->apicall) {
 			$schedule->next = $next->format('Y-m-d H:i:s');
@@ -78,7 +78,7 @@ class plgEveapiEve extends JPlugin {
 	
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
 		//TODO: superclass EveapiPlugin
-		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra('corp', 'CorporationSheet', $userID, $characterID);
 		if ($owner && !$schedule->id && $schedule->apicall) {
 			$next = new DateTime();

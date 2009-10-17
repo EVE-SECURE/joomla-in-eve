@@ -115,10 +115,13 @@ CREATE TABLE IF NOT EXISTS `#__eve_corporations` (
 CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
-  `call` varchar(30) NOT NULL,
+  `call` varchar(25) NOT NULL,
   `authentication` enum('None','User','Character') NOT NULL default 'None',
   `authorization` enum('None','Limited','Full') NOT NULL default 'None',
-  `pagination` varchar(20) default NULL,
+  `paginationRowsetName` varchar(20) default NULL,
+  `paginationAttrib` varchar(20) default NULL,
+  `paginationParam` varchar(20) default NULL,
+  `paginationPerPage` int(11) default NULL,
   `delay` int(11) NOT NULL default '0',
   `params` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)

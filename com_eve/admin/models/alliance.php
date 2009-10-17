@@ -174,7 +174,7 @@ class EveModelAlliance extends EveModel {
 			return true;
 		}
 
-		// Get a alliancesTablealliance instance.
+		// Get a EveTablealliance instance.
 		$table = &$this->getAlliance();
 
 		// Attempt to check-in the row.

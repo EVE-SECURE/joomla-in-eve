@@ -6,5 +6,5 @@ INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_li
 INSERT INTO `jos_eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
 ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', null, '0', '1');
 
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('corp', 'MemberTracking', 'Character', 'Full', NULL, 0, '');
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('corp', 'MemberTracking', 'Character', 'Full', 0, '');

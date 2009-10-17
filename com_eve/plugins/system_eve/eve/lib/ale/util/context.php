@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: context.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: context.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -48,8 +48,26 @@ class AleUtilContext {
 		return $this;
 	}
 	
+	/**
+	 * Add path segment and retrieve xml
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
 	public function __call($name, $arguments) {
 		$this->context[] = $name;
+		return $this->object->_retrieveXml($this->context, $arguments);
+	}
+	
+	/**
+	 * Retrieve xml
+	 * for PHP 5.3
+	 *
+	 * @return mixed
+	 */
+	public function __invoke() {
+		$arguments = func_get_args();
 		return $this->object->_retrieveXml($this->context, $arguments);
 	}
 

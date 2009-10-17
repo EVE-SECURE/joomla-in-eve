@@ -87,10 +87,13 @@ DROP TABLE IF EXISTS `jos_eve_apicalls`;
 CREATE TABLE IF NOT EXISTS `jos_eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
-  `call` varchar(15) NOT NULL,
+  `call` varchar(25) NOT NULL,
   `authentication` enum('None','User','Character') NOT NULL default 'None',
   `authorization` enum('None','Limited','Full') NOT NULL default 'None',
-  `pagination` varchar(20) default NULL,
+  `paginationRowsetName` varchar(20) default NULL,
+  `paginationAttrib` varchar(20) default NULL,
+  `paginationParam` varchar(20) default NULL,
+  `paginationPerPage` int(11) default NULL,
   `delay` int(11) NOT NULL default '0',
   `params` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -135,10 +138,10 @@ INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_li
 ('Schedule', '', 0, @lastid, 'option=com_eve&view=schedule', 'Accounts', 'com_eve', 4, 'components/com_eve/assets/icon-16-schedule.png', 0, '', 1);
 
 
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('account', 'Characters', 'User', 'Limited', NULL, 0, ''),
-('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, ''),
-('corp', 'CorporationSheet', 'Character', 'Limited', NULL, 0, '');
+INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('account', 'Characters', 'User', 'Limited', 0, ''),
+('char', 'CharacterSheet', 'Character', 'Limited', 0, ''),
+('corp', 'CorporationSheet', 'Character', 'Limited', 0, '');
 
 INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
 ('eve', 'AllianceList', 'None', 'None', NULL, 0, '');

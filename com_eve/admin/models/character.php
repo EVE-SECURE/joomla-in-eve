@@ -152,7 +152,7 @@ class EveModelCharacter extends EveModel {
 			return true;
 		}
 
-		// Get a charactersTablecharacter instance.
+		// Get a EveTablecharacter instance.
 		$table = &$this->getCharacter();
 
 		// Attempt to check-in the row.
@@ -275,10 +275,10 @@ class EveModelCharacter extends EveModel {
 	}
 	
 	/**
-	 * Get TableCharacter
+	 * Get EveTableCharacter
 	 *
 	 * @param int $id
-	 * @return TableCharacter
+	 * @return EveTableCharacter
 	 */
 	function getCharacter($characterID = null) {
 		return $this->getInstance('Character', $characterID);

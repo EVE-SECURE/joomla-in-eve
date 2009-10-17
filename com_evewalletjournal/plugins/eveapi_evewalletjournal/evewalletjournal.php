@@ -31,7 +31,7 @@ jimport('joomla.plugin.plugin');
  * @package		Joomla! in EVE		
  * @subpackage	Core
  */
-class plgEveapiEvechartracking extends JPlugin {
+class plgEveapiEveWalletJournal extends JPlugin {
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
@@ -40,7 +40,7 @@ class plgEveapiEvechartracking extends JPlugin {
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
 		//TODO: superclass EveapiPlugin
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra('corp', 'MemberTracking', $userID, $characterID);
+		$schedule->loadExtra('corp', 'WalletJournal', $userID, $characterID);
 		if ($owner && !$schedule->id && $schedule->apicall) {
 			$next = new DateTime();
 			$schedule->next = $next->format('Y-m-d H:i:s');
@@ -51,33 +51,14 @@ class plgEveapiEvechartracking extends JPlugin {
 		}
 	}
 	
-	public function corpMemberTracking($xml, $fromCache, $options = array()) {
-		if (!isset($options['corporationID'])) {
-			$characterID = JArrayHelper::getValue($options, 'characterID');
-			$character = EveFactory::getInstance('Character', $characterID);
-			$corporationID = $character->corporationID;
-		} else {
-			$corporationID = $options['corporationID'];
+	public function charWalletJournal($xml, $fromCache, $options = array()) {
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
+		foreach ($xml->result->entries->toArray() as $entry) {
+			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
+			$table->bind($entry);
+			$table->store();
+			
 		}
-		if (!$corporationID) {
-			//TODO: some reasonable error?
-			return;
-		}
-		$memberIDs = array();
-		foreach ($xml->result->members as $characterID => $member) {
-			$sheet = $member->toArray();
-			$sheet['corporationID'] = $corporationID;
-			$character = EveFactory::getInstance('Character', $characterID);
-			$character->save($sheet);
-			$memberIDs[] = $characterID;
-		}
-		if (!empty($memberIDs)) {
-			$sql = sprintf('UPDATE #__eve_characters SET corporationID=0 WHERE corporationID=%s AND characterID NOT IN(%s)', 
-				intval($corporationID), implode(', ', $memberIDs));
-			$dbo = JFactory::getDBO();
-			$dbo->Execute($sql);
-		}
-		//TODO: block user that are not in owner corps
 	}
 	
 }

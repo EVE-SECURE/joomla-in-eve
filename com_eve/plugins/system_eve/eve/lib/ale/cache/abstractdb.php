@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: abstractdb.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: abstractdb.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -32,11 +32,13 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	protected $path;
 	protected $paramsRaw;
 	protected $params;
+	protected $maxDataSize;
 	
 	protected $row;
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		$this->table = $this->_($config, 'table', 'alecache');
+		$this->maxDataSize = $this->_($config, 'maxDataSize', null);
 	}
 	
 	abstract protected function escape($string);
@@ -92,7 +94,9 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 	 * @return null
 	 */
 	public function store($content, $cachedUntil) {
-		
+		if ($this->maxDataSize && strlen($content) > $this->maxDataSize) {
+			return;
+		}
 		if ($this->row) {
 			$this->row['content'] = $content;
 			$this->row['cachedUntil'] = $cachedUntil;
@@ -130,7 +134,7 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 			$cachedUntil = $time ? "'".$this->escape($time)."'" : 'NULL';
 			$query = sprintf('UPDATE %s SET cachedUntil = %s  WHERE %s', 
 				$this->table, $cachedUntil, $this->getWhere());
-			$this->execute($sql);
+			$this->execute($query);
 		}
 			
 	}
@@ -158,14 +162,33 @@ abstract class AleCacheAbstractDB implements AleInterfaceCache {
 		
 		$tz = new DateTimeZone('UTC');
 		$now = new DateTime(null, $tz);
-		$cachedUntlil = new DateTime($this->row['cachedUntil'], $tz);
+		$cachedUntil = new DateTime($this->row['cachedUntil'], $tz);
 		
-		if ((int) $cachedUntlil->format('U') < (int) $now->format('U')) {
+		if ((int) $cachedUntil->format('U') < (int) $now->format('U')) {
 			return ALE_CACHE_EXPIRED;
 		}
 		
 		return ALE_CACHE_CACHED;
 		
 	}
+	
+	/**
+	 * Remove old data from cache
+	 *
+	 * @param bool $all
+	 */
+	public function purge($all = false) {
+		if ($all) {
+			$query = sprintf("DELETE FROM %s WHERE host='%s'", $this->table, $this->escape($this->host));
+		} else {
+			$tz = new DateTimeZone('UTC');
+			$now = new DateTime(null, $tz);
+			$query = sprintf("DELETE FROM %s WHERE host='%s' AND cachedUntil<'%s'", 
+				$this->table, $this->escape($this->host), $now->format(''));
+		}
+		$this->execute($query);
+		
+	}
+	
 	
 }

@@ -204,7 +204,7 @@ class EveModelAccount extends EveModel {
 			return true;
 		}
 
-		// Get a accountsTableaccount instance.
+		// Get a EveTableaccount instance.
 		$table = &$this->getAccount();
 
 		// Attempt to check-in the row.
@@ -326,10 +326,10 @@ class EveModelAccount extends EveModel {
 	}
 
 	/**
-	 * Get instance of TableAccount
+	 * Get instance of EveTableAccount
 	 *
 	 * @param int $id
-	 * @return TableAccount
+	 * @return EveTableAccount
 	 */
 	function getAccount($userID = null) {
 		return $this->getInstance('Account', $userID);

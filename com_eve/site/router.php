@@ -26,6 +26,9 @@ defined('_JEXEC') or die();
 
 function EveBuildRoute(&$query)
 {
+	if (!isset($query['view']) && !isset($query['task'])) {
+		return array();
+	}
 	$app = JFactory::getApplication();
 	$menu = $app->getMenu();
 	$router = EveRouter::getInstance();

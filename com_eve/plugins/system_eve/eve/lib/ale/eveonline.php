@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: eveonline.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: eveonline.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -48,10 +48,10 @@ class AleEVEOnline extends AleBase {
 		'cacheUpdateError' => array(103, 115, 116, 117, 119, ), 
 		);
 	
-	function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
+	public function __construct(AleInterfaceRequest $request, AleInterfaceCache $cache = null, array $config = array()) {
 		if (isset($config['cacheUpdateError']) && !is_array($config['cacheUpdateError'])) {
-			$config['cacheUpdateError'] = array();
 			$tmp = explode(',', $config['cacheUpdateError']);
+			$config['cacheUpdateError'] = array();
 			foreach ($tmp as $value) {
 				if (trim($value)) {
 					$config['cacheUpdateError'][] = trim($value);
@@ -118,13 +118,13 @@ class AleEVEOnline extends AleBase {
 				case 'throwException':
 				default:
 					if (100 <= $errorCode && $errorCode < 200) {
-						throw new AleExceptionEVEUserInput($errorText, $errorCode);
+						throw new AleExceptionEVEUserInput($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} elseif (200 <= $errorCode && $errorCode < 300) {
-						throw new AleExceptionEVEAuthentication($errorText, $errorCode);
+						throw new AleExceptionEVEAuthentication($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} elseif (500 <= $errorCode && $errorCode < 600) {
-						throw new AleExceptionEVEServerError($errorText, $errorCode);
+						throw new AleExceptionEVEServerError($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					} else {
-						throw new AleExceptionEVEMiscellaneous($errorText, $errorCode);
+						throw new AleExceptionEVEMiscellaneous($errorText, $errorCode, (string) $this->xml->cachedUntil);
 					}
 			}
 		}

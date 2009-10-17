@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: file.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: file.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -102,6 +102,8 @@ class AleCacheFile implements AleInterfaceCache {
 	 */
 	public function store($content, $cachedUntil) {
 		$filename = $this->dir . DIRECTORY_SEPARATOR . $this->params;
+		$new = !file_exists($filename);
+		
 		$file = fopen($filename, 'w');
 		if ($file === false) {
 			throw new AleExceptionCache('Failed to open file: '.$filename);
@@ -110,6 +112,10 @@ class AleCacheFile implements AleInterfaceCache {
 		$this->content = $content;
 		fwrite($file, $cachedUntil."\n".$content);
 		fclose($file);
+		
+		if ($new) {
+			chmod($filename, $this->config['permissions']);
+		}
 	}
 	
 	/**
@@ -149,13 +155,52 @@ class AleCacheFile implements AleInterfaceCache {
 		
 		$tz = new DateTimeZone('UTC');
 		$now = new DateTime(null, $tz);
-		$cachedUntlil = new DateTime($this->cachedUntil, $tz);
+		$cachedUntil = new DateTime($this->cachedUntil, $tz);
 		
-		if ((int) $cachedUntlil->format('U') < (int) $now->format('U')) {
+		if ((int) $cachedUntil->format('U') < (int) $now->format('U')) {
 			return ALE_CACHE_EXPIRED;
 		}
 		
 		return ALE_CACHE_CACHED;
+	}
+	
+	private function _purge($dir, $all) {
+		$dir_handle = opendir($dir);
+		while ($fileaname = readdir($dir_handle)) {
+			if ($fileaname == '.' || $fileaname == '..') {
+				continue;
+			}
+			$fileaname = $dir.DIRECTORY_SEPARATOR.$fileaname;
+			
+			//recurseively search directories
+			
+			if (is_dir($fileaname)) {
+				$this->_purge($fileaname, $all);
+			} 
+			//if not file, do nothing
+			if (!is_file($fileaname)) {
+				continue;
+			}
+			if ($all) {
+				$del = true;
+			} else {
+				$content = file_get_contents($fileaname);
+				$chunks = explode("\n", $content, 2);
+				
+				$tz = new DateTimeZone('UTC');
+				$now = new DateTime(null, $tz);
+				$cachedUntlil = new DateTime($chunks[0], $tz);
+				$del = (int) $cachedUntlil->format('U') < (int) $now->format('U');
+			}
+			if ($del) {
+				unlink($fileaname);
+			}
+		}
+		
+	}
+	
+	public function purge($all = false) {
+		$this->_purge($this->config['rootdir'], $all);
 	}
 	
 }

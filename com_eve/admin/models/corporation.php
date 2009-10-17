@@ -174,7 +174,7 @@ class EveModelCorporation extends EveModel {
 			return true;
 		}
 
-		// Get a corporationsTablecorporation instance.
+		// Get a EveTablecorporation instance.
 		$table = &$this->getCorporation();
 
 		// Attempt to check-in the row.
@@ -300,7 +300,7 @@ class EveModelCorporation extends EveModel {
 	 * Enter description here...
 	 *
 	 * @param int $id
-	 * @return TableCorporation
+	 * @return EveTableCorporation
 	 */
 	function getCorporation($corporationID = null) {
 		return $this->getInstance('Corporation', $corporationID);
