@@ -57,37 +57,53 @@ class plgCronEve extends JPlugin {
 		//JDate::toMySQL()
 		
 		foreach ($list as $row) {
-			if ($row->authentication != 'None') {
-				$account = EveFactory::getInstance('account', $row->userID);
-				if ($row->authorization == 'Limited' && ($account->apiStatus != 'Limited' && $account->apiStatus != 'Full')) {
-					continue;
-				}
-				if ($row->authorization == 'Full' && $account->apiStatus != 'Full') {
-					continue;
-				}
-				$ale->setCredentials($account->userID, $account->apiKey);
-			}
-			if ($row->authentication == 'Character') {
-				$ale->setCharacterID($row->characterID);
-			} else {
-				$ale->setCharacterID(null);
-			}
-			$type = $row->type;
-			$call = $row->call;
 			try {
-				$xml = $ale->$type->$call();
-				$dispatcher->trigger($type.$call,  
-					array($xml, $ale->isFromCache(), array('userID' => $row->userID, 'characterID' => $row->characterID)));
-				$next = new DateTime((string) $xml->cachedUntil, $utc_tz);
-				$next->modify('+'.$row->delay.' minutes');
-				$next->setTimezone($this_tz);
-				$schedule = EveFactory::getInstance('schedule', $row->id);
-				$schedule->next = $next->format('Y-m-d H:i:s');
-				$schedule->store();
+				if ($row->authentication != 'None') {
+					$account = EveFactory::getInstance('account', $row->userID);
+					if ($row->authorization == 'Limited' && ($account->apiStatus != 'Limited' && $account->apiStatus != 'Full')) {
+						continue;
+					}
+					if ($row->authorization == 'Full' && $account->apiStatus != 'Full') {
+						continue;
+					}
+					$ale->setCredentials($account->userID, $account->apiKey);
+				}
+				if ($row->authentication == 'Character') {
+					$ale->setCharacterID($row->characterID);
+				} else {
+					$ale->setCharacterID(null);
+				}
+				$next = null;
+				$type = $row->type;
+				$call = $row->call;
+				if ($row->params) {
+					$params = json_decode($row->params, true);
+				} else {
+					$params = array();
+				}
+				while (true) {
+					$xml = $ale->$type->$call($params);
+					$dispatcher->trigger($type.$call,  
+						array($xml, $ale->isFromCache(), array('userID' => $row->userID, 'characterID' => $row->characterID)));
+					$next = new DateTime((string) $xml->cachedUntil, $utc_tz);
+					if (!$row->paginationAttrib) {
+						break;
+					}
+					$rowsetName = $row->paginationRowsetName;
+					$count = count($xml->result->$rowsetName);
+					if ((0 <= $count) && ($count < $row->paginationPerPage)) {
+						break;
+					}
+					$xpathStr = '/eveapi/result/rowset/row[last()]/@'.$row->paginationAttrib;
+					$beforeParam = (string)reset($xml->xpath($xpathStr));
+					$params[$row->paginationParam] = $beforeParam;
+				}
+				
 			}
 			//TODO: update cacheUntil on error
 			catch (AleExceptionEVEAuthentication $e) {
 				//FIXME: use helper when available
+				$next = new DateTime($e->getCachedUntil(), $utc_tz);
 				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
@@ -101,12 +117,22 @@ class plgCronEve extends JPlugin {
 						break;
 				}
 			}
+			catch (AleExceptionEVE $e) {
+				$next = new DateTime($e->getCachedUntil(), $utc_tz);
+			}
 			catch (RuntimeException $e) {
 				JError::raiseWarning($e->getCode(), $e->getMessage());
 			}
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
-			}	
+			}
+			if (!is_null($next)) {
+				$next->modify('+'.$row->delay.' minutes');
+				$next->setTimezone($this_tz);
+				$schedule = EveFactory::getInstance('schedule', $row->id);
+				$schedule->next = $next->format('Y-m-d H:i:s');
+				$schedule->store();
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: cache.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: cache.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -78,5 +78,12 @@ interface AleInterfaceCache {
 	 * @return int|null
 	 */
 	public function isCached();
+	
+	/**
+	 * Remove old data from cache
+	 *
+	 * @param bool $all
+	 */
+	public function purge($all = false);
 	
 }

@@ -23,34 +23,27 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EveTableAlliance extends EveTable {
-	/** @var int */
-	var $allianceID		= null;
-	/** @var int */
-	var $name			= null;
-	/** @var string */
-	var $shortName		= null;
-	/** @var int */
-	var $executorCorpID	= null;
-	/** @var string */
-	var $memberCount 	= null;
-	
-	/** @var string */
-	var $logo 			= null;
-	/** @var int */
-	var $owner			= null;
-	
-	/* checkout values */
-	var $checked_out = null;
-	var $checked_out_time = null;
-	
-
+class EvewalletjournalTableWalletjournal extends JTable {
+	var $id= null;
+	var $date= null;
+	var $refID= null;
+	var $refTypeID= null;
+	var $ownerName1= null;
+	var $ownerID1= null;
+	var $ownerName2= null;
+	var $ownerID2= null;
+	var $argName1= null;
+	var $argID1= null;
+	var $amount= null;
+	var $balance= null;
+	var $reason= null;
+		
 	/**
 	* @param database A database connector object
 	*/
 	function __construct( &$dbo )
 	{
-		parent::__construct( '#__eve_alliances', 'allianceID', $dbo );
+		parent::__construct( '#__eve_walletjournal', 'id', $dbo );
 	}
 	
 }

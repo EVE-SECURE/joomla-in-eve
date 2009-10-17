@@ -58,7 +58,7 @@ class EveFactory {
 		}
 		
 		if (!$id) {
-			$instance =& JTable::getInstance($table, 'Table', $config);
+			$instance =& JTable::getInstance($table, 'EveTable', $config);
 			return $instance;
 		}
 		
@@ -69,7 +69,7 @@ class EveFactory {
 		}
 		
 		if (!isset(self::$instances[$_table][$id])) {
-			$instance =& JTable::getInstance($table, 'Table', $config);
+			$instance =& JTable::getInstance($table, 'EveTable', $config);
 			$instance->load((int) $id);
 			self::$instances[$_table][$id] = $instance;
 		}

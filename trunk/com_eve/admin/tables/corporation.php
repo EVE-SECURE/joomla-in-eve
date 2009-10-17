@@ -23,7 +23,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableCorporation extends EveTable {
+class EveTableCorporation extends EveTable {
 	//information sent by eve client
 	/** @var int */
 	var $corporationID		= null;

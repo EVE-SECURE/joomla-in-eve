@@ -23,7 +23,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableSchedule extends JTable {
+class EveTableSchedule extends JTable {
 	var $id = null;
 	var $apicall = null;
 	var $userID = null;

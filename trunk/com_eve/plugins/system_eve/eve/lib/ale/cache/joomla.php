@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: joomla.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: joomla.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -25,7 +25,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 class AleCacheJoomla extends AleCacheAbstractDB {
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		parent::__construct($config);
 		if (isset($config['db']) && is_resource($config['db'])) {
 			$this->db = $config['db'];
@@ -51,6 +51,7 @@ class AleCacheJoomla extends AleCacheAbstractDB {
 	}
 	
 	protected function freeResult(&$result) {
+		//joomla does it immediately
 	}
 
 	/**

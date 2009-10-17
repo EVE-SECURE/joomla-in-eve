@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: adodb.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: adodb.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -25,7 +25,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 class AleCacheADOdb extends AleCacheAbstractDB {
 	
-	function __construct(array $config = array()) {
+	public function __construct(array $config = array()) {
 		parent::__construct($config);
 		if (isset($config['adodb_dir'])) {
 			require_once $config['adodb_dir'].DIRECTORY_SEPARATOR.'adodb.inc.php';

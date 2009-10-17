@@ -45,7 +45,7 @@ class EveHelper {
 	/**
 	 * Update apiStatus based on error code
 	 *
-	 * @param TableAccount $account
+	 * @param EveTableAccount $account
 	 * @param int $errorCode
 	 * @param bool $store
 	 */

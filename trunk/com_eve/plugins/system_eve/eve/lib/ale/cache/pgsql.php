@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: mysql.php 210 2009-07-23 18:16:20Z kovalikp $
+ * @version $Id: pgsql.php 210 2009-07-23 18:16:20Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -23,7 +23,7 @@ defined('ALE_BASE') or die('Restricted access');
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractdb.php';
 
 
-class AleCacheMySQL extends AleCacheAbstractDB {
+class AleCachePgSQL extends AleCacheAbstractDB {
 	
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
@@ -31,46 +31,49 @@ class AleCacheMySQL extends AleCacheAbstractDB {
 			$this->db = $config['db'];
 		} else {
 			$config['host'] = $this->_($config, 'host', null);
+                        $config['port'] = $this->_($config, 'port', null);
+                        $config['database'] = $this->_($config, 'database', null);
 			$config['user'] = $this->_($config, 'user', null);
 			$config['password'] = $this->_($config, 'password', null);
 			$config['new_link'] = (bool) $this->_($config, 'new_link', false);
-			$config['client_flags'] = $this->_($config, 'client_flags', 0);
+
+                        $connection_string = "host='".$config['host']."' ".
+                                             "port='".$config['port']."' ".
+                                             "dbname='".$config['database']."' ".
+                                             "user='".$config['user']."' ".
+                                             "password='".$config['password']."' ";
+                        
 			if ($this->_($config, 'persistent')) {
-				$this->db = mysql_pconnect($config['host'], $config['user'], $config['password'], $config['client_flags']);
+				$this->db = pg_pconnect($connection_string, $config['new_link']);
 			} else {
-				$this->db = mysql_connect($config['host'], $config['user'], $config['password'], $config['new_link'], $config['client_flags']);
+				$this->db = pg_connect($connection_string, $config['new_link']);
 			}
+
 			if ($this->db == false) {
-				throw new AleExceptionCache(mysql_error(), mysql_errno());
-			}
-			if (isset($config['database'])) {
-				$result = mysql_select_db($config['database'], $this->db);
-				if ($result === false) {
-					throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
-				}
+				throw new AleExceptionCache(pg_last_error(), pg_connection_status());
 			}
 		}
 	}
 	
 	protected function escape($string) {
-		return mysql_real_escape_string($string);
+		return pg_escape_string($string);
 	}
 	
 	protected function &execute($query) {
-		$result = mysql_query($query, $this->db);
+		$result = pg_query($this->db, $query);
 		if ($result === false) {
-			throw new AleExceptionCache(mysql_error($this->db), mysql_errno($this->db));
+			throw new AleExceptionCache(pg_last_error($this->db), pg_result_status($result));
 		}
 		return $result;
 	}
 	
 	protected function &fetchRow(&$result) {
-		$row = mysql_fetch_assoc($result);
+		$row = pg_fetch_assoc($result);
 		return $row;
 	}
 	
 	protected function freeResult(&$result) {
-		mysql_free_result($result);
+		pg_free_result($result);
 	}
 			
 }

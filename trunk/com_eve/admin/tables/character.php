@@ -23,7 +23,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class TableCharacter extends EveTable {
+class EveTableCharacter extends EveTable {
 	/** @var int */
 	var $userID			= null;
 	
