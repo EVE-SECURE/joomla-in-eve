@@ -20,10 +20,16 @@
 		<sql></sql>
 	</uninstall>
 	
+	<media folder="media" destination="com_cron">
+		<filename>administrator.css</filename>
+		<filename>icon-16-cron.png</filename>
+		<filename>icon-32-run.png</filename>
+		<filename>icon-48-cron.png</filename>
+		<filename>index.html</filename>
+	</media>
 	<administration>
-		<menu img="components/com_cron/cron.png">Cron</menu>
+		<menu img="../media/com_cron/icon-16-cron.png">Cron</menu>
 		<files>
-			<filename>cron.png</filename>
 			<filename>cron.php</filename>
 			<filename>index.html</filename>
 			<filename>install.php</filename>
