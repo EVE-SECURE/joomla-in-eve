@@ -65,12 +65,16 @@ if (JDEBUG) {
 	$_PROFILER =& JProfiler::getInstance( 'Application' );
 }
 
+jimport('joomla.event.event');
+
 // Joomla! library imports
-jimport( 'joomla.event.event');
-jimport( 'joomla.event.dispatcher');
-jimport( 'joomla.plugin.helper' );
-jimport( 'joomla.utilities.string' );
-jimport( 'joomla.environment.uri' ); //required for legacy mode
+jimport('joomla.event.event');
+jimport('joomla.event.dispatcher');
+jimport('joomla.plugin.helper' );
+jimport('joomla.utilities.string' );
+
+jimport('joomla.html.html');			//required for legacy mode
+jimport('joomla.environment.uri' );		//required for legacy mode
 
 //override for JApplicationHelper
 require_once JPATH_CRON.DS.'overrides'.DS.'applicationhelper.php';

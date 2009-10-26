@@ -22,7 +22,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-JToolBarHelper::title('Cron');
-?>
+JHTML::stylesheet('administrator.css', '../media/com_cron/');
+
+JToolBarHelper::title('Cron', 'cron');
+JToolBarHelper::custom('run', 'run', 'run', 'Run now', false);
 
 
