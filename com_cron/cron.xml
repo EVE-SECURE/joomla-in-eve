@@ -14,10 +14,30 @@
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
-		<sql></sql>
+		<queries>
+			<query>
+				CREATE TABLE `#__cron_jobs` (
+					`id` INT NOT NULL AUTO_INCREMENT ,
+					`pattern` VARCHAR( 255 ) NOT NULL DEFAULT '',
+					`type` VARCHAR( 25 ) NOT NULL DEFAULT '',
+					`plugin` VARCHAR( 25 ) NOT NULL DEFAULT '',
+					`event` VARCHAR( 25 ) NOT NULL DEFAULT '',
+					`next` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+					`state` TINYINT NOT NULL DEFAULT '0',
+					`params` TEXT NOT NULL ,
+					`ordering` INT NOT NULL DEFAULT '0',
+					`checked_out` INT NOT NULL DEFAULT '0',
+					`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+					PRIMARY KEY ( `id` )
+				);
+			</query>
+		</queries>
 	</install>
 	<uninstall>
-		<sql></sql>
+		<queries>
+			<query>DROP TABLE `#__cron_jobs`;</query>
+		</queries>
+
 	</uninstall>
 	
 	<media folder="media" destination="com_cron">
@@ -30,10 +50,8 @@
 	<administration>
 		<menu img="../media/com_cron/icon-16-cron.png">Cron</menu>
 		<files>
-			<filename>cron.php</filename>
-			<filename>index.html</filename>
-			<filename>install.php</filename>
-			<filename>uninstall.php</filename>
+			<filename>admin/cron.php</filename>
+			<filename>admin/index.html</filename>
 			<folder>cron</folder>
 		</files>
 	</administration>
