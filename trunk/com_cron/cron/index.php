@@ -42,10 +42,8 @@ $mainframe->triggerEvent('onAfterInitialise');
 
 
 // Run cronned jobs
-JPluginHelper::importPlugin( 'cron' );
-$mainframe->triggerEvent('onCronTick');
-
-JDEBUG ? $_PROFILER->mark( 'afterCronTick' ) : null;
+$mainframe->runJobs();
+JDEBUG ? $_PROFILER->mark( 'afterRunJobs' ) : null;
 
 /**
  * RENDER THE APPLICATION

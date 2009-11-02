@@ -33,7 +33,8 @@ class JCron extends JApplication
 	* @param	array An optional associative array of configuration settings.
 	* Recognized key values include 'clientId' (this list is not meant to be comprehensive).
 	*/
-	function __construct($config = array()) {
+	function __construct($config = array()) 
+	{
 		$config['clientId'] = 4;
 		
 		parent::__construct($config);
@@ -45,17 +46,47 @@ class JCron extends JApplication
 	 * Render empty HTML
 	 *
 	 */
-	function render() {
+	function render()
+	{
 		//TODO: make better templating for debug
 		$template = file_get_contents(JPATH_CRON.DS.'html'.DS.'render.html');
 		JResponse::setBody($template);
 	}
 	
-	function _createSession($name) {
+	function _createSession($name) 
+	{
 		return null;
 	}
 	
-	function _createConfiguration($file) {
+	function _createConfiguration($file) 
+	{
 		return parent::_createConfiguration($file);
+	}
+	
+	function runJobs() 
+	{
+		$now = JFactory::getDate();
+		$dbo = JFactory::getDBO();
+		
+		list($minute, $hour, $day, $month, $weekday) = explode(' ', $now->toFormat('%M %H %d %m %w'));
+		//echo "$minute, $hour, $day, $month, $weekday ";
+		$query = sprintf('SELECT * FROM %s WHERE state=1 AND minutes LIKE %s AND hours LIKE %s AND days LIKE %s AND months LIKE %s AND weekdays LIKE %s',
+			$dbo->nameQuote('#__cron_jobs'), $dbo->Quote('%.'.intval($minute).'.%'), $dbo->Quote('%.'.intval($hour).'.%')
+			, $dbo->Quote('%.'.intval($day).'.%'), $dbo->Quote('%.'.intval($month).'.%'), $dbo->Quote('%.'.intval($weekday).'.%'));
+			
+		//echo $query;
+		$dbo->setQuery($query);
+		$jobs = $dbo->loadObjectList();
+		//print_r($jobs);
+		$dispatcher 	= & JDispatcher::getInstance();
+		
+		foreach ($jobs as $job) {
+			$params = array();
+			$plugin = $job->plugin == '' ? null : $job->plugin;
+			JPluginHelper::importPlugin($job->type, $plugin, true, $dispatcher);
+			$result = $dispatcher->trigger($job->event, array($now, &$params));
+		}
+		
+		//echo $query;
 	}
 }
