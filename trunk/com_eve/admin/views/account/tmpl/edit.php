@@ -48,7 +48,7 @@ JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 						<label for="jformowner"><?php echo JText::_('OWNER'); ?></label>
 					</td>
 					<td>
-						<?php echo JHTML::_('list.users', 'jform[owner]', $this->item->owner, 1); ?>
+						<?php echo JHTML::_('list.users', 'jform[owner]', $this->item->owner, 1, null, 'name', false); ?>
 					</td>
 				</tr>
 			</tbody>
