@@ -324,7 +324,7 @@ class EveModelCorporation extends EveModel {
 				$corporation = $this->getCorporation($corporationID);
 				$ceo = $this->getInstance('Character', $corporation->ceoID);
 				$account = $this->getInstance('Account', $ceo->userID);
-				if ($ceo->apiKey) {
+				if ($account->apiKey) {
 					try {
 						$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
 						$xml = $ale->corp->CorporationSheet();
