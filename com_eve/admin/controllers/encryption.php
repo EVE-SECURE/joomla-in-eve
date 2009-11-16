@@ -42,7 +42,7 @@ class EveControllerEncryption extends EveController {
 		
 		$view = $this->getView('Encryption');
 		$model = $this->getModel('Encryption');
-		$view->setModel($model);
+		$view->setModel($model, true);
 		
 		$data = JRequest::getVar('jform', array(), 'post', 'array');
 		if (!$model->setConfiguration($data)) {

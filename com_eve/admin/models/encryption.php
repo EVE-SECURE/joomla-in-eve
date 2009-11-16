@@ -88,10 +88,10 @@ class EveModelEncryption extends JModel {
 		*/
 		jimport('joomla.filesystem.file');
 		$result = JFile::write($fname, $this->getConfigContent());
-		if ($result) {
+		if (!$result) {
 			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not write to %s', $fname));
 		}
-		return !$result;
+		return $result;
 	}
 	
 	public function setConfiguration($data)
@@ -130,6 +130,11 @@ class EveModelEncryption extends JModel {
 		$this->setState('showapikey', $show);
 		
 		return true;
+	}
+	
+	public function getPath()
+	{
+		return 'administrator'.DS.'components'.DS.'com_eve'.DS.'configs'.DS.'encryption.php';
 	}
 	
 }

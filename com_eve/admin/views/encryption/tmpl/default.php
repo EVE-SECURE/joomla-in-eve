@@ -36,7 +36,7 @@ JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 						<label for="jforkey"><?php echo JText::_('Key Phrase'); ?></label>
 					</td>
 					<td>
-						<input type="text" name="jform[key]" id="jformkey" value="" />
+						<input type="text" name="jform[key]" id="jformkey" value="" size="64" />
 					</td>
 				</tr>
 				<tr>

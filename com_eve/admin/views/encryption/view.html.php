@@ -26,12 +26,21 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.view');
 
 class EveViewEncryption extends JView {
-	public $algorithms = null;
-	public $modes = null;
+	protected $algorithms = null;
+	protected $modes = null;
+	protected $config = null;
+	protected $path = null;
 	
 	public function display($tpl = null) {
-		$algorithms = $this->get('Algorithms');
-		$modes = $this->get('Modes');
+		$values = array();
+		$layout = $this->getLayout();
+		if ($layout == 'config') {
+			$values['config'] = $this->get('ConfigContent');
+			$values['path'] = $this->get('Path');
+		} else {
+			$values['algorithms'] = $this->get('Algorithms');
+			$values['modes'] = $this->get('Modes');
+		}
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -39,9 +48,8 @@ class EveViewEncryption extends JView {
 			return false;
 		}
 		
-		$this->assignRef('algorithms', $algorithms);
-		$this->assignRef('modes', $modes);
-		
+		$this->assign($values);
+		print_r($values);
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
@@ -51,9 +59,14 @@ class EveViewEncryption extends JView {
 
 		$title = JText::_('API Key Encryption');
 		JToolBarHelper::title($title, 'encryption');
+		$layout = $this->getLayout();
 		
-		JToolBarHelper::apply('encryption.configure');
-		JToolBarHelper::cancel('character.cancel');
+		if ($layout == 'config') {
+			JToolBarHelper::cancel('character.cancel', JText::_('Close'));
+		} else {
+			JToolBarHelper::apply('encryption.configure');
+			JToolBarHelper::cancel('character.cancel');
+		}
 	}
 	
 }
