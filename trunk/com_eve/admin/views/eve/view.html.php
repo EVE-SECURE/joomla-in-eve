@@ -29,8 +29,9 @@ class EveViewEve extends JView {
 	public $item;
 	
 	public function display($tpl = null) {
-		/*
-		$item = $this->get('Item');
+		$user = JFactory::getUser();
+		
+		$icons = $this->get('Icons');
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -38,8 +39,8 @@ class EveViewEve extends JView {
 			return false;
 		}
 		
-		$this->assignRef('item', $item);
-		*/		
+		$this->assignRef('icons', $icons);
+		$this->assignRef('user', $user);		
 
 		parent::display($tpl);
 		$this->_setToolbar();
