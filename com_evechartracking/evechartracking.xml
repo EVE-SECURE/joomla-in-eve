@@ -16,7 +16,7 @@
 	<install>
 		<queries>
 			<query>INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', null, '0', '1');</query>
-			<query>INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', NULL, 0, '');</query>
+			<query>INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
 		</queries>
 	</install>
 	<uninstall>
@@ -42,8 +42,6 @@
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
-			<filename>install.php</filename>
-			<filename>uninstall.php</filename>
 			<folder>models</folder>
 			<folder>views</folder>
 		</files>

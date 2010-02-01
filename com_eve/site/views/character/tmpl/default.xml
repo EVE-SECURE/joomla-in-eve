@@ -8,9 +8,8 @@
 	<state>
 		<name>Default Layout</name>
 		<description>DESC HERE</description>
-		<url>
-			<param name="characterID" type="sql" label="Character ID" description="Character ID to display" 
-				query="SELECT ch.characterID, ch.name FROM #__eve_characters AS ch LEFT JOIN #__eve_corporations AS co USING (corporationID) LEFT JOIN #__eve_alliances AS al USING (allianceID) WHERE co.owner OR al.owner ORDER BY name" key_field="characterID" value_field="name"/>
+		<url addpath="/administrator/components/com_eve/elements">
+			<param name="characterID" type="character" label="Character ID" description="Character ID to display" size="50"/>
 		</url>
 	</state>
 </metadata>

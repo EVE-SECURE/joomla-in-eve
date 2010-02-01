@@ -26,13 +26,15 @@ defined('_JEXEC') or die();
 
 function EveBuildRoute(&$query)
 {
-	if (!isset($query['view']) && !isset($query['task'])) {
+	//print_r($query);
+	if (!isset($query['entity']) && !isset($query['task'])) {
 		return array();
 	}
 	$app = JFactory::getApplication();
 	$menu = $app->getMenu();
 	$router = EveRouter::getInstance();
 	$item = $router->getItem($query);
+	
 	if (!$item && isset($query['Itemid']) && isset($query['view'])) {
 		unset($query['Itemid']);
 	}
