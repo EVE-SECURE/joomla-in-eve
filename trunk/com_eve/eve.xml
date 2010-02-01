@@ -51,8 +51,6 @@
 			<filename>eve.php</filename>
 			<filename>config.xml</filename>
 			<filename>index.html</filename>
-			<filename>install.php</filename>
-			<filename>uninstall.php</filename>
 			<folder>assets</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>

@@ -103,8 +103,8 @@ PRIMARY KEY ( `characterID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('char', 'SkillQueue', 'Character', 'Limited', NULL, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('char', 'SkillQueue', 'Character', 'Limited', 0, '');
 
 INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', null, '0', '1');

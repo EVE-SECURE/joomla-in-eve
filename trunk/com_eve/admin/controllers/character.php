@@ -54,7 +54,8 @@ class EveControllerCharacter extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
 	}
 	
-	function edit() {
+	function edit() 
+	{
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Character', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
@@ -267,4 +268,15 @@ class EveControllerCharacter extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
 	}
 	
+	public function search()
+	{
+		$model = $this->getModel('Characters', 'EveModel', array('ignore_request' => true));
+		$model->setState('filter.search', JRequest::getString('filter_search', '', 'request'));
+		$model->setState('filter.fullsearch', 0);
+		$model->setState('list.filter_order', 'invoices.number');
+		$model->setState('list.query', 'c.characterID, c.name');
+		$list = $model->getItems();
+		echo json_encode($list);
+	}
+		
 }

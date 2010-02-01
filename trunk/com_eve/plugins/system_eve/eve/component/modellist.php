@@ -24,25 +24,26 @@ class JModelList extends JModel
 	protected $__state_set	= null;
 	
 	/**
-	 * An array of totals for the lists.
+	 * Internal memory based cache array of data.
 	 *
 	 * @var		array
 	 */
-	protected $_totals		= array();
-
-	/**
-	 * Array of lists containing items.
-	 *
-	 * @var		array
-	 */
-	protected $_lists			= array();
+	protected $_cache = array();
 
 	/**
 	 * Model context string.
 	 *
 	 * @var		string
 	 */
-	protected $_context		= 'group.type';
+	protected $_context		= null;
+
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		if (!empty($config['ignore_request'])) {
+			$this->__state_set = true;
+		}
+	}
 
 	/**
 	 * Method to get a list of items.
@@ -51,22 +52,29 @@ class JModelList extends JModel
 	 */
 	public function &getItems()
 	{
-		// Get a unique key for the current list state.
-		$key = $this->_getStoreId($this->_context);
+		// Get a storage key.
+		$store = $this->_getStoreId();
 
-		// Try to load the value from internal storage.
-		if (!empty ($this->_lists[$key])) {
-			return $this->_lists[$key];
+		// Try to load the data from internal storage.
+		if (!empty($this->_cache[$store])) {
+			return $this->_cache[$store];
 		}
 
-		// Load the list.
+		// Load the list items.
 		$query	= $this->_getListQuery();
-		$rows	= $this->_getList($query->toString(), $this->getState('list.start'), $this->getState('list.limit'));
+		$items	= $this->_getList((string) $query, $this->getState('list.start'), $this->getState('list.limit'));
 
-		// Add the rows to the internal storage.
-		$this->_lists[$key] = $rows;
+		// Check for a database error.
+		if ($this->_db->getErrorNum())
+		{
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
 
-		return $this->_lists[$key];
+		// Add the items to the internal cache.
+		$this->_cache[$store] = $items;
+
+		return $this->_cache[$store];
 	}
 
 	/**
@@ -77,11 +85,22 @@ class JModelList extends JModel
 	public function &getPagination()
 	{
 		jimport('joomla.html.pagination');
+		// Get a storage key.
+		$store = $this->_getStoreId('getPagination');
+
+		// Try to load the data from internal storage.
+		if (!empty($this->_cache[$store])) {
+			return $this->_cache[$store];
+		}
 
 		// Create the pagination object.
-		$instance = new JPagination($this->getTotal(), (int)$this->getState('list.start'), (int)$this->getState('list.limit'));
+		jimport('joomla.html.pagination');
+		$page = new JPagination($this->getTotal(), (int) $this->getState('list.start'), (int) $this->getState('list.limit'));
 
-		return $instance;
+		// Add the object to the internal cache.
+		$this->_cache[$store] = $page;
+
+		return $this->_cache[$store];
 	}
 
 	/**
@@ -91,28 +110,29 @@ class JModelList extends JModel
 	 */
 	public function getTotal()
 	{
-		// Get a unique key for the current list state.
-		$key = $this->_getStoreId($this->_context);
+		// Get a storage key.
+		$store = $this->_getStoreId('getTotal');
 
-		// Try to load the value from internal storage.
-		if (!empty ($this->_totals[$key])) {
-			return $this->_totals[$key];
+		// Try to load the data from internal storage.
+		if (!empty($this->_cache[$store])) {
+			return $this->_cache[$store];
 		}
 
 		// Load the total.
 		$query = $this->_getListQuery();
-		$return = (int)$this->_getListCount($query->toString());
+		$total = (int) $this->_getListCount((string) $query);
 
 		// Check for a database error.
-		if ($this->_db->getErrorNum()) {
+		if ($this->_db->getErrorNum())
+		{
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
 
-		// Push the value into internal storage.
-		$this->_totals[$key] = $return;
+		// Add the total to the internal cache.
+		$this->_cache[$store] = $total;
 
-		return $this->_totals[$key];
+		return $this->_cache[$store];
 	}
 
 	/**
@@ -139,13 +159,13 @@ class JModelList extends JModel
 	 */
 	protected function _getStoreId($id = '')
 	{
-		// Compile the store id.
+		// Add the list state to the store id.
 		$id	.= ':'.$this->getState('list.start');
 		$id	.= ':'.$this->getState('list.limit');
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 
-		return md5($id);
+		return md5($this->_context.':'.$id);
 	}
 
 	/**
@@ -157,10 +177,32 @@ class JModelList extends JModel
 	 *
 	 * @return	void
 	 */
-	protected function _populateState()
+	protected function _populateState($ordering = null, $direction = 'ASC')
 	{
-		$this->setState('list.start', 0);
+		// If the context is set, assume that stateful lists are used.
+		if ($this->_context)
+		{
+			$app = JFactory::getApplication();
+
+			$limit = $app->getUserStateFromRequest('global.list.limit', 'limit', $app->getCfg('list_limit'));
+			$this->setState('list.limit', $limit);
+
+			$limitstart = $app->getUserStateFromRequest($this->_context.'.limitstart', 'limitstart', 0);
+			$this->setState('list.start', $limitstart);
+
+			$orderCol = $app->getUserStateFromRequest($this->_context.'.ordercol', 'filter_order', $ordering);
+			$this->setState('list.ordering', $orderCol);
+
+			$orderDirn = $app->getUserStateFromRequest($this->_context.'.orderdirn', 'filter_order_Dir', $direction);
+			$this->setState('list.direction', $orderDirn);
+		}
+		else
+		{
+			$this->setState('list.start', 0);
+			$this->setState('list.limit', 0);
+		}
 	}
+
 	
 	/**
 	 * Method to get model state variables
@@ -183,4 +225,5 @@ class JModelList extends JModel
 		return $property === null ? $this->_state : $this->_state->get($property, $default);
 	}
 	
+
 }

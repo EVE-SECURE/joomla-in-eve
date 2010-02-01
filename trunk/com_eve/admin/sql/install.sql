@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_corporations` (
 -- Table structure for table `#__eve_apicalls`
 -- 
 
-CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_apicalls` (
+CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
   `call` varchar(25) NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_apicalls` (
 -- Table structure for table `#__eve_schedule`
 -- 
 
-CREATE TABLE IF NOT EXISTS IF NOT EXISTS `#__eve_schedule` (
+CREATE TABLE IF NOT EXISTS `#__eve_schedule` (
   `id` int(11) NOT NULL auto_increment,
   `apicall` int(11) NOT NULL,
   `userID` int(11) default NULL,
@@ -165,13 +165,13 @@ CREATE TABLE IF NOT EXISTS `#__eve_components` (
 -- Data for table `#__eve_schedule`
 -- 
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('account', 'Characters', 'User', 'Limited', NULL, 0, ''),
-('char', 'CharacterSheet', 'Character', 'Limited', NULL, 0, ''),
-('corp', 'CorporationSheet', 'Character', 'Limited', NULL, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('account', 'Characters', 'User', 'Limited', 0, ''),
+('char', 'CharacterSheet', 'Character', 'Limited', 0, ''),
+('corp', 'CorporationSheet', 'Character', 'Limited', 0, '');
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `pagination`, `delay`, `params`) VALUES 
-('eve', 'AllianceList', 'None', 'None', NULL, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('eve', 'AllianceList', 'None', 'None', 0, '');
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
 (@lastid, NULL, NULL, NOW(), 1);

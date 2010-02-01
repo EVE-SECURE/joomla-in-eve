@@ -49,8 +49,6 @@
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
-			<filename>install.php</filename>
-			<filename>uninstall.php</filename>
 			<folder>models</folder>
 			<folder>sql</folder>
 			<folder>views</folder>
