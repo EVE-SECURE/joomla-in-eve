@@ -49,7 +49,6 @@ class EveViewEncryption extends JView {
 		}
 		
 		$this->assign($values);
-		print_r($values);
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
@@ -62,10 +61,10 @@ class EveViewEncryption extends JView {
 		$layout = $this->getLayout();
 		
 		if ($layout == 'config') {
-			JToolBarHelper::cancel('character.cancel', JText::_('Close'));
+			JToolBarHelper::cancel('encryption.cancel', JText::_('Close'));
 		} else {
 			JToolBarHelper::apply('encryption.configure');
-			JToolBarHelper::cancel('character.cancel');
+			JToolBarHelper::cancel('encryption.cancel');
 		}
 	}
 	

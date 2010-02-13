@@ -78,15 +78,16 @@ class EveModelEncryption extends JModel {
 	
 	public function writeConfiguration()
 	{
-		$fname = JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.'encryption.php';
-		jimport('joomla.filesystem.path');
-		/*
-		if (!$ftp['enabled'] && JPath::isOwner($fname) && !JPath::setPermissions($fname, '0644')) {
-			JError::raiseNotice('SOME_ERROR_CODE', 'Could not make configuration.php writable');
-			return;
-		}
-		*/
+		$fname = $this->getPath();
+		$app = JFactory::getApplication();
+		
 		jimport('joomla.filesystem.file');
+		jimport('joomla.filesystem.path');
+		if (!$app->getCfg('ftp_enable') && JFile::exists($fname) && 
+				JPath::isOwner($fname) && !JPath::setPermissions($fname, '0644')) {
+			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not make %s writable', $fname));
+			return false;
+		}
 		$result = JFile::write($fname, $this->getConfigContent());
 		if (!$result) {
 			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not write to %s', $fname));
@@ -134,7 +135,25 @@ class EveModelEncryption extends JModel {
 	
 	public function getPath()
 	{
-		return 'administrator'.DS.'components'.DS.'com_eve'.DS.'configs'.DS.'encryption.php';
+		return JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.'encryption.php';
+	}
+	
+	public function encryptApiKeys()
+	{
+		$dbo = $this->getDBO();
+		$query = EveFactory::getQuery($dbo);
+		$query->addQuery('userID');
+		$query->addTable('#__eve_accounts');
+		$accounts = $query->loadResultArray();
+		foreach ($accounts as $accountID) {
+			$account = EveFactory::getInstance('Account', $accountID);
+			if ($account->apiKey) {
+				$account->apiKey = base64_encode(mcrypt_encrypt($this->getState('cipher'), $this->getState('key'), 
+						$account->apiKey, $this->getState('mode'), $this->getState('iv')));
+				$account->store();
+			}
+		}
+		
 	}
 	
 }

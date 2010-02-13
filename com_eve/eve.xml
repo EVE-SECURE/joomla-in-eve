@@ -40,7 +40,7 @@
 	<administration>
 		<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
 		<submenu>
-			<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
+			<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">Overview</menu>
 			<menu view="characters" img="components/com_eve/assets/icon-16-character.png">Characters</menu>
 			<menu view="corporations" img="components/com_eve/assets/icon-16-corporation.png">Corporations</menu>
 			<menu view="alliances" img="components/com_eve/assets/icon-16-alliance.png">Alliances</menu>
@@ -52,6 +52,7 @@
 			<filename>config.xml</filename>
 			<filename>index.html</filename>
 			<folder>assets</folder>
+			<folder>configs</folder>
 			<folder>controllers</folder>
 			<folder>helpers</folder>
 			<folder>models</folder>

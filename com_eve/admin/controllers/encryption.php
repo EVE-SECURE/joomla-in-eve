@@ -25,6 +25,11 @@ defined('_JEXEC') or die();
 
 class EveControllerEncryption extends EveController {
 	
+	public function cancel()
+	{
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false));
+	}
+	
 	public function configure()
 	{
 		$user = JFactory::getUser();
@@ -38,7 +43,7 @@ class EveControllerEncryption extends EveController {
 		$viewName	= 'Encryption';
 		$viewLayout	= JRequest::getCmd( 'layout', 'default' );
 
-		$view = & $this->getView($viewName, $viewType, '', array( 'base_path'=>$this->_basePath));
+		$view = & $this->getView($viewName, $viewType, '', array('base_path'=>$this->_basePath));
 		
 		$view = $this->getView('Encryption');
 		$model = $this->getModel('Encryption');
@@ -49,6 +54,9 @@ class EveControllerEncryption extends EveController {
 			$view->setLayout('default');
 			$view->display();
 			return;
+		}
+		if ($model->getState('cipher')) {
+			$model->encryptApiKeys();
 		}
 		if ($model->writeConfiguration()) {
 			$this->setRedirect(JRoute::_('index.php?option=com_eve'), JText::_('Config saved'));
