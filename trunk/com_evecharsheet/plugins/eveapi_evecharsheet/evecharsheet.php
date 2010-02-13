@@ -65,7 +65,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 	public function onRegisterCharacter($userID, $characterID) {
 		//TODO: superclass this
 		$next = new DateTime();
-		$schedule = JTable::getInstance('Schedule', 'Table');
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra('char', 'SkillQueue', $userID, $characterID);
 		if (!$schedule->id && $schedule->apicall) {
 			$schedule->next = $next->format('Y-m-d H:i:s');

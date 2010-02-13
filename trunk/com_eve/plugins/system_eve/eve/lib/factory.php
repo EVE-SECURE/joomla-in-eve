@@ -3,7 +3,7 @@ defined('_JEXEC') or die();
 
 class EveFactory {
 	static $instances = array();
-	static $config = array(
+	static $aleconfig = array(
 		'config'			=> false,
 		
 		'main.class' 		=> 'EVEOnline',
@@ -46,8 +46,8 @@ class EveFactory {
 			$params = &JComponentHelper::getParams('com_eve');
 			
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'ale'.DS.'factory.php';
-			self::$config['request.class'] = $params->get('ale_requestclass', 'Curl');
-			$instance = AleFactory::getEVEOnline(self::$config);
+			self::$aleconfig['request.class'] = $params->get('ale_requestclass', 'Curl');
+			$instance = AleFactory::getEVEOnline(self::$aleconfig);
 		}
 		return $instance;
 	}
@@ -84,6 +84,32 @@ class EveFactory {
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'acl.php';
 			$dbo = JFactory::getDBO();
 			$instance = new EveACL($dbo);
+		}
+		return $instance;
+	}
+	
+	public function getConfig()
+	{
+		static $instance;
+		
+		if (!isset($instance)) {
+			jimport('joomla.registry.registry');
+			$instance = new JRegistry('eve');
+
+			$names = array('encryption');
+			foreach ($names as $name) {
+				$className = 'EveConfig'.ucfirst($name);
+				if (!class_exists($className)) {
+					$fname = JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.$name.'.php';
+					if (file_exists($fname)) {
+						require_once $fname;
+					}
+				}
+				if (class_exists($className)) {
+					$config = new $className();
+					$instance->loadObject($config, $name);
+				}
+			}
 		}
 		return $instance;
 	}

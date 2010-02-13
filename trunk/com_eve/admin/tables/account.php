@@ -16,7 +16,7 @@ class EveTableAccount extends EveTable {
 	var $checked_out_time = null;
 	
 	/** @var EveEncryptor */
-	var $_encryptor = null;
+	var $_config = false;
 	
 	
 	/**
@@ -29,8 +29,8 @@ class EveTableAccount extends EveTable {
 	
 	function store($updateNulls = false) {
 		$tmp = $this->apiKey;
-		if (!is_null($this->_encryptor) && !is_null($this->apiKey)) {
-			$this->apiKey = $this->_encryptor->encrypt($this->apiKey);
+		if (!empty($this->apiKey)) {
+			$this->apiKey = $this->encrypt($this->apiKey);
 		}
 		$result = parent::store($updateNulls);
 		$this->apiKey = $tmp;
@@ -39,13 +39,36 @@ class EveTableAccount extends EveTable {
 	
 	function load($oid = null) {
 		$result = parent::load($oid);
-		if ($result && !is_null($this->_encryptor)) {
-			$this->apiKey = $this->_encryptor->decrypt($this->apiKey);
+		if ($result) {
+			$this->apiKey = $this->decrypt($this->apiKey);
 		}
 		return $result;
 	}
 	
-	public function setEncryptor($encryptor) {
-		$this->_encryptor = $encryptor;
+	public function encrypt($raw)
+	{
+		$config = EveFactory::getConfig();
+		if ($config->getValue('encryption.cipher')) {
+			$iv = base64_decode($config->getValue('encryption.iv'));
+			return base64_encode(mcrypt_encrypt($config->getValue('encryption.cipher'), $config->getValue('encryption.key'), 
+					$raw, $config->getValue('encryption.mode'), $iv));
+			
+			//return base64_encode(mcrypt_encrypt($config->method, $config->key, $raw, $config->mode, $config->iv));
+		} else {
+			return $raw;
+		}
 	}
+	
+	public function decrypt($encrypted)
+	{
+		$config = EveFactory::getConfig();
+		if ($config->getValue('encryption.cipher')) {
+			$iv = base64_decode($config->getValue('encryption.iv'));
+			return trim(mcrypt_decrypt($config->getValue('encryption.cipher'), $config->getValue('encryption.key'), 
+					base64_decode($encrypted), $config->getValue('encryption.mode'), $iv));
+		} else {
+			return $encrypted;
+		}
+	}
+	
 }
