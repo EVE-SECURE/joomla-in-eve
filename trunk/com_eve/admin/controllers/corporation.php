@@ -262,4 +262,15 @@ class EveControllerCorporation extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
 	
+	public function search()
+	{
+		$model = $this->getModel('Corporations', 'EveModel', array('ignore_request' => true));
+		$model->setState('filter.search', JRequest::getString('filter_search', '', 'request'));
+		$model->setState('filter.fullsearch', 0);
+		$model->setState('list.filter_order', 'co.corporationName');
+		$model->setState('list.query', 'co.corporationID, co.corporationName');
+		$list = $model->getItems();
+		echo json_encode($list);
+	}
+		
 }

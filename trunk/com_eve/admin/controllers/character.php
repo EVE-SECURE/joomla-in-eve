@@ -273,7 +273,7 @@ class EveControllerCharacter extends EveController {
 		$model = $this->getModel('Characters', 'EveModel', array('ignore_request' => true));
 		$model->setState('filter.search', JRequest::getString('filter_search', '', 'request'));
 		$model->setState('filter.fullsearch', 0);
-		$model->setState('list.filter_order', 'invoices.number');
+		$model->setState('list.ordering', 'c.name');
 		$model->setState('list.query', 'c.characterID, c.name');
 		$list = $model->getItems();
 		echo json_encode($list);

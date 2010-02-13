@@ -259,4 +259,14 @@ class EveControllerAlliance extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
 	
+	public function search()
+	{
+		$model = $this->getModel('Alliances', 'EveModel', array('ignore_request' => true));
+		$model->setState('filter.search', JRequest::getString('filter_search', '', 'request'));
+		$model->setState('filter.fullsearch', 0);
+		$model->setState('list.ordering', 'al.name');
+		$model->setState('list.query', 'al.allianceID, al.name');
+		$list = $model->getItems();
+		echo json_encode($list);
+	}
 }

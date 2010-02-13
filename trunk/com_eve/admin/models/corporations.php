@@ -37,6 +37,8 @@ class EveModelCorporations extends JModelList {
 	
 	protected function _getListQuery()
 	{
+		$list_query = $this->getState('list.query', 'co.*, al.name AS allianceName, al.shortName, editor.name AS editor');
+		
 		$search = $this->getState('filter.search');
 		// Create a new query object.
 		$dbo = $this->getDBO();
@@ -44,13 +46,21 @@ class EveModelCorporations extends JModelList {
 		$q->addTable('#__eve_corporations', 'co');
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
 		$q->addJoin('#__users', 'editor', 'co.checked_out=editor.id');
-		$q->addQuery('co.*');
-		$q->addQuery('editor.name AS editor');
-		$q->addQuery('al.name');
-		$q->addQuery('al.owner AS derived_owner');
+		$q->addQuery($list_query);
+
 		if ($search) {
-			$q->addWhere('co.corporationName LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$searchParts = explode(':', $search, 2);
+			$sarchVal = $this->getState('filter.fullsearch') ? '%' : '';
+			$sarchVal .= $q->getEscaped($search, true).'%';
+			if (count($searchParts) == 2) {
+				$q->addWhere('co.corporationID = '.$q->quote($searchParts[0]));
+			} elseif (is_numeric($search)) {
+				$q->addWhere('co.corporationID LIKE '.$q->Quote($sarchVal, false));
+			} else {
+				$q->addWhere('co.corporationName LIKE '.$q->Quote($sarchVal, false));
+			}
 		}
+		
 		switch ($this->getState('filter.standings')) {
 			case 'owner':
 				$q->addWhere('(co.owner OR al.owner)');
@@ -75,14 +85,10 @@ class EveModelCorporations extends JModelList {
 	protected function _getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id	.= ':'.$this->getState('list.start');
-		$id	.= ':'.$this->getState('list.limit');
-		$id	.= ':'.$this->getState('list.ordering');
-		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.standings');
 		
-		return md5($id);
+		return parent::_getStoreId($id);
 	}
 	
 	/**
@@ -102,17 +108,14 @@ class EveModelCorporations extends JModelList {
 		$context	= $this->_context.'.';
 
 		// Load the filter state.
+		$this->setState('filter.fullsearch', 1); 
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.standings', $app->getUserStateFromRequest($context.'filter.standings', 'filter_standings', '', 'word'));
 		
-		// Load the list state.
-		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
-		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
-		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'co.corporationName', 'cmd'));
-		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
-
 		// Load the parameters.
 		$this->setState('params', $params);
+		
+		return parent::_populateState('c.name');
 	}
 
 }
