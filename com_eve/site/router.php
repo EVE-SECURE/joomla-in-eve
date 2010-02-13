@@ -141,7 +141,7 @@ class EveRouter {
 			$view = $item->query['view'];
 			$itemID = $item->query['view'].'ID';
 			if (isset($this->$view)) {
-				$this->{$view}[$item->query[$itemID]] = $item;
+				$this->{$view}[intval($item->query[$itemID])] = $item;
 			}
 		}
 	}
