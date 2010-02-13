@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="API Form Layot">
+	<layout title="Api Input Layout">
 		<message>
 			<![CDATA[MESSAGE HERE]]>
 		</message>
 	</layout>
 	<state>
-		<name>API Form Layout</name>
+		<name>Default Layout</name>
 		<description>DESC HERE</description>
-		<!--url addpath="/administrator/components/com_contact/elements">
-			<param name="catid" type="category" scope="com_contact_details" default="0" label="Select Category" description="A contacts category" />
-		</url-->
 		<params>
 		</params>
 	</state>

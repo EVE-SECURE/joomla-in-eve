@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<view title="Joomla! in EVE - API Form">
-		<message>
-			<![CDATA[APIFORM]]>
-		</message>
+	<view title="API Input Form">
+		<message></message>
 	</view>
 </metadata>

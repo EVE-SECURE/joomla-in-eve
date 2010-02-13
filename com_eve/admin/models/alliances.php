@@ -37,17 +37,27 @@ class EveModelAlliances extends JModelList {
 	
 	protected function _getListQuery()
 	{
+		$list_query = $this->getState('list.query', 'al.*, editor.name AS editor');
+		
 		$search = $this->getState('filter.search');
 		$owner = $this->getState('filter.owner');
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_alliances', 'al');
-		$q->addQuery('al.*');
-		$q->addQuery('editor.name AS editor');
+		$q->addQuery($list_query);
 		$q->addJoin('#__users', 'editor', 'al.checked_out=editor.id');
 		if ($search) {
-			$q->addWhere('al.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$searchParts = explode(':', $search, 2);
+			$sarchVal = $this->getState('filter.fullsearch') ? '%' : '';
+			$sarchVal .= $q->getEscaped($search, true).'%';
+			if (count($searchParts) == 2) {
+				$q->addWhere('al.allianceID = '.$q->quote($searchParts[0]));
+			} elseif (is_numeric($search)) {
+				$q->addWhere('al.allianceID LIKE '.$q->Quote($sarchVal, false));
+			} else {
+				$q->addWhere('al.name LIKE '.$q->Quote($sarchVal, false));
+			}
 		}
 		if ($owner) {
 			$q->addWhere('al.owner');
@@ -71,14 +81,10 @@ class EveModelAlliances extends JModelList {
 	protected function _getStoreId($id = '')
 	{
 		// Compile the store id.
-		$id	.= ':'.$this->getState('list.start');
-		$id	.= ':'.$this->getState('list.limit');
-		$id	.= ':'.$this->getState('list.ordering');
-		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-		$id	.= ':'.$this->getState('filter.owner');
+		$id	.= ':'.$this->getState('filter.membersof');
 		
-		return md5($id);
+		return parent::_getStoreId($id);
 	}
 	
 	/**
@@ -98,17 +104,14 @@ class EveModelAlliances extends JModelList {
 		$context	= $this->_context.'.';
 
 		// Load the filter state.
+		$this->setState('filter.fullsearch', 1); 
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.owner', $app->getUserStateFromRequest($context.'filter.owner', 'filter_owner', 0, 'int'));
 		
 		// Load the list state.
-		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
-		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
-		$this->setState('list.ordering', $app->getUserStateFromRequest($context.'list.ordering', 'filter_order', 'al.name', 'cmd'));
-		$this->setState('list.direction', $app->getUserStateFromRequest($context.'list.direction', 'filter_order_Dir', 'ASC', 'word'));
-
-		// Load the parameters.
 		$this->setState('params', $params);
+		
+		return parent::_populateState('c.name');
 	}
 
 }

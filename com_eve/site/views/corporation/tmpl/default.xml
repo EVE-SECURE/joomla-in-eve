@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Default Layout">
+	<layout title="Corporation View Layout">
 		<message>
 			<![CDATA[MESSAGE HERE]]>
 		</message>
 	</layout>
 	<state>
-		<name>Default Layout</name>
+		<name>Corporation View Layout</name>
 		<description>DESC HERE</description>
-		<url>
-			<param name="corporationID" type="sql" label="Corporation ID" description="ID of Corporation to display"
-				query="SELECT corporationID, corporationName FROM #__eve_corporations AS c LEFT JOIN #__eve_alliances AS a USING (allianceID) WHERE a.owner OR c.owner ORDER BY corporationName" key_field="corporationID" value_field="corporationName"/>
+		<url addpath="/administrator/components/com_eve/elements">
+			<param name="corporationID" type="corporation" label="Corporation ID" description="Corporation ID to display" size="50"/>
 		</url>
 	</state>
 </metadata>
