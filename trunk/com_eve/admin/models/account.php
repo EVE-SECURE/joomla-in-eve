@@ -179,6 +179,9 @@ class EveModelAccount extends EveModel {
 			$this->setError(JText::_('Invalid userID'));
 			return false;
 		}
+		if (isset($data['apiKey']) && $data['apiKey'] == '') {
+			unset($data['apiKey']);
+		}
 		return $data;
 	}
 	

@@ -34,6 +34,11 @@ class EveViewAccount extends JView {
 		$item = $this->get('Item');
 		$apiStates = $this->get('ApiStates');;
 		
+		$config = EveFactory::getConfig();
+		if (!intval($config->getValue('encryption.showapikey'))) {
+			$item->apiKey = '';
+		}
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
