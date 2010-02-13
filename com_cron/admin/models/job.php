@@ -197,7 +197,6 @@ class CronModelJob extends JModelItem {
 				$txt[] = "$k=$v";
 			}
 			$data['params'] = implode("\n", $txt);
-			//print_r();
 		}
 
 		// Bind the data
