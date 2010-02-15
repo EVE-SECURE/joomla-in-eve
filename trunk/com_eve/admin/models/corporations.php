@@ -37,7 +37,7 @@ class EveModelCorporations extends JModelList {
 	
 	protected function _getListQuery()
 	{
-		$list_query = $this->getState('list.query', 'co.*, al.name AS allianceName, al.shortName, editor.name AS editor');
+		$list_query = $this->getState('list.query', 'co.*, al.name AS allianceName, al.shortName, al.owner AS derived_owner, editor.name AS editor');
 		
 		$search = $this->getState('filter.search');
 		// Create a new query object.
@@ -115,7 +115,7 @@ class EveModelCorporations extends JModelList {
 		// Load the parameters.
 		$this->setState('params', $params);
 		
-		return parent::_populateState('c.name');
+		return parent::_populateState('co.corporationName');
 	}
 
 }

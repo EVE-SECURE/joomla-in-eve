@@ -111,7 +111,7 @@ class EveModelAlliances extends JModelList {
 		// Load the list state.
 		$this->setState('params', $params);
 		
-		return parent::_populateState('c.name');
+		return parent::_populateState('al.name');
 	}
 
 }
