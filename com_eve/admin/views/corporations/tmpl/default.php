@@ -60,7 +60,7 @@ $userId	= $user->get('id');
 					<?php echo $this->escape($item->ticker); ?>
 				</td>
 				<td>
-					<?php echo $this->escape($item->name); ?>
+					<?php echo $this->escape($item->allianceName); ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>
