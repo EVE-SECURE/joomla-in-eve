@@ -1,0 +1,20 @@
+#summary Encrypting API keys in Database
+#labels Phase-Deploy
+
+= API Key Encryption =
+
+== Requirements ==
+
+  * mcrypt PHP module
+
+== How to ==
+  # *BACKUP #__eve_accounts table*
+  # Only for older versions: check length of apiKey field in DB. If it's only 64, change it to 255. Encrypted keys are longer.
+  # Go to Components-> EVE -> Overview
+  # Click on Encryption
+  # Select Cipher and Mode (ECB is recommended)
+  # Enter Pass Phrase
+  # Choose, if people with backend access can view API key (Account Edit Form)
+  # Confirm
+
+The component will try create new config file in administrator/com_eve/configs directory. If the directory isn't writable, you'll have to copy contents from textarea and create it manually.
