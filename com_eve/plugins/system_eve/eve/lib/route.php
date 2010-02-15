@@ -71,6 +71,10 @@ class EveRoute
 					$name = $entity.'Name';
 					$name = isset($obj->$name) ? $name : 'name';
 				}
+				if ($entity == 'alliance' && $obj->$id == 0) {
+					//corporation does not have to be in alliance
+					continue;
+				}
 				if ($sef) {
 					$url .= '&'.$entity.'ID='.$obj->$id.':'.$obj->$name;
 				} else {
