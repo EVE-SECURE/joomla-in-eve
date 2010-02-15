@@ -26,7 +26,6 @@ defined('_JEXEC') or die();
 
 function EveBuildRoute(&$query)
 {
-	//print_r($query);
 	if (!isset($query['entity']) && !isset($query['task'])) {
 		return array();
 	}
@@ -35,9 +34,10 @@ function EveBuildRoute(&$query)
 	$router = EveRouter::getInstance();
 	$item = $router->getItem($query);
 	
-	if (!$item && isset($query['Itemid']) && isset($query['view'])) {
+	if (!$item && isset($query['Itemid']) && isset($query['entity'])) {
 		unset($query['Itemid']);
 	}
+	
 	$segments = $router->getSegments($query, $item);
 	
 	if (isset($query['entity'])) {
@@ -74,6 +74,19 @@ function EveParseRoute($segments)
 	} else {
 		$vars = $item->query;
 		$view = JArrayHelper::getValue($item->query, 'view');
+	}
+	
+	if ($view == 'user') {
+		$s1 = JArrayHelper::getValue($segments, 0);
+		if (is_null($s1)) {
+			return $vars;;
+		} elseif ($s1 == 'c') {
+			$vars['view'] = $view = 'character';
+			$vars['characterID'] = JArrayHelper::getValue($segments, 1, null, 'int');
+			$segments = array_slice($segments, 2);
+		} else {
+			//TODO: route another component
+		}
 	}
 	
 	if ($view == 'alliance') {
@@ -129,9 +142,12 @@ function EveParseRoute($segments)
 class EveRouter {
 	private static $instance;
 	
+	private $user = array();
 	private $character = array();
 	private $corporation = array();
 	private $alliance = array();
+	
+	private $ownedChars = array();
 	
 	private function __construct()
 	{
@@ -139,15 +155,38 @@ class EveRouter {
 		$items = $menu->getItems('component', 'com_eve');
 		foreach ($items as $item) {
 			$view = $item->query['view'];
-			$itemID = $item->query['view'].'ID';
-			if (isset($this->$view)) {
-				$this->{$view}[intval($item->query[$itemID])] = $item;
+			if ($view == 'user') {
+				$this->{$view}[$item->id] = $item;
+			} else {
+				$itemID = $item->query['view'].'ID';
+				if (isset($this->$view)) {
+					$this->{$view}[intval($item->query[$itemID])] = $item;
+				}
 			}
+		}
+		$dbo = JFactory::getDBO();
+		$q = EveFactory::getQuery($dbo);
+		
+		$user = JFactory::getUser();
+		$id = intval($user->id);
+		$q->addTable('#__eve_characters', 'c');
+		$q->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
+		$q->addWhere('a.owner=%s', $id);
+		$q->addQuery('characterID');
+		$tmp = $q->loadResultArray();
+		foreach ($tmp as $characterID) {
+			$this->ownedChars[$characterID] = $characterID;
 		}
 	}
 	
 	public function getItem(&$query)
 	{
+		if (isset($query['characterID']) && isset($this->ownedChars[intval($query['characterID'])])) {
+			if (!empty($this->user)) {
+				return reset($this->user);
+			}
+		}
+		
 		$entities = array('character', 'corporation', 'alliance');
 		
 		foreach ($entities as $entity) {
@@ -165,7 +204,18 @@ class EveRouter {
 	public function getSegments(&$query, $item = null)
 	{
 		$segments = array();
-		$entities = array('alliance', 'corporation', 'character');
+		if (JArrayHelper::getValue($item->query, 'view') == 'user') {
+			//this is user view
+			unset($query['corporationID']);
+			unset($query['allianceID']);
+			$query['Itemid'] = $item->id;
+			$entities = array('character');
+		} elseif (JArrayHelper::getValue($item->query, 'view') == 'corporation' && !isset($query['allianceID'])) {
+			//corporation does not have to be in alliance
+			$entities = array('corporation', 'character'); 
+		} else {
+			$entities = array('alliance', 'corporation', 'character');
+		}
 		foreach ($entities as $entity) {
 			$entityID = $entity.'ID';
 			if (!isset($query[$entityID])) {

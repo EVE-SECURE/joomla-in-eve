@@ -95,6 +95,7 @@ class EvecharsheetViewCharacter extends JView {
 				$pathway->addItem($this->character->corporationName, 
 					EveRoute::_('corporation', $this->character, $this->character));
 			case 'corporation':
+			case 'user':
 				$pathway->addItem($this->character->name, 
 					EveRoute::_('character', $this->character, $this->character, $this->character));
 			case 'character':

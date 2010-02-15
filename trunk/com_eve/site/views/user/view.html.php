@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class EveViewCharacter extends JView 
+class EveViewUser extends JView 
 {
 	public function display($tpl = null)
 	{
@@ -34,27 +34,28 @@ class EveViewCharacter extends JView
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$character = $this->get('Character');
+		$user = $this->get('User');
+		$characters = $this->get('Characters');
 		$components = $this->get('Components');
-		
+
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
-				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$character->name);
+				$params->set('page_title', JText::_('Your characters'));
 			}
 		} else {
-			$params->set('page_title',	$character->name);
+			$params->set('page_title', JText::_('Your characters'));
 		}
 		$document->setTitle($params->get('page_title'));
 		
-		$this->assignRef('character', $character);
 		$this->assignRef('components', $components);
+		$this->assignRef('user', $user);
 		$this->assignRef('params', $params);
+		$this->assignRef('characters', $characters);
 		
 		parent::display();
 		$this->_setPathway();
@@ -62,23 +63,5 @@ class EveViewCharacter extends JView
 	
 	protected function _setPathway()
 	{
-		$menus = &JSite::getMenu();
-		$menu  = $menus->getActive();
-		$app = JFactory::getApplication();
-		$pathway = $app->getPathway();
-		
-		$view = JArrayHelper::getValue($menu->query, 'view');
-		switch ($view) {
-			case null:
-				$pathway->addItem($this->character->alliancenName, 
-					EveRoute::_('alliance', $this->character));
-			case 'alliance':
-				$pathway->addItem($this->character->corporationName, 
-					EveRoute::_('corporation', $this->character, $this->character));
-			case 'corporation':
-			case 'user':
-				$pathway->addItem($this->character->name, 
-					EveRoute::_('character', $this->character, $this->character, $this->character));
-		}
 	}
 }
