@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS `#__eve_accounts` (
   `userID` int(10) unsigned NOT NULL default '0',
   `owner` int(10) unsigned NOT NULL default '0',
-  `apiKey` varchar(64) NOT NULL default '',
+  `apiKey` varchar(255) NOT NULL default '',
   `apiStatus` enum('Unknown','Inactive','Invalid','Limited','Full') NOT NULL default 'Unknown',
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',

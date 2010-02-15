@@ -8,10 +8,9 @@
 	<state>
 		<name>Character Sheet Layout</name>
 		<description>DESC HERE</description>
-		<url>
-			<param name="characterID" type="sql" label="Character ID" description="Character ID to display" 
-				query="SELECT characterID, name FROM #__eve_characters WHERE userID > 0 ORDER BY name" key_field="characterID" value_field="name"/>
-		</url>		
+		<url addpath="/administrator/components/com_eve/elements">
+			<param name="characterID" type="character" label="Character ID" description="Character ID to display" size="50"/>
+		</url>
 		<params>
 		</params>
 	</state>
