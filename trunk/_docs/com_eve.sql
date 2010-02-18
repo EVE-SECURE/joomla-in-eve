@@ -110,9 +110,10 @@ CREATE TABLE IF NOT EXISTS `jos_eve_schedule` (
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `jos_eve_components`;
-CREATE TABLE `jos_eve_components` (
-  `id` varchar(50) NOT NULL,
+DROP TABLE IF EXISTS `jos_eve_sections`;
+CREATE TABLE `jos_eve_sections` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `alias` varchar(50) NOT NULL,
   `entity` varchar(50) NOT NULL,
@@ -121,6 +122,7 @@ CREATE TABLE `jos_eve_components` (
   `layout` varchar(50) NULL DEFAULT NULL,
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
+  `access` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -150,7 +152,7 @@ SET @lastid = LAST_INSERT_ID();
 INSERT INTO `jos_eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
 (@lastid, NULL, NULL, NOW(), 1);
 
-INSERT INTO `jos_eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
+INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
 ('character', 'Character', '', 'character', '', 'character', null, '0', '0'),
 ('corporation', 'Corporation', '', 'corporation', '', 'corporation', null, '0', '0'),
 ('alliance', 'Alliance', '', 'alliance', '', 'alliance', null, '0', '0');

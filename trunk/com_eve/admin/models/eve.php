@@ -35,6 +35,9 @@ class EveModelEve extends JModel {
 		$result[] = array('icon'=>'icon-48-alliance.png', 'view'=>'alliances', 'caption'=>JText::_('Alliances'));
 		$result[] = array('icon'=>'icon-48-account.png', 'view'=>'accounts', 'caption'=>JText::_('Accounts'));
 		$result[] = array('icon'=>'icon-48-schedule.png', 'view'=>'schedule', 'caption'=>JText::_('Schedule'));
+		if ($user->authorize('com_config', 'manage')) {
+			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'access', 'caption'=>JText::_('Access Control'));
+		}
 		if ($user->authorize('com_config', 'manage') && !file_exists(JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.'encryption.php')) {
 			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'encryption', 'caption'=>JText::_('API Key Encryption'));
 		}

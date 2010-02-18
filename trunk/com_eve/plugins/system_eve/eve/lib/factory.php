@@ -3,6 +3,7 @@ defined('_JEXEC') or die();
 
 class EveFactory {
 	static $instances = array();
+	static $namedInstances = array();
 	static $aleconfig = array(
 		'config'			=> false,
 		
@@ -70,11 +71,51 @@ class EveFactory {
 		
 		if (!isset(self::$instances[$_table][$id])) {
 			$instance =& JTable::getInstance($table, 'EveTable', $config);
-			$instance->load((int) $id);
+			$instance->load($id);
 			self::$instances[$_table][$id] = $instance;
 		}
 		
 		return self::$instances[$_table][$id];
+	}
+	
+	static function getInstanceByName($table, $key, $name, $config) {
+		if (!array_key_exists('dbo', $config))  {
+			$dbo = $config['dbo'] =& JFactory::getDBO();
+		}
+		$_table = strtolower($table);
+		 
+		if (!isset(self::$namedInstances[$_table])) {
+			self::$namedInstances[$_table] = array();
+		}
+		
+		if (!isset(self::$namedInstances[$_table][$name])) {
+			$instance =& JTable::getInstance($table, 'EveTable', $config);
+			$k = $this->_tbl_key;
+			
+			$instance->reset();
+	
+			$db =& $this->getDBO();
+	
+			$query = 'SELECT *'
+			. ' FROM '.$instance->_tbl
+			. ' WHERE '.$instance->$key.' = '.$db->Quote($name);
+			$db->setQuery( $query );
+	
+			if (!($result = $db->loadAssoc( ))) {
+				//$this->setError($db->getErrorMsg());
+				return false;
+			}
+			$this->bind($result);
+
+			self::$namedInstances[$_table][$name] = $instance->$k; 
+			self::$instances[$_table][$instance->$k] = $instance;
+		}
+		$id = self::$namedInstances[$_table][$name];
+		if ($id == null) {
+			return false;
+		}
+		return self::getInstance($table, $id, $config); 
+		
 	}
 	
 	function getACL() {

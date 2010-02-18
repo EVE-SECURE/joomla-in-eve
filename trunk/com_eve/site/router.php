@@ -120,7 +120,7 @@ function EveParseRoute($segments)
 	$s1 = str_replace(':', '-', $s1);
 	if ($s1) {
 		$dbo = JFactory::getDBO();
-		$query = 'SELECT * FROM #__eve_components WHERE alias='.$dbo->Quote($s1);
+		$query = 'SELECT * FROM #__eve_sections WHERE alias='.$dbo->Quote($s1);
 		$dbo->setQuery($query);
 		$component = $dbo->loadObject();
 		if (!$component) {

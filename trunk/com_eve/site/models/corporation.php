@@ -106,7 +106,7 @@ class EveModelCorporation extends JModelItem
 	{
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_components');
+		$q->addTable('#__eve_sections');
 		$q->addWhere("entity = 'corporation'");
 		$q->addWhere('published');
 		$q->addOrder('ordering');

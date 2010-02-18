@@ -27,20 +27,20 @@ class EveRoute
 {
 	private static $_components;
 	
-	protected function _getComponent($id)
+	protected function _getComponent($name)
 	{
 		if (!isset(self::$_components)) {
 			$q = EveFactory::getQuery();
-			$q->addTable('#__eve_components');
-			self::$_components = $q->loadObjectList('id');
+			$q->addTable('#__eve_sections');
+			self::$_components = $q->loadObjectList('name');
 		}
-		return self::$_components[$id]; 
+		return self::$_components[$name]; 
 	}
 	
-	static public function _($id, $alliance = null, $corporation = null, $character = null, $xhtml = true)
+	static public function _($name, $alliance = null, $corporation = null, $character = null, $xhtml = true)
 	{
 		$app = JFactory::getApplication();
-		$component = self::_getComponent($id);
+		$component = self::_getComponent($name);
 		$sef = $app->getCfg('sef');
 		if ($sef) {
 			$url = 'index.php?option=com_eve&entity='.$component->entity;
@@ -88,9 +88,9 @@ class EveRoute
 		return JRoute::_($url, $xhtml);
 	}
 	
-	static public function link($id, $attribs = null, $alliance = null, $corporation = null, $character = null)
+	static public function link($name, $attribs = null, $alliance = null, $corporation = null, $character = null)
 	{
-		$component = EveFactory::getInstance('Component', $id);
+		$component = EveFactory::getInstanceByName('section', 'name', $name);
 		$href = self::_($component, $alliance, $corporation, $character);
 		return JHTML::_('link', $url, $component->title, $attribs);
 	}
