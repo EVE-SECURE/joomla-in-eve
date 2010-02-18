@@ -148,8 +148,9 @@ CREATE TABLE IF NOT EXISTS `#__eve_schedule` (
 -- Table structure for table `#__eve_components`
 -- 
 
-CREATE TABLE IF NOT EXISTS `#__eve_components` (
-  `id` varchar(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS `#__eve_sections` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `alias` varchar(50) NOT NULL,
   `entity` varchar(50) NOT NULL,
@@ -177,10 +178,10 @@ INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `publ
 (@lastid, NULL, NULL, NOW(), 1);
 
 -- 
--- Data for table `#__eve_components`
+-- Data for table `#__eve_sections`
 -- 
 
-INSERT INTO `#__eve_components` ( `id` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
+INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
 ('character', 'Character', '', 'character', '', 'character', null, '0', '0'),
 ('corporation', 'Corporation', '', 'corporation', '', 'corporation', null, '0', '0'),
 ('alliance', 'Alliance', '', 'alliance', '', 'alliance', null, '0', '0');

@@ -40,7 +40,7 @@ defined('_JEXEC') or die();
 
 <div>
 	<?php foreach ($this->components as $component): ?>
-		<a href="<?php echo EveRoute::_($component->id, $this->character, $this->character, $this->character); ?>">
+		<a href="<?php echo EveRoute::_($component->name, $this->character, $this->character, $this->character); ?>">
 			<?php echo JText::_($component->title); ?>
 		</a>
 	<?php endforeach; ?>

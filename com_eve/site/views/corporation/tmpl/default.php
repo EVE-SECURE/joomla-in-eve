@@ -52,7 +52,7 @@ defined('_JEXEC') or die();
 
 <div>
 	<?php foreach ($this->components as $component): ?>
-		<a href="<?php echo EveRoute::_($component->id, $this->corporation, $this->corporation); ?>">
+		<a href="<?php echo EveRoute::_($component->name, $this->corporation, $this->corporation); ?>">
 			<?php echo JText::_($component->title); ?>
 		</a> <br />
 	<?php endforeach; ?>
