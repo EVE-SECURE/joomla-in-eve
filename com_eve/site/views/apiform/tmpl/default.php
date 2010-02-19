@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 <?php endif; ?>
 <div>
 <form action="<?php echo JRoute::_('index.php?option=com_eve'); ?>" method="post">
-	<input type="hidden" name="task" value="apiform" />
+	<input type="hidden" name="task" value="apiform.process" />
 	<table>
 		<?php if ($this->require_credentials): ?>
 		<tr>

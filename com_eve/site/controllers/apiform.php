@@ -25,14 +25,14 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-class EveController extends JController {
+class EveControllerApiform extends EveController {
 	
 	function __construct($config = array()) {
 		parent::__construct($config);
 		$this->registerTask('apiform', 'apiForm');
 	}
 	
-	function apiform() {
+	function process() {
 		$model = $this->getModel('Apiform');
 		if ($model->processForm($_POST)) {
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apiform&layout=success', false));

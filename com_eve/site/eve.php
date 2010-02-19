@@ -23,15 +23,16 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once(JPATH_COMPONENT.DS.'controller.php');
-
 if (!JPluginHelper::isEnabled('system', 'eve')) {
 	$app = JFactory::getApplication();
 	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
 } else {
-	$controller = new EveController();
-	$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
-	$controller->redirect();
+	$controller = EveController::getInstance('Eve');
+	if (!JError::isError($controller)) {
+		$controller->execute(JRequest::getVar('task'));
+		$controller->redirect();
+	} else {
+		$app = JFactory::getApplication();
+		$app->enqueueMessage($controller->getMessage(), 'error');
+	}
 }
-
-

@@ -122,18 +122,21 @@ function EveParseRoute($segments)
 		$dbo = JFactory::getDBO();
 		$query = 'SELECT * FROM #__eve_sections WHERE alias='.$dbo->Quote($s1);
 		$dbo->setQuery($query);
-		$component = $dbo->loadObject();
-		if (!$component) {
+		$section = $dbo->loadObject();
+		if (!$section) {
 			JError::raiseError(404, JText::_("Resource Not Found"));
 			return false;
 		}
-		$vars['option'] = 'com_eve'.$component->component;
-		if ($component->view) {
-			$vars['view'] = $component->view;
+		$vars['option'] = 'com_eve'.$section->component;
+		if ($section->view) {
+			$vars['view'] = $section->view;
 		}
-		if ($component->layout) {
-			$vars['layout'] = $component->layout;
+		if ($section->layout) {
+			$vars['layout'] = $section->layout;
 		}
+		$vars['section'] = $section->name;
+	} else {
+		$vars['section'] = $vars['view']; 
 	}
 	
 	return $vars;
