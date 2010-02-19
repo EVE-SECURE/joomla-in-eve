@@ -55,6 +55,7 @@ $gtree = $acl->get_group_children_tree( null, 'USERS', false );
 				<td><?php echo $this->pagination->getRowOffset($i); ?></td>
 				<td>
 					<?php echo JHTML::_('grid.id', $i, $item->id ); ?>
+					<input type="hidden" name="access[<?php echo $i; ?>][id]" value="<?php echo $item->id; ?>" />
 				</td>
 				<td>
 					<?php echo $item->name; ?>
@@ -67,7 +68,7 @@ $gtree = $acl->get_group_children_tree( null, 'USERS', false );
 				</td>
 				
 				<td>
-					<?php echo JHTML::_('select.genericlist', $gtree, 'access', '', 'value', 'text', $item->access); ?>
+					<?php echo JHTML::_('select.genericlist', $gtree, 'access['.$i.'][access]', '', 'value', 'text', $item->access); ?>
 				</td>
 
 			</tr>
@@ -79,5 +80,5 @@ $gtree = $acl->get_group_children_tree( null, 'USERS', false );
 	<input type="hidden" name="boxchecked" value="0" />
 	<input type="hidden" name="filter_order" value="<?php echo $this->state->get('list.ordering'); ?>" />
 	<input type="hidden" name="filter_order_Dir" value="<?php echo $this->state->get('list.direction'); ?>" />
-	<?php echo JHTML::_( 'form.token' ); ?>
+	<?php echo JHTML::_('form.token'); ?>
 </form>

@@ -116,7 +116,8 @@ class EveModelAccess extends JModelList {
 		$this->setState('params', $params);
 	}
 	
-	public function setEnabled($cid, $enabled) {
+	public function setEnabled($cid, $enabled) 
+	{
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
 		// Initialize variables
@@ -141,11 +142,32 @@ class EveModelAccess extends JModelList {
 		return true;
 	}
 	
-	public function run() {
-		JPluginHelper::importPlugin('cron', 'eve');
-		$dispatcher	=& JDispatcher::getInstance();
-		$results	= $dispatcher->trigger('onCronTick', array());
-	}
 	
+	public function save($data)
+	{
+		// Get a account row instance.
+		$id = JArrayHelper::getValue($data, 'id', null, 'int');
+		$table = EveFactory::getInstance('section', $id);
+		
+		if (!$table->bind($data)) {
+			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
+			return false;
+		}
+		
+
+		// Check the data
+		if (!$table->check()) {
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Store the data
+		if (!$table->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+		
+		return $table->id;
+	}		
 		
 }
