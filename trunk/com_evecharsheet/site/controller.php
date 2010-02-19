@@ -25,13 +25,10 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-class EvecharsheetController extends JController {
+class EvecharsheetController extends EveController {
 	
 	function __construct($config = array()) {
 		parent::__construct($config);
 	}
 	
-	function update() {
-		
-	}
 }

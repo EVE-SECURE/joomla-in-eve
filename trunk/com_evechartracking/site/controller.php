@@ -25,7 +25,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-class EvechartrackingController extends JController {
+class EvechartrackingController extends EveController {
 	
 	function __construct($config = array()) {
 		parent::__construct($config);
