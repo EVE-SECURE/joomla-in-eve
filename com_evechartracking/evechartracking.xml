@@ -15,7 +15,7 @@
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<queries>
-			<query>INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', null, '0', '1');</query>
+			<query>INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '2');</query>
 			<query>INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
 		</queries>
 	</install>

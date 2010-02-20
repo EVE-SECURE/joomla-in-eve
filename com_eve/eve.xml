@@ -26,8 +26,9 @@
 	
 	<files folder="site">
 		<filename>eve.php</filename>
-		<filename>controller.php</filename>
 		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<folder>controllers</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
