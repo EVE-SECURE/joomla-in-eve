@@ -118,8 +118,8 @@ CREATE TABLE `jos_eve_sections` (
   `alias` varchar(50) NOT NULL,
   `entity` varchar(50) NOT NULL,
   `component` varchar(50) NOT NULL,
-  `view` varchar(50) NULL DEFAULT NULL,
-  `layout` varchar(50) NULL DEFAULT NULL,
+  `view` varchar(50) NOT NULL DEFAULT '',
+  `layout` varchar(50) NOT NULL DEFAULT '',
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `access` int(11) NOT NULL default '0',
@@ -152,7 +152,7 @@ SET @lastid = LAST_INSERT_ID();
 INSERT INTO `jos_eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
 (@lastid, NULL, NULL, NOW(), 1);
 
-INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published` ) VALUES 
-('character', 'Character', '', 'character', '', 'character', null, '0', '0'),
-('corporation', 'Corporation', '', 'corporation', '', 'corporation', null, '0', '0'),
-('alliance', 'Alliance', '', 'alliance', '', 'alliance', null, '0', '0');
+INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
+('character', 'Character', '', 'character', '', 'character', '', '0', '0', '0'),
+('corporation', 'Corporation', '', 'corporation', '', 'corporation', '', '0', '0', '0'),
+('alliance', 'Alliance', '', 'alliance', '', 'alliance', '', '0', '0', '0');
