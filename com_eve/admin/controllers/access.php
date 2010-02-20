@@ -65,6 +65,12 @@ class EveControllerAccess extends EveController {
 	
 	function apply() {
 		JRequest::checkToken() or jexit('Invalid Token');
+
+		$user = JFactory::getUser();
+		if (!$user->authorize('com_config', 'manage')) {
+			$this->setRedirect(JRoute::_('index.php'), JText::_('ALERTNOTAUTH'));
+			return;
+		}
 		
 		$app	= &JFactory::getApplication();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');

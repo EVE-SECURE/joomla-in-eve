@@ -1,24 +1,90 @@
 <?php
 defined('_JEXEC') or die();
 
-define('EVE_ROLE_DIRECTOR');
-
 class EveACL extends JObject {
-	var $dbo = null;
+	protected $_section;
+	protected $_ownedCharacters;
 	
-	function __construct($dbo) {
-		$this->dbo = $dbo;
+	
+	public function setSection($section)
+	{
+		$this->_section = $section;
 	}
 	
-	function getOwnerCoroprationIDs() {
-		$q = EveFactory::getQuery($this->dbo);
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-		$q->addWhere('(co.owner OR al.owner)');
-		$q->addQuery('co.corporationID');
-		return $q->loadResultArray();
+	public function authorize()
+	{
+		$acl = JFactory::getACL();
+		$user = JFactory::getUser();
+		$result = false;
+		
+		$section = $this->getSection(); 
+		
+		if ($section) {
+			$access = $section->access; 
+			if ($section->entity == 'character') {
+				//always allow access to user's characters
+				$id = JRequest::getInt('characterID');
+				$ids = $this->getOwnedCharacterIDs();
+				if (isset($ids[$id])) {
+					return true;
+				}
+			}
+			//todo owner coporations (and alliances?)
+			if ($access > $user->get('aid', 0)) {
+				JError::raiseError(403, JText::_('ALERTNOTAUTH'));
+				return false;
+			}
+		}
+		
+		return true;
 	}
+	
+	public function getSection()
+	{
+		global $option;
+		if (!isset($this->_section)) {
+			$component = substr($option, 7);
+			$view = JRequest::getCmd('view');
+			$dbo = JFactory::getDBO();
+			$query = EveFactory::getQuery($dbo);
+			$query->addTable('#__eve_sections');
+			$query->addWhere("component = '%s' AND view = '%s'", $component, $view);
+			//TODO: check layout?
+			$section = $query->loadObject();
+			if ($section) {
+				$this->_section = $section;
+			} else {
+				$this->_section = false;
+			}
+		}
+		return $this->_section;
+	}
+	
+	public function getOwnedCharacterIDs()
+	{
+		if (!isset($this->_ownedCharacters)) {
+			$user = JFactory::getUser();
+			$id = intval($user->id);
+			$this->_ownedCharacters = array();
+			if ($id) {
+				$dbo = JFactory::getDBO();
+				$query = EveFactory::getQuery($dbo);
+				$query->addTable('#__eve_characters', 'c');
+				$query->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
+				$query->addWhere('a.owner=%s', $id);
+				$query->addQuery('characterID');
+				$tmp = $query->loadResultArray();
+				foreach ($tmp as $characterID) {
+					$this->_ownedCharacters[$characterID] = $characterID;
+				}
+			}
+		}
+		return $this->_ownedCharacters;
+	}
+	
 }
+
+
 
 $roles = array(
 'corpRoleDirector' => '1',

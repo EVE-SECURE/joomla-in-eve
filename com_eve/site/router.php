@@ -127,6 +127,8 @@ function EveParseRoute($segments)
 			JError::raiseError(404, JText::_("Resource Not Found"));
 			return false;
 		}
+		$acl = EveFactory::getACL();
+		$acl->setSection($section);
 		$vars['option'] = 'com_eve'.$section->component;
 		if ($section->view) {
 			$vars['view'] = $section->view;
@@ -167,19 +169,8 @@ class EveRouter {
 				}
 			}
 		}
-		$dbo = JFactory::getDBO();
-		$q = EveFactory::getQuery($dbo);
-		
-		$user = JFactory::getUser();
-		$id = intval($user->id);
-		$q->addTable('#__eve_characters', 'c');
-		$q->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
-		$q->addWhere('a.owner=%s', $id);
-		$q->addQuery('characterID');
-		$tmp = $q->loadResultArray();
-		foreach ($tmp as $characterID) {
-			$this->ownedChars[$characterID] = $characterID;
-		}
+		$acl = EveFactory::getACL();
+		$this->ownedChars = $acl->getOwnedCharacterIDs();
 	}
 	
 	public function getItem(&$query)
