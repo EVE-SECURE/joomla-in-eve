@@ -15,13 +15,11 @@
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<sql>
-			<file driver="mysql">sql/install.compat.sql</file>
 			<file driver="mysql" charset="utf8">sql/install.sql</file>
 		</sql>
 	</install>
 	<uninstall>
 		<sql>
-			<file driver="mysql">sql/uninstall.compat.sql</file>
 			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
 		</sql>
 	</uninstall>

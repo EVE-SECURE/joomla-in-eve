@@ -34,6 +34,7 @@ class EveViewAccess extends JView {
 	function display($tpl = null) {
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
+		$groups		= $this->get('Groups');
 		$pagination	= $this->get('Pagination');
 
 		// Check for errors.
@@ -44,6 +45,7 @@ class EveViewAccess extends JView {
 
 		$this->assignRef('state',			$state);
 		$this->assignRef('items',			$items);
+		$this->assignRef('groups',			$groups);
 		$this->assignRef('pagination',		$pagination);
 		
 		parent::display($tpl);

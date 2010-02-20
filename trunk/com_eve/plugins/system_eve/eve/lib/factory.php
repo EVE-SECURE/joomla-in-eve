@@ -123,8 +123,7 @@ class EveFactory {
 		
 		if (!isset($instance)) {
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'acl.php';
-			$dbo = JFactory::getDBO();
-			$instance = new EveACL($dbo);
+			$instance = new EveACL();
 		}
 		return $instance;
 	}

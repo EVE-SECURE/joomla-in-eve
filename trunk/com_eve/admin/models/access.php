@@ -168,6 +168,20 @@ class EveModelAccess extends JModelList {
 		}
 		
 		return $table->id;
-	}		
+	}
+	
+	public function getGroups()
+	{
+		$dbo = $this->getDBO();
+
+		$query = 'SELECT id AS value, name AS text'
+		. ' FROM #__groups'
+		. ' ORDER BY id'
+		;
+		$dbo->setQuery( $query );
+		$groups = $dbo->loadObjectList();
+		return $groups;
+		
+	}
 		
 }

@@ -113,6 +113,8 @@ class EveController extends JController {
 	
 	public function display()
 	{
+		$acl = EveFactory::getACL();
+		$acl->authorize();
 		return parent::display();
 	}
 }

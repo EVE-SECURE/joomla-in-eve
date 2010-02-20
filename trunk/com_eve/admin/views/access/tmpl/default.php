@@ -11,8 +11,6 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 JHTML::_('behavior.tooltip');
 $user	= &JFactory::getUser();
 $userId	= $user->get('id');
-$acl = JFactory::getACL();
-$gtree = $acl->get_group_children_tree( null, 'USERS', false );
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=access'); ?>" method="post" name="adminForm">
@@ -68,7 +66,7 @@ $gtree = $acl->get_group_children_tree( null, 'USERS', false );
 				</td>
 				
 				<td>
-					<?php echo JHTML::_('select.genericlist', $gtree, 'access['.$i.'][access]', '', 'value', 'text', $item->access); ?>
+					<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access); ?>
 				</td>
 
 			</tr>
