@@ -104,7 +104,8 @@ PRIMARY KEY ( `characterID` )
 
 
 INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
-('char', 'SkillQueue', 'Character', 'Limited', 0, '');
+('char', 'SkillQueue', 'Character', 'Limited', 0, ''),
+('corp', 'Titles', 'Character', 'Full', 0, '');
 
 INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');

@@ -42,7 +42,6 @@ class plgEveapiEvecharsheet extends JPlugin {
 	}
 	
 	
-	/*
 	public function corpTitles($xml, $fromCache, $options = array())
 	{
 		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
@@ -61,7 +60,7 @@ class plgEveapiEvecharsheet extends JPlugin {
 			$dbo->Execute($sql);
 		}
 	}
-	*/
+
 	public function onRegisterCharacter($userID, $characterID) {
 		//TODO: superclass this
 		$next = new DateTime();
@@ -70,6 +69,20 @@ class plgEveapiEvecharsheet extends JPlugin {
 		if (!$schedule->id && $schedule->apicall) {
 			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
+		}
+	}
+
+	public function onSetOwnerCorporation($userID, $characterID, $owner) {
+		//TODO: superclass EveapiPlugin
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
+		$schedule->loadExtra('corp', 'Titles', $userID, $characterID);
+		if ($owner && !$schedule->id && $schedule->apicall) {
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
+		if (!$owner && $schedule->id) {
+			$schedule->delete();
 		}
 	}
 	
