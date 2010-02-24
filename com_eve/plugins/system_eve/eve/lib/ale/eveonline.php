@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: eveonline.php 210 2009-07-23 18:16:20Z kovalikp $
+ * @version $Id: eveonline.php 212 2009-10-17 22:29:38Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
