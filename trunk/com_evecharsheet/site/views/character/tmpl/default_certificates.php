@@ -6,11 +6,23 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+jimport('joomla.html.pane');
+
+$this->something = $this->params->get('showcertificates') == 2;
+$pane = JPane::getInstance('sliders', array('allowAllClose' => 'true'));
+
 ?>
 <div class="evecharsheet-certificates">
 <h3><?php echo JText::_('Certificates'); ?></h3>
+<?php if ($this->something): ?>
+	<?php echo $pane->startPane("certificate-pane"); ?>
+<?php endif; ?>
 <?php foreach ($this->categories as $category): ?>
-	<h4><?php echo $category->categoryName; ?></h4>
+	<?php if ($this->something): ?>
+		<?php echo $pane->startPanel($this->escape($category->categoryName), "certificate-category-".$category->categoryID); ?>
+	<?php else: ?>
+	<h4><?php echo $this->escape($category->categoryName); ?></h4>
+	<?php endif; ?>
 	<?php if ($category->certificates): ?>
 		<table class="certificate-category">
 		<?php foreach ($category->certificates as $certificate): ?>
@@ -27,5 +39,11 @@ defined('_JEXEC') or die();
 	<?php else: ?>
 		<?php echo JText::_('No certificates in this category'); ?>
 	<?php endif; ?>
+	<?php if ($this->something): ?>
+		<?php echo $pane->endPanel(); ?>
+	<?php endif; ?>
 <?php endforeach; ?>
+<?php if ($this->something): ?>
+	<?php echo $pane->endPane(); ?>
+<?php endif; ?>
 </div>

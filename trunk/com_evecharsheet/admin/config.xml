@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<params>
-		<param name="show_owner" type="radio" label="Show Owner" description="Show owner name and his/her characters" default="0">
-			<option value="0">NO</option>
-			<option value="1">YES</option>
+		<param name="portraitsize" type="radio" default="256"
+			label="Portrait Size" description="Portrait Size">
+			<option value="64">64 x 64</option>
+			<option value="256">256 x256</option>
 		</param>
-		<param name="show_all" type="radio" label="Show All characters" description="Show all characters, including those not from owner corporation in character sheet" default="0">
-			<option value="0">NO</option>
-			<option value="1">YES</option>
+		<param name="showballance" type="radio" default="1"
+			label="Show Ballance" description="Show Account Balance.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
 		</param>
-	</params>
+		<param name="showclone" type="radio" default="1"
+			label="Show Clone" description="Show Clone Name and Grade.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showattributes" type="radio" default="1"
+			label="Show Attributes" description="Show Attributes Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showskills" type="radio" default="1"
+			label="Show Skills" description="Show Skills Table.">
+			<option value="0">No</option>
+			<option value="1">List</option>
+			<option value="2">Accordion</option>
+		</param>
+		<param name="showcertificates" type="radio" default="1"
+			label="Show Certificates" description="Show Certificates Table.">
+			<option value="0">No</option>
+			<option value="1">List</option>
+			<option value="2">Accordion</option>
+		</param>
+		<param name="showroles" type="radio" default="1"
+			label="Show Roles" description="Show Corporation Roles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showtitles" type="radio" default="1"
+			label="Show Titles" description="Show Corporation Titles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showskillqueue" type="radio" default="1"
+			label="Show Skill Queue"
+			description="Show Skill Queue.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>	</params>
 </config>

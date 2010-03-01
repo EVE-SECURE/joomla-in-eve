@@ -6,11 +6,23 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+jimport('joomla.html.pane');
+
+$this->something = $this->params->get('showskills') == 2;
+$pane = JPane::getInstance('sliders', array('allowAllClose' => 'true'));
+
 ?>
 <div class="evecharsheet-skills">
 <h3><?php echo JText::_('Skills'); ?></h3>
+<?php if ($this->something): ?>
+	<?php echo $pane->startPane("skill-pane"); ?>
+<?php endif; ?>
 <?php foreach ($this->groups as $group): ?>
-	<h4><?php echo $group->groupName; ?></h4>
+	<?php if ($this->something): ?>
+		<?php echo $pane->startPanel($this->escape($group->groupName), "skill-group-".$group->groupID); ?>
+	<?php else: ?>
+	<h4><?php echo $this->escape($group->groupName); ?></h4>
+	<?php endif; ?>
 	<?php if ($group->skills): ?>
 		<table class="skill-group">
 		<?php foreach ($group->skills as $skill): ?>
@@ -31,5 +43,11 @@ defined('_JEXEC') or die();
 	<?php else: ?>
 		<?php echo JText::_('No skills in this category'); ?>
 	<?php endif; ?>
+	<?php if ($this->something): ?>
+		<?php echo $pane->endPanel(); ?>
+	<?php endif; ?>
 <?php endforeach; ?>
+<?php if ($this->something): ?>
+	<?php echo $pane->endPane(); ?>
+<?php endif; ?>
 </div>

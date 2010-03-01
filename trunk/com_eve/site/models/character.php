@@ -51,9 +51,12 @@ class EveModelCharacter extends JModelItem
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
+		$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
 		$q->addQuery('ch.*');
 		$q->addQuery('co.corporationName', 'co.ticker AS corporationTicker');
 		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
+		$q->addQuery('owner.id AS ownerID', 'owner.name AS ownerName');
 		$q->addWhere('ch.characterID='. $id);		
 		$this->_character = $q->loadObject();
 	}

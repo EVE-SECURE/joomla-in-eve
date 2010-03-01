@@ -19,7 +19,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 <?php endif; ?>
 
 <div class="evecharsheet-heading">
-	<img src="http://img.eve.is/serv.asp?s=256&c=<?php echo $this->character->characterID; ?>" /> <br />
+	<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
 	<span><?php echo JText::_('Character Name'); ?>:</span> 
 		<?php echo $this->character->name; ?> <br />
 	<span><?php echo JText::_('Race'); ?>:</span> 
@@ -28,8 +28,10 @@ $pageClass = $this->params->get('pageclass_sfx');
 		<?php echo $this->character->gender; ?> <br />
 	<span><?php echo JText::_('Blood Line'); ?>:</span>
 		<?php echo $this->character->bloodLine; ?> <br />
-	<span><?php echo JText::_('Ballance'); ?>:</span>
-		<?php echo number_format($this->character->balance); ?> <br />
+	<?php if ($this->show('ballance')): ?>
+		<span><?php echo JText::_('Ballance'); ?>:</span>
+			<?php echo number_format($this->character->balance); ?> <br />
+	<?php endif; ?>
 	<span><?php echo JText::_('Corporation'); ?>:</span>
 		<a href="<?php echo EveRoute::_('corporation', $this->character, $this->character); ?>">
 			<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
