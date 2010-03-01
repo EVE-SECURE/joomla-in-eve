@@ -28,7 +28,6 @@ $pageClass = $this->params->get('pageclass_sfx');
 <table>
 	<tr>
 		<th><?php echo JText::_('Character Name'); ?></th>
-		<?php /* <th><?php echo JText::_('Owner'); ?></th> */ ?>
 		<?php foreach ($this->selectedColumns as $col): ?>
 			<th><?php echo JText::_($col); ?>
 		<?php endforeach; ?>
@@ -36,7 +35,6 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<?php foreach ($this->members as $member): ?>
 		<tr>
 			<td><?php echo $this->getMemberColumn($member, 'name'); ?></td>
-			<?php /* <td><?php echo $this->getMemberColumn($member, 'owner'); ?></td> */ ?>
 			<?php foreach ($this->columns as $col): ?>
 				<?php if (isset($this->selectedColumns[$col])): ?>
 					<td><?php echo $this->getMemberColumn($member, $col); ?></td>

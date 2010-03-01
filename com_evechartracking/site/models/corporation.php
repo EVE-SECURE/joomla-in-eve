@@ -68,8 +68,8 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 		$q->addQuery('st.stationName AS baseName, stationTypeID AS baseTypeID');
 		$q->addQuery('iv.typeName AS shipTypeName');
 		$q->addOrder('ch.name', 'ASC');
-		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
-		$q->addQuery('us.name AS userName');
+		$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
+		$q->addQuery('owner.name AS ownerName');
 		$q->addWhere('ch.corporationID = %s', $corporation->corporationID);
 		/*if ($limit > 0) {
 			//$q->setLimit($limit, $limitstart);
@@ -78,14 +78,17 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 	}
 	
 	function getColumns($onlyShown = false) {
-		$params = &JComponentHelper::getParams( 'com_evechartracking' );
+		$user 	= JFactory::getUser();
+		$params = &JComponentHelper::getParams('com_evechartracking');
 		
-		$availables =  array('race', 'gender', 'bloodLine', 'balance', 'startDateTime', 'title', 'baseName', 
+		$availables =  array('owner', 'race', 'gender', 'bloodLine', 'balance', 'startDateTime', 'title', 'baseName', 
 			'logonDateTime', 'logoffDateTime', 'locationName', 'shipTypeName');
 		
 		$result = array();
 		foreach ($availables as $name) {
-			if ($params->get('show_'.$name) > intval($onlyShown)) {
+			$show = $params->get('show_'.$name) > intval($onlyShown);
+			$access = $params->get('access_'.$name, 0) <= $user->get('aid');
+			if ($show && $access) {
 				$result[$name] = $name; 
 			}
 		}

@@ -57,7 +57,7 @@ class EvechartrackingViewCorporation extends JView {
 		$this->assignRef('columns', $columns);
 		$this->assignRef('selectedColumns', $selectedColumns);
 		$this->assignRef('params', $params);
-		$this->assign('members', $members);
+		$this->assignRef('members', $members);
 		
 		parent::display();
 		$this->_setPathway();
@@ -120,17 +120,12 @@ class EvechartrackingViewCorporation extends JView {
 				} else {
 					return $member->shipTypeName;
 				}
-			case 'corporationID':
-				if ($member->corporationID == 0) {
-					return '';
-				}
-				return sprintf('<a href="%s">%s</a>', JRoute::_('index.php?option=com_evechartracking&view=evechartracking&layout=corp&corporationID='.$member->corporationID), $member->corporationName);				
 			case 'owner':
 				if ($member->owner == 0) {
 					return '';
 				}
-				return sprintf('<a href="%s">%s</a>', JRoute::_('index.php?option=com_evechartracking&view=evechartracking&layout=user&owner='.$member->owner), $member->userName);				
-				case 'startDateTime':
+				return $member->ownerName;
+			case 'startDateTime':
 			case 'startDateTime':
 			case 'logonDateTime':
 			case 'logoffDateTime':
