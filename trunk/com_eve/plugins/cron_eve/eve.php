@@ -38,11 +38,13 @@ class plgCronEve extends JPlugin {
 	
 	function onCronTick() {
 		//
+		$now = JFactory::getDate();
+		
 		$dbo = JFactory::getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_schedule', 'sc');
 		$q->addJoin('#__eve_apicalls', 'ap', 'ap.id=sc.apicall');
-		$q->addWhere('next <= NOW()');
+		$q->addWhere('next <= '.$q->quote($now->toMySQL()));
 		$q->addWhere('published');
 		$q->addQuery('ap.*', 'sc.*');
 		$list = $q->loadObjectList();
