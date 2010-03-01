@@ -30,15 +30,15 @@ class EvecharsheetViewCharacter extends JView {
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		
-		$params 	= $this->get('Params');
-		$character 	= $this->get('Character');
-		$groups 	= $this->get('SkillGroups');
-		$queue 		= $this->get('Queue');
-		$categories = $this->get('CertificateCategories');
-		$attributes = $this->get('Attributes');
-		$roles 		= $this->get('Roles');
+		$params 		= $this->get('Params');
+		$character 		= $this->get('Character');
+		$groups 		= $this->get('SkillGroups');
+		$queue 			= $this->get('Queue');
+		$categories 	= $this->get('CertificateCategories');
+		$attributes 	= $this->get('Attributes');
+		$roles 			= $this->get('Roles');
 		$roleLocations 	= $this->get('RoleLocations');
-		$titles 	= $this->get('Titles');
+		$titles 		= $this->get('Titles');
 		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -71,7 +71,6 @@ class EvecharsheetViewCharacter extends JView {
 	
 	public function show($section)
 	{
-		return true;
 		return intval($this->params->get('show'.$section, 0));
 	}
 
