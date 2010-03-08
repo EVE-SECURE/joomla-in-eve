@@ -149,8 +149,8 @@ class getEvecharsheetTab extends cbTabHandler
 			<?php echo JText::_('Race'); ?>: <?php echo $this->character->race; ?> <br />
 			<?php echo JText::_('Gender'); ?>: <?php echo $this->character->gender; ?> <br />
 			<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
-			<?php if ($this->show('ballance')): ?>
-				<?php echo JText::_('Ballance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
+			<?php if ($this->show('balance')): ?>
+				<?php echo JText::_('Balance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
 			<?php endif; ?>
 			<?php echo JText::_('Corporation'); ?>: <?php echo $this->character->corporationName; ?> [<?php echo $this->character->ticker; ?>] <br />
 			<?php if ($this->show('clone')  && $this->character->cloneID): ?>

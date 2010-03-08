@@ -28,8 +28,8 @@ $pageClass = $this->params->get('pageclass_sfx');
 		<?php echo $this->character->gender; ?> <br />
 	<span><?php echo JText::_('Blood Line'); ?>:</span>
 		<?php echo $this->character->bloodLine; ?> <br />
-	<?php if ($this->show('ballance')): ?>
-		<span><?php echo JText::_('Ballance'); ?>:</span>
+	<?php if ($this->show('balance')): ?>
+		<span><?php echo JText::_('Balance'); ?>:</span>
 			<?php echo number_format($this->character->balance); ?> <br />
 	<?php endif; ?>
 	<span><?php echo JText::_('Corporation'); ?>:</span>

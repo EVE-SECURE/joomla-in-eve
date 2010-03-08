@@ -21,7 +21,7 @@
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_balance" type="radio" default="2" label="Show Wallet Ballance" description="Show/Hide the Wallet Ballance in list">
+		<param name="show_balance" type="radio" default="2" label="Show Wallet Balance" description="Show/Hide the Wallet Balance in list">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
@@ -64,7 +64,7 @@
 		<param name="@spacer" type="spacer" default="" label="" description="" />
 		<param name="access_owner" type="sql" default="0" label="Access Owner" 
 			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_balance" type="sql" default="0" label="Access Wallet Ballance" 
+		<param name="access_balance" type="sql" default="0" label="Access Wallet Balance" 
 			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
 		<param name="access_startDateTime" type="sql" default="0" label="Access Join Date" 
 			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
