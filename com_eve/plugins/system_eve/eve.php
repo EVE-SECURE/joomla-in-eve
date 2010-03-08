@@ -56,19 +56,6 @@ class  plgSystemEVE extends JPlugin {
 		if (!EveHelperIgb::isIgb()) {
 			return;
 		}
-		
-		
-		$igb_template = $this->params->get('igb_template');
-		$app->setTemplate($igb_template);
-
-		if (!EveHelperIgb::isTrusted()) {
-			$trustme = $this->params->get('trustme'); 
-			$site = JURI::base();
-			//die("eve.trustme:$site::$trustme");
-			header("eve.trustme:$site::$trustme");
-			return;
-		}
-		
 	}
 	
 
