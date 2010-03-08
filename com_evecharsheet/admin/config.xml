@@ -6,8 +6,8 @@
 			<option value="64">64 x 64</option>
 			<option value="256">256 x256</option>
 		</param>
-		<param name="showballance" type="radio" default="1"
-			label="Show Ballance" description="Show Account Balance.">
+		<param name="showbalance" type="radio" default="1"
+			label="Show Balance" description="Show Account Balance.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
