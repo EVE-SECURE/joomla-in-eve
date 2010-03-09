@@ -41,13 +41,12 @@ class EveFactory {
 			$dbo = JFactory::getDBO();
 		}
 		if (!isset($instance)) {
-			if (!class_exists('JComponentHelper')) {
-				jimport( 'joomla.application.component.helper');
-			}
+			jimport( 'joomla.application.component.helper');
 			$params = &JComponentHelper::getParams('com_eve');
 			
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'ale'.DS.'factory.php';
 			self::$aleconfig['request.class'] = $params->get('ale_requestclass', 'Curl');
+			self::$aleconfig['cache.maxDataSize'] = intval($params->get('ale_maxdatasize', 0));
 			$instance = AleFactory::getEVEOnline(self::$aleconfig);
 		}
 		return $instance;
