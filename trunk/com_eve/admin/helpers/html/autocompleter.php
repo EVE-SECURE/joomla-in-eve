@@ -8,14 +8,12 @@ defined('_JEXEC') or die();
 
 class JHtmlAutocompleter
 {
-	static protected $location = 'administrator/components/com_eve/assets/autocompleter/';
-	
 	static public function json($id, $url, $options = '{}')
 	{
 		JHTML::_('behavior.combobox');
-		JHTML::script('observer.js', self::$location, true);
-		JHTML::script('autocompleter.js', self::$location, true);
-		JHTML::stylesheet('autocompleter.css', self::$location);
+		JHTML::script('observer.js', 'media/com_eve/js/', true);
+		JHTML::script('autocompleter.js', 'media/com_eve/js/', true);
+		JHTML::stylesheet('autocompleter.css', 'media/com_eve/css/');
 		
 		$script  = "window.addEvent('domready', function(){ \n";
 		$script .= "\tvar completer = new Autocompleter.Ajax.Json($('".$id."'), '".$url."', ".$options.");\n";

@@ -120,6 +120,35 @@
 			</else>
 		</if>
 		
+		<if>
+			<equals arg1="${copy.media}" arg2="true" />
+			<then>
+			
+				<!-- copy media -->
+				<property name="component.media" value="false" override="true" />
+				<available file="${project.basedir}/${component.name}/media" type="dir" property="component.media"/>
+				<if>
+					<equals arg1="${component.media}" arg2="true" />
+					<then>
+		
+						<!-- media files -->
+						<copy todir="${testdir}/media/${component.name}" overwrite="${overwrite}">
+							<fileset dir="${project.basedir}/${component.name}/media/">
+								<include name="**"/>
+							</fileset>
+						</copy>
+						
+					</then>
+					<else>
+						<echo message="No media for ${component.name}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<echo message="Skipping media" />
+			</else>
+		</if>
+		
 	</target>
 	
 	<target name="build">

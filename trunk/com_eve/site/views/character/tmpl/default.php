@@ -6,6 +6,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
 ?>
 <?php if ($this->params->get('show_page_title')) : ?>
 <div class="componentheading<?php echo $this->params->get('pageclass_sfx'); ?>">
@@ -23,20 +24,16 @@ defined('_JEXEC') or die();
 </div>
 
 <div>
-<?php echo JText::_('Corporation'); ?>:
-	<a href="<?php echo EveRoute::_('corporation', $this->character, $this->character); ?>">
-		<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
-	</a>
+	<?php echo JText::_('Corporation'); ?>:
+		<?php echo JHTML::_('evelink.corporation', $this->character); ?>
 </div>
 
-<div>
 <?php if ($this->character->allianceID) : ?>
-	<?php echo JText::_('Alliance'); ?>:
-	<a href="<?php echo EveRoute::_('alliance', $this->character); ?>">
-		<?php echo $this->character->allianceName; ?> &lt;<?php echo $this->character->allianceShortName; ?>&gt;
-	</a>
+	<div>
+		<?php echo JText::_('Alliance'); ?>:
+			<?php echo JHTML::_('evelink.alliance', $this->character); ?>
+	</div>
 <?php endif; ?>
-</div>
 
 <div>
 	<?php foreach ($this->components as $component): ?>

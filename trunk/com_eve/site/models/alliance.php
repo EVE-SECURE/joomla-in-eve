@@ -52,7 +52,7 @@ class EveModelAlliance extends JModelItem
 		$q->addTable('#__eve_alliances', 'al');
 		$q->addJoin('#__eve_corporations', 'co', 'al.executorCorpID=co.corporationID');
 		$q->addQuery('al.*');
-		$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorTicker');
+		$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorCorpTicker');
 		$q->addWhere('al.allianceID='. $id);
 		$this->_alliance = $q->loadObject();
 	}

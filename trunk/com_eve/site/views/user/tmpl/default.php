@@ -6,6 +6,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
 ?>
 <?php if ($this->params->get('show_page_title')) : ?>
 <div class="componentheading<?php echo $this->params->get('pageclass_sfx'); ?>">
@@ -26,9 +27,7 @@ defined('_JEXEC') or die();
 <div>
 	<?php echo JText::_('Characters'); ?> <br />
 	<?php foreach ($this->characters as $character) : ?>
-		<a href="<?php echo EveRoute::_('character', $character, $character, $character); ?>">
-			<?php echo $character->name; ?>
-		</a> <br />
+		<?php echo JHTML::_('evelink.character', $character); ?> <br />
 	<?php endforeach; ?>
 </div>
 

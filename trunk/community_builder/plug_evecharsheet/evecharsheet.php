@@ -141,6 +141,8 @@ class getEvecharsheetTab extends cbTabHandler
 		$this->roleLocations = $this->model->getRoleLocations();
 		$this->titles = $this->model->getTitles($character->characterID);
 		
+		JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
+		
 		ob_start();
 		?>
 		<div>
