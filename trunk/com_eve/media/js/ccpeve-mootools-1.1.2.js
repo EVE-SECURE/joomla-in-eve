@@ -116,11 +116,12 @@ var CcpEveContextMenu = new Class({
 				return;
 			}
 			if ($chk(this.entities[name].click)) {
-				element.addEvent('click', this._getEvent(this.entities[name], element));
+				if (element.getTag() != 'a' || element.getProperty('href') == '#') {
+					element.addEvent('click', this._getEvent(this.entities[name], element));
+				}
 			}
 			if ($chk(this.entities[name].contextmenu)) {
 				var _actions = {};
-				//var _menu = $('contextmenu-ccpeve').clone().inject('contextmenu-ccpeve', 'after');
 				var _menu = new Element('ul', {
 					'class': this.options.menuclass,
 					}).inject(element, 'after');
@@ -197,3 +198,9 @@ var CcpEveContextMenu = new Class({
 });
 
 CcpEveContextMenu.implement(new Options);
+
+window.addEvent('domready', function() {
+	if ($chk(CCPEVE)) {
+		new CcpEveContextMenu({});
+	}
+});

@@ -6,6 +6,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
+JHTML::_('eve.contextmenu');
 $pageClass = $this->params->get('pageclass_sfx');
 ?>
 
