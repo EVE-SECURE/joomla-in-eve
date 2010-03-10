@@ -26,76 +26,70 @@ defined('_JEXEC') or die();
 
 abstract class JHTMLevelink {
 	
-	public static function character($character, $corporation = null, $alliance = null)
+	static public function character($character, $corporation = null, $alliance = null)
 	{
 		if (is_array($character)) {
+			$characterID = $character[1].'ID';
 			$characterName = $character[1].'Name';
 			$characterObj = $character[0];
 		} else {
+			$characterID = 'characterID';
 			$characterName = isset($character->characterName) ? 'characterName' : 'name';
 			$characterObj = $character;
 		}
-		if (is_null($corporation)) {
-			$corporation = $characterObj;
-			$corporationObj = $corporation; 
-		} else if (is_array($corporation)) {
-			$corporationObj = $corporation[0];
-		} else {
-			$corporationObj = $corporation;
-		}
-		if (is_null($alliance)) {
-			$alliance = $corporationObj;
-		}
-		$html = '<a href="'.EveRoute::_('character', $alliance, $corporation, $character).'">'.
+		$class = 'ccpeve character-'.$characterObj->$characterID;
+		$html = '<a class="'.$class.'" href="'.EveRoute::character($character, $corporation, $alliance).'">'.
 					$characterObj->$characterName.
 				'</a>';
 		return $html;
 	}
 
-	public static function corporation($corporation, $alliance = null)
+	static public function corporation($corporation, $alliance = null)
 	{
 		if (is_array($corporation)) {
+			$corporationID = $corporation[1].'ID';
 			$corporationName = $corporation[1].'Name';
 			$corporationTicker = $corporation[1].'Ticker';
 			$corporationObj = $corporation[0];
 		} else {
+			$corporationID = 'corporationID';
 			$corporationName = isset($corporation->corporationName) ? 'corporationName' : 'name';
 			$corporationTicker = isset($corporation->corporationTicker) ? 'corporationTicker' : 'ticker';
 			$corporationObj = $corporation;
 		}
-		if (is_null($alliance)) {
-			$alliance = $corporationObj;
-		}
-		$html = '<a href="'.EveRoute::_('corporation', $alliance, $corporation).'">'.
+		$class = 'ccpeve corporation-'.$corporationObj->$corporationID;
+		$html = '<a class="'.$class.'" href="'.EveRoute::corporation($corporation, $alliance).'">'.
 					$corporationObj->$corporationName.' ['.$corporationObj->$corporationTicker.']'.
 				'</a>';
 		return $html;
-		
 	}
 
-	public static function alliance($alliance)
+	static public function alliance($alliance)
 	{
 		if (is_array($alliance)) {
+			$allianceID = $alliance[1].'ID';
 			$allianceName = $alliance[1].'Name';
 			$allianceShortName = $alliance[1].'ShortName';
 			$allianceObj = $alliance[0];
 		} else {
+			$allianceID = 'allianceID';
 			$allianceName = isset($alliance->allianceName) ? 'allianceName' : 'name';
 			$allianceShortName = isset($alliance->allianceShortName) ? 'allianceShortName' : 'shortName';
 			$allianceObj = $alliance;
 		}
-		$html = '<a href="'.EveRoute::_('alliance', $alliance).'">'.
+		$class = 'ccpeve alliance-'.$allianceObj->$allianceID;
+		$html = '<a class="'.$class.'" href="'.EveRoute::alliance($alliance).'">'.
 					$allianceObj->$allianceName.' &lt;'.$allianceObj->$allianceShortName.'&gt;'.
 				'</a>';
 		return $html;
 	}
 	
-	public static function item($item, $href = '#')
+	static public function item($item, $href = '#')
 	{
 		
 	}
 	
-	public static function ship($item, $href = '#')
+	static public function ship($item, $href = '#')
 	{
 		
 	}

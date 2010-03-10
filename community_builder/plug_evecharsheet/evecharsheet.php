@@ -142,6 +142,7 @@ class getEvecharsheetTab extends cbTabHandler
 		$this->titles = $this->model->getTitles($character->characterID);
 		
 		JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
+		JHTML::_('eve.contextmenu');
 		
 		ob_start();
 		?>

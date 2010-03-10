@@ -26,6 +26,15 @@ defined('_JEXEC') or die();
 
 abstract class JHTMLEve {
 	
+	static public function contextmenu()
+	{
+		JHTML::_('behavior.mootools');
+		JHTML::stylesheet('contextmenu.css', 'media/com_eve/css/');
+		JHTML::script('observer.js', 'media/com_eve/js/');
+		JHTML::script('contextmenu-1.1.2.js', 'media/com_eve/js/');
+		JHTML::script('ccpeve-mootools-1.1.2.js', 'media/com_eve/js/');
+	}
+	
 	static function alliancelist($name, $attribs = null, $selected = null, $idtag = false) {
 		$query = 'SELECT allianceID, name FROM #__eve_alliances ORDER BY name;';
 		$dbo = JFactory::getDBO();

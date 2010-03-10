@@ -88,10 +88,36 @@ class EveRoute
 		return JRoute::_($url, $xhtml);
 	}
 	
+	static public function character($character, $corporation = null, $alliance = null)
+	{
+		if (is_null($corporation)) {
+			$corporation = is_array($character) ? $character[0] : $character;
+		}
+		if (is_null($alliance)) {
+			$alliance = is_array($corporation) ? $corporation[0] : $corporation;
+		}
+		return self::_('character', $alliance, $corporation, $character);
+	}
+
+	static public function corporation($corporation, $alliance = null)
+	{
+		if (is_null($alliance)) {
+			$alliance = is_array($corporation) ? $corporation[0] : $corporation;
+		}
+		return self::_('corporation', $alliance, $corporation);
+	}
+
+	static public function alliance($alliance)
+	{
+		return self::_('alliance', $alliance);
+	}
+		
 	static public function link($name, $attribs = null, $alliance = null, $corporation = null, $character = null)
 	{
 		$component = EveFactory::getInstanceByName('section', 'name', $name);
 		$href = self::_($component, $alliance, $corporation, $character);
 		return JHTML::_('link', $url, $component->title, $attribs);
 	}
+	
+	
 }

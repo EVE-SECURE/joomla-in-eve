@@ -7,8 +7,9 @@
 defined('_JEXEC') or die();
 
 JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
-
+JHTML::_('eve.contextmenu');
 ?>
+
 <?php if ($this->params->get('show_page_title')) : ?>
 <div class="componentheading<?php echo $this->params->get('pageclass_sfx'); ?>">
 	<?php echo $this->escape($this->params->get('page_title')); ?>
