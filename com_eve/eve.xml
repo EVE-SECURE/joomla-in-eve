@@ -35,6 +35,18 @@
 	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_eve.ini</language>
 	</languages>
+	<media folder="media" destination="com_eve">
+		<filename>css/contextmenu-ccpeve.css</filename>
+		<filename>images/icon07_04.png</filename>
+		<filename>images/icon09_01.png</filename>
+		<filename>images/icon18_01.png</filename>
+		<filename>images/icon38_111.png</filename>
+		<filename>images/icon38_89.png</filename>
+		<filename>images/icon64_10.png</filename>
+		<filename>images/icon74_14.png</filename>
+		<filename>js/ccpeve-mootools-1.1.2.js</filename>
+		<filename>js/contextmenu-1.1.2.js</filename>
+	</media>
 	
 	<administration>
 		<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>

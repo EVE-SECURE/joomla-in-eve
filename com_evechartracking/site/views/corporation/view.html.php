@@ -29,6 +29,8 @@ class EvechartrackingViewCorporation extends JView {
 
 	public function display($tpl = null)
 	{
+		JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
+		
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		
@@ -90,7 +92,7 @@ class EvechartrackingViewCorporation extends JView {
 	function getMemberColumn(&$member, $column) {
 		switch($column) {
 			case 'name':
-				return sprintf('<a href="%s">%s</a>', EveRoute::_('character', $this->corporation, $this->corporation, $member), $member->name); 
+				return JHTML::_('evelink.character', $member, $this->corporation); 
 				break;
 			case 'baseName':
 				if ($member->baseID == 0) {

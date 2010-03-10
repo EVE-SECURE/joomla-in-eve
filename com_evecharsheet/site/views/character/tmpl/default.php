@@ -6,6 +6,7 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
+JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
 JHTML::_('stylesheet', 'character.css', 'components/com_evecharsheet/assets/');
 
 $pageClass = $this->params->get('pageclass_sfx');
@@ -33,15 +34,11 @@ $pageClass = $this->params->get('pageclass_sfx');
 			<?php echo number_format($this->character->balance); ?> <br />
 	<?php endif; ?>
 	<span><?php echo JText::_('Corporation'); ?>:</span>
-		<a href="<?php echo EveRoute::_('corporation', $this->character, $this->character); ?>">
-			<?php echo  $this->character->corporationName; ?> [<?php echo  $this->character->corporationTicker; ?>]
-		</a> <br />
+		<?php echo JHTML::_('evelink.corporation', $this->character); ?> <br />
 	
 	<?php if ($this->character->allianceID) : ?>
 		<span><?php echo JText::_('Alliance'); ?>:</span>
-			<a href="<?php echo EveRoute::_('alliance', $this->character); ?>">
-				<?php echo $this->character->allianceName; ?> &lt;<?php echo $this->character->allianceShortName; ?>&gt;
-			</a> <br />
+			<?php echo JHTML::_('evelink.alliance', $this->character); ?> <br />
 	<?php endif; ?>
 </div>
 
