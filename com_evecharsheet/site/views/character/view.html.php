@@ -31,7 +31,7 @@ class EvecharsheetViewCharacter extends JView {
 		$document = JFactory::getDocument();
 		
 		$params 		= $this->get('Params');
-		$character 		= $this->get('Character');
+		$character 		= $this->get('Item');
 		$groups 		= $this->get('SkillGroups');
 		$queue 			= $this->get('Queue');
 		$categories 	= $this->get('CertificateCategories');

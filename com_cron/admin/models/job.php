@@ -25,13 +25,6 @@ class CronModelJob extends JModelItem {
 
 	}
 
-	/**
-	 * Override to get the ad table
-	 */
-	public function &getTable()
-	{
-		return parent::getTable('Job', 'CronTable');
-	}
 
 	/**
 	 * Method to auto-populate the model state.
@@ -171,7 +164,7 @@ class CronModelJob extends JModelItem {
 		return $this->_item[$jobID];
 	}
 
-
+	
 
 	public function save($data)
 	{

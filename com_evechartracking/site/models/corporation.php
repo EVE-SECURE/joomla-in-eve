@@ -27,25 +27,17 @@ require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'corporation
 
 class EvechartrackingModelCorporation extends EveModelCorporation {
 	
-	protected $_context = 'com_evechartracking.corporation';
-	
 	protected function _populateState()
 	{
 		parent::_populateState();
 		$app = JFactory::getApplication();
-		$context = $this->_context.'.';
-		
-		$id = JRequest::getInt('corporationID');
-		$params = JComponentHelper::getParams('com_evechartracking');
-		$this->setState('params', $params);
-		
+		$context = $this->_option.'.'.$this->_context.'.';
 		$defaultColums = $this->getColumns(true);
 		if (JRequest::getInt('reset') && is_null(JRequest::getVar('selectedColumns'))) {
 			$app->setUserState($context.'selectedColumns', array());
 		}
 		$selectedColumns = $app->getUserStateFromRequest( $context.'selectedColumns', 'selectedColumns', $defaultColums, 'array' );
 		$this->setState('selectedColumns', $selectedColumns);
-		
 	}
 	
 	public function getQuery()
@@ -55,7 +47,7 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 	}
 	
 	function getMembers() {
-		$corporation = $this->getCorporation();
+		$corporation = $this->getItem();
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');

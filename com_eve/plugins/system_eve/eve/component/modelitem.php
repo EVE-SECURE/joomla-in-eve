@@ -1,15 +1,13 @@
 <?php
 /**
- * @version		$Id: modelitem.php 12189 2009-06-20 00:34:32Z eddieajau $
- * @copyright	Copyright (C) 2005 - 2009 Open Source Matters, Inc. All rights reserved.
- * @copyright	Copyright (C) 2008 - 2009 JXtended, LLC. All rights reserved.
+ * @version		$Id: modelitem.php 14570 2010-02-04 07:07:15Z eddieajau $
+ * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('JPATH_BASE') or die;
 
 jimport('joomla.application.component.model');
-jimport('joomla.database.query');
 
 /**
  * Prototype item model.
@@ -20,9 +18,6 @@ jimport('joomla.database.query');
  */
 abstract class JModelItem extends JModel
 {
-	//missing from 1.6 JModel
-	protected $__state_set	= null;
-	
 	/**
 	 * An item.
 	 *
@@ -31,11 +26,56 @@ abstract class JModelItem extends JModel
 	protected $_item = null;
 
 	/**
+	 * Model option string.
+	 *
+	 * @var		string
+	 */
+	protected $_option;
+	
+	/**
 	 * Model context string.
 	 *
 	 * @var		string
 	 */
-	 protected $_context = 'group.type';
+	protected $_context;
+	
+	protected $__state_set = false;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param	array An optional associative array of configuration settings.
+	 * @see		JModel
+	 */
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		if (!empty($config['ignore_request'])) {
+			$this->__state_set = true;
+		}
+		
+		// Check for context in config
+		if (isset($config['context'])) {
+			$this->_context = $config['context'];
+		}
+		
+		if (empty($this->_option) || empty($this->_context)) {
+			$r = null;
+			if (!preg_match('/(.*)Model(.*)/i', get_class($this), $r)) {
+				return JError::raiseError(500, 'JModel_Error_Cannot_parse_name');
+			}
+		}
+		
+		// Guess the option as the prefix, eg: OptionControllerContext
+		if (empty($this->_option)) {
+			$this->_option = 'com_'.strtolower($r[1]);
+		}
+		
+		// Guess the context as the suffix, eg: OptionControllerContext
+		if (empty($this->_context)) {
+			$this->_context = strtolower($r[2]);
+		}
+	}
 
 	/**
 	 * Method to get a store id based on model configuration state.
@@ -53,10 +93,33 @@ abstract class JModelItem extends JModel
 
 		return md5($id);
 	}
-	
+
+	/**
+	 * Method to auto-populate the model state.
+	 *
+	 * This method should only be called once per instantiation and is designed
+	 * to be called on the first call to the getState() method unless the model
+	 * configuration flag to ignore the request is set.
+	 *
+	 * @return	void
+	 */
 	protected function _populateState()
 	{
-		
+		$app = &JFactory::getApplication();
+
+		// Load state from the request.
+		if (!($pk = (int) $app->getUserState($this->_option.'.'.$this->_context.'.id'))) {
+			$pk = (int) JRequest::getInt('id');
+		}
+		$this->setState($this->_context.'.id', $pk);
+
+		// Load the parameters.
+		if ($app->isSite()) {
+			$params	= $app->getParams();
+		} else {
+			$params = JComponentHelper::getParams($this->_option);
+		}
+		$this->setState('params', $params);
 	}
 
 	/**
@@ -79,5 +142,56 @@ abstract class JModelItem extends JModel
 
 		return $property === null ? $this->_state : $this->_state->get($property, $default);
 	}
+		
+	protected function _loadItem($pk = null)
+	{
+		// Get a row instance.
+		$data = false;
+		$table = &$this->getTable();
+
+		if ($table->load($pk)) {
+			$data = JArrayHelper::toObject($table->getProperties(1), 'JObject');
+		} else if ($error = $table->getError()) {
+			$this->setError($error);
+		}
+		
+		return $data;		
+	}
+		
+	public function getTable($name = null, $prefix = null, $options = array())
+	{
+		if (is_null($name)) {
+			$name = ucfirst($this->_context);
+		}
+		if (is_null($prefix)) {
+			$prefix = ucfirst(substr($this->_option, 4)).'Table'; 
+		}
+		return parent::getTable($name, $prefix, $options);
+	}
 	
+	
+	/**
+	 * Method to get processed item data.
+	 *
+	 * @param	integer	The id of the item.
+	 *
+	 * @return	mixed	Content item data object on success, false on failure.
+	 */
+	public function getItem($pk = null)
+	{
+		// Initialize variables.
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->_context.'.id');
+		$storeId = $this->_getStoreId($pk);
+		
+		if ($this->_item === null) {
+			$this->_item = array();
+		}
+		
+		if (!isset($this->_item[$storeId])) {
+			$this->_item[$storeId] = $this->_loadItem($pk);
+		}
+		
+		return $this->_item[$storeId];
+	}
+
 }

@@ -34,7 +34,7 @@ class EveViewCorporation extends JView
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$corporation = $this->get('Corporation');
+		$corporation = $this->get('Item');
 		$members = $this->get('Members');
 		$components = $this->get('Components');
 

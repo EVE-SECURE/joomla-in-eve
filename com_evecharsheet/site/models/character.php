@@ -27,8 +27,6 @@ require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.p
 
 class EvecharsheetModelCharacter extends EveModelCharacter {
 	
-	protected $_context = 'com_evecharsheet.character';
-	
 	protected function _populateState()
 	{
 		parent::_populateState();
@@ -44,7 +42,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	}
 	
 	function getQueue($characterID = null) {
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_skillqueue', 'sq');
 		$q->addJoin('invTypes', 'it', 'it.typeID=sq.typeID');
@@ -56,7 +54,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	}
 	
 	function getSkillGroups($characterID = null) {
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
 		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
@@ -90,7 +88,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	
 	function getCertificateCategories($characterID = null)
 	{
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charcertificates', 'cs');
 		$q->addJoin('crtCertificates', 'cr', 'cr.certificateID=cs.certificateID', 'inner');
@@ -113,13 +111,12 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		foreach ($certificates as $certificate) {
 			$categories[$certificate->categoryID]->certificates[] = $certificate; 
 		}
-		
 		return $categories;
 	}
 	
 	function getAttributes($characterID = null)
 	{
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charattributes', 'cc');
 		$q->addJoin('chrAttributes', 'ca', 'ca.attributeID=cc.attributeID');
@@ -134,7 +131,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	
 	function getRoles($characterID = null)
 	{
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charroles', 'cr');
 		$q->addJoin('#__eve_roles', 'ro', 'cr.roleID=ro.roleID');
@@ -157,7 +154,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	
 	function getTitles($characterID = null)
 	{
-		$character = $this->getCharacter($characterID);
+		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_chartitles', 'ch');
 		$q->addTable('#__eve_corptitles', 'co');

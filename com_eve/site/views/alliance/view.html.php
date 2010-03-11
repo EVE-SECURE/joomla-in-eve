@@ -34,7 +34,7 @@ class EveViewAlliance extends JView
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$alliance = $this->get('Alliance');
+		$alliance = $this->get('Item');
 		$members = $this->get('Members');
 		$components = $this->get('Components');
 		

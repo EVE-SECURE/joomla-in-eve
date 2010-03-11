@@ -32,10 +32,41 @@ defined('_JEXEC') or die();
 
 class getEvecharsheetTab extends cbTabHandler
 {
+	/**
+	 * Layout name
+	 *
+	 * @var		string
+	 * @access 	protected
+	 */
+	protected $_layout = 'default';
+	protected $_name = 'character';
+	protected $_option = 'com_evecharsheet';
+	
+	protected $_escape = 'htmlspecialchars';
+	protected $_charset = 'UTF-8';
+	
+	protected $_path = array(
+		'template' => array(),
+		'helper' => array()
+	);
+	
+	protected $_output = null;
+	/**
+	 * Layout extension
+	 *
+	 * @var		string
+	 * @access 	protected
+	 */
+	protected $_layoutExt = 'php';
+	
 	//Construnctor
 	public function __construct()
 	{
 		$this->cbTabHandler();
+		
+		$this->_basePath = JPATH_BASE.DS.'components'.DS.$this->_option;
+		
+		$this->_setPath('template', $this->_basePath.DS.'views'.DS.$this->_name.DS.'tmpl');
 	}
 	
 	/**
@@ -123,177 +154,188 @@ class getEvecharsheetTab extends cbTabHandler
 		$pane = JPane::getInstance();
 	}
 	
-	private function displayNone()
+	/**
+	* Adds to the search path for templates and resources.
+	*
+	* @access protected
+	* @param string|array $path The directory or stream to search.
+	*/
+	function _addPath($type, $path)
 	{
-		?>
-		No characters known
-		<?php
+		// just force to array
+		settype($path, 'array');
+
+		// loop through the path directories
+		foreach ($path as $dir)
+		{
+			// no surrounding spaces allowed!
+			$dir = trim($dir);
+
+			// add trailing separators as needed
+			if (substr($dir, -1) != DIRECTORY_SEPARATOR) {
+				// directory
+				$dir .= DIRECTORY_SEPARATOR;
+			}
+
+			// add to the top of the search dirs
+			array_unshift($this->_path[$type], $dir);
+		}
 	}
+
+	/**
+	* Sets an entire array of search paths for templates or resources.
+	*
+	* @access protected
+	* @param string $type The type of path to set, typically 'template'.
+	* @param string|array $path The new set of search paths.  If null or
+	* false, resets to the current directory only.
+	*/
+	protected function _setPath($type, $path)
+	{
+		$app = JFactory::getApplication();
+
+		// clear out the prior search dirs
+		$this->_path[$type] = array();
+
+		// actually add the user-specified directories
+		$this->_addPath($type, $path);
+
+		// always add the fallback directories as last resort
+		switch (strtolower($type))
+		{
+			case 'template':
+			{
+				// set the alternative template search dir
+				if (isset($app))
+				{
+					$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $this->_option);
+					$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->_name;
+					$this->_addPath('template', $fallback);
+				}
+			}	break;
+		}
+	}
+	
+	/**
+	 * Create the filename for a resource
+	 *
+	 * @access private
+	 * @param string 	$type  The resource type to create the filename for
+	 * @param array 	$parts An associative array of filename information
+	 * @return string The filename
+	 * @since 1.5
+	 */
+	function _createFileName($type, $parts = array())
+	{
+		$filename = '';
+
+		switch($type)
+		{
+			case 'template' :
+				$filename = strtolower($parts['name']).'.'.$this->_layoutExt;
+				break;
+
+			default :
+				$filename = strtolower($parts['name']).'.php';
+				break;
+		}
+		return $filename;
+	}
+	
+	 /**
+     * Sets the _escape() callback.
+     *
+     * @param mixed $spec The callback for _escape() to use.
+     */
+    function setEscape($spec)
+    {
+        $this->_escape = $spec;
+    }
+	
+	/**
+     * Escapes a value for output in a view script.
+     *
+     * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
+     * {@link $_encoding} setting.
+     *
+     * @param  mixed $var The output to escape.
+     * @return mixed The escaped value.
+     */
+    function escape($var)
+    {
+        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
+            return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_charset);
+        }
+
+        return call_user_func($this->_escape, $var);
+    }
+    
+	/**
+	 * Load a template file -- first look in the templates folder for an override
+	 *
+	 * @access	public
+	 * @param string $tpl The name of the template source file ...
+	 * automatically searches the template paths and compiles as needed.
+	 * @return string The output of the the template script.
+	 */
+	function loadTemplate( $tpl = null)
+	{
+		// clear prior output
+		$this->_output = null;
+
+		//create the template file name based on the layout
+		$file = isset($tpl) ? $this->_layout.'_'.$tpl : $this->_layout;
+		// clean the file name
+		$file = preg_replace('/[^A-Z0-9_\.-]/i', '', $file);
+		$tpl  = preg_replace('/[^A-Z0-9_\.-]/i', '', $tpl);
+
+		// load the template script
+		jimport('joomla.filesystem.path');
+		$filetofind	= $this->_createFileName('template', array('name' => $file));
+		$this->_template = JPath::find($this->_path['template'], $filetofind);
+
+		if ($this->_template != false)
+		{
+			// unset so as not to introduce into template scope
+			unset($tpl);
+			unset($file);
+
+			// never allow a 'this' property
+			if (isset($this->this)) {
+				unset($this->this);
+			}
+
+			// start capturing output into a buffer
+			ob_start();
+			// include the requested template filename in the local scope
+			// (this will execute the view logic).
+			include $this->_template;
+
+			// done with the requested template; get the buffer and
+			// clear it.
+			$this->_output = ob_get_contents();
+			ob_end_clean();
+
+			return $this->_output;
+		}
+		else {
+			return JError::raiseError( 500, 'Layout "' . $file . '" not found' );
+		}
+	}
+
 	
 	private function displayCharacter($character)
 	{
 		$this->character = $character;
-		$this->groups = $this->model->getSkillGroups($character->characterID);
-		$this->queue = $this->model->getQueue($character->characterID);
-		$this->categories = $this->model->getCertificateCategories($character->characterID);
-		$this->attributes = $this->model->getAttributes($character->characterID);
-		$this->roles = $this->model->getRoles($character->characterID);
+		$this->model->setCharacterID($character->characterID);
+		$this->groups = $this->model->getSkillGroups();
+		$this->queue = $this->model->getQueue();
+		$this->categories = $this->model->getCertificateCategories();
+		$this->attributes = $this->model->getAttributes();
+		$this->roles = $this->model->getRoles();
 		$this->roleLocations = $this->model->getRoleLocations();
-		$this->titles = $this->model->getTitles($character->characterID);
+		$this->titles = $this->model->getTitles();
 		
-		JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
-		JHTML::_('eve.contextmenu');
-		
-		ob_start();
-		?>
-		<div>
-			<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
-			<?php echo JText::_('Character Name'); ?>: <?php echo $this->character->name; ?> <br />
-			<?php echo JText::_('Race'); ?>: <?php echo $this->character->race; ?> <br />
-			<?php echo JText::_('Gender'); ?>: <?php echo $this->character->gender; ?> <br />
-			<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
-			<?php if ($this->show('balance')): ?>
-				<?php echo JText::_('Balance'); ?>: <?php echo number_format($this->character->balance); ?> <br />
-			<?php endif; ?>
-			<?php echo JText::_('Corporation'); ?>: <?php echo $this->character->corporationName; ?> [<?php echo $this->character->ticker; ?>] <br />
-			<?php if ($this->show('clone')  && $this->character->cloneID): ?>
-				<?php echo JText::_('Clone'); ?>: <?php echo $this->character->cloneName; ?> (<?php echo number_format($this->character->cloneSkillPoints) . ' ' . JText::_('Skill Points'); ?>)
-			<?php endif; ?>
-		</div>
-		
-		<?php if ($this->show('attributes')): ?>
-			<div>
-				<h3><?php echo JText::_('Attributes'); ?></h3>
-				<table>
-					<?php foreach ($this->attributes as $attribute): ?>
-						<tr>
-							<td><?php echo $attribute->attributeName; ?></td>
-							<td><?php echo $attribute->value; ?> + <?php echo $attribute->augmentatorValue; ?></td>
-							<td><?php echo $attribute->augmentatorName; ?></td>
-						</tr>
-					<?php endforeach; ?>
-				</table>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ($this->show('skillqueue')): ?>
-			<div>
-				<h3><?php echo JText::_('Skill Queue'); ?></h3>
-				<table>
-				<?php foreach ($this->queue as $skill): ?>
-					<tr>
-						<td>
-							<?php echo $skill->queuePosition + 1; ?>
-						</td>
-						<td class="skill-label" title="<?php echo $skill->description; ?>" >
-							<?php echo $skill->typeName; ?>
-						</td>
-						<td class="skill-level">
-							<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
-						</td>
-						<td>
-							<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>
-						</td>
-						<td>
-							<?php echo JHTML::_('date', $skill->endTime, JText::_('DATE_FORMAT_LC2')); ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-				</table>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ($this->show('skills')): ?>
-			<div>
-			<h3><?php echo JText::_('Skills'); ?></h3>
-			<?php foreach ($this->groups as $group): ?>
-				<h4><?php echo $group->groupName; ?></h4>
-				<?php if ($group->skills): ?>
-					<table class="skill-group">
-					<?php foreach ($group->skills as $skill): ?>
-						<tr>
-							<td class="skill-label" title="<?php echo $skill->description; ?>" >
-								<?php echo $skill->typeName; ?>
-							</td>
-							<td class="skill-level">
-								<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->skillpoints); ?>" />
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					</table>
-					<div>
-						<?php echo JText::sprintf('%s skills trained for total of %s skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
-						<?php echo JText::sprintf('Skill Cost %s', number_format($group->skillPrice)); ?>
-					</div>
-				<?php else: ?>
-					<?php echo JText::_('No skills in this category'); ?>
-				<?php endif; ?>
-			<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-
-		<?php if ($this->show('certificates')): ?>
-			<div>
-			<h3><?php echo JText::_('Certificates'); ?></h3>
-			<?php foreach ($this->categories as $category): ?>
-				<h4><?php echo $category->categoryName; ?></h4>
-				<?php if ($category->certificates): ?>
-					<table class="certificate-category">
-					<?php foreach ($category->certificates as $certificate): ?>
-						<tr>
-							<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
-								<?php echo $certificate->className; ?>
-							</td>
-							<td class="certificate-level">
-								<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
-							</td>
-						</tr>
-					<?php endforeach; ?>
-					</table>
-				<?php else: ?>
-					<?php echo JText::_('No certificates in this category'); ?>
-				<?php endif; ?>
-			<?php endforeach; ?>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ($this->show('roles')): ?>
-			<div>
-			<h3><?php echo JText::_('Roles'); ?></h3>
-			<table>
-				<tr>
-					<th></th>
-					<?php foreach ($this->roleLocations as $location): ?>
-						<th><?php echo JText::_($location); ?></th>
-					<?php endforeach ?>
-				<tr>
-			<?php foreach ($this->roles as $role): ?>
-				<tr>
-					<td><?php echo $role->roleName; ?></td>
-					<?php foreach ($this->roleLocations as $location): ?>
-						<td><?php echo $role->$location; ?></td>
-					<?php endforeach ?>
-				<tr>
-				
-			<?php endforeach; ?>
-			</table>
-			</div>
-		<?php endif; ?>
-		
-		<?php if ($this->show('titles')): ?>
-			<div>
-			<h3><?php echo JText::_('Titles'); ?></h3>
-			<table>
-			<?php foreach ($this->titles as $title): ?>
-				<tr>
-					<td><?php echo $title->titleName; ?></td>
-				<tr>
-			<?php endforeach; ?>
-			</table>
-			</div>
-		<?php endif; ?>
-		
-		<?php
-		return ob_get_clean();
+		return $this->loadTemplate();
 	}
 } 
