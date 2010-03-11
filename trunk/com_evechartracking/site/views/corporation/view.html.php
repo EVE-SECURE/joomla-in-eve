@@ -35,7 +35,7 @@ class EvechartrackingViewCorporation extends JView {
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$corporation = $this->get('Corporation');
+		$corporation = $this->get('Item');
 		$members = $this->get('Members');
 		$columns = $this->get('Columns');
 		$selectedColumns = $this->get('SelectedColumns');

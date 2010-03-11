@@ -28,33 +28,40 @@ jimport('joomla.application.component.model');
 
 class EveModelAlliance extends JModelItem
 {
-	protected $_alliance = null;
-	
-	protected $_context = 'com_eve.alliance';
-	
 	protected function _populateState()
 	{
 		$id = JRequest::getInt('allianceID');
-		$this->setState('alliance.allianceID', $id);
+		$this->setState('alliance.id', $id);
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
 		
 	}
 	
-	protected function _loadAlliance()
+	protected function _loadItem($id)
 	{
-		if (isset($this->_alliance)) {
-			return;
+		try {
+			$dbo = $this->getDBO();
+			$q = EveFactory::getQuery($dbo);
+			$q->addTable('#__eve_alliances', 'al');
+			$q->addJoin('#__eve_corporations', 'co', 'al.executorCorpID=co.corporationID');
+			$q->addQuery('al.*');
+			$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorCorpTicker');
+			$q->addWhere('al.allianceID='. intval($id));
+			$data = $q->loadObject();
+			
+			if ($error = $dbo->getErrorMsg()) {
+				throw new Exception($error);
+			}
+
+			if (empty($data)) {
+				throw new Exception(JText::_('Com_Eve_Error_Alliance_not_found'), 404);
+			}
+		} catch (Exception $e) {
+			$this->setError($e);
+			$data = false;
 		}
-		$id = $this->getState('alliance.allianceID');
-		$dbo = $this->getDBO();
-		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_alliances', 'al');
-		$q->addJoin('#__eve_corporations', 'co', 'al.executorCorpID=co.corporationID');
-		$q->addQuery('al.*');
-		$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorCorpTicker');
-		$q->addWhere('al.allianceID='. $id);
-		$this->_alliance = $q->loadObject();
+
+		return $data;
 	}
 	
 	public function setAllianceID($id)
@@ -63,13 +70,12 @@ class EveModelAlliance extends JModelItem
 			// Private method to auto-populate the model state.
 			$this->_populateState();
 			
-			$this->setState('alliance.allianceID', $id);
+			$this->setState('alliance.id', $id);
 			// Set the model state set flat to true.
 			
 			$this->__state_set = true;
 		} else {
-			//TODO: set error when trying to rewite allianceID
-			$this->setError('');
+			$this->setState('alliance.id', $id);
 		}
 		
 	}
@@ -80,15 +86,9 @@ class EveModelAlliance extends JModelItem
 		return $params;
 	}
 	
-	public function getAlliance()
-	{
-		$this->_loadAlliance();
-		return $this->_alliance;
-	}
-	
 	function getMembers()
 	{
-		$id = $this->getState('alliance.allianceID');
+		$id = $this->getState('alliance.id');
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_corporations');

@@ -28,37 +28,44 @@ jimport('joomla.application.component.model');
 
 class EveModelCharacter extends JModelItem
 {
-	protected $_character = null;
-	
-	protected $_context = 'com_eve.character';
-	
 	protected function _populateState()
 	{
 		$id = JRequest::getInt('characterID');
-		$this->setState('character.characterID', $id);
+		$this->setState('character.id', $id);
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
 	}
 	
-	protected function _loadCharacter()
+	protected function _loadItem($id)
 	{
-		if (isset($this->_character)) {
-			return;
+		try {
+			$dbo = $this->getDBO();
+			$q = EveFactory::getQuery($dbo);
+			$q->addTable('#__eve_characters', 'ch');
+			$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
+			$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
+			$q->addQuery('ch.*');
+			$q->addQuery('co.corporationName', 'co.ticker AS corporationTicker');
+			$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
+			$q->addQuery('owner.id AS ownerID', 'owner.name AS ownerName');
+			$q->addWhere('ch.characterID='. intval($id));
+			$data = $q->loadObject();
+			
+			if ($error = $dbo->getErrorMsg()) {
+				throw new Exception($error);
+			}
+
+			if (empty($data)) {
+				throw new Exception(JText::_('Com_Eve_Error_Character_not_found'), 404);
+			}
+		} catch (Exception $e) {
+			$this->setError($e);
+			$data = false;
 		}
-		$id = $this->getState('character.characterID');
-		$dbo = $this->getDBO();
-		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_characters', 'ch');
-		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
-		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
-		$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
-		$q->addQuery('ch.*');
-		$q->addQuery('co.corporationName', 'co.ticker AS corporationTicker');
-		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
-		$q->addQuery('owner.id AS ownerID', 'owner.name AS ownerName');
-		$q->addWhere('ch.characterID='. $id);		
-		$this->_character = $q->loadObject();
+
+		return $data;
 	}
 	
 	public function setCharacterID($id)
@@ -67,13 +74,12 @@ class EveModelCharacter extends JModelItem
 			// Private method to auto-populate the model state.
 			$this->_populateState();
 			
-			$this->setState('character.characterID', $id);
+			$this->setState('character.id', $id);
 			// Set the model state set flat to true.
 			
 			$this->__state_set = true;
 		} else {
-			//TODO: set error when trying to rewite corporationID
-			$this->setError('');
+			$this->setState('character.id', $id);
 		}
 	}
 	
@@ -81,12 +87,6 @@ class EveModelCharacter extends JModelItem
 	{
 		$params = $this->getState('params');
 		return $params;
-	}
-	
-	public function getCharacter()
-	{
-		$this->_loadCharacter();
-		return $this->_character;
 	}
 	
 	public function getComponents()

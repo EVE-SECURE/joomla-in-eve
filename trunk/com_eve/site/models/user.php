@@ -28,10 +28,6 @@ jimport('joomla.application.component.model');
 
 class EveModelUser extends JModelItem
 {
-	protected $_corporation = null;
-	
-	protected $_context = 'com_eve.user';
-	
 	protected function _populateState()
 	{
 		$user = JFactory::getUser();
@@ -40,6 +36,10 @@ class EveModelUser extends JModelItem
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
 		
+	}
+
+	protected function _loadItem($pk) {
+		return JFactory::getUser($id);
 	}
 	
 	public function setUserID($id)
@@ -63,11 +63,6 @@ class EveModelUser extends JModelItem
 	{
 		$params = $this->getState('params');
 		return $params;
-	}
-	
-	public function getUser()
-	{
-		
 	}
 	
 	function getCharacters()

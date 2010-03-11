@@ -34,7 +34,7 @@ class EveViewCharacter extends JView
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$character = $this->get('Character');
+		$character = $this->get('Item');
 		$components = $this->get('Components');
 		
 		$menus = &JSite::getMenu();

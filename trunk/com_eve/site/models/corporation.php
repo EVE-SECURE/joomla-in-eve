@@ -28,37 +28,44 @@ jimport('joomla.application.component.model');
 
 class EveModelCorporation extends JModelItem
 {
-	protected $_corporation = null;
-	
-	protected $_context = 'com_eve.corporation';
-	
 	protected function _populateState()
 	{
 		$id = JRequest::getInt('corporationID');
-		$this->setState('corporation.corporationID', $id);
+		$this->setState('corporation.id', $id);
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
 		
 	}
 	
-	protected function _loadCorporation()
+	protected function _loadItem($id)
 	{
-		if (isset($this->_corporation)) {
-			return;
+		try {
+			$dbo = $this->getDBO();
+			$q = EveFactory::getQuery($dbo);
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addJoin('staStations', 'st', 'co.stationID=st.stationID');
+			$q->addQuery('co.*');
+			$q->addQuery('ch.name AS ceoName');
+			$q->addQuery('al.name AS allianceName', 'al.shortName AS allianceShortName');
+			$q->addQuery('stationName');
+			$q->addWhere('co.corporationID='. intval($id));		
+			$data = $q->loadObject();
+			
+			if ($error = $dbo->getErrorMsg()) {
+				throw new Exception($error);
+			}
+
+			if (empty($data)) {
+				throw new Exception(JText::_('Com_Eve_Error_Corporation_not_found'), 404);
+			}
+		} catch (Exception $e) {
+			$this->setError($e);
+			$data = false;
 		}
-		$id = $this->getState('corporation.corporationID');
-		$dbo = $this->getDBO();
-		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-		$q->addJoin('staStations', 'st', 'co.stationID=st.stationID');
-		$q->addQuery('co.*');
-		$q->addQuery('ch.name AS ceoName');
-		$q->addQuery('al.name AS allianceName', 'al.shortName AS allianceShortName');
-		$q->addQuery('stationName');
-		$q->addWhere('co.corporationID='. $id);		
-		$this->_corporation = $q->loadObject();
+
+		return $data;
 	}
 	
 	public function setCorporationID($id)
@@ -67,13 +74,12 @@ class EveModelCorporation extends JModelItem
 			// Private method to auto-populate the model state.
 			$this->_populateState();
 			
-			$this->setState('corporation.corporationID', $id);
+			$this->setState('corporation.id', $id);
 			// Set the model state set flat to true.
 			
 			$this->__state_set = true;
 		} else {
-			//TODO: set error when trying to rewite corporationID
-			$this->setError('');
+			$this->setState('corporation.id', $id);
 		}
 		
 	}
@@ -84,15 +90,9 @@ class EveModelCorporation extends JModelItem
 		return $params;
 	}
 	
-	public function getCorporation()
-	{
-		$this->_loadCorporation();
-		return $this->_corporation;
-	}
-	
 	function getMembers()
 	{
-		$id = $this->getState('corporation.corporationID');
+		$id = $this->getState('corporation.id');
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_characters');

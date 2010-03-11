@@ -34,7 +34,7 @@ class EveViewUser extends JView
 		$document = JFactory::getDocument();
 		
 		$params = $this->get('Params');
-		$user = $this->get('User');
+		$user = $this->get('Item');
 		$characters = $this->get('Characters');
 		$components = $this->get('Components');
 
