@@ -24,14 +24,12 @@
 		<param name="showskills" type="radio" default="1"
 			label="Show Skills" description="Show Skills Table.">
 			<option value="0">No</option>
-			<option value="1">List</option>
-			<option value="2">Accordion</option>
+			<option value="1">Yes</option>
 		</param>
 		<param name="showcertificates" type="radio" default="1"
 			label="Show Certificates" description="Show Certificates Table.">
 			<option value="0">No</option>
-			<option value="1">List</option>
-			<option value="2">Accordion</option>
+			<option value="1">Yes</option>
 		</param>
 		<param name="showroles" type="radio" default="1"
 			label="Show Roles" description="Show Corporation Roles Table.">
@@ -48,5 +46,6 @@
 			description="Show Skill Queue.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
-		</param>	</params>
+		</param>
+	</params>
 </config>

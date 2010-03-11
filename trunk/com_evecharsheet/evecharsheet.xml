@@ -36,6 +36,22 @@
 		<language tag="en-GB">en-GB/en-GB.com_evecharsheet.ini</language>
 	</languages>
 	
+	<media folder="media" destination="com_evecharsheet">
+		<filename>css/component.css</filename>
+		<filename>images/level0.gif</filename>
+		<filename>images/level1_act.gif</filename>
+		<filename>images/level1.gif</filename>
+		<filename>images/level2_act.gif</filename>
+		<filename>images/level2.gif</filename>
+		<filename>images/level3_act.gif</filename>
+		<filename>images/level3.gif</filename>
+		<filename>images/level4_act.gif</filename>
+		<filename>images/level4.gif</filename>
+		<filename>images/level5_act.gif</filename>
+		<filename>images/level5.gif</filename>
+		<filename>js/collapsibles.js</filename>
+	</media>
+
 	<administration>
 		<menu img="components/com_eve/assets/icon-char-16.png">EVE Character Sheet</menu>
 		<languages folder="admin/language">

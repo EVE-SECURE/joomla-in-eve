@@ -7,7 +7,9 @@
 defined('_JEXEC') or die();
 
 JHTML::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'helpers'.DS.'html');
-//JHTML::_('stylesheet', 'character.css', 'components/com_evecharsheet/assets/');
+JHTML::stylesheet('component.css', 'media/com_evecharsheet/css/');
+JHTML::script('collapsibles.js', 'media/com_evecharsheet/js/');
+JHTML::_('behavior.mootools');
 JHTML::_('eve.contextmenu');
 $pageClass = $this->params->get('pageclass_sfx');
 ?>

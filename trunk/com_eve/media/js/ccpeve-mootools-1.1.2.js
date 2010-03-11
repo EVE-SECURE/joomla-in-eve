@@ -200,7 +200,7 @@ var CcpEveContextMenu = new Class({
 CcpEveContextMenu.implement(new Options);
 
 window.addEvent('domready', function() {
-	if ($chk(CCPEVE)) {
+	if (typeof CCPEVE != 'undefined') {
 		new CcpEveContextMenu({});
 	}
 });
