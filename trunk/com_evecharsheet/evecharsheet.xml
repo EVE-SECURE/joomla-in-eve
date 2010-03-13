@@ -28,7 +28,6 @@
 		<filename>evecharsheet.php</filename>
 		<filename>controller.php</filename>
 		<filename>index.html</filename>
-		<folder>assets</folder>
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>
