@@ -36,7 +36,7 @@
 	</languages>
 	
 	<administration>
-		<menu img="components/com_eve/assets/icon-char-16.png">EVE Character Tracking</menu>
+		<menu img="components/com_eve/assets/icon-16-corporation.png">EVE Character Tracking</menu>
 		<files folder="admin">
 			<filename>admin.evechartracking.php</filename>
 			<filename>config.xml</filename>

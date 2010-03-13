@@ -35,7 +35,7 @@ class EvechartrackingViewEvechartracking extends JView {
 		$document->addStyleDeclaration('.icon-32-refresh { background-image: url(templates/'.$template.'/images/toolbar/icon-32-refresh.png); }');
 		
 		$title = JText::_('EVE CHARACTER TRACKING');
-		JToolBarHelper::title($title, 'char');
+		JToolBarHelper::title($title, 'corporation');
 		JToolBarHelper::preferences('com_evechartracking', 480, 640);
 		JToolBarHelper::custom('', 'refresh', 'refresh', 'Refresh', false);
 
