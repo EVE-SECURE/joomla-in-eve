@@ -160,7 +160,8 @@ CREATE TABLE IF NOT EXISTS `#__eve_sections` (
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `access` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=utf8;
 
 -- 

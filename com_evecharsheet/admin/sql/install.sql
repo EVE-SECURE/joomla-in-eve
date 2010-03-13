@@ -107,10 +107,10 @@ INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`
 ('char', 'SkillQueue', 'Character', 'Limited', 0, ''),
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
-INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
+INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');
 
-INSERT INTO #__eve_roles (`roleID`, `roleName`) VALUES
+INSERT IGNORE INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (1, 'roleDirector'),
 -- (2, ''),
 -- (4, ''),
@@ -170,5 +170,5 @@ INSERT INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (72057594037927936, 'roleContractManager'),
 (144115188075855872, 'roleInfrastructureTacticalOfficer'),
 (288230376151711744, 'roleStarbaseCaretaker'),
-(576460752303423488, 'roleFittingManager')
+(576460752303423488, 'roleFittingManager');
 
