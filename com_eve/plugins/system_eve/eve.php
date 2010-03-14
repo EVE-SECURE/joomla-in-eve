@@ -36,7 +36,6 @@ class  plgSystemEVE extends JPlugin {
 	function onAfterInitialise() {
 		$app = JFactory::getApplication();
 		$base = JPATH_PLUGINS.DS.'system'.DS.'eve'.DS;
-		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
 		JLoader::register('EveFactory', $base.'lib'.DS.'factory.php');
 		JLoader::register('EveHelperIgb', $base.'lib'.DS.'igb.php');
 		JLoader::register('EveHelper', $base.'lib'.DS.'helper.php');
