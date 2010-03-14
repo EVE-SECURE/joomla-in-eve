@@ -1,6 +1,9 @@
 <?php
 defined('_JEXEC') or die();
 
+//add include path for character, corporation, alliance, account tables
+JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables');
+
 class EveFactory {
 	static $instances = array();
 	static $namedInstances = array();
@@ -139,7 +142,7 @@ class EveFactory {
 			foreach ($names as $name) {
 				$className = 'EveConfig'.ucfirst($name);
 				if (!class_exists($className)) {
-					$fname = JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.$name.'.php';
+					$fname = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'configs'.DS.$name.'.php';
 					if (file_exists($fname)) {
 						require_once $fname;
 					}
