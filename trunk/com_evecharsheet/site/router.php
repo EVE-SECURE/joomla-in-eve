@@ -1,119 +1,36 @@
 <?php
-class EvecharsheetRoute
-{
-	public static function character(&$item)
-	{
-		
-	}
-	
-	public static function corporation($item)
-	{
-		
-	}
-	
-	public static function owner($item)
-	{
-		
-	}
-	
-	protected static function _findItemId($needles)
-	{
-		// Prepare the reverse lookup array.
-		if (self::$lookup === null)
-		{
-			self::$lookup = array();
-
-			$component	= &JComponentHelper::getComponent('com_evecharsheet');
-			$menus		= &JApplication::getMenu('site', array());
-			$items		= $menus->getItems('component_id', $component->id);
-
-			foreach ($items as &$item)
-			{
-				if (isset($item->query) && isset($item->query['view']))
-				{
-					$view = $item->query['view'];
-					$layout = $item->query['layout'];
-					$desc = "$view.$layout";
-					if (!isset(self::$lookup[$view])) {
-						self::$lookup[$view] = array();
-					}
-					if (isset($item->query['id'])) {
-						self::$lookup[$view][$item->query['id']] = $item->id;
-					}
-				}
-			}
-		}
-
-		$match = null;
-
-		foreach ($needles as $view => $id)
-		{
-			if (isset(self::$lookup[$view]))
-			{
-				if (isset(self::$lookup[$view][$id])) {
-					return self::$lookup[$view][$id];
-				}
-			}
-		}
-
-		return null;
-	}
-}
-
+/**
+ * @version		$Id$
+ * @author		Pavol Kovalik
+ * @package		Joomla! in EVE
+ * @subpackage	Core
+ * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
+ * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
 
 function EvecharsheetBuildRoute(&$query)
 {
 	$segments = array();
-	
-	$view = JArrayHelper::getValue($query, 'view');
-	$layout = JArrayHelper::getValue($query, 'layout', 'default');
-	//urlencode();
-	
-	switch ($view.'.'.$layout) {
-		case 'sheet.default':
-			$segments[] = $query['characterID'];
-			unset($query['characterID']);
-			unset($query['layout']);
-			unset($query['view']);
-			break;
-		case 'list.owner':
-			$segments[] = 'owner';
-			$segments[] = $query['owner'];
-			unset($query['owner']);
-			unset($query['layout']);
-			unset($query['view']);
-			break;
-		case 'list.corporation':
-			$segments[] = 'corporation';
-			$segments[] = $query['corporationID'];
-			unset($query['corporationID']);
-			unset($query['layout']);
-			unset($query['view']);
-			break;
-	}
-
 	return $segments;
 }
 
 function EvecharsheetParseRoute($segments)
 {
 	$vars = array();
-	$count = count($segments);
-	if ($count == 1) {
-		$vars['view'] = 'sheet';
-		$vars['layout'] = 'default';
-		$vars['characterID'] = $segments[0];
-	} elseif ($count == 2) {
-		$vars['view'] = 'list';
-		$vars['layout'] = $segments[0];
-		if ($segments[0] == 'corporation') {
-			$key = 'corporationID';
-		} else {
-			$key = 'owner';
-		}
-		$vars[$key] = $segments[1];
-	}
-	
-
 	return $vars;
 }

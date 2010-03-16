@@ -111,10 +111,13 @@ class EveController extends JController {
 		return $filename;
 	}
 	
-	public function display()
+	public function display($cachable = false)
 	{
 		$acl = EveFactory::getACL();
-		$acl->authorize();
-		return parent::display();
+		if (!$acl->authorize()) {
+			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
+			return false;
+		}
+		return parent::display($cachable);
 	}
 }

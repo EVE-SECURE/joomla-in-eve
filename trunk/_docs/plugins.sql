@@ -12,5 +12,6 @@ INSERT INTO `jos_plugins` (`name`, `element`, `folder`, `access`, `ordering`, `p
 ('Eveapi - Wallet Journal', 'evewalletjournal', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', '');
 
 INSERT INTO `jos_plugins` (`name`, `element`, `folder`, `access`, `ordering`, `published`, `iscore`, `client_id`, `checked_out`, `checked_out_time`, `params`) VALUES
+('Search - EVE', 'eve', 'search', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', ''),
 ('Search - Character Sheet', 'evecharsheet', 'search', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', '');
 
