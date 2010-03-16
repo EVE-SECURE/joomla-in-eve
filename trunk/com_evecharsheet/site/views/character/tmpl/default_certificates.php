@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
 					<?php echo $certificate->className; ?>
 				</td>
 				<td class="certificate-level">
-					<img src="<?php echo JURI::base(); ?>components/com_evecharsheet/assets/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
+					<img src="<?php echo JURI::base(); ?>media/com_evecharsheet/images/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
 				</td>
 			</tr>
 		<?php endforeach; ?>
