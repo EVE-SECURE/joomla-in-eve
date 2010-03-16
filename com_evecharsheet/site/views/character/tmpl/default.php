@@ -24,7 +24,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 <div class="evecharsheet-heading">
 	<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
 	<span><?php echo JText::_('Character Name'); ?>:</span> 
-		<?php echo $this->character->name; ?> <br />
+		<?php echo JHTML::_('evelink.character', $this->character); ?> <br /> <br />
 	<span><?php echo JText::_('Race'); ?>:</span> 
 		<?php echo $this->character->race; ?> <br />
 	<span><?php echo JText::_('Gender'); ?>:</span>
