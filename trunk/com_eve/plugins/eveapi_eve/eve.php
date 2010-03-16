@@ -31,7 +31,7 @@ jimport('joomla.plugin.plugin');
  * @package		Joomla! in EVE		
  * @subpackage	Core
  */
-class plgEveapiEve extends JPlugin {
+class plgEveapiEve extends EveApiPlugin {
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
@@ -66,28 +66,11 @@ class plgEveapiEve extends JPlugin {
 	}
 	
 	public function onRegisterCharacter($userID, $characterID) {
-		//TODO: superclass this
-		$next = new DateTime();
-		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra('char', 'CharacterSheet', $userID, $characterID);
-		if (!$schedule->id && $schedule->apicall) {
-			$schedule->next = $next->format('Y-m-d H:i:s');
-			$schedule->store();
-		}
+		$this->_registerCharacter('char', 'CharacterSheet', $userID, $characterID);
 	}
 	
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		//TODO: superclass EveapiPlugin
-		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra('corp', 'CorporationSheet', $userID, $characterID);
-		if ($owner && !$schedule->id && $schedule->apicall) {
-			$next = new DateTime();
-			$schedule->next = $next->format('Y-m-d H:i:s');
-			$schedule->store();
-		}
-		if (!$owner && $schedule->id) {
-			$schedule->delete();
-		}
+		$this->_setOwnerCorporation('corp', 'CorporationSheet', $owner, $userID, $characterID);
 	}
 	
 	public function accountCharacters($xml, $fromCache, $options = array()) {

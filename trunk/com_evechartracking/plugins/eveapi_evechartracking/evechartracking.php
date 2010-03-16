@@ -22,7 +22,6 @@
  
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
-jimport('joomla.plugin.plugin');
 
 /**
  * Joomla! in EVE Api core plugin
@@ -31,24 +30,14 @@ jimport('joomla.plugin.plugin');
  * @package		Joomla! in EVE		
  * @subpackage	Core
  */
-class plgEveapiEvechartracking extends JPlugin {
+class plgEveapiEvechartracking extends EveApiPlugin {
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
 	
 	
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		//TODO: superclass EveapiPlugin
-		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra('corp', 'MemberTracking', $userID, $characterID);
-		if ($owner && !$schedule->id && $schedule->apicall) {
-			$next = new DateTime();
-			$schedule->next = $next->format('Y-m-d H:i:s');
-			$schedule->store();
-		}
-		if (!$owner && $schedule->id) {
-			$schedule->delete();
-		}
+		$this->_setOwnerCorporation('corp', 'MemberTracking', $owner, $userID, $characterID);
 	}
 	
 	public function corpMemberTracking($xml, $fromCache, $options = array()) {
