@@ -104,11 +104,13 @@ class EveModelCorporation extends JModelItem
 	
 	public function getComponents()
 	{
+		$user = JFactory::getUser();
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_sections');
 		$q->addWhere("entity = 'corporation'");
 		$q->addWhere('published');
+		$q->addWhere('access <='.intval($user->get('aid')));
 		$q->addOrder('ordering');
 		$result = $q->loadObjectList();
 		return $result;
