@@ -371,6 +371,10 @@ class EveModelCorporation extends EveModel {
 				$corporation = $this->getCorporation($corporationID);
 				$ceo = $this->getInstance('Character', $corporation->ceoID);
 				$account = $this->getInstance('Account', $ceo->userID);
+				if (!$account->isLoaded()) {
+					$app->enqueueMessage(JText::_('COULD NOT LOAD CEO API CREDENTIALS', $corporation->corporationName, $corporation->corporationID), 'error');
+					continue;
+				}
 				
 				$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
 				$xml = $ale->corp->MemberTracking();
