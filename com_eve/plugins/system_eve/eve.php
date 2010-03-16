@@ -40,6 +40,7 @@ class  plgSystemEVE extends JPlugin {
 		JLoader::register('EveHelperIgb', $base.'lib'.DS.'igb.php');
 		JLoader::register('EveHelper', $base.'lib'.DS.'helper.php');
 		JLoader::register('EveRoute', $base.'lib'.DS.'route.php');
+		JLoader::register('EveApiPlugin', $base.'lib'.DS.'apiplugin.php');
 		JLoader::register('EveTable', $base.'database'.DS.'table.php');
 		JLoader::register('JQuery', $base.'database'.DS.'query.php');
 		JLoader::register('EveModel', $base.'component'.DS.'model.php');

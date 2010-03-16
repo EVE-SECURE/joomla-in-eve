@@ -3,7 +3,7 @@
  * @version		$Id$
  * @author		Pavol Kovalik
  * @package		Joomla! in EVE
- * @subpackage	Character Tracking
+ * @subpackage	Core
  * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
  * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
  * This program is free software: you can redistribute it and/or modify
@@ -23,30 +23,32 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-/**
- * Joomla! in EVE Api core plugin
- *
- * @author		Pavol Kovalik  <kovalikp@gmail.com>
- * @package		Joomla! in EVE		
- * @subpackage	Core
- */
-class plgEveapiEveWalletJournal extends EveApiPlugin {
-	function __construct($subject, $config = array()) {
-		parent::__construct($subject, $config);
+jimport('joomla.plugin.plugin');
+
+class EveApiPlugin extends JPlugin 
+{
+	protected function  _registerCharacter($type, $call, $userID = null, $characterID = null, $params = null)
+	{
+		$next = new DateTime();
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
+		$schedule->loadExtra($type, $call, $userID, $characterID);
+		if (!$schedule->id && $schedule->apicall) {
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
 	}
 	
-	
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		$this->_setOwnerCorporation('corp', 'WalletJournal', $owner, $userID, $characterID);
-	}
-	
-	public function charWalletJournal($xml, $fromCache, $options = array()) {
-		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
-		foreach ($xml->result->entries->toArray() as $entry) {
-			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
-			$table->bind($entry);
-			$table->store();
-			
+	protected function  _setOwnerCorporation($type, $call, $owner, $userID = null, $characterID = null, $params = null)
+	{
+		$schedule = JTable::getInstance('Schedule', 'EveTable');
+		$schedule->loadExtra($type, $call, $userID, $characterID);
+		if ($owner && !$schedule->id && $schedule->apicall) {
+			$next = new DateTime();
+			$schedule->next = $next->format('Y-m-d H:i:s');
+			$schedule->store();
+		}
+		if (!$owner && $schedule->id) {
+			$schedule->delete();
 		}
 	}
 	
