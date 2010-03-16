@@ -11,16 +11,32 @@
 	<version>0.1</version>
 	<description>Custom registration component to allow only copr/alliance members to join site.</description>
 
+	<installfile>install.php</installfile>
+	<uninstallfile>uninstall.php</uninstallfile>
+	
+	<install>
+		<queries></queries>
+	</install>
+	<uninstall>
+		<queries></queries>
+	</uninstall>
+	
 	<files folder="site">
-	 <filename>index.html</filename>
+		<filename>index.html</filename>
 	</files>
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_everegister.ini</language>
+	</languages>
 	
 	<administration>
-	<menu>EVE Register</menu>
-	
-	 <files folder="admin">
-	  <filename>index.html</filename>
-	 </files>  
+		<menu>EVE Register</menu>
+		<files folder="admin">
+			<filename>index.html</filename>
+		</files>  
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_everegister.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_everegister.menu.ini</language>
+		</languages>
 	
 	</administration>
 </install>

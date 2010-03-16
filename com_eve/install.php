@@ -2,7 +2,7 @@
 
 $app = JFactory::getApplication();
 
-$plugins = array('eveapi_eve', 'system_eve', 'user_eve', 'cron_eve');
+$plugins = array('eveapi_eve', 'system_eve', 'search_eve', 'user_eve', 'cron_eve');
 foreach ($plugins as $plugin) {
 	$p_dir = $this->parent->getPath('source').DS.'plugins'.DS.$plugin;
 	

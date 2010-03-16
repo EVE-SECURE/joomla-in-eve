@@ -11,13 +11,14 @@ class EveACL extends JObject {
 		$this->_section = $section;
 	}
 	
-	public function authorize()
+	public function authorize($section = null)
 	{
 		$acl = JFactory::getACL();
 		$user = JFactory::getUser();
 		$result = false;
-		
-		$section = $this->getSection(); 
+		if (is_null($section)) {
+			$section = $this->getSection();
+		} 
 		
 		if ($section) {
 			$access = $section->access; 
@@ -31,7 +32,6 @@ class EveACL extends JObject {
 			}
 			//todo owner coporations (and alliances?)
 			if ($access > $user->get('aid', 0)) {
-				JError::raiseError(403, JText::_('ALERTNOTAUTH'));
 				return false;
 			}
 		}

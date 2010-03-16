@@ -91,13 +91,16 @@ class EveModelCharacter extends JModelItem
 	
 	public function getComponents()
 	{
+		$item = $this->getItem();
 		$user = JFactory::getUser();
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_sections');
 		$q->addWhere("entity = 'character'");
 		$q->addWhere('published');
-		$q->addWhere('access <='.intval($user->get('aid')));
+		if ($item->ownerID && $item->ownerID != $user->get('id')) {
+			$q->addWhere('access <='.intval($user->get('aid')));
+		}
 		$q->addOrder('ordering');
 		$result = $q->loadObjectList();
 		return $result;

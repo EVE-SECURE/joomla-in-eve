@@ -5,6 +5,7 @@ function com_uninstall() {
 		array('user', 'eve'),
 		array('cron', 'eve'),
 		array('eveapi', 'eve'),
+		array('search', 'eve'),
 		array('system', 'eve'),
 	);
 	
