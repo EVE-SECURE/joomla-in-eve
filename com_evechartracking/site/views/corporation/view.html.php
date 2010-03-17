@@ -69,7 +69,7 @@ class EvechartrackingViewCorporation extends JView {
 	{
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
-		if ($menu->component == 'com_evechartracking') {
+		if (!$menu || $menu->component == 'com_evechartracking') {
 			return;
 		}
 		$app = JFactory::getApplication();

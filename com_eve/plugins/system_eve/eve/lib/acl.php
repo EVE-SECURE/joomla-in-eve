@@ -2,62 +2,53 @@
 defined('_JEXEC') or die();
 
 class EveACL extends JObject {
-	protected $_section;
+	protected $_sections = array();
 	protected $_ownedCharacters;
 	
 	
-	public function setSection($section)
-	{
-		$this->_section = $section;
-	}
-	
-	public function authorize($section = null)
+	public function authorize($section, $entityID = null)
 	{
 		$acl = JFactory::getACL();
 		$user = JFactory::getUser();
 		$result = false;
-		if (is_null($section)) {
-			$section = $this->getSection();
+		if (!is_object($section)) {
+			$section = $this->_getSectionByName($section);
 		} 
 		
-		if ($section) {
-			$access = $section->access; 
-			if ($section->entity == 'character') {
-				//always allow access to user's characters
-				$id = JRequest::getInt('characterID');
-				$ids = $this->getOwnedCharacterIDs();
-				if (isset($ids[$id])) {
-					return true;
-				}
+		if (!$section) {
+			return false;
+		}
+		$access = $section->access; 
+		if ($section->entity == 'character') {
+			//always allow access to user's characters
+			$ids = $this->getOwnedCharacterIDs();
+			if (!is_null($entityID) && isset($ids[$entityID])) {
+				return true;
 			}
-			//todo owner coporations (and alliances?)
-			if ($access > $user->get('aid', 0)) {
-				return false;
-			}
+		}
+		//todo owner coporations (and alliances?)
+		if ($access > $user->get('aid', 0)) {
+			return false;
 		}
 		
 		return true;
 	}
 	
-	public function getSection()
+	protected function _getSectionByName($name)
 	{
-		global $option;
-		if (!isset($this->_section)) {
-			$component = substr($option, 7);
-			$view = JRequest::getCmd('view');
+		if (!isset($this->_sections[$name])) {
 			$dbo = JFactory::getDBO();
 			$query = EveFactory::getQuery($dbo);
 			$query->addTable('#__eve_sections');
-			$query->addWhere("component = '%s' AND view = '%s'", $component, $view);
-			//TODO: check layout?
+			$query->addWhere("name = '%s'", $name);
 			$section = $query->loadObject();
 			if ($section) {
-				$this->_section = $section;
+				$this->_sections[$name] = $section;
 			} else {
-				$this->_section = false;
+				$this->_sections[$name] = false;
 			}
 		}
-		return $this->_section;
+		return $this->_sections[$name];
 	}
 	
 	public function getOwnedCharacterIDs()

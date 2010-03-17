@@ -127,8 +127,6 @@ function EveParseRoute($segments)
 			JError::raiseError(404, JText::_("Resource Not Found"));
 			return false;
 		}
-		$acl = EveFactory::getACL();
-		$acl->setSection($section);
 		$vars['option'] = 'com_eve'.$section->component;
 		if ($section->view) {
 			$vars['view'] = $section->view;

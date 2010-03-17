@@ -114,10 +114,28 @@ class EveController extends JController {
 	public function display($cachable = false)
 	{
 		$acl = EveFactory::getACL();
-		if (!$acl->authorize()) {
-			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
-			return false;
+		$section = $this->getSection();
+		if ($section) {
+			$entityID = JRequest::getInt($section->entity.'ID');
+			if (!$acl->authorize($section, $entityID)) {
+				JError::raiseError(403, JText::_('ALERTNOTAUTH'));
+				return false;
+			}
 		}
 		return parent::display($cachable);
+	}
+	
+	public function getSection()
+	{
+		global $option;
+		$component = substr($option, 7);
+		$view = JRequest::getCmd('view');
+		$dbo = JFactory::getDBO();
+		$query = EveFactory::getQuery($dbo);
+		$query->addTable('#__eve_sections');
+		$query->addWhere("component = '%s' AND view = '%s'", $component, $view);
+		//TODO: check layout?
+		$section = $query->loadObject();
+		return $section;
 	}
 }

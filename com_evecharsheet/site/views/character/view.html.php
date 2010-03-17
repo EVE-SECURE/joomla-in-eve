@@ -78,7 +78,7 @@ class EvecharsheetViewCharacter extends JView {
 	{
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
-		if ($menu->component == 'com_evecharsheet') {
+		if (!$menu || $menu->component == 'com_evecharsheet') {
 			return;
 		}
 		
