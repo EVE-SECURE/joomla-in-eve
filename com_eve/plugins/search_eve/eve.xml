@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install version="1.5" type="plugin" group="search">
-	<name>Search - EVE Character Sheet</name>
+	<name>Search - EVE</name>
 	<author>Pavol Kovalik</author>
-	<creationDate>March 2009</creationDate>
-	<copyright>Copyright (C) 2009 Pavol Kovalik. All rights reserved.</copyright>
+	<creationDate>March 2010</creationDate>
+	<copyright>Copyright (C) 2010 Pavol Kovalik. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>kovalikp@gmail.com</authorEmail>
 	<authorUrl>http://www.code-box.sk</authorUrl>
 	<version>1.5</version>
-	<description>ALLOWS SEARCHING OF CHARACTER</description>
+	<description>ALLOWS SEARCHING OF EVE ENTITIES</description>
 	<files>
-		<filename plugin="evecharsheet">evecharsheet.php</filename>
+		<filename plugin="eve">eve.php</filename>
 	</files>
 	<params>
 		<param name="search_limit" type="text" size="5" default="50" label="Search Limit" description="Number of Search items to return"/>
