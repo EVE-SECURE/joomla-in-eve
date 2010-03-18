@@ -43,6 +43,7 @@ class EvewalletjournalTableWalletjournal extends JTable {
 	*/
 	function __construct( &$dbo )
 	{
+		//FIXME: duplicate entries, use refID instead of id?
 		parent::__construct( '#__eve_walletjournal', 'id', $dbo );
 	}
 	

@@ -23,12 +23,10 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.controller');
+require_once(JPATH_COMPONENT.DS.'controller.php');
 
-class EvechartrackingController extends EveController {
-	
-	public function __construct($config = array()) {
-		parent::__construct($config);
-	}
-	
-}
+$controller = new EvewalletjournalController();
+
+$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
+$controller->redirect();
+

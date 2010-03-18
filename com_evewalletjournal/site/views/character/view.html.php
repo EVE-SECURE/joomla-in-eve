@@ -3,7 +3,7 @@
  * @version		$Id$
  * @author		Pavol Kovalik
  * @package		Joomla! in EVE
- * @subpackage	Character Tracking
+ * @subpackage	Wallet Journal
  * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
  * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
  * This program is free software: you can redistribute it and/or modify
@@ -23,12 +23,29 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport('joomla.application.component.controller');
+jimport( 'joomla.application.component.view');
 
-class EvechartrackingController extends EveController {
-	
-	public function __construct($config = array()) {
-		parent::__construct($config);
+class EvewalletjournalViewCharacter extends JView 
+{
+	public $state;
+	public $items;
+	public $pagination;
+
+	function display($tpl = null) {
+		$state		= $this->get('State');
+		$items		= $this->get('Items');
+		$pagination	= $this->get('Pagination');
+
+		// Check for errors.
+		if (count($errors = $this->get('Errors'))) {
+			JError::raiseError(500, implode("\n", $errors));
+			return false;
+		}
+
+		$this->assignRef('state',			$state);
+		$this->assignRef('items',			$items);
+		$this->assignRef('pagination',		$pagination);
+		
+		parent::display();
 	}
-	
 }

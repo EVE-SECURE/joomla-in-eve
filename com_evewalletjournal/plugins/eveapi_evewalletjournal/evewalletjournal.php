@@ -43,6 +43,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	public function charWalletJournal($xml, $fromCache, $options = array()) {
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
 		foreach ($xml->result->entries->toArray() as $entry) {
+			//FIXME: duplicate entries
 			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
 			$table->bind($entry);
 			$table->store();
