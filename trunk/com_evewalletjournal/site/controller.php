@@ -25,10 +25,19 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
-class EvechartrackingController extends EveController {
+class EvewalletjournalController extends EveController {
 	
-	public function __construct($config = array()) {
+	public function __construct($config = array())
+	{
 		parent::__construct($config);
 	}
 	
+	public function getModel($name = '', $prefix = '', $config = array())
+	{
+		if ($name == 'character' || $name == 'corporation') {
+			$config['entity'] = $name;
+			$name = 'list';
+		}
+		return parent::getModel($name, $prefix, $config);
+	}
 }
