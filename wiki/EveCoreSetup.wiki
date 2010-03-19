@@ -14,7 +14,19 @@ Joomla! in EVE requires
 Install CronJobs. Then install com_eve.zip as any other component.
 
 = Setting up API account activation =
-  * Enable all EVE related plugins.
-  * Disable _New User Account Activation_ in _Global Configuration_. EVE - User plugin will automatically disable any new Joomla! account.
-  * Register _Owner Corporation_ or _Owner Alliance_. Just enter ID, then fetch details by API.
-  * Create link to API input form in any menu.
+  # Enable all EVE related plugins.
+    * Cron - EVE Catches onCronTick event and fetches all scheduled api calls.
+    * Eveapi - EVE Processes and stores basic api calls like _accountCharacters_, _charCharacterSheet_, _corpCorporationSheet_ and _eveAllianceList_.
+    * Search - EVE Search for characters, corporations or alliances.
+    * System - EVE Load Joomla! in EVE framework.
+    * User - EVE - automatically blocks all new accounts upon creation.
+  # Disable _New User Account Activation_ in _Global Configuration_. EVE - User plugin will automatically disable any new Joomla! account.
+  # Register _Owner Corporation_ or _Owner Alliance_. Go to Components -> EVE -> Corporations (or Alliances) -> New (or Edit existing one). Enter corporation ID, make sure OWNER? field is set to "yes" and store.
+  # Create link to API input form in any menu. Go to Menus -> {Menu} -> New -> EVE -> API Input Form
+
+New users will now register in two steps:
+  # Register new Joomla! account.
+  # Use the API Input Form to register their API key. Form requires username, password, EVE userID and API key to unblock Joomla! account.
+
+
+Note: The one userID/API key cannot be used to unblock Joomla! account as long as it's assigned to another account. This is security measure to prevent other people to get access to your site in case they get someone's API key. Make sure your corp mates register at your site as soon as possible they god admitted to corporation.
