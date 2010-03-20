@@ -156,4 +156,14 @@ class EveFactory {
 		return $instance;
 	}
 	
+	public function getRouter()
+	{
+		static $instance;
+		if (!isset($instance)) {
+			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'router.php';
+			$instance = new EveRouter();
+		}
+		return $instance;
+	}
+	
 }

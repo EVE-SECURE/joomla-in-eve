@@ -51,6 +51,9 @@ class EveTableSchedule extends JTable {
 	}
 	
 	function loadExtra($type, $call, $userID = null, $characterID = null, $params = null) {
+		if (is_array($params)) {
+			$params = json_encode($params);
+		}
 		$q = EveFactory::getQuery();
 		$q->addTable('#__eve_schedule', 'sc');
 		$q->addJoin('#__eve_apicalls', 'ap', 'sc.apicall=ap.id');
