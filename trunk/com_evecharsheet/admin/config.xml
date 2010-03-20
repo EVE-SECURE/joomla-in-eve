@@ -6,46 +6,63 @@
 			<option value="64">64 x 64</option>
 			<option value="256">256 x256</option>
 		</param>
-		<param name="showbalance" type="radio" default="1"
+		<param name="show_balance" type="radio" default="1"
 			label="Show Balance" description="Show Account Balance.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showclone" type="radio" default="1"
+		<param name="show_clone" type="radio" default="1"
 			label="Show Clone" description="Show Clone Name and Grade.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showattributes" type="radio" default="1"
+		<param name="show_attributes" type="radio" default="1"
 			label="Show Attributes" description="Show Attributes Table.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showskills" type="radio" default="1"
+		<param name="show_skills" type="radio" default="1"
 			label="Show Skills" description="Show Skills Table.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showcertificates" type="radio" default="1"
+		<param name="show_certificates" type="radio" default="1"
 			label="Show Certificates" description="Show Certificates Table.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showroles" type="radio" default="1"
+		<param name="show_roles" type="radio" default="1"
 			label="Show Roles" description="Show Corporation Roles Table.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showtitles" type="radio" default="1"
+		<param name="show_titles" type="radio" default="1"
 			label="Show Titles" description="Show Corporation Titles Table.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="showskillqueue" type="radio" default="1"
+		<param name="show_skillqueue" type="radio" default="1"
 			label="Show Skill Queue"
 			description="Show Skill Queue.">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
+
+		<param name="access_balance" type="sql" default="0" label="Access Account Balance" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_clone" type="sql" default="0" label="Access Clone" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_attributes" type="sql" default="0" label="Access Attributes" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_skills" type="sql" default="0" label="Access Skills" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_certificates" type="sql" default="0" label="Access Certificates" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_roles" type="sql" default="0" label="Access Roles" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_titles" type="sql" default="0" label="Access Titles" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_skillqueue" type="sql" default="0" label="Access Skill Queue" 
+			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
 	</params>
 </config>

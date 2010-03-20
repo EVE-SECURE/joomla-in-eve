@@ -26,7 +26,9 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.view');
 
 class EvecharsheetViewCharacter extends JView {
-	function display($tmpl = null) {
+	private $_ownedCharacter = false;
+	
+	public function display($tmpl = null) {
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
 		
@@ -39,6 +41,14 @@ class EvecharsheetViewCharacter extends JView {
 		$roles 			= $this->get('Roles');
 		$roleLocations 	= $this->get('RoleLocations');
 		$titles 		= $this->get('Titles');
+
+		$this->_ownedCharacter = false;
+		$acl = EveFactory::getACL();
+		$ids = $acl->getOwnedCharacterIDs();
+		if (isset($ids[$character->characterID])) {
+			$this->_ownedCharacter = true;
+		}
+		
 		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -65,13 +75,16 @@ class EvecharsheetViewCharacter extends JView {
 		$this->assignRef('roleLocations', $roleLocations);
 		$this->assignRef('titles', $titles);
 		
-		parent::display($tmpl);
+		parent::display();
 		$this->_setPathway();
 	}
 	
 	public function show($section)
 	{
-		return intval($this->params->get('show'.$section, 0));
+		$user = JFactory::getUser();
+		$show = intval($this->params->get('show_'.$section, 0));
+		$access = intval($this->params->get('access_'.$section, 0)) <= $user->get('aid');
+		return $show && ($access || $this->_ownedCharacter);
 	}
 
 	protected function _setPathway()
