@@ -31,7 +31,7 @@ class EveApiPlugin extends JPlugin
 	{
 		$next = new DateTime();
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra($type, $call, $userID, $characterID);
+		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if (!$schedule->id && $schedule->apicall) {
 			$schedule->next = $next->format('Y-m-d H:i:s');
 			$schedule->store();
@@ -41,7 +41,7 @@ class EveApiPlugin extends JPlugin
 	protected function  _setOwnerCorporation($type, $call, $owner, $userID = null, $characterID = null, $params = null)
 	{
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
-		$schedule->loadExtra($type, $call, $userID, $characterID);
+		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if ($owner && !$schedule->id && $schedule->apicall) {
 			$next = new DateTime();
 			$schedule->next = $next->format('Y-m-d H:i:s');

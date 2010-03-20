@@ -26,28 +26,16 @@ defined('_JEXEC') or die();
 
 function EveBuildRoute(&$query)
 {
-	if (!isset($query['entity']) && !isset($query['task'])) {
+	if (!isset($query['section']) && !isset($query['task'])) {
 		return array();
 	}
 	$app = JFactory::getApplication();
 	$menu = $app->getMenu();
-	$router = EveRouter::getInstance();
+	$router = EveFactory::getRouter();
 	$item = $router->getItem($query);
-	
-	if (!$item && isset($query['Itemid']) && isset($query['entity'])) {
-		unset($query['Itemid']);
-	}
 	
 	$segments = $router->getSegments($query, $item);
 	
-	if (isset($query['entity'])) {
-		unset($query['entity']);
-	}
-	
-	if (isset($query['component'])) {
-		$segments[] = $query['component'];
-		unset($query['component']);
-	}
 	return $segments;
 }
 
@@ -120,7 +108,7 @@ function EveParseRoute($segments)
 	$s1 = str_replace(':', '-', $s1);
 	if ($s1) {
 		$dbo = JFactory::getDBO();
-		$query = 'SELECT * FROM #__eve_sections WHERE alias='.$dbo->Quote($s1);
+		$query = sprintf('SELECT * FROM #__eve_sections WHERE alias=%s AND entity=%s ', $dbo->Quote($s1), $dbo->Quote($view));
 		$dbo->setQuery($query);
 		$section = $dbo->loadObject();
 		if (!$section) {
@@ -140,99 +128,4 @@ function EveParseRoute($segments)
 	}
 	
 	return $vars;
-}
-
-class EveRouter {
-	private static $instance;
-	
-	private $user = array();
-	private $character = array();
-	private $corporation = array();
-	private $alliance = array();
-	
-	private $ownedChars = array();
-	
-	private function __construct()
-	{
-		$menu = JSite::getMenu();
-		$items = $menu->getItems('component', 'com_eve');
-		foreach ($items as $item) {
-			$view = $item->query['view'];
-			if ($view == 'user') {
-				$this->{$view}[$item->id] = $item;
-			} else {
-				$itemID = $item->query['view'].'ID';
-				if (isset($this->$view)) {
-					$this->{$view}[intval($item->query[$itemID])] = $item;
-				}
-			}
-		}
-		$acl = EveFactory::getACL();
-		$this->ownedChars = $acl->getOwnedCharacterIDs();
-	}
-	
-	public function getItem(&$query)
-	{
-		if (isset($query['characterID']) && isset($this->ownedChars[intval($query['characterID'])])) {
-			if (!empty($this->user)) {
-				return reset($this->user);
-			}
-		}
-		
-		$entities = array('character', 'corporation', 'alliance');
-		
-		foreach ($entities as $entity) {
-			$entityID = $entity.'ID';
-			if (isset($query[$entityID])) {
-				$id = intval($query[$entityID]);
-				if (isset($this->{$entity}[$id])) {
-					return $this->{$entity}[$id];
-				}
-			}
-		}
-		return null;
-	}
-	
-	public function getSegments(&$query, $item = null)
-	{
-		$segments = array();
-		if (JArrayHelper::getValue($item->query, 'view') == 'user') {
-			//this is user view
-			unset($query['corporationID']);
-			unset($query['allianceID']);
-			$query['Itemid'] = $item->id;
-			$entities = array('character');
-		} elseif (JArrayHelper::getValue($item->query, 'view') == 'corporation' && !isset($query['allianceID'])) {
-			//corporation does not have to be in alliance
-			$entities = array('corporation', 'character'); 
-		} else {
-			$entities = array('alliance', 'corporation', 'character');
-		}
-		foreach ($entities as $entity) {
-			$entityID = $entity.'ID';
-			if (!isset($query[$entityID])) {
-				return $segments;
-			}
-			if (!empty($item) && ($item->query['view'] == $entity)) {
-				$segments = array();
-				$query['Itemid'] = $item->id;
-				unset($query[$entityID]);
-				unset($query['entity']);
-				continue;
-			}
-			$segments[] = $entity[0];
-			$segments[] = $query[$entityID];
-			unset($query[$entityID]);
-		}
-		return $segments;
-	}
-	
-	public static function getInstance()
-	{
-		if (!isset(self::$instance)) {
-			self::$instance = new EveRouter();
-		}
-		return self::$instance;
-	}
-	
 }

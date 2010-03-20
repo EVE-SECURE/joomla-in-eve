@@ -40,13 +40,11 @@ class EveRoute
 	static public function _($name, $alliance = null, $corporation = null, $character = null, $xhtml = true)
 	{
 		$app = JFactory::getApplication();
-		$component = self::_getComponent($name);
+		$eveRouter = EveFactory::getRouter();
+		$component = $eveRouter->getSection($name);
 		$sef = $app->getCfg('sef');
 		if ($sef) {
-			$url = 'index.php?option=com_eve&entity='.$component->entity;
-			if ($component->alias) {
-				$url .= '&component='.$component->alias;
-			}
+			$url = 'index.php?option=com_eve&section='.$name;
 			$entities = array('alliance', 'corporation', 'character');
 		} else {
 			$url = 'index.php?option=com_eve'.$component->component;
