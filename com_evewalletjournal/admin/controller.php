@@ -27,39 +27,4 @@ jimport('joomla.application.component.controller');
 
 class EvewalletjournalController extends EveController {
 	
-	public function __construct($config = array())
-	{
-		parent::__construct($config);
-	}
-	
-	function display($cachable = false)
-	{
-		$document =& JFactory::getDocument();
-
-		$viewType	= $document->getType();
-		$viewName	= JRequest::getCmd('view', $this->getName());
-		$viewLayout	= JRequest::getCmd('layout', 'default');
-
-		$view = & $this->getView( $viewName, $viewType, '', array('base_path'=>$this->_basePath));
-
-		// Get/Create the model
-		if ($model = & $this->getModel($viewName)) {
-			// Push the model into the view (as default)
-			$view->setModel($model, true);
-		}
-		$modelList = $this->getModel('list');
-		$view->setModel($modelList, false);
-
-		// Set the layout
-		$view->setLayout($viewLayout);
-
-		// Display the view
-		if ($cachable && $viewType != 'feed') {
-			global $option;
-			$cache =& JFactory::getCache($option, 'view');
-			$cache->get($view, 'display');
-		} else {
-			$view->display();
-		}
-	}
 }

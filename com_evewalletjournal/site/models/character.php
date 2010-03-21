@@ -23,10 +23,17 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once(JPATH_COMPONENT.DS.'controller.php');
+require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.php';
 
-$controller = new EvewalletjournalController();
+class EvewalletjournalModelCharacter extends EveModelCharacter {
+	
+	protected function _populateState()
+	{
+		parent::_populateState();
+		$id = JRequest::getInt('characterID');
+		$params = JComponentHelper::getParams('com_evewalletjournal');
+		$this->setState('params', $params);
+	}
+	
 
-$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
-$controller->redirect();
-
+}
