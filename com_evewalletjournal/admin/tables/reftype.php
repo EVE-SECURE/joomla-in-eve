@@ -23,29 +23,16 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EvewalletjournalTableWalletjournal extends JTable {
-	var $entityID = null;
-	var $accountKey = null;
-	var $date= null;
-	var $refID= null;
+class EvewalletjournalTableReftype extends EveTable {
 	var $refTypeID= null;
-	var $ownerName1= null;
-	var $ownerID1= null;
-	var $ownerName2= null;
-	var $ownerID2= null;
-	var $argName1= null;
-	var $argID1= null;
-	var $amount= null;
-	var $balance= null;
-	var $reason= null;
-		
+	var $refTypeName= null;
+	
 	/**
 	* @param database A database connector object
 	*/
 	function __construct( &$dbo )
 	{
-		//FIXME: primary key contains multiple fields: entityID, accountKey, refID?
-		parent::__construct( '#__eve_walletjournal', 'refID', $dbo );
+		parent::__construct( '#__eve_reftypes', 'refTypeID', $dbo );
 	}
 	
 }

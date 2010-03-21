@@ -27,4 +27,12 @@ jimport('joomla.application.component.controller');
 
 class EvewalletjournalController extends EveController {
 	
+	function getRefTypes() {
+		$model = & $this->getModel('Reftype');
+		
+		//@todo: message, error output
+		$model->apiGetRefTypes();
+		$this->setRedirect(JRoute::_('index.php?option=com_evewalletjournal', false));
+	}
+		
 }

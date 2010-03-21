@@ -23,29 +23,30 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class EvewalletjournalTableWalletjournal extends JTable {
-	var $entityID = null;
-	var $accountKey = null;
-	var $date= null;
-	var $refID= null;
-	var $refTypeID= null;
-	var $ownerName1= null;
-	var $ownerID1= null;
-	var $ownerName2= null;
-	var $ownerID2= null;
-	var $argName1= null;
-	var $argID1= null;
-	var $amount= null;
-	var $balance= null;
-	var $reason= null;
-		
-	/**
-	* @param database A database connector object
-	*/
-	function __construct( &$dbo )
-	{
-		//FIXME: primary key contains multiple fields: entityID, accountKey, refID?
-		parent::__construct( '#__eve_walletjournal', 'refID', $dbo );
+jimport('joomla.application.component.model');
+
+class EvewalletjournalModelReftype extends EveModel {
+	
+	public function apiGetRefTypes() {
+		$app = JFactory::getApplication();
+		try {
+			$ale = $this->getAleEVEOnline();
+			$xml = $ale->eve->RefTypes();
+			
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			
+			$dispatcher->trigger('eveRefTypes', 
+				array($xml, $ale->isFromCache(), array()));
+			
+			$app->enqueueMessage(JText::_('Com_Evewalletjournal_Ref_Types_Imported'));
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}
 	}
 	
 }
