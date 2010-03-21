@@ -46,11 +46,44 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	public function charWalletJournal($xml, $fromCache, $options = array()) {
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
 		foreach ($xml->result->entries->toArray() as $entry) {
-			//FIXME: duplicate entries
+			$entry['accountKey'] = 1000;
+			$entry['entityID'] = $options['characterID'];
 			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
 			$table->bind($entry);
 			$table->store();
-			
+		}
+	}
+	
+	public function corpWalletJournal($xml, $fromCache, $options = array()) {
+		if (!isset($options['corporationID'])) {
+			$characterID = JArrayHelper::getValue($options, 'characterID');
+			$character = EveFactory::getInstance('Character', $characterID);
+			$entityID = $character->corporationID;
+		} else {
+			$entityID = $options['corporationID'];
+		}
+		if (!$corporationID) {
+			//TODO: some reasonable error?
+			return;
+		}
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
+		foreach ($xml->result->entries->toArray() as $entry) {
+			$entry['accountKey'] = 1000;
+			$entry['entityID'] = $entityID;
+			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
+			$table->bind($entry);
+			$table->store();
+		}
+	}
+	
+	public function eveRefTypes($xml, $fromCache, $options = array())
+	{
+		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
+		foreach ($xml->result->refTypes->toArray() as $refType) {
+			//FIXME: duplicate entries
+			$table = JTable::getInstance('Reftype', 'EvewalletjournalTable');
+			$table->bind($refType);
+			$table->store();
 		}
 	}
 	

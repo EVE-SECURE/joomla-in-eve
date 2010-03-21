@@ -27,7 +27,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 		<tr>
 			<th><?php echo JHTML::_('grid.sort',  'Com_Evewalletjournal_Ref_ID', 'wj.refID', 
 					$this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-			<th><?php echo JHTML::_('grid.sort',  'Com_Evewalletjournal_Ref_Type_ID', 'wj.refTypeID', 
+			<th><?php echo JHTML::_('grid.sort',  'Com_Evewalletjournal_Ref_Type', 'rt.refTypeName', 
 					$this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Com_Evewalletjournal_Date', 'wj.date', 
 					$this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
@@ -49,7 +49,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<?php foreach ($this->items as $item) : ?>
 		<tr>
 			<td><?php echo $item->refID; ?></td>
-			<td><?php echo $item->refTypeID; ?></td>
+			<td><?php echo $item->refTypeName; ?></td>
 			<td><?php echo JHTML::date($item->date); ?></td>
 			<td><?php echo $item->ownerName1; ?></td>
 			<td><?php echo $item->ownerName2; ?></td>

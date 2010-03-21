@@ -52,8 +52,11 @@ class EvewalletjournalModelList extends JModelList {
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_walletjournal', 'wj');
+		$q->addJoin('#__eve_reftypes', 'rt', 'rt.refTypeID=wj.refTypeID');
+		$q->addQuery('wj.*');
+		$q->addQuery('rt.refTypeName');
 		
-		$q->addWhere('(ownerID1 = %1$s OR ownerID2 = %1$s)', $entityID);
+		$q->addWhere('entityID = %1$s', $entityID);
 		/*
 		if ($search) {
 			$q->addWhere('owner.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
