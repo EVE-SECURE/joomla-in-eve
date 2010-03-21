@@ -84,16 +84,38 @@ abstract class JHTMLevelink {
 		return $html;
 	}
 	
-	static public function item($item, $href = '#')
+	static public function ship($ship, $href = '#')
 	{
-		
+		return self::type($ship, $href, 'ship');
 	}
 	
-	static public function ship($item, $href = '#')
+	static public function station($station, $href = '#')
 	{
-		
+		return self::type($station, $href, 'station');
 	}
 	
+	static public function solarSystem($solarSystem, $href = '#')
+	{
+		return self::type($solarSystem, $href, 'solarSystem');
+	}
+	
+	static public function type($item, $href = '#', $type = 'type')
+	{
+		if (is_array($item)) {
+			$itemID = JArrayHelper::getValue($item, 1, $type).'ID'.JArrayHelper::getValue($item, 2, '');
+			$itemName = JArrayHelper::getValue($item, 1, $type).'Name'.JArrayHelper::getValue($item, 2, '');
+			$itemObj = $item[0];
+		} else {
+			$itemID = $type.'ID';
+			$itemName = $type.'Name';
+			$itemObj = $item;
+		}
+		$class = 'ccpeve '.$type.'-'.$itemObj->$itemID;
+		$html = '<a class="'.$class.'" href="'.$href.'">'.
+					$itemObj->$itemName.
+				'</a>';
+		return $html;
+	}
 	
 	
 }
