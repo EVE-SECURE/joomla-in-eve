@@ -25,7 +25,7 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view');
 
-class EvewalletjournalViewCharacter extends JView 
+class EvewalletjournalViewCorporation extends JView 
 {
 	public $state;
 	public $items;
@@ -37,7 +37,7 @@ class EvewalletjournalViewCharacter extends JView
 		
 		$state		= $this->get('State');
 		$params		= $this->get('Params');
-		$character	= $this->get('Item');
+		$corporation	= $this->get('Item');
 		$items		= $this->get('Items', 'list');
 		$pagination	= $this->get('Pagination', 'list');
 
@@ -55,20 +55,20 @@ class EvewalletjournalViewCharacter extends JView
 		$menu  = $menus->getActive();
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evewalletjournal'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
-				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+				&& JArrayHelper::getValue($menu->query, 'view') == 'corporation'  
+				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$character->name.' - '.JText::_('Wallet Journal'));
+				$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Wallet Journal'));
 			}
 		} else {
-			$params->set('page_title',	$character->name.' - '.JText::_('Wallet Journal'));
+			$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Wallet Journal'));
 		}
 		$document->setTitle($params->get('page_title'));
 		
 
 		$this->assignRef('params', 		$params);
-		$this->assignRef('character', 	$character);
+		$this->assignRef('corporation', $corporation);
 		$this->assignRef('state',		$state);
 		$this->assignRef('items',		$items);
 		$this->assignRef('pagination',	$pagination);
@@ -91,58 +91,14 @@ class EvewalletjournalViewCharacter extends JView
 		$view = JArrayHelper::getValue($menu->query, 'view');
 		switch ($view) {
 			case null:
-				$pathway->addItem($this->character->allianceName, 
-					EveRoute::_('alliance', $this->character));
+				$pathway->addItem($this->corporation->allianceName, 
+					EveRoute::_('alliance', $this->corporation));
 			case 'alliance':
-				$pathway->addItem($this->character->corporationName, 
-					EveRoute::_('corporation', $this->character, $this->character));
+				$pathway->addItem($this->corporation->corporationName, 
+					EveRoute::_('corporation', $this->corporation, $this->corporation));
 			case 'corporation':
-			case 'user':
-				$pathway->addItem($this->character->name, 
-					EveRoute::_('character', $this->character, $this->character, $this->character));
-			case 'character':
 				$pathway->addItem(JText::_('Wallet Journal'), 
-					EveRoute::_('charwalletjournal', $this->character, $this->character, $this->character));
-		}
-	}
-	
-	public function getArgument($item)
-	{
-		switch ($item->refTypeID) {
-			case 1:
-				//station
-				return JHTML::_('evelink.station', array($item, 'arg', '1'));
-				break;
-			case 2:
-				//transactionID
-				break;
-			case 19:
-				//ship typeID
-				return JHTML::_('evelink.ship', array($item, 'arg', '1'));
-				break;
-			case 35:
-				//CSPA characterID
-				break;
-			case 85:
-				//Bonties solarSystemID
-				return JHTML::_('evelink.solarSystem', array($item, 'arg', '1'));
-				break;
-			default:
-				return $item->argName1;
-		}
-	}
-	
-	public function getReason($item)
-	{
-		switch ($item->refTypeID) {
-			case 85:
-				//For each type of NPC killed, its typeID is followed by a colon and the quantity killed. 
-				//These pairs are seperated by commas, and if there are too many (more than about 60 characters' worth) 
-				//the list is ended with a literal ",..." to indicate that more have been left off the list. 
-				return $item->reason;
-				break;
-			default:
-				return $item->reason;
+					EveRoute::_('corpwalletjournal', $this->corporation, $this->corporation));
 		}
 	}
 }

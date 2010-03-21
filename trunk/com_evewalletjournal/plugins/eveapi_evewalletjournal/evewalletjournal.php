@@ -37,7 +37,10 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	
 	
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		$this->_setOwnerCorporation('corp', 'WalletJournal', $owner, $userID, $characterID);
+		for ($accountKey = 1000; $accountKey <= 1006; $accountKey +=1) {
+			$params = array('accountKey' => $accountKey);
+			$this->_setOwnerCorporation('corp', 'WalletJournal', $owner, $userID, $characterID, $params);
+		}
 	}
 	
 	public function charWalletJournal($xml, $fromCache, $options = array()) {

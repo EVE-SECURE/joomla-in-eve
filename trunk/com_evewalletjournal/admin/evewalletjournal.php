@@ -29,4 +29,3 @@ $controller = new EvewalletjournalController();
 
 $controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
 $controller->redirect();
-

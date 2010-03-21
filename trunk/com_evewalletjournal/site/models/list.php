@@ -51,16 +51,16 @@ class EvewalletjournalModelList extends JModelList {
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
-		$q->addTable('#__eve_walletjournal');
+		$q->addTable('#__eve_walletjournal', 'wj');
 		
 		$q->addWhere('(ownerID1 = %1$s OR ownerID2 = %1$s)', $entityID);
 		/*
 		if ($search) {
 			$q->addWhere('owner.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'owner.name')), 
-			$q->getEscaped($this->getState('list.direction', 'ASC')));
 		*/
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'wj.refID')), 
+			$q->getEscaped($this->getState('list.direction', 'DESC')));
 		return $q;
 	}
 
@@ -98,7 +98,8 @@ class EvewalletjournalModelList extends JModelList {
 	 * @return	void
 	 * @since	1.6
 	 */
-	protected function _populateState() {
+	protected function _populateState()
+	{
 		// Initialize variables.
 		$app		= &JFactory::getApplication('administrator');
 		$params		= JComponentHelper::getParams('com_eve');
@@ -113,8 +114,14 @@ class EvewalletjournalModelList extends JModelList {
 		
 		parent::_populateState();
 
+		$limitstart = JRequest::getInt('limitstart'); 
+		$this->setState('list.start', $limitstart);
+		
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
 
+	public function getRefTypes()
+	{
+	}
 }

@@ -23,10 +23,16 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once(JPATH_COMPONENT.DS.'controller.php');
+jimport('joomla.application.component.view');
 
-$controller = new EvewalletjournalController();
+class EvewalletjournalViewEvewalletjournal extends JView {
+	function display($tmpl = null) {
+		JHTML::stylesheet('walletjournal.css', 'administrator/components/com_evewalletjournal/assets/');
+		
+		$title = JText::_('EVE WALLET JOURNAL');
+		JToolBarHelper::title($title, 'wallet');
+		//JToolBarHelper::preferences('com_evewalletjournal', 480, 640);
 
-$controller->execute(JRequest::getVar('task', null, 'default', 'cmd'));
-$controller->redirect();
-
+		parent::display($tmpl);
+	}
+}
