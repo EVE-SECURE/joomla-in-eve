@@ -31,8 +31,46 @@ defined('_JEXEC') or die();
  * @subpackage	Core
  */
 class plgEveapiEveWalletJournal extends EveApiPlugin {
+	private $_fields;
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
+		$this->_fields = array(
+		  'entityID',
+		  'accountKey',
+		  'date',
+		  'refID',
+		  'refTypeID',
+		  'ownerName1',
+		  'ownerID1',
+		  'ownerName2',
+		  'ownerID2',
+		  'argName1',
+		  'argID1',
+		  'amount',
+		  'balance',
+		  'reason'
+ 		);
+	}
+	
+	private function _storeWalletJournal($xml, $entityID, $accounKey = 1000)
+	{
+		$dbo = JFactory::getDBO();
+		$sql = 'INSERT IGNORE INTO #__eve_walletjournal (';
+		$sql .= implode(',', $this->_fields);
+		$sql .= ") VALUES ";
+		$values = array();
+		foreach ($xml->result->entries->toArray() as $entry) {
+			$entry['accountKey'] = $accounKey;
+			$entry['entityID'] = $entityID;
+			$value = array();
+			foreach ($this->_fields as $field) {
+				$value[] = $dbo->quote($entry[$field]); 
+			}
+			$values[] = '('.implode(',', $value).')';
+		}
+		$sql .= implode(",", $values);
+		$dbo->setQuery($sql);
+		$dbo->query();
 	}
 	
 	
@@ -45,13 +83,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	
 	public function charWalletJournal($xml, $fromCache, $options = array()) {
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
-		foreach ($xml->result->entries->toArray() as $entry) {
-			$entry['accountKey'] = 1000;
-			$entry['entityID'] = $options['characterID'];
-			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
-			$table->bind($entry);
-			$table->store();
-		}
+		$this->_storeWalletJournal($xml, $options['characterID']);
 	}
 	
 	public function corpWalletJournal($xml, $fromCache, $options = array()) {
@@ -66,14 +98,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 			//TODO: some reasonable error?
 			return;
 		}
-		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
-		foreach ($xml->result->entries->toArray() as $entry) {
-			$entry['accountKey'] = 1000;
-			$entry['entityID'] = $entityID;
-			$table = JTable::getInstance('Walletjournal', 'EvewalletjournalTable');
-			$table->bind($entry);
-			$table->store();
-		}
+		$this->_storeWalletJournal($xml, $entityID, $options['accountKey']);
 	}
 	
 	public function eveRefTypes($xml, $fromCache, $options = array())
