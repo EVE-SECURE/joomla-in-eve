@@ -110,7 +110,7 @@ class EveRouter {
 		foreach ($entities as $entity) {
 			$entityID = $entity.'ID';
 			if (!isset($query[$entityID])) {
-				return $segments;
+				break;
 			}
 			if (!empty($item) && ($item->query['view'] == $entity)) {
 				$segments = array();
