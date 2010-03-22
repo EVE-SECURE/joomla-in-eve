@@ -37,7 +37,7 @@ class EveModelCharacters extends JModelList {
 	
 	protected function _getListQuery()
 	{
-		$list_query = $this->getState('list.query', 'c.*, co.corporationName, co.ticker, al.name AS allianceName, al.shortName, editor.name AS editor, u.name AS userName'); 
+		$list_query = $this->getState('list.query', 'c.*, co.corporationName, co.ticker, al.name AS allianceName, al.shortName, editor.name AS editor, u.name AS userName, us.apiStatus'); 
 		
 		$search = $this->getState('filter.search');
 		$membersof = $this->getState('filter.membersof');

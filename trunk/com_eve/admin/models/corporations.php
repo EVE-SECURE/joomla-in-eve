@@ -37,13 +37,15 @@ class EveModelCorporations extends JModelList {
 	
 	protected function _getListQuery()
 	{
-		$list_query = $this->getState('list.query', 'co.*, al.name AS allianceName, al.shortName, al.owner AS derived_owner, editor.name AS editor');
+		$list_query = $this->getState('list.query', 'co.*, al.name AS allianceName, al.shortName, al.owner AS derived_owner, editor.name AS editor, c.name AS ceoName, us.apiStatus');
 		
 		$search = $this->getState('filter.search');
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_characters', 'c', 'c.characterID=co.ceoID');
+		$q->addJoin('#__eve_accounts', 'us', 'us.userID=c.userID');
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
 		$q->addJoin('#__users', 'editor', 'co.checked_out=editor.id');
 		$q->addQuery($list_query);

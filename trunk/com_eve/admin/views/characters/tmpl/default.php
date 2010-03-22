@@ -41,11 +41,12 @@ $userId	= $user->get('id');
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'OWNER' ), 'userName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CORPORATION' ), 'co.corporationName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'ALLIANCE' ), 'allianceName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'API KEY STATUS' ), 'apiStatus', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
-				<td colspan="7"><?php echo $this->pagination->getListFooter(); ?></td>
+				<td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -72,6 +73,11 @@ $userId	= $user->get('id');
 				</td>
 				<td>
 					<?php echo $item->allianceName; ?>
+				</td>
+				<td>
+					<?php if (!is_null($item->apiStatus)): ?>
+						<span class="apiStatus apiStatus-<?php echo $item->apiStatus; ?>"><?php echo $item->apiStatus; ?></span>
+					<?php endif; ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
