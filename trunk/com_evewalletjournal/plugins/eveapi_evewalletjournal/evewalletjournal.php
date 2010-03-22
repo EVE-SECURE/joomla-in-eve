@@ -68,9 +68,11 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 			}
 			$values[] = '('.implode(',', $value).')';
 		}
-		$sql .= implode(",", $values);
-		$dbo->setQuery($sql);
-		$dbo->query();
+		if ($values) {
+			$sql .= implode(",", $values);
+			$dbo->setQuery($sql);
+			$dbo->query();
+		}
 	}
 	
 	
@@ -94,7 +96,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 		} else {
 			$entityID = $options['corporationID'];
 		}
-		if (!$corporationID) {
+		if (!$entityID) {
 			//TODO: some reasonable error?
 			return;
 		}

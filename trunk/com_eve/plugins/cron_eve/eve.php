@@ -85,8 +85,10 @@ class plgCronEve extends JPlugin {
 				}
 				while (true) {
 					$xml = $ale->$type->$call($params);
+					$params['userID'] = $row->userID;
+					$params['characterID'] = $row->characterID;
 					$dispatcher->trigger($type.$call,  
-						array($xml, $ale->isFromCache(), array('userID' => $row->userID, 'characterID' => $row->characterID)));
+						array($xml, $ale->isFromCache(), $params));
 					$next = new DateTime((string) $xml->cachedUntil, $utc_tz);
 					if (!$row->paginationAttrib) {
 						break;
