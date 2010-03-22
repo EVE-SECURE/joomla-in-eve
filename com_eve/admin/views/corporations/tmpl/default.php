@@ -31,13 +31,15 @@ $userId	= $user->get('id');
 				</th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CORPORATION NAME' ), 'co.corporationName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CORPORATION TAG' ), 'co.ticker', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'CEO NAME' ), 'ceoName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'ALLIANCE' ), 'al.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'API KEY STATUS' ), 'apiStatus', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 				<th class="title"><?php echo JText::_('OWNER'); ?></th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
-			<td colspan="6"><?php echo $this->pagination->getListFooter(); ?></td>
+			<td colspan="8"><?php echo $this->pagination->getListFooter(); ?></td>
 			</tr>
 		</tfoot>
 		<tbody>
@@ -60,7 +62,17 @@ $userId	= $user->get('id');
 					<?php echo $this->escape($item->ticker); ?>
 				</td>
 				<td>
+					<?php if (!is_null($item->ceoName)): ?>
+						<?php echo $this->escape($item->ceoName); ?>
+					<?php endif; ?>
+				</td>
+				<td>
 					<?php echo $this->escape($item->allianceName); ?>
+				</td>
+				<td>
+					<?php if (!is_null($item->apiStatus)): ?>
+						<span class="apiStatus apiStatus-<?php echo $item->apiStatus; ?>"><?php echo $item->apiStatus; ?></span>
+					<?php endif; ?>
 				</td>
 				<td align="center">
 					<?php if ( $item->owner == 1 ) : ?>

@@ -60,7 +60,6 @@ $userId	= $user->get('id');
 				</td>
 				<td>
 					<span class="apiStatus apiStatus-<?php echo $item->apiStatus; ?>"><?php echo $item->apiStatus; ?></span>
-					
 				</td>
 				<td>
 					<?php echo $this->escape($item->characters); ?>
