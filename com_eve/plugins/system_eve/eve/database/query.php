@@ -163,9 +163,9 @@ class JQuery extends JObject {
 		$tmp = array();
 		foreach ($this->table as $table) {
 			if ($table->alias) {
-				$tmp[] = "`$table->table` AS `$table->alias`";
+				$tmp[] = "$table->table AS $table->alias";
 			} else {
-				$tmp[] = "`$table->table`";
+				$tmp[] = "$table->table";
 			}
 		}
 		$q .= implode(', ', $tmp);
@@ -179,7 +179,7 @@ class JQuery extends JObject {
 		}
 		$tmp = array();
 		foreach ($this->join as $table) {
-			$tmp[] = " $table->type JOIN `$table->table` AS `$table->alias` ON $table->join";
+			$tmp[] = " $table->type JOIN $table->table AS $table->alias ON $table->join";
 		}
 		return implode(' ', $tmp);
 		

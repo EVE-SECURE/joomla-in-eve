@@ -26,7 +26,16 @@ defined('_JEXEC') or die();
 require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'corporation.php';
 
 class EvechartrackingModelCorporation extends EveModelCorporation {
+	protected $dbdump;
 	
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
+	}
+		
 	protected function _populateState()
 	{
 		parent::_populateState();
@@ -51,9 +60,9 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
-		$q->addJoin('mapDenormalize', 'md', 'ch.locationID=md.itemID');
-		$q->addJoin('staStations', 'st', 'ch.locationID=st.stationID');
-		$q->addJoin('invTypes', 'iv', 'ch.shipTypeID=iv.typeID');
+		$q->addJoin($this->dbdump.'mapDenormalize', 'md', 'ch.locationID=md.itemID');
+		$q->addJoin($this->dbdump.'staStations', 'st', 'ch.locationID=st.stationID');
+		$q->addJoin($this->dbdump.'invTypes', 'iv', 'ch.shipTypeID=iv.typeID');
 		$q->addQuery('ch.*');
 		$q->addQuery('ac.owner');
 		$q->addQuery('md.itemName AS locationName, md.typeID AS locationTypeID');

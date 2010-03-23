@@ -26,6 +26,15 @@ defined('_JEXEC') or die();
 require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.php';
 
 class EvecharsheetModelCharacter extends EveModelCharacter {
+	protected $dbdump;
+	
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
+	}
 	
 	protected function _populateState()
 	{
@@ -45,7 +54,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_skillqueue', 'sq');
-		$q->addJoin('invTypes', 'it', 'it.typeID=sq.typeID');
+		$q->addJoin($this->dbdump.'invTypes', 'it', 'it.typeID=sq.typeID');
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('queuePosition', 'ASC');
 		$queue =  $q->loadObjectList();
@@ -57,13 +66,13 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
-		$q->addJoin('invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
+		$q->addJoin($this->dbdump.'invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('typeName', 'ASC');
 		$skills =  $q->loadObjectList();
 		
 		$q = $this->getQuery();
-		$q->addTable('invGroups');
+		$q->addTable($this->dbdump.'invGroups');
 		$q->addWhere('`categoryID` = 16');
 		$q->addWhere('published = 1');
 		$q->addOrder('groupName', 'ASC');
@@ -91,8 +100,8 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charcertificates', 'cs');
-		$q->addJoin('crtCertificates', 'cr', 'cr.certificateID=cs.certificateID', 'inner');
-		$q->addJoin('crtClasses', 'cl', 'cr.classID=cl.classID');
+		$q->addJoin($this->dbdump.'crtCertificates', 'cr', 'cr.certificateID=cs.certificateID', 'inner');
+		$q->addJoin($this->dbdump.'crtClasses', 'cl', 'cr.classID=cl.classID');
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addQuery('cr.*', 'cl.className');
 		$q->addOrder('cr.classID', 'ASC');
@@ -100,7 +109,7 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$certificates = $q->loadObjectList('classID');
 
 		$q = $this->getQuery();
-		$q->addTable('crtCategories', 'ct');
+		$q->addTable($this->dbdump.'crtCategories', 'ct');
 		$q->addOrder('categoryName', 'ASC');
 		$categories = $q->loadObjectList('categoryID');
 		
@@ -119,8 +128,8 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charattributes', 'cc');
-		$q->addJoin('chrAttributes', 'ca', 'ca.attributeID=cc.attributeID');
-		$q->addJoin('invTypes', 'it', 'it.typeID=cc.augmentatorID');
+		$q->addJoin($this->dbdump.'chrAttributes', 'ca', 'ca.attributeID=cc.attributeID');
+		$q->addJoin($this->dbdump.'invTypes', 'it', 'it.typeID=cc.augmentatorID');
 		$q->addQuery('cc.*');
 		$q->addQuery('it.typeName AS augmentatorName');
 		$q->addQuery('ca.attributeName', 'ca.description', 'ca.shortDescription');
