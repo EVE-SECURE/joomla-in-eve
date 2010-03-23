@@ -34,6 +34,7 @@ class EvecharsheetViewCharacter extends JView {
 		
 		$params 		= $this->get('Params');
 		$character 		= $this->get('Item');
+		$clone	 		= $this->get('Clone');
 		$groups 		= $this->get('SkillGroups');
 		$queue 			= $this->get('Queue');
 		$categories 	= $this->get('CertificateCategories');
@@ -68,6 +69,7 @@ class EvecharsheetViewCharacter extends JView {
 		$this->assignRef('params', $params);
 		$this->assignRef('character', $character);
 		$this->assignRef('groups', $groups);
+		$this->assignRef('clone', $clone);
 		$this->assignRef('queue', $queue);
 		$this->assignRef('categories', $categories);
 		$this->assignRef('attributes', $attributes);
@@ -82,7 +84,7 @@ class EvecharsheetViewCharacter extends JView {
 	public function show($section)
 	{
 		$user = JFactory::getUser();
-		$show = intval($this->params->get('show_'.$section, 0));
+		$show = intval($this->params->get('show_'.$section, 1));
 		$access = intval($this->params->get('access_'.$section, 0)) <= $user->get('aid');
 		return $show && ($access || $this->_ownedCharacter);
 	}

@@ -50,7 +50,21 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		return EveFactory::getQuery($dbo);
 	}
 	
-	function getQueue($characterID = null) {
+	function getClone($characterID = null)
+	{
+		$character = $this->getItem($characterID);
+		$q = $this->getQuery();
+		$q->addTable('#__eve_charclone', 'cc');
+		$q->addJoin($this->dbdump.'invTypes', 'it', 'cc.cloneID=it.typeID');
+		$q->addJoin($this->dbdump.'dgmTypeAttributes', 'dta', 'dta.typeID=it.typeID AND dta.attributeID=419'); //FIXME: magical consant
+		$q->addQuery('it.typeID AS cloneID', 'it.typeName AS cloneName', 'dta.valueInt AS cloneSkillPoints');
+		$q->addWhere('cc.characterID='.intval($character->characterID));
+		$clone = $q->loadObject();
+		return $clone;
+	}
+	
+	function getQueue($characterID = null) 
+	{
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_skillqueue', 'sq');
@@ -62,7 +76,8 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		return $queue;
 	}
 	
-	function getSkillGroups($characterID = null) {
+	function getSkillGroups($characterID = null) 
+	{
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
 		$q->addTable('#__eve_charskills', 'cs');
