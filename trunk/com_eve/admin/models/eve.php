@@ -120,7 +120,7 @@ class EveModelEve extends JModel {
 			'trnTranslations' => false,
 		);
 		$dbo = $this->getDBO();
-		$sql = 'SHOW TABLES';
+		$sql = 'SHOW TABLES FROM eve';
 		$dbo->setQuery($sql);
 		$tables =  $dbo->loadResultArray();
 		$tmp = array();

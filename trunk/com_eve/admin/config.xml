@@ -6,5 +6,6 @@
 			<option value="Fsock">Fsock</option>
 		</param>
 		<param type="text" name="ale_maxdatasize" default="" label="CACHE MAX DATA SIZE" description="USE 'select @@global.max_allowed_packet;' to get max value" />
+		<param type="text" name="dbdump_database" default="" label="STATIC DATA DUMP DATABASE" description="" />
 	</params>
 </config>
