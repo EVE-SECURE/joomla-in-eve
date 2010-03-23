@@ -23,34 +23,15 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view');
+require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EvewalletjournalViewCorporation extends JView 
+class EvewalletjournalViewCorporation extends EvewalletjournalView 
 {
-	public $state;
-	public $items;
-	public $pagination;
+	public $corporation;
 
-	function display($tpl = null) {
-		$app = JFactory::getApplication();
+	protected function _setEntity($corporation, $params) 
+	{
 		$document = JFactory::getDocument();
-		
-		$state		= $this->get('State');
-		$params		= $this->get('Params');
-		$corporation	= $this->get('Item');
-		$items		= $this->get('Items', 'list');
-		$pagination	= $this->get('Pagination', 'list');
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-		if (count($errors = $this->get('Errors', 'list'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
@@ -66,17 +47,10 @@ class EvewalletjournalViewCorporation extends JView
 		}
 		$document->setTitle($params->get('page_title'));
 		
-
-		$this->assignRef('params', 		$params);
 		$this->assignRef('corporation', $corporation);
-		$this->assignRef('state',		$state);
-		$this->assignRef('items',		$items);
-		$this->assignRef('pagination',	$pagination);
 		
-		parent::display();
-		$this->_setPathway();
 	}
-
+	
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
