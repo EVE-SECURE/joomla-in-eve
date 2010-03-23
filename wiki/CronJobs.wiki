@@ -10,11 +10,13 @@ In 4 easy steps.
   * Set your crontab to execute `cron/index.php`
   * Add new job. Go to Joomla Administration -> Components -> Cron -> New
 
+{{{
 Pattern: * * * * *   	
 Type: cron
 Plugin:
 Event: onCronTick
 Enabled: Yes
+}}}
 
 == Details ==
 
