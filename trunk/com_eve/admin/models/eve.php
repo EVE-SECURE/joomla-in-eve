@@ -27,7 +27,8 @@ jimport('joomla.application.component.model');
 
 class EveModelEve extends JModel {
 	
-	public function getIcons() {
+	public function getIcons() 
+	{
 		$user = JFactory::getUser();
 		$result = array();
 		$result[] = array('icon'=>'icon-48-character.png', 'view'=>'characters', 'caption'=>JText::_('Characters'));
@@ -43,5 +44,93 @@ class EveModelEve extends JModel {
 		}
 		return $result;
 		
+	}
+	
+	public function getCCPDbDumpTables()
+	{
+		$result = array(
+			'agtAgents' => false,
+			'agtAgentTypes' => false,
+			'agtConfig' => false,
+			'agtResearchAgents' => false,
+			'chrAncestries' => false,
+			'chrAttributes' => false,
+			'chrBloodlines' => false,
+			'chrFactions' => false,
+			'chrRaces' => false,
+			'crpActivities' => false,
+			'crpNPCCorporationDivisions' => false,
+			'crpNPCCorporationResearchFields' => false,
+			'crpNPCCorporations' => false,
+			'crpNPCCorporationTrades' => false,
+			'crpNPCDivisions' => false,
+			'crtCategories' => false,
+			'crtCertificates' => false,
+			'crtClasses' => false,
+			'crtRecommendations' => false,
+			'crtRelationships' => false,
+			'dgmAttributeCategories' => false,
+			'dgmAttributeTypes' => false,
+			'dgmEffects' => false,
+			'dgmTypeAttributes' => false,
+			'dgmTypeEffects' => false,
+			'eveGraphics' => false,
+			'eveNames' => false,
+			'eveUnits' => false,
+			'invBlueprintTypes' => false,
+			'invCategories' => false,
+			'invContrabandTypes' => false,
+			'invControlTowerResourcePurposes' => false,
+			'invControlTowerResources' => false,
+			'invFlags' => false,
+			'invGroups' => false,
+			'invMarketGroups' => false,
+			'invMetaGroups' => false,
+			'invMetaTypes' => false,
+			'invTypeMaterials' => false,
+			'invTypeReactions' => false,
+			'invTypes' => false,
+			'mapCelestialStatistics' => false,
+			'mapConstellationJumps' => false,
+			'mapConstellations' => false,
+			'mapDenormalize' => false,
+			'mapJumps' => false,
+			'mapLandmarks' => false,
+			'mapLocationScenes' => false,
+			'mapLocationWormholeClasses' => false,
+			'mapRegionJumps' => false,
+			'mapRegions' => false,
+			'mapSolarSystemJumps' => false,
+			'mapSolarSystems' => false,
+			'mapUniverse' => false,
+			'ramActivities' => false,
+			'ramAssemblyLines' => false,
+			'ramAssemblyLineStations' => false,
+			'ramAssemblyLineTypeDetailPerCategory' => false,
+			'ramAssemblyLineTypeDetailPerGroup' => false,
+			'ramAssemblyLineTypes' => false,
+			'ramInstallationTypeContents' => false,
+			'ramTypeRequirements' => false,
+			'staOperations' => false,
+			'staOperationServices' => false,
+			'staServices' => false,
+			'staStations' => false,
+			'staStationTypes' => false,
+			'trnTranslationColumns' => false,
+			'trnTranslations' => false,
+		);
+		$dbo = $this->getDBO();
+		$sql = 'SHOW TABLES';
+		$dbo->setQuery($sql);
+		$tables =  $dbo->loadResultArray();
+		$tmp = array();
+		foreach ($tables as $i => $table) {
+			$tmp[strtolower($table)] = true;
+		}
+		foreach ($result as $table => $empty) {
+			$result[$table] = isset($tmp[strtolower($table)]);
+		}
+		
+		return $result;
 	}
 }

@@ -83,6 +83,15 @@
 	background-image: url(status-white.png);
 }
 
+#eveoverview {
+	float: right; 
+	width: 45%;	
+}
+#cpanel {
+	width: 55%;
+}
+
 #cpanel div {
 	float:left;
 }
+
