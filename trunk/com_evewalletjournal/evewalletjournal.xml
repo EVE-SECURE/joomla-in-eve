@@ -25,10 +25,11 @@
 	</uninstall>
 
 	<files folder="site">
-		<filename>router.php</filename>
-		<filename>evewalletjournal.php</filename>
 		<filename>controller.php</filename>
+		<filename>evewalletjournal.php</filename>
 		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<filename>view.php</filename>
 		<folder>models</folder>
 		<folder>views</folder>
 	</files>

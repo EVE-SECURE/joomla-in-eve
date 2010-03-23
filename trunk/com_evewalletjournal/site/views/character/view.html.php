@@ -23,34 +23,15 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-jimport( 'joomla.application.component.view');
+require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EvewalletjournalViewCharacter extends JView 
+class EvewalletjournalViewCharacter extends EvewalletjournalView 
 {
-	public $state;
-	public $items;
-	public $pagination;
+	public $character;
 
-	function display($tpl = null) {
-		$app = JFactory::getApplication();
+	protected function _setEntity($character, $params) 
+	{
 		$document = JFactory::getDocument();
-		
-		$state		= $this->get('State');
-		$params		= $this->get('Params');
-		$character	= $this->get('Item');
-		$items		= $this->get('Items', 'list');
-		$pagination	= $this->get('Pagination', 'list');
-
-		// Check for errors.
-		if (count($errors = $this->get('Errors'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-		if (count($errors = $this->get('Errors', 'list'))) {
-			JError::raiseError(500, implode("\n", $errors));
-			return false;
-		}
-		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
@@ -65,18 +46,10 @@ class EvewalletjournalViewCharacter extends JView
 			$params->set('page_title',	$character->name.' - '.JText::_('Wallet Journal'));
 		}
 		$document->setTitle($params->get('page_title'));
-		
-
-		$this->assignRef('params', 		$params);
 		$this->assignRef('character', 	$character);
-		$this->assignRef('state',		$state);
-		$this->assignRef('items',		$items);
-		$this->assignRef('pagination',	$pagination);
 		
-		parent::display();
-		$this->_setPathway();
 	}
-
+	
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
@@ -106,43 +79,4 @@ class EvewalletjournalViewCharacter extends JView
 		}
 	}
 	
-	public function getArgument($item)
-	{
-		switch ($item->refTypeID) {
-			case 1:
-				//station
-				return JHTML::_('evelink.station', array($item, 'arg', '1'));
-				break;
-			case 2:
-				//transactionID
-				break;
-			case 19:
-				//ship typeID
-				return JHTML::_('evelink.ship', array($item, 'arg', '1'));
-				break;
-			case 35:
-				//CSPA characterID
-				break;
-			case 85:
-				//Bonties solarSystemID
-				return JHTML::_('evelink.solarSystem', array($item, 'arg', '1'));
-				break;
-			default:
-				return $item->argName1;
-		}
-	}
-	
-	public function getReason($item)
-	{
-		switch ($item->refTypeID) {
-			case 85:
-				//For each type of NPC killed, its typeID is followed by a colon and the quantity killed. 
-				//These pairs are seperated by commas, and if there are too many (more than about 60 characters' worth) 
-				//the list is ended with a literal ",..." to indicate that more have been left off the list. 
-				return $item->reason;
-				break;
-			default:
-				return $item->reason;
-		}
-	}
 }
