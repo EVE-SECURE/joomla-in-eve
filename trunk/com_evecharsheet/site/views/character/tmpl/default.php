@@ -44,6 +44,9 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<?php endif; ?>
 </div>
 
+<?php if ($this->show('clone')): ?>
+	<?php echo $this->loadTemplate('clone'); ?>
+<?php endif; ?>
 
 <?php if ($this->show('attributes')): ?>
 	<?php echo $this->loadTemplate('attributes'); ?>

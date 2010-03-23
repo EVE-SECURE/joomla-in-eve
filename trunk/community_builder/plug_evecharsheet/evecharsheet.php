@@ -130,15 +130,11 @@ class getEvecharsheetTab extends cbTabHandler
 		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
-		$q->addJoin('#__eve_charclone', 'cc', 'cc.characterID=ch.characterID');
-		$q->addJoin('invTypes', 'it', 'cc.cloneID=it.typeID');
-		$q->addJoin('dgmTypeAttributes', 'dta', 'dta.typeID=it.typeID AND dta.attributeID=419'); //FIXME: magical consant
 		
 		$q->addQuery('ch.*');
 		$q->addQuery('co.corporationID', 'co.corporationName', 'co.ticker');
 		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName');
 		$q->addQuery('ac.owner', 'us.name AS ownerName');
-		$q->addQuery('cloneID', 'it.typeName AS cloneName', 'dta.valueInt AS cloneSkillPoints');
 		$q->addOrder('name');
 		$q->addWhere('ac.owner = %s', intval($owner));
 		if (!$this->params->get('listallcharacters', 0)) {
@@ -329,6 +325,7 @@ class getEvecharsheetTab extends cbTabHandler
 		$this->character = $character;
 		$this->model->setCharacterID($character->characterID);
 		$this->groups = $this->model->getSkillGroups();
+		$this->clone = $this->model->getClone();
 		$this->queue = $this->model->getQueue();
 		$this->categories = $this->model->getCertificateCategories();
 		$this->attributes = $this->model->getAttributes();
