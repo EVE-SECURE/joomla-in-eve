@@ -9,22 +9,26 @@ com_eve implements basic basic pages for alliances, corporations and characters.
 
 == Register your component ==
 
-During installation process, insert new record to `#__eve_links`, where
-  * `name` - Name displayed in pathway
+During installation process, insert new record to `#__eve_sections`, where
+  * `name` - Identifier of section of component. This is alternate key in table and is used to identify section in your code.
+  * `title` - Text of URL leading to section. This URLs are currently listed in com_eve character, corporation, alliance or user views to access section.
+  * `alias` - Segment of URL identifying the section.
   * `entity` - To what is the component related (currently character, corporation or alliance)
   * `component` - Component name without `com_eve` prefix, e.g. `charsheet` for `com_evecharsheet`
+  * `view` - View variable
+  * `layout` - Layout variable
+  * `access` - Access level. 0 = Public, 1 = Registered, 2 = Special
+
 
 == Routing URL ==
 
 Use `EveRoute::_()` to build URLs. It will generate path containing all params for SEF URLs, or just necessary ID, if site doesn't use SEF URLs. Input parameters are
-  * `$component`, `$entity` - see above
+  * `$name` - see above
   * `$alliance`, `$corporation`, `$character` - $object or array($object, $prefix) containing entity ID and Name. Use _prefix_, if attributes of object are different from standard naming in entity table. E.g. 'ceo' for 'ceoID' and 'ceoName',
   * `$xhtml' - see `JRoute::_()`
 
 = TODO =
 
-  # user entity (view and list of characters belonging to user
   # EveRoute - FIX, doesn't allow any other parameters
   # backend administration for links - publish, unpublish
-  # alias to use in URLS for links
   # make links for owner corporations only (optional)
