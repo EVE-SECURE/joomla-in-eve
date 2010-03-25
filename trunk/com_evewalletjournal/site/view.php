@@ -56,7 +56,7 @@ abstract class EvewalletjournalView extends JView
 		
 		$this->_setEntity($item, $params);
 		
-		$refTypeOption = JHTML::_('select.option', '0', JText::_('Com_Evewalletjournal_REF_TYPE_0_OPTION'), 'refTypeID', 'refTypeName');
+		$refTypeOption = JHTML::_('select.option', '-1', JText::_('Com_Evewalletjournal_REF_TYPE_0_OPTION'), 'refTypeID', 'refTypeName');
 		array_unshift($refTypes, $refTypeOption);
 
 		$this->assignRef('params', 		$params);

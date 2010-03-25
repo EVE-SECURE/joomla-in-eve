@@ -49,7 +49,7 @@ class EvewalletjournalModelList extends JModelList {
 		$search = $this->getState('filter.search');
 		$entityID = intval($this->getState('list.entityID'));
 		$accountKey = intval($this->getState('filter.accountKey', 1000));
-		$refTypeID = intval($this->getState('filter.refTypeID', 0));
+		$refTypeID = intval($this->getState('filter.refTypeID', -1));
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
@@ -60,7 +60,7 @@ class EvewalletjournalModelList extends JModelList {
 		
 		$q->addWhere('accountKey = %1$s', $accountKey);
 		$q->addWhere('entityID = %1$s', $entityID);
-		if ($refTypeID) {
+		if ($refTypeID >= 0) {
 			$q->addWhere('wj.refTypeID='.$refTypeID);
 		}
 		
@@ -132,7 +132,7 @@ class EvewalletjournalModelList extends JModelList {
 		$search = $app->getUserStateFromRequest($context.'filter.search', 'filter_search', '');
 		$this->setState('filter.search', $search);
 
-		$refTypeID = $app->getUserStateFromRequest($context.'filter.refTypeID', 'refTypeID', 0, 'int');
+		$refTypeID = $app->getUserStateFromRequest($context.'filter.refTypeID', 'refTypeID', -1, 'int');
 		$this->setState('filter.refTypeID', $refTypeID);
 		
 		$accountKey = 1000;
