@@ -38,9 +38,12 @@ abstract class EvewalletjournalView extends JView
 		$state		= $this->get('State');
 		$params		= $this->get('Params');
 		$item		= $this->get('Item');
+		$listState	= $this->get('State', 'list');
 		$items		= $this->get('Items', 'list');
 		$pagination	= $this->get('Pagination', 'list');
-
+		$accountKeys = $this->get('AccountKeys', 'list');
+		$refTypes	= $this->get('RefTypes', 'list');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -53,10 +56,16 @@ abstract class EvewalletjournalView extends JView
 		
 		$this->_setEntity($item, $params);
 		
+		$refTypeOption = JHTML::_('select.option', '0', JText::_('Com_Evewalletjournal_REF_TYPE_0_OPTION'), 'refTypeID', 'refTypeName');
+		array_unshift($refTypes, $refTypeOption);
+
 		$this->assignRef('params', 		$params);
 		$this->assignRef('state',		$state);
 		$this->assignRef('items',		$items);
+		$this->assignRef('listState',	$listState);
 		$this->assignRef('pagination',	$pagination);
+		$this->assignRef('accountKeys',	$accountKeys);
+		$this->assignRef('refTypes',	$refTypes);
 		
 		parent::display();
 		$this->_setPathway();
@@ -129,10 +138,10 @@ abstract class EvewalletjournalView extends JView
 				//For each type of NPC killed, its typeID is followed by a colon and the quantity killed. 
 				//These pairs are seperated by commas, and if there are too many (more than about 60 characters' worth) 
 				//the list is ended with a literal ",..." to indicate that more have been left off the list. 
-				return $item->reason;
+				return $this->escape($item->reason);
 				break;
 			default:
-				return $item->reason;
+				return $this->escape($item->reason);
 		}
 	}
 }
