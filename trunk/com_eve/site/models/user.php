@@ -39,7 +39,7 @@ class EveModelUser extends JModelItem
 	}
 
 	protected function _loadItem($pk) {
-		return JFactory::getUser($id);
+		return JFactory::getUser($pk);
 	}
 	
 	public function setUserID($id)
