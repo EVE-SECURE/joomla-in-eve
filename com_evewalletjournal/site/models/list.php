@@ -48,6 +48,8 @@ class EvewalletjournalModelList extends JModelList {
 	{
 		$search = $this->getState('filter.search');
 		$entityID = intval($this->getState('list.entityID'));
+		$accountKey = intval($this->getState('filter.accountKey', 1000));
+		$refTypeID = intval($this->getState('filter.refTypeID', 0));
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
@@ -56,14 +58,27 @@ class EvewalletjournalModelList extends JModelList {
 		$q->addQuery('wj.*');
 		$q->addQuery('rt.refTypeName');
 		
+		$q->addWhere('accountKey = %1$s', $accountKey);
 		$q->addWhere('entityID = %1$s', $entityID);
-		/*
-		if ($search) {
-			$q->addWhere('owner.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+		if ($refTypeID) {
+			$q->addWhere('wj.refTypeID='.$refTypeID);
 		}
-		*/
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'wj.refID')), 
-			$q->getEscaped($this->getState('list.direction', 'DESC')));
+		
+		if ($search) {
+			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
+				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
+		}
+		$ordering = $q->getEscaped($this->getState('list.ordering', 'wj.refID'));
+		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
+		if (!in_array(strtolower($ordering), array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1', 
+				'wj.ownername2', 'wj.argname1', 'wj.amount', 'wj.balance', 'wj.reason' ))) {
+			$ordering = 'wj.refID';
+		}
+		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
+			$direction = 'desc';
+		}
+		
+		$q->addOrder($ordering, $direction);
 		return $q;
 	}
 
@@ -87,7 +102,9 @@ class EvewalletjournalModelList extends JModelList {
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-
+		$id	.= ':'.$this->getState('filter.refTypeID');
+		$id	.= ':'.$this->getState('filter.accountKey');
+		
 		return md5($id);
 	}
 	
@@ -114,8 +131,17 @@ class EvewalletjournalModelList extends JModelList {
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($context.'filter.search', 'filter_search', '');
 		$this->setState('filter.search', $search);
+
+		$refTypeID = $app->getUserStateFromRequest($context.'filter.refTypeID', 'refTypeID', 0, 'int');
+		$this->setState('filter.refTypeID', $refTypeID);
 		
-		parent::_populateState();
+		$accountKey = 1000;
+		if ($this->_entity == 'corporation') {
+			$accountKey = $app->getUserStateFromRequest($context.'filter.accountKey', 'accountKey', $accountKey);
+		}
+		$this->setState('filter.accountKey', $accountKey);
+		
+		parent::_populateState('wj.refID', 'desc');
 
 		$limitstart = JRequest::getInt('limitstart'); 
 		$this->setState('list.start', $limitstart);
@@ -124,7 +150,23 @@ class EvewalletjournalModelList extends JModelList {
 		$this->setState('params', $params);
 	}
 
+	public function getAccountKeys()
+	{
+		$options = array();
+		for ($i = 1000; $i <= 1006; $i += 1) {
+			$option = JHTML::_('select.option', $i);
+			$options[] = $option;
+		}
+		return $options;
+	}
+	
 	public function getRefTypes()
 	{
+		$dbo = $this->getDBO();
+		$q = new JQuery($dbo);
+		$q->addTable('#__eve_reftypes');
+		$q->addOrder('refTypeName');
+		$result = $q->loadObjectList();
+		return $result;
 	}
 }
