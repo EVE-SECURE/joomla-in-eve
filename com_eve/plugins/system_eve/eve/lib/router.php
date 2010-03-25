@@ -101,7 +101,7 @@ class EveRouter {
 			unset($query['corporationID']);
 			unset($query['allianceID']);
 			$entities = array('character');
-		} elseif (JArrayHelper::getValue($item->query, 'view') == 'corporation' && !isset($query['allianceID'])) {
+		} elseif (!isset($query['allianceID'])) {
 			//corporation does not have to be in alliance
 			$entities = array('corporation', 'character'); 
 		} else {

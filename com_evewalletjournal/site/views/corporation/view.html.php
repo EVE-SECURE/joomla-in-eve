@@ -55,18 +55,23 @@ class EvewalletjournalViewCorporation extends EvewalletjournalView
 	{
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
-		if (!$menu || $menu->component == 'com_evewalletjournal') {
-			return;
+		if ($menu) {
+			if ($menu->component == 'com_evewalletjournal') {
+				return;
+			}
+			$view = JArrayHelper::getValue($menu->query, 'view');
+		} else {
+			$view = null;
 		}
 		
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		
-		$view = JArrayHelper::getValue($menu->query, 'view');
 		switch ($view) {
 			case null:
-				$pathway->addItem($this->corporation->allianceName, 
-					EveRoute::_('alliance', $this->corporation));
+				if ($this->corporation->allianceID) {
+					$pathway->addItem($this->corporation->allianceName, 
+						EveRoute::_('alliance', $this->corporation));
+				}
 			case 'alliance':
 				$pathway->addItem($this->corporation->corporationName, 
 					EveRoute::_('corporation', $this->corporation, $this->corporation));

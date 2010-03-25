@@ -72,8 +72,10 @@ class EveViewCorporation extends JView
 		$view = JArrayHelper::getValue($menu->query, 'view');
 		switch ($view) {
 			case null:
-				$pathway->addItem($this->corporation->allianceName, 
-					EveRoute::_('alliance', $this->corporation));
+				if ($this->corporation->allianceID) {
+					$pathway->addItem($this->corporation->allianceName, 
+						EveRoute::_('alliance', $this->corporation));
+				}
 			case 'alliance':
 				$pathway->addItem($this->corporation->corporationName, 
 					EveRoute::_('corporation', $this->corporation, $this->corporation));
