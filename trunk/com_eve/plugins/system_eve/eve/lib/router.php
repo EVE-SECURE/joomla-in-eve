@@ -38,14 +38,16 @@ class EveRouter {
 	{
 		$menu = JSite::getMenu();
 		$items = $menu->getItems('component', 'com_eve');
-		foreach ($items as $item) {
-			$view = $item->query['view'];
-			if ($view == 'user') {
-				$this->{$view}[$item->id] = $item;
-			} else {
-				$itemID = $item->query['view'].'ID';
-				if (isset($this->$view)) {
-					$this->{$view}[intval($item->query[$itemID])] = $item;
+		if (is_array($items)) {
+			foreach ($items as $item) {
+				$view = $item->query['view'];
+				if ($view == 'user') {
+					$this->{$view}[$item->id] = $item;
+				} else {
+					$itemID = $item->query['view'].'ID';
+					if (isset($this->$view)) {
+						$this->{$view}[intval($item->query[$itemID])] = $item;
+					}
 				}
 			}
 		}
