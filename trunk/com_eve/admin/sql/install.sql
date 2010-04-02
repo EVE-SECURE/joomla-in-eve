@@ -177,7 +177,7 @@ INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`
 ('eve', 'AllianceList', 'None', 'None', 0, '');
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
-(@lastid, NULL, NULL, NOW(), 1);
+(@lastid, NULL, NULL, '0000-00-00 00:00:00', 1);
 
 -- 
 -- Data for table `#__eve_sections`
