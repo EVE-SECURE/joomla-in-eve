@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 ?>
 
 <div class="evecharsheet-skills">
-<h3><?php echo JText::_('Skills'); ?></h3>
+<h2><?php echo JText::_('Skills'); ?></h2>
 
 <a class="expand-all-skills" href="#" title="<?php echo JText::_('Expand all skills'); ?>">
 	<?php echo JText::_('Expand all skills'); ?>
@@ -20,7 +20,9 @@ defined('_JEXEC') or die();
 
 
 <?php foreach ($this->groups as $group): ?>
-	<h4><?php echo $this->escape($group->groupName); ?></h4>
+	<div class="heading <?php echo preg_replace('/[^a-z]/', '', strtolower($group->groupName)); ?>">
+		<h3><?php echo $this->escape($group->groupName); ?><h3>
+	</div>
 	<?php if ($group->skills): ?>
 		<table class="skill-group">
 		<?php foreach ($group->skills as $skill): ?>

@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 ?>
 
 <div class="evecharsheet-certificates">
-<h3><?php echo JText::_('Certificates'); ?></h3>
+<h2><?php echo JText::_('Certificates'); ?></h2>
 <a class="expand-all-certificates" href="#" title="<?php echo JText::_('Expand all certificates'); ?>">
 	<?php echo JText::_('Expand all certificates'); ?>
 </a> 
@@ -18,7 +18,9 @@ defined('_JEXEC') or die();
 </a>
 
 <?php foreach ($this->categories as $category): ?>
-	<h4><?php echo $this->escape($category->categoryName); ?></h4>
+	<div class="heading <?php echo preg_replace('/[^a-z]/', '', strtolower($category->categoryName)); ?>">
+		<h3><?php echo $this->escape($category->categoryName); ?></h3>
+	</div>
 	<?php if ($category->certificates): ?>
 		<table class="certificate-category">
 		<?php foreach ($category->certificates as $certificate): ?>
