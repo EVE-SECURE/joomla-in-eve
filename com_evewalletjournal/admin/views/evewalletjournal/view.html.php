@@ -29,9 +29,9 @@ class EvewalletjournalViewEvewalletjournal extends JView {
 	function display($tmpl = null) {
 		JHTML::stylesheet('walletjournal.css', 'administrator/components/com_evewalletjournal/assets/');
 		
-		$title = JText::_('Com_Evewallejournal_Eve_Wallet_Journal_Title');
+		$title = JText::_('Com_Evewalletjournal_Eve_Wallet_Journal_Title');
 		JToolBarHelper::title($title, 'wallet');
-		JToolBarHelper::custom('getRefTypes', 'reftypes', 'reftypes', JText::_('Com_Evewallejournal_Get_Ref_Types'), false);
+		JToolBarHelper::custom('getRefTypes', 'reftypes', 'reftypes', JText::_('Com_Evewalletjournal_Get_Ref_Types'), false);
 		//JToolBarHelper::preferences('com_evewalletjournal', 480, 640);
 
 		parent::display($tmpl);
