@@ -29,11 +29,11 @@ class EveApiPlugin extends JPlugin
 {
 	protected function  _registerCharacter($type, $call, $userID = null, $characterID = null, $params = null)
 	{
-		$next = new DateTime();
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if (!$schedule->id && $schedule->apicall) {
-			$schedule->next = $next->format('Y-m-d H:i:s');
+			$next = JFactory::getDate();
+			$schedule->next = $next->toMySQL();
 			$schedule->store();
 		}
 	}
@@ -43,8 +43,8 @@ class EveApiPlugin extends JPlugin
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if ($owner && !$schedule->id && $schedule->apicall) {
-			$next = new DateTime();
-			$schedule->next = $next->format('Y-m-d H:i:s');
+			$next = JFactory::getDate();
+			$schedule->next = $next->toMySQL();
 			$schedule->store();
 		}
 		if (!$owner && $schedule->id) {

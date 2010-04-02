@@ -151,7 +151,7 @@ INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization
 ('eve', 'AllianceList', 'None', 'None', 0, '');
 SET @lastid = LAST_INSERT_ID();
 INSERT INTO `jos_eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
-(@lastid, NULL, NULL, NOW(), 1);
+(@lastid, NULL, NULL, '0000-00-00 00:00:00', 1);
 
 INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('character', 'Character', '', 'character', '', 'character', '', '0', '0', '0'),
