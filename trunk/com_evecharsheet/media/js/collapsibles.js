@@ -1,21 +1,23 @@
 Collapsibles = {
 	skills: function() {
 		var list = $$('.evecharsheet-skills .skill-group');
-		var headings = $$('.evecharsheet-skills h4');
+		var headings = $$('.evecharsheet-skills div.heading');
 		var collapsibles = new Array();
 		
 		headings.each( function(heading, i) {
 			var collapsible = new Fx.Slide(list[i], { 
 				duration: 500, 
 				transition: Fx.Transitions.linear,
+				onComplete: function() {
+					heading.toggleClass('heading-collapsed');
+					heading.toggleClass('heading-expanded');
+				},
 			});
 			
 			collapsibles[i] = collapsible;
 			
 			heading.addEvent('click', function(){
 				collapsible.toggle();
-				heading.toggleClass('heading-collapsed');
-				heading.toggleClass('heading-expanded');
 				return false;
 			});
 			heading.addClass('heading-collapsed');
@@ -49,21 +51,23 @@ Collapsibles = {
 	
 	certificates: function() {
 		var list = $$('.evecharsheet-certificates .certificate-category');
-		var headings = $$('.evecharsheet-certificates h4');
+		var headings = $$('.evecharsheet-certificates div.heading');
 		var collapsibles = new Array();
 		
 		headings.each( function(heading, i) {
 			var collapsible = new Fx.Slide(list[i], { 
 				duration: 500, 
 				transition: Fx.Transitions.linear,
+				onComplete: function() {
+					heading.toggleClass('heading-collapsed');
+					heading.toggleClass('heading-expanded');
+				},
 			});
 			
 			collapsibles[i] = collapsible;
 			
 			heading.addEvent('click', function(){
 				collapsible.toggle();
-				heading.toggleClass('heading-collapsed');
-				heading.toggleClass('heading-expanded');
 				return false;
 			});
 			heading.addClass('heading-collapsed');

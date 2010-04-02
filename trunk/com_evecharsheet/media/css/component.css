@@ -1,3 +1,15 @@
 @CHARSET "UTF-8";
 div.evecharsheet-skills td.skill-label {width: 40em;}
 div.evecharsheet-certificates td.certificate-label {width: 40em;}
+
+div.heading-expanded {
+	background: url(../images/collapse.png) no-repeat;
+	padding-left: 20px;
+	cursor: pointer;
+}
+
+div.heading-collapsed {
+	background: url(../images/expand.png) no-repeat;
+	padding-left: 20px;
+	cursor: pointer;
+}

@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 
 ?>
 <div class="evecharsheet-titles">
-<h3><?php echo JText::_('Titles'); ?></h3>
+<h2><?php echo JText::_('Titles'); ?></h2>
 <table>
 <?php foreach ($this->titles as $title): ?>
 	<tr>
