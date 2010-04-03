@@ -25,4 +25,11 @@ foreach ($plugins as $plugin) {
 		$mainframe->enqueueMessage($msg);
 		$result = true;
 	}
+	$dbo = JFactory::getDBO();
+	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evechartracking'";
+	$dbo->setQuery($sql);
+	if ($dbo->query()) {
+		$msg = JText::sprintf('Plugins enabled');
+		$app->enqueueMessage($msg);
+	}
 }
