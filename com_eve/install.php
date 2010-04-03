@@ -26,6 +26,13 @@ foreach ($plugins as $plugin) {
 		$app->enqueueMessage($msg);
 		$result = true;
 	}
+	$dbo = JFactory::getDBO();
+	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eve'";
+	$dbo->setQuery($sql);
+	if ($dbo->query()) {
+		$msg = JText::sprintf('Plugins enabled');
+		$app->enqueueMessage($msg);
+	}
 }
 
 function com_install() {
@@ -36,11 +43,6 @@ function com_install() {
 	<p>
 		Before you start using this component, make sure to:
 		<ol>
-			<li>
-				<a href="<?php echo JRoute::_('index.php?option=com_plugins&search=eve'); ?>" target="_blank">
-					<?php echo JText::_('Enable all plugins'); ?>
-				</a>
-			</li>
 			<li>
 				<a href="<?php echo JRoute::_('index.php?option=com_config'); ?>" target="_blank">
 					<?php echo JText::_('Turn off "New User Account Activation"'); ?> if you want to use API account activation

@@ -37,6 +37,8 @@
 	
 	<media folder="media" destination="com_evecharsheet">
 		<filename>css/component.css</filename>
+		<filename>images/collapse.png</filename>
+		<filename>images/expand.png</filename>
 		<filename>images/level0.gif</filename>
 		<filename>images/level1_act.gif</filename>
 		<filename>images/level1.gif</filename>
