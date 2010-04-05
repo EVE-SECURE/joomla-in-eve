@@ -38,7 +38,7 @@ JHTML::_('eve.contextmenu');
 </div>
 
 <div>
-	<?php echo JText::_('Tax Rate'); ?>: <?php echo $this->corporation->taxRate * 100; ?>%
+	<?php echo JText::_('Tax Rate'); ?>: <?php echo $this->corporation->taxRate; ?>%
 </div>
 
 <div>
