@@ -46,6 +46,21 @@ class EveModelEve extends JModel {
 		
 	}
 	
+	public function getOwnerCorporations()
+	{
+		$dbo = $this->getDBO();
+		$q = new JQuery($dbo);
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin('#__eve_characters', 'ceo', 'ceo.characterID=co.ceoID');
+		$q->addJoin('#__eve_accounts', 'ac', 'ceo.userID=ac.userID');
+		$q->addQuery('co.*, al.name AS allianceName, al.shortName, ceo.name AS ceoName, ac.apiStatus');
+		$q->addWhere('(co.owner = 1 OR al.owner = 1)');
+		$list = $q->loadObjectList();
+		return $list;
+		
+	}
+	
 	public function getCCPDbDumpTables()
 	{
 		$result = array(

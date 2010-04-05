@@ -33,6 +33,7 @@ class EveViewEve extends JView {
 		
 		$icons = $this->get('Icons');
 		$tables = $this->get('CCPDbDumpTables');
+		$ownerCorporations = $this->get('OwnerCorporations');
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -42,6 +43,7 @@ class EveViewEve extends JView {
 		
 		$this->assignRef('icons', $icons);
 		$this->assignRef('tables', $tables);
+		$this->assignRef('ownerCorporations', $ownerCorporations);
 		$this->assignRef('user', $user);		
 
 		parent::display($tpl);
