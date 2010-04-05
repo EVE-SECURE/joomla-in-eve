@@ -336,7 +336,7 @@ class EveModelCorporation extends EveModel {
 					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
 				}
 				$dispatcher->trigger('corpCorporationSheet', 
-					array($xml, $ale->isFromCache(), array('characterID'=>$character->characterID)));
+					array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID)));
 				$count += 1;
 			}
 			catch (RuntimeException $e) {
