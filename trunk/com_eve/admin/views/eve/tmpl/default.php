@@ -21,6 +21,58 @@ foreach ($this->tables as $tableName => $tableExists) {
 
 <div id="eveoverview">
 	<?php echo $pane->startPane("eveoverview-pane"); ?>
+	<?php echo $pane->startPanel(JText::_('Owner Corporations'), 'eveoverview-panel-owner-corporations' ); ?>
+		<?php if (!$this->ownerCorporations): ?>
+			<h4><?php echo JText::_('No owner corporation set'); ?></h4>
+			<ol>
+				<li><?php echo JText::_('Go to'); ?> 
+					<a href="<?php echo JRoute::_('index.php?option=com_eve&view=corporations'); ?>"><?php echo JText::_('Corporations') ?></a>
+					<?php echo JText::_('or'); ?>
+					<a href="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>"><?php echo JText::_('Alliances') ?></a>
+				</li>
+				<li>
+					<?php echo JText::_('Create new or edit existing corporation or alliance'); ?>
+				</li>
+				<li>
+					<?php echo JText::_('Set OWNER to "yes"'); ?>
+				</li>
+				<li>
+					<?php echo JText::_('Save'); ?>
+				</li>
+			</ol>
+		<?php else: ?>
+			<table class="adminlist">
+				<tr>
+					<th class="title">
+						<?php echo JText::_('CORPORATION NAME'); ?>
+					</th>
+					<th class="title">
+						<?php echo JText::_('CEO NAME' ); ?>
+					</th>
+					<th class="title">
+						<?php echo JText::_('API KEY STATUS'); ?>
+					</th>
+				</tr>
+				<?php foreach ($this->ownerCorporations as $item): ?>
+					<tr>
+						<td>
+							<span><?php echo $this->escape($item->corporationName); ?></span> (<?php echo $item->corporationID; ?>)
+						</td>
+						<td>
+							<?php if (!is_null($item->ceoName)): ?>
+								<?php echo $this->escape($item->ceoName); ?>
+							<?php endif; ?>
+						</td>
+						<td>
+							<?php if (!is_null($item->apiStatus)): ?>
+								<span class="apiStatus apiStatus-<?php echo $item->apiStatus; ?>"><?php echo $item->apiStatus; ?></span>
+							<?php endif; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
+	<?php echo $pane->endPanel(); ?>
 	<?php echo $pane->startPanel(JText::_('CCP Static Data Dump Info'), 'eveoverview-panel-tables' ); ?>
 	<table class="adminlist">
 	<?php if (!$allTables): ?>
