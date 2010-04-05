@@ -110,7 +110,7 @@ INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');
 
-INSERT IGNORE INTO #__eve_roles (`roleID`, `roleName`) VALUES
+INSERT INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (1, 'roleDirector'),
 -- (2, ''),
 -- (4, ''),

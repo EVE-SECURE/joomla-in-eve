@@ -48,7 +48,6 @@
 			<filename>controller.php</filename>
 			<filename>evewalletjournal.php</filename>
 			<filename>index.html</filename>
-			<filename>view.html</filename>
 			<folder>assets</folder>
 			<folder>models</folder>
 			<folder>sql</folder>

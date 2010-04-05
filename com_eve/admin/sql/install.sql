@@ -183,7 +183,7 @@ INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `publ
 -- Data for table `#__eve_sections`
 -- 
 
-INSERT INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
+INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('character', 'Character', '', 'character', '', 'character', '', '0', '0', '0'),
 ('corporation', 'Corporation', '', 'corporation', '', 'corporation', '', '0', '0', '0'),
 ('alliance', 'Alliance', '', 'alliance', '', 'alliance', '', '0', '0', '0');
