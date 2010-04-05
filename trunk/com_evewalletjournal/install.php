@@ -1,5 +1,29 @@
 <?php
-global $mainframe;
+/**
+ * @version		$Id$
+ * @author		Pavol Kovalik
+ * @package		Joomla! in EVE
+ * @subpackage	Wallet Journal
+ * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
+ * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+// Check to ensure this file is included in Joomla!
+defined('_JEXEC') or die();
+
+$app = JFactory::getApplication();
 
 $plugins = array('eveapi_evewalletjournal');
 foreach ($plugins as $plugin) {
@@ -17,14 +41,19 @@ foreach ($plugins as $plugin) {
 	if (!$installer->install($package['dir'])) {
 		// There was an error installing the package
 		$msg = JText::sprintf('INSTALLEXT', JText::_($package['type']), JText::_('Error'));
-		$mainframe->enqueueMessage($msg);
+		$app->enqueueMessage($msg);
 		$result = false;
 	} else {
 		// Package installed sucessfully
 		$msg = JText::sprintf('INSTALLEXT', JText::_($package['type']), JText::_('Success'));
-		$mainframe->enqueueMessage($msg);
+		$app->enqueueMessage($msg);
 		$result = true;
 	}
+}
+
+function com_install() {
+	$app = JFactory::getApplication();
+
 	$dbo = JFactory::getDBO();
 	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evewalletjournal'";
 	$dbo->setQuery($sql);
@@ -32,4 +61,5 @@ foreach ($plugins as $plugin) {
 		$msg = JText::sprintf('Plugins enabled');
 		$app->enqueueMessage($msg);
 	}
+	return true;
 }
