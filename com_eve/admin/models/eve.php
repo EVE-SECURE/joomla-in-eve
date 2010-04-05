@@ -143,7 +143,7 @@ class EveModelEve extends JModel {
 			$tmp[strtolower($table)] = true;
 		}
 		foreach ($result as $table => $empty) {
-			$result[$table] = isset($tmp[strtolower($table)]);
+			$result[strtolower($table)] = isset($tmp[strtolower($table)]);
 		}
 		
 		return $result;
