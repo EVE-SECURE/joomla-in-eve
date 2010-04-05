@@ -60,10 +60,6 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		}
 	}
 
-	public function onRegisterCharacter($userID, $characterID) {
-		$this->_registerCharacter('char', 'SkillQueue', $userID, $characterID);
-	}
-
 	public function onSetOwnerCorporation($userID, $characterID, $owner) {
 		$this->_setOwnerCorporation('corp', 'Titles', $owner, $userID, $characterID);
 	}
@@ -83,6 +79,8 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		$this->storeTitles($characterID, $xml);
 		
 		$this->storeClone($characterID, $xml);
+		
+		$this->loadSkillQueue($characterID);
 	}
 	
 	public function charSkillQueue($xml, $fromCache, $options = array()) {
@@ -107,7 +105,34 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		$sql = 'INSERT INTO #__eve_skillqueue (characterID, queuePosition, typeID, level, startSP, endSP, startTime, endTime) VALUES '.$values;
 		$dbo->Execute('DELETE FROM #__eve_skillqueue WHERE characterID = '. $characterID);
 		$dbo->Execute($sql);
-		
+	}
+	
+	private function loadSkillQueue($characterID)
+	{
+		$dispatcher =& JDispatcher::getInstance();
+		try {
+			$ale = EveFactory::getAleEVEOnline();
+			$character  = EveFactory::getInstance('Character', $characterID);
+			$account = EveFactory::getInstance('Account', $character->userID);
+			if (!$account->apiKey) {
+				return;
+			}
+			$ale->setCredentials($account->userID, $account->apiKey, $character->characterID);
+			$xml = $ale->char->SkillQueue();
+			$dispatcher->trigger('charSkillQueue', 
+				array($xml, $ale->isFromCache(), array('characterID' => $character->characterID)));
+			$count += 1;
+		}
+		catch (AleExceptionEVEAuthentication $e) {
+			EveHelper::updateApiStatus($account, $e->getCode(), true);
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}
 	}
 	
 	private function loadAttributes()
