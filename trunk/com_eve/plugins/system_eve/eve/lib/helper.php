@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 class EveHelper {
 	static $ownerCorporationIDs = null;
 	
-	static function getOwnerCoroprationIDs($dbo = null) 
+	public static function getOwnerCoroprationIDs($dbo = null) 
 	{
 		if (is_null(self::$ownerCorporationIDs)) {
 			if (empty($dbo)) {
@@ -49,7 +49,7 @@ class EveHelper {
 	 * @param int $errorCode
 	 * @param bool $store
 	 */
-	function updateApiStatus($account, $errorCode, $store = false) 
+	public static function updateApiStatus($account, $errorCode, $store = false) 
 	{
 		switch ($errorCode) {
 			case 200:
@@ -76,6 +76,59 @@ class EveHelper {
 				}
 				break;
 		}
+	}
+	
+	/**
+	 * Schedule corporatin related API calls.
+	 * You should use this when installing new component.
+	 *
+	 * @param string $plugin Plugin name
+	 * @param bool $create Create plugin manually. Set to true if the plugin was just installed
+	 */
+	public static function scheduleApiCalls($name = null, $create = false)
+	{
+		$type = 'eveapi';
+		$dbo = JFactory::getDBO();
+		$q = new JQuery($dbo);
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin('#__eve_characters', 'ceo', 'ceo.characterID=co.ceoID');
+		$q->addQuery('ceo.characterID', 'ceo.userID');
+		$q->addWhere('(co.owner = 1 OR al.owner = 1)');
+		$ceos = $q->loadObjectList();
+		
+		
+		JPluginHelper::importPlugin('eveapi', $name);
+		$dispatcher =& JDispatcher::getInstance();
+		if ($create && $name) {
+			$path	= JPATH_PLUGINS.DS.$type.DS.$name.'.php';
+			require_once $path;
+			$className = 'plg'.$type.$name;
+			if(class_exists($className)) {
+				$instance = new $className($dispatcher, array('type' => $type, 'name' => $name));
+			}
+		}
+		
+		foreach ($ceos as $ceo) {
+			if ($ceo->userID && $ceo->characterID) {
+				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, 1));
+			}
+		}
+	}
+	
+	public static function clearApiCalls($type, $call)
+	{
+		$dbo = JFactory::getDBO();
+		
+		$sql = sprintf('DELETE FROM #__eve_schedule WHERE apicall IN (SELECT id FROM #__eve_apicalls WHERE `type`=%s AND `call`=%s)', 
+			$dbo->quote($type), $dbo->quote($call));
+		$dbo->setQuery($sql);
+		$dbo->query($sql);
+
+		$sql = sprintf('DELETE FROM  #__eve_apicalls WHERE `type`=%s AND `call`=%s', 
+			$dbo->quote($type), $dbo->quote($call));
+		$dbo->setQuery($sql);
+		$dbo->query($sql);
 	}
 	
 	

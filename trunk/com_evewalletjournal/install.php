@@ -61,5 +61,6 @@ function com_install() {
 		$msg = JText::sprintf('Plugins enabled');
 		$app->enqueueMessage($msg);
 	}
+	EveHelper::scheduleApiCalls('evewalletjournal', true);
 	return true;
 }

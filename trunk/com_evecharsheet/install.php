@@ -58,5 +58,6 @@ function com_install() {
 		$msg = JText::sprintf('Plugins enabled');
 		$app->enqueueMessage($msg);
 	}
+	EveHelper::scheduleApiCalls('evecharsheet', true);
 	return true;
 }

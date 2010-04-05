@@ -44,3 +44,10 @@ foreach ($tmp as $plugin) {
 
 $model = JModel::getInstance('Plugins', 'InstallerModel');
 $model->remove($plugins);
+
+function com_uninstall() {
+	EveHelper::clearApiCalls('char', 'WalletJournal');
+	EveHelper::clearApiCalls('corp', 'WalletJournal');
+	
+	return true;
+}

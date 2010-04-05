@@ -29,7 +29,7 @@ class EveApiPlugin extends JPlugin
 {
 	protected function  _registerCharacter($type, $call, $userID = null, $characterID = null, $params = null)
 	{
-		$schedule = JTable::getInstance('Schedule', 'EveTable');
+		$schedule = EveFactory::getInstance('Schedule', 'EveTable');
 		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if (!$schedule->id && $schedule->apicall) {
 			$next = JFactory::getDate();
@@ -40,7 +40,7 @@ class EveApiPlugin extends JPlugin
 	
 	protected function  _setOwnerCorporation($type, $call, $owner, $userID = null, $characterID = null, $params = null)
 	{
-		$schedule = JTable::getInstance('Schedule', 'EveTable');
+		$schedule = EveFactory::getInstance('Schedule');
 		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if ($owner && !$schedule->id && $schedule->apicall) {
 			$next = JFactory::getDate();
