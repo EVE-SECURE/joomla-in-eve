@@ -42,3 +42,9 @@ foreach ($tmp as $plugin) {
 
 $model = JModel::getInstance('Plugins', 'InstallerModel');
 $model->remove($plugins);
+
+function com_uninstall() {
+	EveHelper::clearApiCalls('corp', 'Titles');
+	
+	return true;
+}

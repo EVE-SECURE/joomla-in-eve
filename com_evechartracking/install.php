@@ -62,5 +62,7 @@ function com_install() {
 		$msg = JText::sprintf('Plugins enabled');
 		$app->enqueueMessage($msg);
 	}
+	
+	EveHelper::scheduleApiCalls('evechartracking', true);
 	return true;
 }

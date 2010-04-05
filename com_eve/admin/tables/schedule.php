@@ -75,6 +75,6 @@ class EveTableSchedule extends JTable {
 		$this->userID = $userID;
 		$this->characterID = $characterID;
 		$this->setApicall($type, $call, $params);
-		return false;
+		return true;
 	}
 }

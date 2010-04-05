@@ -36,7 +36,7 @@ INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`
 ('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{"accountKey":1005}'),
 ('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{"accountKey":1006}');
 
-INSERT INTO `#__eve_reftypes` (`refTypeID`, `refTypeName`) VALUES 
+INSERT IGNORE INTO `#__eve_reftypes` (`refTypeID`, `refTypeName`) VALUES 
 (0, 'Undefined'),
 (1, 'Player Trading'),
 (2, 'Market Transaction'),
