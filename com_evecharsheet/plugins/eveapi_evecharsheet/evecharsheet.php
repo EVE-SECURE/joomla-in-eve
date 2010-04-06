@@ -47,6 +47,7 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		$character = EveFactory::getInstance('Character', $characterID);
 		$corporationID = $character->corporationID;
 		$dbo = JFactory::getDBO();
+		$values = '';
 		foreach ($xml->result->titles as $title) {
 			if ($values) {
 				$values .= ",\n"; 
@@ -121,7 +122,6 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 			$xml = $ale->char->SkillQueue();
 			$dispatcher->trigger('charSkillQueue', 
 				array($xml, $ale->isFromCache(), array('characterID' => $character->characterID)));
-			$count += 1;
 		}
 		catch (AleExceptionEVEAuthentication $e) {
 			EveHelper::updateApiStatus($account, $e->getCode(), true);
