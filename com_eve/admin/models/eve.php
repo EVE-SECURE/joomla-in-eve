@@ -27,6 +27,11 @@ jimport('joomla.application.component.model');
 
 class EveModelEve extends JModel {
 	
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+	}
+	
 	public function getIcons() 
 	{
 		$user = JFactory::getUser();
@@ -134,8 +139,16 @@ class EveModelEve extends JModel {
 			'trnTranslationColumns' => false,
 			'trnTranslations' => false,
 		);
+
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		if (!$dbdump_database) {
+			$app = JFactory::getApplication();
+			$dbdump_database = $app->getCfg('db');
+		}
+		
 		$dbo = $this->getDBO();
-		$sql = 'SHOW TABLES FROM eve';
+		$sql = 'SHOW TABLES FROM '.$dbo->nameQuote($dbdump_database);
 		$dbo->setQuery($sql);
 		$tables =  $dbo->loadResultArray();
 		$tmp = array();
@@ -143,7 +156,7 @@ class EveModelEve extends JModel {
 			$tmp[strtolower($table)] = true;
 		}
 		foreach ($result as $table => $empty) {
-			$result[strtolower($table)] = isset($tmp[strtolower($table)]);
+			$result[$table] = isset($tmp[strtolower($table)]);
 		}
 		
 		return $result;
