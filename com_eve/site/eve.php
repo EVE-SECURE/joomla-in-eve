@@ -27,9 +27,14 @@ if (!JPluginHelper::isEnabled('system', 'eve')) {
 	$app = JFactory::getApplication();
 	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
 } else {
+	$task = JRequest::getVar('task', 'display');
+	$view = JRequest::getVar('view');
+	if ($task == 'display' && $view == 'character') {
+		JRequest::setVar('task', 'character.display');
+	}
 	$controller = EveController::getInstance('Eve');
 	if (!JError::isError($controller)) {
-		$controller->execute(JRequest::getVar('task'));
+		$controller->execute($task);
 		$controller->redirect();
 	} else {
 		$app = JFactory::getApplication();

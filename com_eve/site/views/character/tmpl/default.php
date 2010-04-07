@@ -41,6 +41,10 @@ JHTML::_('eve.contextmenu');
 	<?php foreach ($this->components as $component): ?>
 		<a href="<?php echo EveRoute::_($component->name, $this->character, $this->character, $this->character); ?>">
 			<?php echo JText::_($component->title); ?>
-		</a>
+		</a> <br />
 	<?php endforeach; ?>
 </div>
+
+<?php if (is_array($this->apischedule) && $this->apischedule): ?>
+	<?php echo $this->loadTemplate('apischedule') ?>
+<?php endif; ?>

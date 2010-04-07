@@ -52,6 +52,6 @@ defined('_JEXEC') or die();
 		</tr>
 	</table>
 	<input type="submit" value="<?php echo JText::_('SUBMIT'); ?>" />
-	
+	<?php echo JHTML::_('form.token'); ?>
 </form>
 </div>
