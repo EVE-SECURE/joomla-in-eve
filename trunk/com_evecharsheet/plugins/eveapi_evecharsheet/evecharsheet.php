@@ -35,9 +35,13 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 	static private $attributes;
 	static private $enhancers;
 	static private $clones;
+	private $dbdump;
 	
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
 	}
 	
 	
@@ -140,7 +144,7 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		if (isset(self::$attributes)) {
 			return;
 		}
-		$sql = 'SELECT * FROM chrAttributes';
+		$sql = 'SELECT * FROM '.$this->dbdump.'chrAttributes';
 		$dbo = JFactory::getDBO();
 		$dbo->setQuery($sql);
 		self::$attributes = $dbo->loadObjectList();
@@ -151,7 +155,7 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		if (isset(self::$clones)) {
 			return;
 		}
-		$sql = 'SELECT typeID, typeName FROM invTypes WHERE groupID=23';
+		$sql = 'SELECT typeID, typeName FROM '.$this->dbdump.'invTypes WHERE groupID=23';
 		$dbo = JFactory::getDBO();
 		$dbo->setQuery($sql);
 		self::$clones = $dbo->loadObjectList('typeName');
@@ -160,7 +164,7 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 	private function getAugmentatorID($augmentatorName)
 	{
 		if (!isset(self::$enhancers)) {
-			$sql = 'SELECT typeID, typeName FROM invTypes WHERE groupID IN (300, 745)'; 
+			$sql = 'SELECT typeID, typeName FROM '.$this->dbdump.'invTypes WHERE groupID IN (300, 745)'; 
 			$dbo = JFactory::getDBO();
 			$dbo->setQuery($sql);
 			self::$enhancers = $dbo->loadObjectList('typeName');
