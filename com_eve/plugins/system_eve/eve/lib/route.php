@@ -86,7 +86,7 @@ class EveRoute
 		return JRoute::_($url, $xhtml);
 	}
 	
-	static public function character($character, $corporation = null, $alliance = null)
+	static public function character($character, $corporation = null, $alliance = null, $xhtml = true)
 	{
 		if (is_null($corporation)) {
 			$corporation = is_array($character) ? $character[0] : $character;
@@ -94,20 +94,20 @@ class EveRoute
 		if (is_null($alliance)) {
 			$alliance = is_array($corporation) ? $corporation[0] : $corporation;
 		}
-		return self::_('character', $alliance, $corporation, $character);
+		return self::_('character', $alliance, $corporation, $character, $xhtml);
 	}
 
-	static public function corporation($corporation, $alliance = null)
+	static public function corporation($corporation, $alliance = null, $xhtml = true)
 	{
 		if (is_null($alliance)) {
 			$alliance = is_array($corporation) ? $corporation[0] : $corporation;
 		}
-		return self::_('corporation', $alliance, $corporation);
+		return self::_('corporation', $alliance, $corporation, $xhtml);
 	}
 
-	static public function alliance($alliance)
+	static public function alliance($alliance, $xhtml = true)
 	{
-		return self::_('alliance', $alliance);
+		return self::_('alliance', $alliance, $xhtml);
 	}
 		
 	static public function link($name, $attribs = null, $alliance = null, $corporation = null, $character = null)

@@ -42,7 +42,7 @@ class EveModelApischedule extends EveModel
 		$q->addJoin('#__eve_schedule', 's', 's.apicall=a.id AND characterID='.$characterID);
 		$q->addWhere("a.type='char'");
 		$q->addQuery("a.id AS apicall, s.id, s.published, a.call, s.next");
-		$list = $q->loadObjectList();
+		$list = $q->loadObjectList('apicall');
 		return $list;
 	}
 	
@@ -58,6 +58,29 @@ class EveModelApischedule extends EveModel
 			$this->__state_set = true;
 		} else {
 			$this->setState('character.id', $id);
+		}
+	}
+	
+	public function setCharacterList($data, $character)
+	{
+		$characterID = $this->getState('character.id');
+		$list = $this->getCharacterList();
+		foreach ($list as $i => $item) {
+			$itemData = JArrayHelper::getValue($data, $i);
+			if (!is_array($itemData)) {
+				continue;
+			}
+			if (JArrayHelper::getValue($itemData, 'id') != $item->id 
+					|| JArrayHelper::getValue($itemData, 'apicall') != $item->apicall) {
+				continue;
+			}
+			$object = EveFactory::getInstance('Schedule', $item->id);
+			$object->apicall = $item->apicall;
+			$object->published = JArrayHelper::getValue($itemData, 'published', 0, 'int');
+			$object->userID = $character->userID;
+			$object->characterID = $character->characterID;
+			$object->store();
+			//TODO: check/set error
 		}
 	}
 	

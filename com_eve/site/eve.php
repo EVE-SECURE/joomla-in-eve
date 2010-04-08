@@ -34,7 +34,7 @@ if (!JPluginHelper::isEnabled('system', 'eve')) {
 	}
 	$controller = EveController::getInstance('Eve');
 	if (!JError::isError($controller)) {
-		$controller->execute($task);
+		$controller->execute(JRequest::getVar('task'));
 		$controller->redirect();
 	} else {
 		$app = JFactory::getApplication();
