@@ -33,6 +33,7 @@ class EveControllerApiform extends EveController {
 	}
 	
 	function process() {
+		JRequest::checkToken() or jexit('Invalid Token');
 		$model = $this->getModel('Apiform');
 		if ($model->processForm($_POST)) {
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apiform&layout=success', false));
