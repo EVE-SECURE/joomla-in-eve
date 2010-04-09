@@ -61,6 +61,13 @@
 		<if>
 			<equals arg1="${copy.admin}" arg2="yes" />
 			<then>
+				<!-- copy component manifest and install scripts -->
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}">
+						<include name="*"/>
+					</fileset>
+				</copy>
+				
 				<!-- copy component admin -->
 				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
 					<fileset dir="${project.basedir}/${component.name}/admin">
