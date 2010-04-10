@@ -22,7 +22,7 @@ INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `
 ('charmarketorders', 'Market Orders', 'market-orders', 'character', 'marketorders', 'character', '', '0', '1', '2'),
 ('corpmarketorders', 'Market Orders', 'market-orders', 'corporation', 'marketorders', 'corporation', '', '0', '1', '2');
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES 
-('char', 'MarketOrders', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, ''),
-('corp', 'MarketOrders', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '');
+INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('char', 'MarketOrders', 'Character', 'Full', 0, ''),
+('corp', 'MarketOrders', 'Character', 'Full', 0, '');
 

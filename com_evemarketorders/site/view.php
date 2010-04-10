@@ -73,7 +73,52 @@ abstract class EvemarketordersView extends JView
 	{
 		
 	}
-
+	
+	public function rangeName($range)
+	{
+		switch ($range) {
+			case -1:
+				return JText::_('Com_Evemarketorders_Range_Station');
+			case 0:
+				return JText::_('Com_Evemarketorders_Range_Solar_System');
+			case 32767:
+				return JText::_('Com_Evemarketorders_Range_Region');
+			default:
+				return JText::sprintf('Com_Evemarketorders_Range_N_Jumps', $range);
+				
+		}
+	}
+	
+	public function orderStateName($orderState)
+	{
+		switch ($orderState) {
+			case 0:
+				return JText::_('Com_Evemarketorders_Order_State_Active');
+			case 1:
+				return JText::_('Com_Evemarketorders_Order_State_Closed');
+			case 2:
+				return JText::_('Com_Evemarketorders_Order_State_Expired');
+			case 3:
+				return JText::_('Com_Evemarketorders_Order_State_Cancelled');
+			case 4:
+				return JText::_('Com_Evemarketorders_Order_State_Pending');
+			case 5:
+				return JText::_('Com_Evemarketorders_Order_State_Character_Deleted');
+			default:
+				return JText::_('Com_Evemarketorders_Order_State_Unknown');
+				
+		}
+	}
+	
+	public function bidName($bid)
+	{
+		if ($bid) {
+			return JText::_('Com_Evemarketorders_Bid_Buy');
+		} else {
+			return JText::_('Com_Evemarketorders_Bid_Sell');
+		}
+	}
+	
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
