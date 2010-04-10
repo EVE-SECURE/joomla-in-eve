@@ -61,7 +61,7 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 		$sql .= implode(',', $this->_fields);
 		$sql .= ") VALUES ";
 		$values = array();
-		foreach ($xml->result->entries->toArray() as $entry) {
+		foreach ($xml->result->orders->toArray() as $entry) {
 			$entry['entityID'] = $entityID;
 			$value = array();
 			foreach ($this->_fields as $field) {
@@ -77,11 +77,17 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 	}
 	
 	
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
+	public function onSetOwnerCorporation($userID, $characterID, $owner) 
+	{
 		$this->_setOwnerCorporation('corp', 'MarketOrders', $owner, $userID, $characterID);
 	}
 	
-	public function corpMarketOrders($xml, $fromCache, $options = array()) {
+	public function charMarketOrders($xml, $fromCache, $options = array()) {
+		$this->_storeMarketOrders($xml, $options['characterID']);
+	}
+	
+	public function corpMarketOrders($xml, $fromCache, $options = array()) 
+	{
 		if (!isset($options['corporationID'])) {
 			$characterID = JArrayHelper::getValue($options, 'characterID');
 			$character = EveFactory::getInstance('Character', $characterID);

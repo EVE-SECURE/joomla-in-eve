@@ -53,26 +53,40 @@ class EvemarketordersModelList extends JModelList {
 		$search = $this->getState('filter.search');
 		$entityID = intval($this->getState('list.entityID'));
 		$accountKey = intval($this->getState('filter.accountKey', -1));
+		$columns = array('mo.issued', 'mo.orderid', 'inv.typename', 
+			'mo.volentered', 'mo.volremaining', 'mo.minvolume', 'mo.price', 'mo.escrow', 'mo.bid', 
+			'sta.stationname', 'mo.range', 'mo.duration', 'mo.orderstate', );
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_marketorders', 'mo');
+		$q->addJoin($this->dbdump.'staStations', 'sta', 'sta.stationID=mo.stationID');
+		$q->addJoin($this->dbdump.'invTypes', 'inv', 'inv.typeID=mo.typeID');
 		$q->addQuery('mo.*');
-		
-		if ($accountKey > 0) {
-			$q->addWhere('accountKey = %1$s', $accountKey);
+		$q->addQuery('sta.stationTypeID, sta.stationName');
+		$q->addQuery('inv.typeName');
+		if ($this->_entity == 'corporation') {
+			if ($accountKey > 0) {
+				$q->addWhere('accountKey = %1$s', $accountKey);
+			}
+			array_push($columns, 'mo.accountkey', 'ch.name');
+			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=mo.charID');
+			$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addQuery('ch.characterID', 'ch.name AS characterName');
+			$q->addQuery('co.corporationID', 'co.corporationName', 'co.ticker AS corporationTicker');
+			$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
 		}
 		$q->addWhere('entityID = %1$s', $entityID);
 		
 		if ($search) {
-			/*
-			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
+			//TODO: search
+			$q->addWhere(sprintf('(inv.typeName LIKE %1$s OR sta.stationName LIKE %1$s)', 
 				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
-			*/
 		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'mo.issued'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
-		if (!in_array(strtolower($ordering), array('mo.issued',))) {
+		if (!in_array(strtolower($ordering), $columns)) {
 			$ordering = 'mo.issued';
 		}
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
