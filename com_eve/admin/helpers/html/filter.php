@@ -31,9 +31,9 @@ abstract class JHTMLFilter {
 			$id = $name;
 		}
 		return '<label for="'.$id.'">'.JText::_('Filter'). ':</label>'.
-		'<input type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" />'.
-		'<button onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button>'.
-		'<button onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button>';
+		'<input class="inputbox" type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" /> '.
+		'<button class="button" onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button> '.
+		'<button class="button" onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button> ';
 	}
 	
 	
