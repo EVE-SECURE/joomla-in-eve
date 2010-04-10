@@ -25,9 +25,9 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<label for="accountKey">
 		<?php echo JText::_('Com_Evewalletjournal_Account_Key'); ?>:
 	</label>
-	<?php echo JHTML::_('select.genericlist', $this->accountKeys, 'accountKey', 'onchange="this.form.submit();"', 'value', 'text', $this->listState->get('filter.accountKey')); ?>
+	<?php echo JHTML::_('select.genericlist', $this->accountKeys, 'accountKey', 'class="inputbox" onchange="this.form.submit();"', 'value', 'text', $this->listState->get('filter.accountKey')); ?>
 	<?php echo JHTML::_('filter.search', $this->listState->get('filter.search')); ?>
-	<?php echo JHTML::_('select.genericlist', $this->refTypes, 'refTypeID', 'onchange="this.form.submit();"', 'refTypeID', 'refTypeName', $this->listState->get('filter.refTypeID')); ?>
+	<?php echo JHTML::_('select.genericlist', $this->refTypes, 'refTypeID', 'class="inputbox" onchange="this.form.submit();"', 'refTypeID', 'refTypeName', $this->listState->get('filter.refTypeID')); ?>
 </div>
 <table>
 	<thead>
@@ -72,3 +72,6 @@ $pageClass = $this->params->get('pageclass_sfx');
 <input type="hidden" name="filter_order" value="<?php echo $this->listState->get('list.ordering', 'wj.refID'); ?>" />
 <input type="hidden" name="filter_order_Dir" value="<?php echo $this->listState->get('list.direction', 'desc'); ?>" />
 </form>
+<?php if ($pageClass) : ?>
+	</div>
+<?php endif; ?>
