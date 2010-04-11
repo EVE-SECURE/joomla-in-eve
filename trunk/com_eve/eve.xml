@@ -8,7 +8,7 @@
 	<authorUrl>http://code-box.sk</authorUrl>
 	<copyright>(C) 2008 - 2009 Pavol Kovalik </copyright>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<version>0.5</version>
+	<version>0.6</version>
 	<description>Joomla! in EVE - Core</description>
 	
 	<installfile>install.php</installfile>

@@ -37,6 +37,7 @@ class EveViewCharacter extends JView
 		$character = $this->get('Item');
 		$components = $this->get('Components');
 		$apischedule = $this->get('CharacterList', 'Apischedule');
+		$sectionaccess = $this->get('CharacterList', 'Sectionaccess');
 		
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
@@ -56,6 +57,7 @@ class EveViewCharacter extends JView
 		$this->assignRef('character', $character);
 		$this->assignRef('components', $components);
 		$this->assignRef('apischedule', $apischedule);
+		$this->assignRef('sectionaccess', $sectionaccess);
 		$this->assignRef('params', $params);
 		
 		parent::display();
