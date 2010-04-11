@@ -48,3 +48,7 @@ JHTML::_('eve.contextmenu');
 <?php if (is_array($this->apischedule) && $this->apischedule): ?>
 	<?php echo $this->loadTemplate('apischedule') ?>
 <?php endif; ?>
+
+<?php if (is_array($this->sectionaccess) && $this->sectionaccess): ?>
+	<?php echo $this->loadTemplate('sectionaccess') ?>
+<?php endif; ?>

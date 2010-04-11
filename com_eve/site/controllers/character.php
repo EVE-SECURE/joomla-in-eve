@@ -51,8 +51,12 @@ class EveControllerCharacter extends EveController {
 		$user = JFactory::getUser();
 		if ($user->get('id') && $user->get('id') == $character->ownerID) {
 			$apischeduleModel = & $this->getModel('Apischedule');
-			// Push the model into the view (as default)
+			// Push the model into the view
 			$view->setModel($apischeduleModel);
+			
+			$sectionaccessModel = & $this->getModel('Sectionaccess');
+			// Push the model into the view
+			$view->setModel($sectionaccessModel);
 		}
 
 		// Set the layout

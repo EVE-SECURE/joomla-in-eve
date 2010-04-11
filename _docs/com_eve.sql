@@ -127,6 +127,15 @@ CREATE TABLE `jos_eve_sections` (
   UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `jos_eve_section_character_access`;
+CREATE TABLE `jos_eve_section_character_access` (
+  `section` int(11) NOT NULL,
+  `characterID` int(11) NOT NULL,
+  `access` int(3) default NULL,
+  PRIMARY KEY  (`section`,`characterID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
 
 DELETE FROM `jos_components` WHERE `option` = 'com_eve';
 INSERT INTO `jos_components` (`name`, `link`, `menuid`, `parent`, `admin_menu_link`, `admin_menu_alt`, `option`, `ordering`, `admin_menu_img`, `iscore`, `params`, `enabled`) VALUES
