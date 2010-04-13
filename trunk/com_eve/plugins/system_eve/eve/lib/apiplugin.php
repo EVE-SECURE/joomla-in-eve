@@ -29,7 +29,7 @@ class EveApiPlugin extends JPlugin
 {
 	protected function  _registerCharacter($type, $call, $userID = null, $characterID = null, $params = null)
 	{
-		$schedule = EveFactory::getInstance('Schedule', 'EveTable');
+		$schedule = EveFactory::getInstance('Schedule');
 		$schedule->loadExtra($type, $call, $userID, $characterID, $params);
 		if (!$schedule->id && $schedule->apicall) {
 			$next = JFactory::getDate();
