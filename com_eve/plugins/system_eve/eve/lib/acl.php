@@ -4,10 +4,12 @@ defined('_JEXEC') or die();
 class EveACL extends JObject {
 	protected $_sections = array();
 	protected $_ownedCharacters;
-	
+	protected $ownerCorporationIDs = null;
+	protected $userCorporationIDs = null;
 	
 	public function authorize($section, $entityID = null)
 	{
+		//TODO: character_section_access
 		$acl = JFactory::getACL();
 		$user = JFactory::getUser();
 		$result = false;
@@ -71,6 +73,39 @@ class EveACL extends JObject {
 			}
 		}
 		return $this->_ownedCharacters;
+	}
+	
+	public function getOwnerCorporationIDs() 
+	{
+		if (is_null($this->ownerCorporationIDs)) {
+			$dbo = JFactory::getDBO();
+			$q = EveFactory::getQuery($dbo);
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+			$q->addWhere('(co.owner OR al.owner)');
+			$q->addQuery('co.corporationID');
+			$this->ownerCorporationIDs = $q->loadResultArray();
+		}
+		return $this->ownerCorporationIDs;
+	}
+	
+	public function getUserCorporationIDs()
+	{
+		if (is_null($this->userCorporationIDs)) {
+			$user = JFactory::getUser();
+			if ($user->id) {
+				$dbo = JFactory::getDBO();
+				$q = EveFactory::getQuery($dbo);
+				$q->addTable('#__eve_characters', 'ch');
+				$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
+				$q->addWhere('ac.owner = '.$user->id);
+				$q->addQuery('ch.corporationID');
+				$this->userCorporationIDs = $q->loadResultArray();
+			} else {
+				$this->userCorporationIDs = array();
+			}
+		}
+		return $this->userCorporationIDs;
 	}
 	
 }

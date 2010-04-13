@@ -15,10 +15,10 @@ defined('_JEXEC') or die();
 		<table>
 			<tr>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Api_Call_Name'); ?>
+					<?php echo JText::_('Com_Eve_Section_Access_Name'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Api_Call_Published'); ?>
+					<?php echo JText::_('Com_Eve_Section_Access_Level'); ?>
 				</th>
 			</tr>
 			<?php foreach ($this->sectionaccess as $i => $item): ?>
@@ -31,9 +31,8 @@ defined('_JEXEC') or die();
 					<td>
 						<input type="hidden" name="sectionaccess[<?php echo $i; ?>][section]" 
 							value="<?php echo $item->section; ?>">
-						<input type="text" class="inputbox" name="sectionaccess[<?php echo $i; ?>][access]" 
-							id="sectionaccess_<?php echo $i; ?>_access"
-							value="<?php echo $item->access; ?>"  />
+						<?php echo JHTML::_('select.genericlist', $this->groups, 'sectionaccess['.$i.'][access]', '', 'value', 'text', 
+							$item->access, 'sectionaccess_'.$i.'_access_', 1); ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>

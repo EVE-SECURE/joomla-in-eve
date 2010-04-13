@@ -67,25 +67,42 @@ class EveModelSectionaccess extends EveModel
 	{
 		$characterID = $this->getState('character.id');
 		$list = $this->getCharacterList();
-		/*
+		$dbo = $this->getDBO();
 		foreach ($list as $i => $item) {
 			$itemData = JArrayHelper::getValue($data, $i);
 			if (!is_array($itemData)) {
 				continue;
 			}
-			if (JArrayHelper::getValue($itemData, 'id') != $item->id 
-					|| JArrayHelper::getValue($itemData, 'apicall') != $item->apicall) {
+			if (JArrayHelper::getValue($itemData, 'section') != $item->section) {
 				continue;
 			}
-			$object = EveFactory::getInstance('Schedule', $item->id);
-			$object->apicall = $item->apicall;
-			$object->published = JArrayHelper::getValue($itemData, 'published', 0, 'int');
-			$object->userID = $character->userID;
-			$object->characterID = $character->characterID;
-			$object->store();
-			//TODO: check/set error
+			$access = JArrayHelper::getValue($itemData, 'access');
+			$access = is_numeric($access) ? (int) $access : 'NULL';
+			$sql = sprintf('INSERT INTO #__eve_section_character_access (section, characterID, access) VALUES (%1$s, %2$s, %3$s) '.
+				'ON DUPLICATE KEY UPDATE access = %3$s',
+				$item->section, $characterID, $access);
+			$dbo->setQuery($sql);
+			$dbo->query();
 		}
-		*/
+	}
+	
+	public function getCharacterGroups()
+	{
+		$dbo = $this->getDBO();
+
+		$query = 'SELECT id AS value, name AS text'
+		. ' FROM #__groups'
+		. ' ORDER BY id'
+		;
+		$dbo->setQuery( $query );
+		$groups = $dbo->loadObjectList();
+		jimport('joomla.html.html');
+		array_unshift($groups, JHTML::_('select.option', 'NULL', 'Com_Eve_Access_Option_Default'));
+		$groups[] = JHTML::_('select.option', '10', 'Com_Eve_Access_Option_Corporation');
+		$groups[] = JHTML::_('select.option', '100', 'Com_Eve_Access_Option_Personal');
+		
+		return $groups;
+		
 	}
 	
 
