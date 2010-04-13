@@ -97,4 +97,29 @@ class EveControllerCharacter extends EveController {
 		
 	}
 	
+	public function sectionaccess()
+	{
+		JRequest::checkToken() or jexit('Invalid Token');
+		$user = JFactory::getUser();
+		if (!$user->get('id')) {
+			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
+			return false;
+		}
+		// Get/Create the character model
+		$characterModel = & $this->getModel('Character');
+		$character = $characterModel->getItem();
+		if ($character->ownerID != $user->get('id')) {
+			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
+			return false;
+		}
+		
+		$sectionaccessModel = & $this->getModel('Sectionaccess');
+		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
+		$sectionaccessModel->setCharacterList($data, $character);
+		$msg = JText::_('Com_Eve_Character_Section_Access_Stored');
+		//TODO: check/display errors
+		$this->setRedirect(EveRoute::character($character, null, null, false), $msg);
+		
+	}
+	
 }
