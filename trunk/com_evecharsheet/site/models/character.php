@@ -27,13 +27,29 @@ require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.p
 
 class EvecharsheetModelCharacter extends EveModelCharacter {
 	protected $dbdump;
-	
+	protected $skillGroups = array();
+	protected $skillToAttributes = array (
+		3377 	=> 1,
+		12387 	=> 3,
+		12385 	=> 4,
+		3376 	=> 2,
+		12386 	=> 5,
+		3378 	=> 4,
+		3375 	=> 5,
+		12376 	=> 1,
+		12383 	=> 2,
+		3379 	=> 3,
+	);
+	protected $learningGroupID = 267;
+	protected $learningTypeID = 3374;
+
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
 		$eveparams = JComponentHelper::getParams('com_eve');
 		$dbdump_database = $eveparams->get('dbdump_database');
 		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
+		
 	}
 	
 	protected function _populateState()
@@ -79,35 +95,39 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 	function getSkillGroups($characterID = null) 
 	{
 		$character = $this->getItem($characterID);
-		$q = $this->getQuery();
-		$q->addTable('#__eve_charskills', 'cs');
-		$q->addJoin($this->dbdump.'invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
-		$q->addWhere("characterID='%s'", $character->characterID);
-		$q->addOrder('typeName', 'ASC');
-		$skills =  $q->loadObjectList();
 		
-		$q = $this->getQuery();
-		$q->addTable($this->dbdump.'invGroups');
-		$q->addWhere('`categoryID` = 16');
-		$q->addWhere('published = 1');
-		$q->addOrder('groupName', 'ASC');
-		$groups = $q->loadObjectList('groupID');
-		
-		foreach ($groups as &$group) {
-			$group->skills = array();
-			$group->skillCount = 0;
-			$group->skillpoints = 0;
-			$group->skillPrice = 0;
+		if (!isset($this->skillGroups[$character->characterID])) {
+			$q = $this->getQuery();
+			$q->addTable('#__eve_charskills', 'cs');
+			$q->addJoin($this->dbdump.'invTypes', 'it', 'it.typeID=cs.typeID', 'inner');
+			$q->addWhere("characterID='%s'", $character->characterID);
+			$q->addOrder('typeName', 'ASC');
+			$skills =  $q->loadObjectList();
+			
+			$q = $this->getQuery();
+			$q->addTable($this->dbdump.'invGroups');
+			$q->addWhere('`categoryID` = 16');
+			$q->addWhere('published = 1');
+			$q->addOrder('groupName', 'ASC');
+			$groups = $q->loadObjectList('groupID');
+			
+			foreach ($groups as &$group) {
+				$group->skills = array();
+				$group->skillCount = 0;
+				$group->skillpoints = 0;
+				$group->skillPrice = 0;
+			}
+			
+			foreach ($skills as $skill) {
+				$groups[$skill->groupID]->skills[] = $skill;
+				$groups[$skill->groupID]->skillCount += 1;
+				$groups[$skill->groupID]->skillpoints += $skill->skillpoints;
+				$groups[$skill->groupID]->skillPrice += $skill->basePrice;
+			}
+			$this->skillGroups[$character->characterID] = $groups;
 		}
 		
-		foreach ($skills as $skill) {
-			$groups[$skill->groupID]->skills[] = $skill;
-			$groups[$skill->groupID]->skillCount += 1;
-			$groups[$skill->groupID]->skillpoints += $skill->skillpoints;
-			$groups[$skill->groupID]->skillPrice += $skill->basePrice;
-		}
-		
-		return $groups;
+		return $this->skillGroups[$character->characterID];
 	}
 	
 	function getCertificateCategories($characterID = null)
@@ -150,7 +170,30 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addQuery('ca.attributeName', 'ca.description', 'ca.shortDescription');
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('ca.attributeName');
-		return $q->loadObjectList();
+		$attributes = $q->loadObjectList('attributeID');
+		
+		$skillGroups = $this->getSkillGroups($characterID);
+		$skillMultiplier = 1.0;
+		foreach ($attributes as $attribute) {
+			$attribute->skillValue = 0;
+		}
+		$learningSkills = JArrayHelper::getValue($skillGroups, $this->learningGroupID, array());
+		foreach ($learningSkills->skills as $learningSkill) {
+			if ($learningSkill->typeID == $this->learningTypeID) {
+				$skillMultiplier = 1.0 + $learningSkill->level / 50;
+			} else {
+				$attributeID = JArrayHelper::getValue($this->skillToAttributes, $learningSkill->typeID);
+				$attribute = JArrayHelper::getValue($attributes, $attributeID);
+				if ($attribute) {
+					$attribute->skillValue += $learningSkill->level;
+				}
+			}
+		}
+		foreach ($attributes as $attribute) {
+			$attribute->skillMultiplier = $skillMultiplier;
+		}
+		
+		return $attributes;
 	}
 	
 	function getRoles($characterID = null)
