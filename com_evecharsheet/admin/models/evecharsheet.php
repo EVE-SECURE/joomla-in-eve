@@ -26,6 +26,15 @@ defined('_JEXEC') or die();
 jimport('joomla.application.component.model');
 
 class EvecharsheetModelEvecharsheet extends JModel {
+	protected $dbdump;
+	
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database :''; 
+	}
 	
 	function getTableCheck() {
 		$tables = array('invTypes', 'invGroups', 'chrAttributes', 'crtCertificates', 'crtClasses', 
@@ -34,7 +43,11 @@ class EvecharsheetModelEvecharsheet extends JModel {
 		$result = array();
 		$db = $this->getDBO();
 		
-		$sql = "SHOW TABLES LIKE '%s'";
+		if ($this->dbdump) {
+			$sql = "SHOW TABLES IN ".$this->dbdump." LIKE '%s'";
+		} else {
+			$sql = "SHOW TABLES LIKE '%s'";
+		}
 		foreach ($tables as $table) {
 			$_sql = sprintf($sql, $table);
 			$db->Execute($_sql);
