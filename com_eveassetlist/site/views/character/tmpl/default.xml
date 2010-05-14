@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Character Asset List Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Character Asset List Layout</name>
+		<description>DESC HERE</description>
+		<url addpath="/administrator/components/com_eve/elements">
+			<param name="characterID" type="character" label="Character ID" description="Character ID to display" size="50"/>
+		</url>
+		<params>
+		</params>
+	</state>
+</metadata>

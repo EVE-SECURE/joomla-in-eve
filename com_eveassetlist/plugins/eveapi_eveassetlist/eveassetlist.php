@@ -71,7 +71,7 @@ class plgEveapiEveAssetList extends EveApiPlugin {
 			if (isset($asset->contents)) {
 				foreach ($asset->contents as $content) {
 					$content->entityID = $entityID;
-					$content->containerID = $asset->entityID;
+					$content->containerID = $asset->itemID;
 					$content->locationID = $asset->locationID;
 					$value = array();
 					foreach ($this->_fields as $field) {
