@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Corporation Asset List Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Corporation Asset List Layout</name>
+		<description>DESC HERE</description>
+		<url addpath="/administrator/components/com_eve/elements">
+			<param name="corporationID" type="corporation" label="Corporation ID" description="Corporation ID to display" size="50"/>
+		</url>
+	</state>
+</metadata>

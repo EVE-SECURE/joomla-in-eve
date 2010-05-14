@@ -42,6 +42,9 @@ class EveassetlistModelList extends JModelList {
 		parent::__construct($config);
 		$entity = JArrayHelper::getValue($config, 'entity', JRequest::getCmd('view'));
 		$this->_entity = $entity;
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
 	}
 	
 	protected function _getListQuery()
@@ -53,24 +56,73 @@ class EveassetlistModelList extends JModelList {
 		// Create a new query object.
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
-		$q->addTable('#__eve_assetlist', 'al');
-		$q->addWhere('entityID = %1$s', $entityID);
+		$q->addTable('#__eve_assets', 'al');
+		$q->addWhere('al.entityID = %1$s', $entityID);
+		$q->addJoin('#__eve_assets', 'con', 'con.itemID=al.containerID AND con.entityID=al.entityID');
+		$q->addJoin($this->dbdump.'invTypes', 'inv', 'inv.typeID=al.typeID');
+		$q->addJoin($this->dbdump.'invTypes', 'cinv', 'cinv.typeID=con.typeID');
+		$q->addJoin($this->dbdump.'invFlags', 'fla', 'fla.flagID=al.flag');
+		$q->addQuery('al.*');
+		$q->addQuery('inv.typeName');
+		$q->addQuery('cinv.typeID AS containerTypeID, cinv.typeName AS containerTypeName');
+		$q->addQuery('fla.flagName, fla.flagText');
+		if (false) {
+			$locationQuery = "CASE
+		  WHEN al.locationID BETWEEN 66000000 AND 66999999 THEN
+		    (SELECT s.stationName FROM {$this->dbdump}staStations AS s
+		      WHERE s.stationID=al.locationID-6000001)
+		  WHEN al.locationID BETWEEN 67000000 AND 67999999 THEN
+		    (SELECT c.stationName FROM api.ConqStations AS c
+		      WHERE c.stationID=al.locationID-6000000)
+		  WHEN al.locationID BETWEEN 60014861 AND 60014928 THEN
+		    (SELECT c.stationName FROM api.ConqStations AS c
+		      WHERE c.stationID=al.locationID)
+		  WHEN al.locationID BETWEEN 60000000 AND 61000000 THEN
+		    (SELECT s.stationName FROM {$this->dbdump}staStations AS s
+		      WHERE s.stationID=al.locationID)
+		  WHEN al.locationID>=61000000 THEN
+		    (SELECT c.stationName FROM api.ConqStations AS c
+		      WHERE c.stationID=al.locationID)
+		  else (SELECT m.itemName FROM {$this->dbdump}mapDenormalize AS m
+		    WHERE m.itemID=al.locationID) END locationName";
+		} else {
+			$locationQuery = "CASE
+		  WHEN al.locationID BETWEEN 66000000 AND 66999999 THEN
+		    (SELECT s.stationName FROM {$this->dbdump}staStations AS s
+		      WHERE s.stationID=al.locationID-6000001)
+		  WHEN al.locationID BETWEEN 67000000 AND 67999999 THEN
+		  	".$dbo->quote(JText::_('Com_Eveassetlist_Unknown_Player_Outpost'))."
+		  WHEN al.locationID BETWEEN 60014861 AND 60014928 THEN
+		  	".$dbo->quote(JText::_('Com_Eveassetlist_Unknown_Player_Outpost'))."
+		  WHEN al.locationID BETWEEN 60000000 AND 61000000 THEN
+		    (SELECT s.stationName FROM {$this->dbdump}staStations AS s
+		      WHERE s.stationID=al.locationID)
+		  WHEN al.locationID>=61000000 THEN
+		  	".$dbo->quote(JText::_('Com_Eveassetlist_Unknown_Player_Outpost'))."
+		  else (SELECT m.itemName FROM {$this->dbdump}mapDenormalize AS m
+		    WHERE m.itemID=al.locationID) END AS locationName";
+		}
+		
+		$q->addQuery($locationQuery);
 		
 		
 		/*if ($search) {
 			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
 				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
 		}*/
-		$ordering = $q->getEscaped($this->getState('list.ordering', 'wj.refID'));
+		$ordering = $q->getEscaped($this->getState('list.ordering', 'al.itemID'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
-		/*if (!in_array(strtolower($ordering), array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1', 
-				'wj.ownername2', 'wj.argname1', 'wj.amount', 'wj.balance', 'wj.reason' ))) {
-			$ordering = 'wj.refID';
-		}*/
+		if (!in_array(strtolower($ordering), array('al.itemid', 'inv.typename', 'al.quantity', 'al.singleton', 
+			 'fla.flagtext', 'locationname', 'containertypename'))) {
+			$ordering = 'al.itemID';
+		}
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
 			$direction = 'desc';
 		}
 		
+		if (strtolower($ordering) == 'al.quantity') {
+			$q->addOrder('al.singleton', $direction == strtolower('desc') ? 'asc' : 'desc');
+		}
 		$q->addOrder($ordering, $direction);
 		return $q;
 	}
