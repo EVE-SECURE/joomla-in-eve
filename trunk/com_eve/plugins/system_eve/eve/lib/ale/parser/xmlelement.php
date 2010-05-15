@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: xmlelement.php 190 2009-03-05 18:59:58Z kovalikp $
+ * @version $Id: xmlelement.php 215 2010-05-14 20:27:33Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
  * 
@@ -261,6 +261,17 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 			return $this->children[$name];
 		}
 		return null;
+	}
+	
+	/**
+	 * Node isset checker
+	 *
+	 * @param string $name
+	 * @return AleParserXMLElement
+	 */
+	public function __isset($name) {
+		$this->prepareChildren();
+		return isset($this->children[$name]);
 	}
 	
 	/**
