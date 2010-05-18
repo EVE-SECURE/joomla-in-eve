@@ -54,9 +54,6 @@ abstract class EveassetlistView extends JView
 		
 		$this->_setEntity($item, $params);
 		
-		$refTypeOption = JHTML::_('select.option', '-1', JText::_('Com_Eveassetlist_REF_TYPE_0_OPTION'), 'refTypeID', 'refTypeName');
-		array_unshift($refTypes, $refTypeOption);
-
 		$this->assignRef('params', 		$params);
 		$this->assignRef('state',		$state);
 		$this->assignRef('items',		$items);
