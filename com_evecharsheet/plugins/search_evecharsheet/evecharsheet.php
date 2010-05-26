@@ -72,13 +72,8 @@ class plgSearchEvecharsheet extends JPlugin {
 		$q->addWhere($where);
 		$q->addQuery('NULL AS created');
 		$acl = EveFactory::getACL();
-		if (!$acl->authorize('charsheet')) {
-			$ids = $acl->getOwnedCharacterIDs();
-			if (!$ids) {
-				return array();
-			}
-			$q->addWhere('ch.characterID IN ('.implode(', ', $ids).')');
-		}
+		$acl->setCharacterQuery($q, 'charsheet', 'ch.');
+		
 		//gender known = called /char/CharacterSheet.xml.aspx
 		$q->addWhere("ch.gender <> 'Unknown'");
 		$q->setLimit($limit);

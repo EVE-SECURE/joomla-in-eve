@@ -7,6 +7,9 @@ class EveACL extends JObject {
 	protected $ownerCorporationIDs = null;
 	protected $userCorporationIDs = null;
 	
+	const CHARACTER_IN_OWNER_CORPORATION = 10;
+	const CHARACTER_OWNED_BY_USER = 100;
+	
 	public function authorize($section, $entityID = null)
 	{
 		//TODO: character_section_access
@@ -22,11 +25,7 @@ class EveACL extends JObject {
 		}
 		$access = $section->access; 
 		if ($section->entity == 'character') {
-			//always allow access to user's characters
-			$ids = $this->getOwnedCharacterIDs();
-			if (!is_null($entityID) && isset($ids[$entityID])) {
-				return true;
-			}
+			return $this->authorizeCharacter($section, $entityID);
 		}
 		//todo owner coporations (and alliances?)
 		if ($access > $user->get('aid', 0)) {
@@ -34,6 +33,87 @@ class EveACL extends JObject {
 		}
 		
 		return true;
+	}
+	
+	protected function authorizeCharacter($section, $characterID = null)
+	{
+		$dbo = JFactory::getDBO();
+		$query = EveFactory::getQuery($dbo);
+		$query->addTable('#__eve_section_character_access');
+		$query->addWhere('characterID = ' . (int) $characterID);
+		$query->addWhere('section = ' . (int) $section->id);
+		$query->addQuery('access');
+		$result = $query->loadResult();
+
+		//null (or false) means we should use default access
+		if (!is_numeric($result)) {
+			$result = $section->access;
+		}
+		
+		//get user's characters and check if the character is among them
+		$ids = $this->getUserCharacterIDs();
+		if (isset($ids[$characterID])) {
+			return true;
+		}
+		/* if ($result == self::CHARACTER_OWNED_BY_USER) {
+			$ids = $this->getUserCharacterIDs();
+			return isset($ids[$characterID]);
+		}*/
+		
+		//get user's corporations and check if the character's corp is among them 
+		if ($result == self::CHARACTER_IN_OWNER_CORPORATION) {
+			$character = EveFactory::getInstance('character', $characterID);
+			$ids = $this->getUserCorporationIDs();
+			return isset($ids[$character->corporationID]); 
+		}
+		
+		$user = JFactory::getUser();
+		return $result <= $user->get('aid', 0);
+		
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param JQuery $query
+	 * @param string|EveTableSection $section Section object or name
+	 * @param string $table Character table prefix
+	 */
+	public function setCharacterQuery($query, $section, $table = '')
+	{
+		if (!is_object($section)) {
+			$section = $this->_getSectionByName($section);
+		}
+		if (!$section) {
+			throw new RuntimeException('Invalid section name', 0);
+		}
+		$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
+			' AND #__eve_section_character_access.section = '.$section->id);
+		
+		$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')'; 
+		
+		$sql  = '(';
+		$user = JFactory::getUser();
+		$sql .= ('('.$coalesced.' NOT IN ('.self::CHARACTER_IN_OWNER_CORPORATION.','.self::CHARACTER_OWNED_BY_USER.')'.
+			' AND '.$coalesced. ' <= '. $user->get('aid', 0).')');
+		
+		$ids = $this->getUserCharacterIDs();
+		if (!empty($ids)) {
+			$sql .= ' OR ';
+			$sql .= ('('.$table.'characterID IN ('. implode(',', $ids).'))');
+			/*$sql .= ('('.$coalesced.' = '.self::CHARACTER_OWNED_BY_USER.
+				' AND '.$table.'characterID IN ('. implode(',', $ids).'))'); */
+		}
+		
+		$ids = $this->getUserCorporationIDs();
+		if (!empty($ids)) {
+			$sql .= ' OR ';
+			$sql .= ('('.$coalesced.' = '.self::CHARACTER_IN_OWNER_CORPORATION.
+				' AND '.$table.'corporationID IN ('. implode(',', $ids).'))');
+		}
+		$sql .= ')';
+		
+		$query->addWhere($sql);
 	}
 	
 	protected function _getSectionByName($name)
@@ -53,26 +133,52 @@ class EveACL extends JObject {
 		return $this->_sections[$name];
 	}
 	
-	public function getOwnedCharacterIDs()
+	protected function _loadUserEntityIDs()
 	{
-		if (!isset($this->_ownedCharacters)) {
-			$user = JFactory::getUser();
-			$id = intval($user->id);
-			$this->_ownedCharacters = array();
-			if ($id) {
-				$dbo = JFactory::getDBO();
-				$query = EveFactory::getQuery($dbo);
-				$query->addTable('#__eve_characters', 'c');
-				$query->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
-				$query->addWhere('a.owner=%s', $id);
-				$query->addQuery('characterID');
-				$tmp = $query->loadResultArray();
-				foreach ($tmp as $characterID) {
-					$this->_ownedCharacters[$characterID] = $characterID;
-				}
+		$this->_userCharacters = array();
+		$this->_userCorporations = array();
+		$this->_userAccounts = array();
+		$user = JFactory::getUser();
+		$id = intval($user->id);
+		if ($id) {
+			$dbo = JFactory::getDBO();
+			$query = EveFactory::getQuery($dbo);
+			$query->addTable('#__eve_characters', 'c');
+			$query->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
+			$query->addWhere('a.owner=%s', $id);
+			$query->addQuery('characterID, corporationID, c.userID');
+			$list = $query->loadObjectList();
+			foreach ($list as $item) {
+				$this->_userCharacters[$item->characterID] = $item->characterID;
+				$this->_userCorporations[$item->corporationID] = $item->corporationID;
+				$this->_userAccounts[$item->userID] = $item->userID;
 			}
 		}
-		return $this->_ownedCharacters;
+		
+	}
+	
+	public function getUserCharacterIDs()
+	{
+		if (!isset($this->_userCharacters)) {
+			$this->_loadUserEntityIDs();
+		}
+		return $this->_userCharacters;
+	}
+	
+	public function getUserCorporationIDs()
+	{
+		if (!isset($this->_userCorporations)) {
+			$this->_loadUserEntityIDs();
+		}
+		return $this->_userCorporations;
+	}
+	
+	public function getUserAccountIDs()
+	{
+		if (!isset($this->_userAccounts)) {
+			$this->_loadUserEntityIDs();
+		}
+		return $this->_userAccounts;
 	}
 	
 	public function getOwnerCorporationIDs() 
@@ -87,25 +193,6 @@ class EveACL extends JObject {
 			$this->ownerCorporationIDs = $q->loadResultArray();
 		}
 		return $this->ownerCorporationIDs;
-	}
-	
-	public function getUserCorporationIDs()
-	{
-		if (is_null($this->userCorporationIDs)) {
-			$user = JFactory::getUser();
-			if ($user->id) {
-				$dbo = JFactory::getDBO();
-				$q = EveFactory::getQuery($dbo);
-				$q->addTable('#__eve_characters', 'ch');
-				$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
-				$q->addWhere('ac.owner = '.$user->id);
-				$q->addQuery('ch.corporationID');
-				$this->userCorporationIDs = $q->loadResultArray();
-			} else {
-				$this->userCorporationIDs = array();
-			}
-		}
-		return $this->userCorporationIDs;
 	}
 	
 }

@@ -52,7 +52,7 @@ class EveRouter {
 			}
 		}
 		$acl = EveFactory::getACL();
-		$this->ownedChars = $acl->getOwnedCharacterIDs();
+		$this->ownedChars = $acl->getUserCharacterIDs();
 	}
 	
 	public function getSection($name)

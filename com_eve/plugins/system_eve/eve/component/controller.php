@@ -117,13 +117,14 @@ class EveController extends JController {
 		if ($result && $task == 'display') {
 			$acl = EveFactory::getACL();
 			$section = $this->getSection();
-			if ($section) {
-				$entityID = JRequest::getInt($section->entity.'ID');
-				if (!$acl->authorize($section, $entityID)) {
-					$result = false;
-				}
+			if (!$section) {
+				return $result;
 			}
-			
+			$entityID = JRequest::getInt($section->entity.'ID');
+			if (!$acl->authorize($section, $entityID)) {
+				$result = false;
+			}
+		
 		}
 		return $result;
 	}

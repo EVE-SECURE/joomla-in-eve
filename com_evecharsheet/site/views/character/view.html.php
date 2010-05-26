@@ -45,7 +45,7 @@ class EvecharsheetViewCharacter extends JView {
 
 		$this->_ownedCharacter = false;
 		$acl = EveFactory::getACL();
-		$ids = $acl->getOwnedCharacterIDs();
+		$ids = $acl->getUserCharacterIDs();
 		if (isset($ids[$character->characterID])) {
 			$this->_ownedCharacter = true;
 		}

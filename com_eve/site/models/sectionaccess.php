@@ -98,8 +98,8 @@ class EveModelSectionaccess extends EveModel
 		$groups = $dbo->loadObjectList();
 		jimport('joomla.html.html');
 		array_unshift($groups, JHTML::_('select.option', 'NULL', 'Com_Eve_Access_Option_Default'));
-		$groups[] = JHTML::_('select.option', '10', 'Com_Eve_Access_Option_Corporation');
-		$groups[] = JHTML::_('select.option', '100', 'Com_Eve_Access_Option_Personal');
+		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_IN_OWNER_CORPORATION, 'Com_Eve_Access_Option_Corporation');
+		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_OWNED_BY_USER, 'Com_Eve_Access_Option_Personal');
 		
 		return $groups;
 		
