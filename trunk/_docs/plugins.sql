@@ -10,6 +10,7 @@ INSERT INTO `jos_plugins` (`name`, `element`, `folder`, `access`, `ordering`, `p
 ('Eveapi - Character Sheet', 'evecharsheet', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', ''),
 ('Eveapi - Character Tracking', 'evechartracking', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', ''),
 ('Eveapi - Wallet Journal', 'evewalletjournal', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', ''),
+('Eveapi - Asset List', 'eveassetlist', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', ''),
 ('Eveapi - Market Orders', 'evemarketorders', 'eveapi', 0, 0, 1, 0, 0, 0, '0000-00-00 00:00:00', '');
 
 INSERT INTO `jos_plugins` (`name`, `element`, `folder`, `access`, `ordering`, `published`, `iscore`, `client_id`, `checked_out`, `checked_out_time`, `params`) VALUES

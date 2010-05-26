@@ -120,7 +120,13 @@ class EveFactory {
 		
 	}
 	
-	function getACL() {
+	
+	/**
+	 * 
+	 * Return ACL object
+	 * @return EveACL
+	 */
+	static public function getACL() {
 		static $instance;
 		
 		if (!isset($instance)) {
