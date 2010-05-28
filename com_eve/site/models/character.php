@@ -96,13 +96,11 @@ class EveModelCharacter extends JModelItem
 		$dbo = $this->getDBO();
 		
 		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_characters', 'ch');
 		$q->addTable('#__eve_sections', 's');
 		$q->addWhere("s.entity = 'character'");
 		$q->addWhere('s.published');
-		$q->addWhere('ch.characterID='.(int) $item->characterID);
 		$acl = EveFactory::getACL();
-		$acl->setCharacterQuery($q, 's.', 'ch.');
+		$acl->setCharacterQuery($q, 's.', $item);
 		
 		$q->addOrder('ordering');
 		$result = $q->loadObjectList();
