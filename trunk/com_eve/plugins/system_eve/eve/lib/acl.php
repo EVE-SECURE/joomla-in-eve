@@ -81,15 +81,14 @@ class EveACL extends JObject {
 	 * 
 	 * Enter description here ...
 	 * @param JQuery $query
-	 * @param string|EveTableSection $section Section object or name
-	 * @param string $table Character table prefix
+	 * @param string|EveTableSection $section Section object or name or table prefix
+	 * @param string $table|EveTableCharacter Character object  or table prefix
 	 */
-	public function setCharacterQuery($query, $section, $table = '')
+	public function setCharacterQuery($query, $section, $character)
 	{
 		if (is_string($section) && substr($section, -1, 1) == '.') {
-			$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
-				' AND #__eve_section_character_access.section = '.$section.'id');
 			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section.'access)'; 
+			$sectionID =  $section.'id';
 		} else {
 			if (!is_object($section)) {
 				$section = $this->_getSectionByName($section);
@@ -97,11 +96,22 @@ class EveACL extends JObject {
 			if (!$section) {
 				throw new RuntimeException('Invalid section name', 0);
 			}
-			$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
-				' AND #__eve_section_character_access.section = '.$section->id);
 			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')'; 
+			$sectionID = $section->id;
 		}
 		
+		if (is_string($character) && substr($character, -1, 1) == '.') {
+			$corporationID = $character.'corporationID';
+			$characterID = $character.'characterID';
+		} else if (is_object($character)) {
+			$corporationID = $character->corporationID;
+			$characterID = $character->characterID;
+		} else {
+		}
+		
+		
+		$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$characterID.
+			' AND #__eve_section_character_access.section = '.$sectionID);
 		
 		$sql  = '(';
 		$user = JFactory::getUser();
@@ -111,7 +121,7 @@ class EveACL extends JObject {
 		$ids = $this->getUserCharacterIDs();
 		if (!empty($ids)) {
 			$sql .= ' OR ';
-			$sql .= ('('.$table.'characterID IN ('. implode(',', $ids).'))');
+			$sql .= ('('.$characterID.' IN ('. implode(',', $ids).'))');
 			/*$sql .= ('('.$coalesced.' = '.self::CHARACTER_OWNED_BY_USER.
 				' AND '.$table.'characterID IN ('. implode(',', $ids).'))'); */
 		}
@@ -120,7 +130,7 @@ class EveACL extends JObject {
 		if (!empty($ids)) {
 			$sql .= ' OR ';
 			$sql .= ('('.$coalesced.' = '.self::CHARACTER_IN_OWNER_CORPORATION.
-				' AND '.$table.'corporationID IN ('. implode(',', $ids).'))');
+				' AND '.$corporationID.' IN ('. implode(',', $ids).'))');
 		}
 		$sql .= ')';
 		
