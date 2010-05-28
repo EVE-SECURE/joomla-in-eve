@@ -9,6 +9,7 @@ class EveACL extends JObject {
 	
 	const CHARACTER_IN_OWNER_CORPORATION = 10;
 	const CHARACTER_OWNED_BY_USER = 100;
+	const CHARACTER_SECTION_DISABLED = -1;
 	
 	public function authorize($section, $entityID = null)
 	{
@@ -50,6 +51,10 @@ class EveACL extends JObject {
 			$result = $section->access;
 		}
 		
+		if ($result == self::CHARACTER_SECTION_DISABLED) {
+			return false;
+		}
+		
 		//get user's characters and check if the character is among them
 		$ids = $this->getUserCharacterIDs();
 		if (isset($ids[$characterID])) {
@@ -81,20 +86,26 @@ class EveACL extends JObject {
 	 */
 	public function setCharacterQuery($query, $section, $table = '')
 	{
-		if (!is_object($section)) {
-			$section = $this->_getSectionByName($section);
+		if (is_string($section) && substr($section, -1, 1) == '.') {
+			$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
+				' AND #__eve_section_character_access.section = '.$section.'id');
+			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section.'access)'; 
+		} else {
+			if (!is_object($section)) {
+				$section = $this->_getSectionByName($section);
+			}
+			if (!$section) {
+				throw new RuntimeException('Invalid section name', 0);
+			}
+			$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
+				' AND #__eve_section_character_access.section = '.$section->id);
+			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')'; 
 		}
-		if (!$section) {
-			throw new RuntimeException('Invalid section name', 0);
-		}
-		$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', ' #__eve_section_character_access.characterID = '.$table.'characterID'.
-			' AND #__eve_section_character_access.section = '.$section->id);
 		
-		$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')'; 
 		
 		$sql  = '(';
 		$user = JFactory::getUser();
-		$sql .= ('('.$coalesced.' NOT IN ('.self::CHARACTER_IN_OWNER_CORPORATION.','.self::CHARACTER_OWNED_BY_USER.')'.
+		$sql .= ('('.$coalesced.' NOT IN ('.self::CHARACTER_IN_OWNER_CORPORATION.','.self::CHARACTER_OWNED_BY_USER.','.self::CHARACTER_SECTION_DISABLED.')'.
 			' AND '.$coalesced. ' <= '. $user->get('aid', 0).')');
 		
 		$ids = $this->getUserCharacterIDs();
@@ -114,6 +125,7 @@ class EveACL extends JObject {
 		$sql .= ')';
 		
 		$query->addWhere($sql);
+		$query->addWhere('('.$coalesced.' <> '. self::CHARACTER_SECTION_DISABLED.')');
 	}
 	
 	protected function _getSectionByName($name)

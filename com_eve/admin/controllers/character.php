@@ -34,13 +34,44 @@ class EveControllerCharacter extends EveController {
 	}
 	
 	/**
-	 * Dummy method to redirect back to standard controller
+	 * Display method
 	 *
 	 * @return	void
 	 */
-	public function display()
+	public function display($cachable = false)
 	{
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false));
+		$document =& JFactory::getDocument();
+
+		$viewType	= $document->getType();
+		$viewName	= JRequest::getCmd( 'view', $this->getName() );
+		$viewLayout	= JRequest::getCmd( 'layout', 'default' );
+
+		$view = & $this->getView($viewName, $viewType, '', array('base_path'=>$this->_basePath));
+
+		// Get/Create the character model
+		$characterModel = & $this->getModel('Character');
+		$view->setModel($characterModel, true);
+
+		// Get/Create the schedule model
+		$apischeduleModel = & $this->getModel('Apischedule');
+		// Push the model into the view
+		$view->setModel($apischeduleModel);
+		
+		$sectionaccessModel = & $this->getModel('Sectionaccess');
+		// Push the model into the view
+		$view->setModel($sectionaccessModel);
+
+		// Set the layout
+		$view->setLayout($viewLayout);
+
+		// Display the view
+		if ($cachable && $viewType != 'feed') {
+			global $option;
+			$cache =& JFactory::getCache($option, 'view');
+			$cache->get($view, 'display');
+		} else {
+			$view->display();
+		}
 	}
 	
 	function add() {
@@ -173,7 +204,15 @@ class EveControllerCharacter extends EveController {
 			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
 			return false;
 		}
-
+		
+		$apischeduleModel = & $this->getModel('Apischedule');
+		$data = JRequest::getVar('apischedule', array(), 'post', 'array');
+		$apischeduleModel->setCharacterList($data, $character);
+		
+		$sectionaccessModel = & $this->getModel('Sectionaccess');
+		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
+		$sectionaccessModel->setCharacterList($data, $character);
+		
 		// Save succeeded, check-in the character.
 		if (!$model->checkin()) {
 			// Check-in failed, go back to the character and display a notice.

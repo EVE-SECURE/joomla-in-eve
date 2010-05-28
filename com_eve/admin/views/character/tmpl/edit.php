@@ -10,7 +10,7 @@ JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 ?>
 <form action="<?php //FIXME: JRoute::_('index.php?option=com_eve'); ?>" method="post" name="adminForm">
-	<div class="col100">
+	<div class="col30">
 	<fieldset>
 		<legend><?php echo JText::_('CHARACTER DETAILS'); ?></legend>
 		<table class="admintable">
@@ -49,7 +49,11 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 		</table>
 	</fieldset>
 	</div>
-		
+	
+	<?php echo $this->loadTemplate('apischedule'); ?>
+	
+	<?php echo $this->loadTemplate('sectionaccess'); ?>
+			
 	<input type="hidden" name="task" value="" />
-	<?php echo JHTML::_( 'form.token' ); ?>
+	<?php echo JHTML::_('form.token'); ?>
 </form>
