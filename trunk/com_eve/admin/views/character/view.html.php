@@ -29,15 +29,28 @@ class EveViewCharacter extends JView {
 	public $item;
 	
 	public function display($tpl = null) {
-		$item = $this->get('Item');
+		$character = $this->get('Item');
 		
+		$apischedule = $this->get('CharacterList', 'Apischedule');
+		$sectionaccess = $this->get('CharacterList', 'Sectionaccess');
+		$groups = $this->get('CharacterGroups', 'Sectionaccess');
+		if (is_array($sectionaccess)) {
+			foreach ($sectionaccess as $item) {
+				if (is_null($item->access)) {
+					$item->access = 'NULL';
+				}
+			}
+		}
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 		
-		$this->assignRef('item', $item);
+		$this->assignRef('item', $character);
+		$this->assignRef('apischedule', $apischedule);
+		$this->assignRef('sectionaccess', $sectionaccess);
+		$this->assignRef('groups', $groups);
 		
 		parent::display($tpl);
 		$this->_setToolbar();

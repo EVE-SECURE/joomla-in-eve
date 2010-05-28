@@ -66,7 +66,11 @@ $userId	= $user->get('id');
 				</td>
 				
 				<td>
-					<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access); ?>
+					<?php if ($item->entity == 'character'): ?>
+						<?php echo JHTML::_('select.genericlist', $this->characterGroups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
+					<?php else: ?>
+						<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
+					<?php endif; ?>
 				</td>
 
 			</tr>

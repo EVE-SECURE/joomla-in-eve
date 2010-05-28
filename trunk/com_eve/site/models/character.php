@@ -96,25 +96,14 @@ class EveModelCharacter extends JModelItem
 		$dbo = $this->getDBO();
 		
 		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_characters', 'ch');
 		$q->addTable('#__eve_sections', 's');
 		$q->addWhere("s.entity = 'character'");
 		$q->addWhere('s.published');
-		if ($item->ownerID) {
-			if ($item->ownerID == $user->get('id')) {
-				//owner has always access
-			} else {
-				$acl = EveFactory::getACL();
-				$corporationIDs = $acl->getUserCorporationIDs();
-				$q->addJoin('#__eve_section_character_access', 'sc', 'sc.section=s.id AND sc.characterID='.$item->characterID);
-				if (in_array($item->corporationID, $corporationIDs)) {
-					$q->addWhere('((COALESCE(sc.access, s.access) = 10) OR (COALESCE(sc.access, s.access) <='.intval($user->get('aid')).'))');
-				} else {
-					$q->addWhere('(COALESCE(sc.access, s.access) <='.intval($user->get('aid')).')');
-				}
-			}
-		} else {
-			$q->addWhere('access >= 0 AND access <='.intval($user->get('aid')));
-		}
+		$q->addWhere('ch.characterID='.(int) $item->characterID);
+		$acl = EveFactory::getACL();
+		$acl->setCharacterQuery($q, 's.', 'ch.');
+		
 		$q->addOrder('ordering');
 		$result = $q->loadObjectList();
 		return $result;
