@@ -71,6 +71,9 @@ $userId	= $user->get('id');
 					<?php else: ?>
 						<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
 					<?php endif; ?>
+					<?php if ($item->entity == 'corporation'): ?>
+						<input type="button" class="" onclick="listItemTask('cb<?php echo $i; ?>', 'roles.editsection')" value="<?php echo JText::_('Edit Roles'); ?>"/>
+					<?php endif; ?>
 				</td>
 
 			</tr>

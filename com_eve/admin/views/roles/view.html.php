@@ -25,30 +25,26 @@ defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view');
 
-class EveViewAccess extends JView {
+class EveViewRoles extends JView {
 	public $state;
-	public $items;
-	public $pagination;
+	public $item;
 
 	
 	function display($tpl = null) {
 		$state		= $this->get('State');
-		$items		= $this->get('Items');
-		$groups		= $this->get('Groups');
-		$pagination	= $this->get('Pagination');
-		$characterGroups = $this->get('CharacterGroups', 'Sectionaccess');
-
+		$item 		= $this->get('Item');
+		
+		$acl = EveFactory::getACL();
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
 
-		$this->assignRef('state',			$state);
-		$this->assignRef('items',			$items);
-		$this->assignRef('groups',			$groups);
-		$this->assignRef('characterGroups',	$characterGroups);
-		$this->assignRef('pagination',		$pagination);
+		$this->assignRef('state',	$state);
+		$this->assignRef('item',	$item);
+		$this->assignRef('acl',		$acl);
 		
 		parent::display($tpl);
 		$this->_setToolbar();
@@ -61,9 +57,18 @@ class EveViewAccess extends JView {
 	protected function _setToolbar()
 	{
 		JRequest::setVar('hidemainmenu', 1);
-		$title = JText::_('Access Control');
+		$title = JText::_('Roles').' - '.$this->item->title;
 		JToolBarHelper::title($title, 'encryption');
-		JToolBarHelper::apply('access.apply');
+		JToolBarHelper::save('roles.savesection');
+		JToolBarHelper::apply('roles.applysection');
+		JToolBarHelper::cancel('roles.cancelsection', 'Close');
 	}
 	
+	
+	protected function displayItem($name, $value)
+	{
+		$this->assign('itemName', $name);
+		$this->assign('itemValue', $value);
+		return $this->loadTemplate('item');
+	}
 }

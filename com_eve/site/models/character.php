@@ -91,7 +91,6 @@ class EveModelCharacter extends JModelItem
 	
 	public function getComponents()
 	{
-		$user = JFactory::getUser();
 		$item = $this->getItem();
 		$dbo = $this->getDBO();
 		

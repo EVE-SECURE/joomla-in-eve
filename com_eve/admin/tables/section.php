@@ -47,7 +47,9 @@ class EveTableSection extends JTable {
 	var $published	= null;
 	/** @var int */
 	var $access		= null;
-
+	/** @var bigint */
+	var $roles		= null;
+	
 	/**
 	* @param database A database connector object
 	*/
