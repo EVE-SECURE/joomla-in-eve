@@ -112,6 +112,8 @@ $i = 0;
 			
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="" />
-	<input type="hidden" name="jform[id]" value="<?php echo $this->item->id; ?>"/>
+	<input type="hidden" name="jform[id]" value="<?php echo $this->state->get('section.id'); ?>"/>
+	<input type="hidden" name="jform[section]" value="<?php echo $this->state->get('sectionCorporation.section'); ?>"/>
+	<input type="hidden" name="jform[corporationID]" value="<?php echo $this->state->get('sectionCorporation.corporationID'); ?>"/>
 	<?php echo JHTML::_('form.token'); ?>
 </form>

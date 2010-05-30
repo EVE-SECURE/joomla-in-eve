@@ -56,12 +56,18 @@ class EveViewRoles extends JView {
 	 */
 	protected function _setToolbar()
 	{
+		$context = $this->state->get('context');
 		JRequest::setVar('hidemainmenu', 1);
 		$title = JText::_('Roles').' - '.$this->item->title;
+		if ($context == 'sectionCorporation') {
+			$corporationID = $this->state->get('sectionCorporation.corporationID');
+			$corporation = EveFactory::getInstance('corporation', $corporationID);
+			$title .= ' - '. $this->escape($corporation->corporationName);
+		}
 		JToolBarHelper::title($title, 'encryption');
-		JToolBarHelper::save('roles.savesection');
-		JToolBarHelper::apply('roles.applysection');
-		JToolBarHelper::cancel('roles.cancelsection', 'Close');
+		JToolBarHelper::save('roles.save'.$context);
+		JToolBarHelper::apply('roles.apply'.$context);
+		JToolBarHelper::cancel('roles.cancel'.$context, 'Close');
 	}
 	
 	

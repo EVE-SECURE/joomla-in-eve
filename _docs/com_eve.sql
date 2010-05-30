@@ -123,6 +123,7 @@ CREATE TABLE `jos_eve_sections` (
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `access` int(11) NOT NULL default '0',
+  `roles` bigint(20) unsigned default NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=utf8;
@@ -135,6 +136,14 @@ CREATE TABLE `jos_eve_section_character_access` (
   PRIMARY KEY  (`section`,`characterID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `jos_eve_section_corporation_access`;
+CREATE TABLE IF NOT EXISTS `jos_eve_section_corporation_access` (
+  `section` int(11) NOT NULL,
+  `corporationID` int(11) NOT NULL,
+  `access` int(3) default NULL,
+  `roles` bigint(20) unsigned default NULL,
+  PRIMARY KEY  (`section`,`corporationID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 DELETE FROM `jos_components` WHERE `option` = 'com_eve';

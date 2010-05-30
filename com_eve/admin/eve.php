@@ -29,7 +29,7 @@ if (!JPluginHelper::isEnabled('system', 'eve')) {
 } else {
 	$task = JRequest::getVar('task', 'display');
 	$view = JRequest::getVar('view');
-	if ($task == 'display' && ($view == 'character' || $view == 'access' || $view == 'roles')) {
+	if ($task == 'display' && ($view == 'character' || $view == 'corporation' || $view == 'access' || $view == 'roles')) {
 		JRequest::setVar('task', "$view.$task");
 	}
 	$controller = EveController::getInstance('Eve');

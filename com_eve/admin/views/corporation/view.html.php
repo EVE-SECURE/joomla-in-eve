@@ -33,6 +33,8 @@ class EveViewCorporation extends JView {
 		$document->addStyleSheet('components/com_eve/assets/common.css');
 		
 		$item = $this->get('Item');
+		$sectionaccess = $this->get('CorporationList', 'Sectionaccess');
+		$groups = $this->get('CorporationGroups', 'Sectionaccess');
 		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
@@ -41,6 +43,8 @@ class EveViewCorporation extends JView {
 		}
 		
 		$this->assignRef('item', $item);
+		$this->assignRef('sectionaccess', $sectionaccess);
+		$this->assignRef('groups', $groups);
 		
 		parent::display($tpl);
 		$this->_setToolbar();
