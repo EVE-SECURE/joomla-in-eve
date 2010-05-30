@@ -64,6 +64,7 @@ class EveViewAccess extends JView {
 		$title = JText::_('Access Control');
 		JToolBarHelper::title($title, 'encryption');
 		JToolBarHelper::apply('access.apply');
+		JToolBarHelper::cancel('access.cancel');
 	}
 	
 }

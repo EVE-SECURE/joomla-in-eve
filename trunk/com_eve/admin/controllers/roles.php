@@ -66,7 +66,7 @@ class EveControllerRoles extends EveController {
 		}
 	}
 	
-	function editsection()
+	function editSection()
 	{
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Sectionroles', 'EveModel');
@@ -74,26 +74,27 @@ class EveControllerRoles extends EveController {
 		
 		$id		= (int) (count($cid) ? $cid[0] : JRequest::getInt('id'));
 		
-		$app->setUserState('com_eve.roles.model', 'sectionroles');
+		$app->setUserState('com_eve.roles.model', 'sectionRoles');
 		$app->setUserState('com_eve.section.id', $id);
 		$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit');
 		return true;
 	}
 	
-	function editsectioncorporation()
+	function editSectionCorporation()
 	{
-		/*
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Roles', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
 		
-		$id		= (int) (count($cid) ? $cid[0] : JRequest::getInt('id'));
+		$section = (int) (count($cid) ? $cid[0] : JRequest::getInt('section'));
+		$data	= JRequest::getVar('jform', array(), 'post', 'array');
+		$corporationID = JArrayHelper::getValue($data, 'corporationID', null, 'int');
 		
-		$app->setUserState('com_eve.roles.model', 'sectioncorporationroles');
-		$app->setUserState('com_eve.sectioncorporation.corporationID', $id);
+		$app->setUserState('com_eve.roles.model', 'sectionCorporationRoles');
+		$app->setUserState('com_eve.sectionCorporation.corporationID', $corporationID);
+		$app->setUserState('com_eve.sectionCorporation.section', $section);
 		$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit');
 		return true;
-		*/
 	}
 	
 	/**
@@ -103,7 +104,30 @@ class EveControllerRoles extends EveController {
 	 * @return	void
 	 * @since	1.0
 	 */
-	public function cancelsection()
+	public function cancelSection()
+	{
+		JRequest::checkToken() or jExit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+
+		$modelName = $app->getUserState('com_eve.roles.model');
+		$app->setUserState('com_eve.roles.model', null);
+		$app->setUserState('com_eve.sectionCorporation.corporationID', null);
+		$app->setUserState('com_eve.sectionCorporation.section', null);
+				
+		$model	= &$this->getModel($modelName, 'EveModel');
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
+	}
+
+	/*
+	 * Method to cancel an edit
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	1.0
+	 */
+	public function cancelSectionCorporation()
 	{
 		JRequest::checkToken() or jExit(JText::_('JInvalid_Token'));
 
@@ -115,9 +139,8 @@ class EveControllerRoles extends EveController {
 		$app->setUserState('com_eve.section.id', null);
 		
 		$model	= &$this->getModel($modelName, 'EveModel');
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
-	}
-
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporation&layout=edit', false));
+	}	
 	/**
 	 * Method to save a character.
 	 *
@@ -125,7 +148,7 @@ class EveControllerRoles extends EveController {
 	 * @return	void
 	 * @since	1.0
 	 */
-	public function savesection()
+	public function saveSection()
 	{
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));

@@ -175,6 +175,18 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_character_access` (
   PRIMARY KEY  (`section`,`characterID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `#__eve_section_character_access`
+-- 
+
+CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
+  `section` int(11) NOT NULL,
+  `corporationID` int(11) NOT NULL,
+  `access` int(3) default NULL,
+  `roles` bigint(20) unsigned default NULL,
+  PRIMARY KEY  (`section`,`corporationID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 -- 
 -- Data for table `#__eve_schedule`

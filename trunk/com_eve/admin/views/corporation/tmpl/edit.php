@@ -64,6 +64,8 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 		</table>
 	</fieldset>
 	</div>
+	
+	<?php echo $this->loadTemplate('sectionaccess'); ?>
 		
 	<input type="hidden" name="task" value="" />
 	<?php echo JHTML::_( 'form.token' ); ?>

@@ -313,6 +313,9 @@ class EveACL extends JObject {
 	
 	public function hasRole($role, $roles)
 	{
+		if (is_null($roles)) {
+			$roles = 0;
+		}
 		if (isset(self::$roles[$role])) {
 			$role = self::$roles[$role];
 		}

@@ -35,6 +35,8 @@ class EveModelSectionaccess extends EveModel
 		if (JRequest::getWord('layout') === 'edit') {
 			$characterID = (int) $app->getUserState('com_eve.edit.character.characterID');
 			$this->setState('character.characterID', $characterID);
+			$corporationID = (int) $app->getUserState('com_eve.edit.corporation.corporationID');
+			$this->setState('corporation.corporationID', $corporationID);
 		} else {
 			$characterID = (int) JRequest::getInt('characterID');
 			$this->setState('character.characterID', $characterID);
@@ -114,8 +116,55 @@ class EveModelSectionaccess extends EveModel
 		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
 		
 		return $groups;
-		
 	}
 	
+	public function setCorporationID($id)
+	{
+		if (!$this->__state_set) {
+			// Private method to auto-populate the model state.
+			$this->_populateState();
+			
+			$this->setState('corporation.corporationID', $id);
+			// Set the model state set flat to true.
+			
+			$this->__state_set = true;
+		} else {
+			$this->setState('corporation.corporationID', $id);
+		}
+	}	
+	public function getCorporationList()
+	{
+		$dbo = $this->getDBO();
+		$corporationID = $this->getState('corporation.corporationID');
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_sections', 's');
+		$q->addJoin('#__eve_section_corporation_access', 'cs', 'cs.section=s.id AND corporationID='.$corporationID);
+		$q->addWhere("entity = 'corporation'");
+		$q->addWhere('published = 1');
+		$q->addQuery('s.title, s.id AS section, cs.access, cs.roles');
+		$list = $q->loadObjectList('section');
+		return $list;
+	}
+	
+	public function getCorporationGroups()
+	{
+		$dbo = $this->getDBO();
 
+		$query = 'SELECT id AS value, name AS text'
+		. ' FROM #__groups'
+		. ' ORDER BY id'
+		;
+		$dbo->setQuery( $query );
+		$groups = $dbo->loadObjectList();
+		jimport('joomla.html.html');
+		if ($this->getState('nullOption', true)) {
+			array_unshift($groups, JHTML::_('select.option', 'NULL', 'Com_Eve_Access_Option_Default'));
+		}
+		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_IN_OWNER_CORPORATION, 'Com_Eve_Access_Option_Corporation');
+		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_OWNED_BY_USER, 'Com_Eve_Access_Option_Personal');
+		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
+		
+		return $groups;
+	}
+	
 }

@@ -25,14 +25,8 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-class EveModelSectionroles extends JModelItem {
-	protected $_context = 'section';
-	
-	protected function _populateState()
-	{
-		parent::_populateState();
-		$this->setState('context', $this->_context);
-	}
+class EveModelSectionCorporationRoles extends JModelItem {
+	protected $_context = 'sectionCorporation';
 	
 	public function validate(&$data)
 	{
@@ -42,6 +36,49 @@ class EveModelSectionroles extends JModelItem {
 		return $data;
 	}
 	
+	protected function _populateState()
+	{
+		$app = &JFactory::getApplication();
+		
+		$this->setState('context', $this->_context);
+
+		// Load state from the request.
+		if (!($section = (int) $app->getUserState($this->_option.'.'.$this->_context.'.section'))) {
+			$section = (int) JRequest::getInt('section');
+		}
+		$this->setState($this->_context.'.section', $section);
+
+		// Load state from the request.
+		if (!($corporationID = (int) $app->getUserState($this->_option.'.'.$this->_context.'.corporationID'))) {
+			$corporationID = (int) JRequest::getInt('corporationID');
+		}
+		$this->setState($this->_context.'.corporationID', $corporationID);
+
+		// Load the parameters.
+		if ($app->isSite()) {
+			$params	= $app->getParams();
+		} else {
+			$params = JComponentHelper::getParams($this->_option);
+		}
+		$this->setState('params', $params);
+	}
+	
+	protected function _loadItem()
+	{
+		$dbo = $this->getDBO();
+		$section = $this->getState($this->_context.'.section');
+		$corporationID = $this->getState($this->_context.'.corporationID');
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_sections', 's');
+		$q->addJoin('#__eve_section_corporation_access', 'cs', 'cs.section=s.id AND corporationID='.$corporationID);
+		$q->addWhere("entity = 'corporation'");
+		$q->addWhere('published = 1');
+		$q->addWhere('s.id='.$section);
+		$q->addQuery('s.title, s.id AS section, cs.access, cs.roles');
+		$result = $q->loadObject();
+		return $result;
+	}
+		
 	public function save($data)
 	{
 		$id	= (int) $this->getState('section.id');
