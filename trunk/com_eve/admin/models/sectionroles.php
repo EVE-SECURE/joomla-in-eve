@@ -23,21 +23,47 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-if (!JPluginHelper::isEnabled('system', 'eve')) {
-	$app = JFactory::getApplication();
-	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
-} else {
-	$task = JRequest::getVar('task', 'display');
-	$view = JRequest::getVar('view');
-	if ($task == 'display' && ($view == 'character' || $view == 'access' || $view == 'roles')) {
-		JRequest::setVar('task', "$view.$task");
+jimport('joomla.application.component.model');
+
+class EveModelSectionroles extends JModelItem {
+	protected $_context = 'section';
+	
+	public function validate(&$data)
+	{
+		$roles = JArrayHelper::getValue($data, 'roles', array());
+		$acl = EveFactory::getACL();
+		$data['roles'] = $acl->sumRoles($roles);
+		return $data;
 	}
-	$controller = EveController::getInstance('Eve');
-	if (!JError::isError($controller)) {
-		$controller->execute(JRequest::getVar('task'));
-		$controller->redirect();
-	} else {
-		$app = JFactory::getApplication();
-		$app->enqueueMessage($controller->getMessage(), 'error');
+	
+	public function save($data)
+	{
+		$id	= (int) $this->getState('section.id');
+
+		// Get a character row instance.
+		$table = &$this->getTable();
+		
+		$table->load($id);
+		
+		// Bind the data
+		if (!$table->bind($data)) {
+			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
+			return false;
+		}
+		
+		// Check the data
+		if (!$table->check()) {
+			$this->setError($table->getError());
+			return false;
+		}
+		
+		// Store the data
+		if (!$table->store()) {
+			$this->setError($this->_db->getErrorMsg());
+			return false;
+		}
+
+		return $table->id;		
 	}
+	
 }

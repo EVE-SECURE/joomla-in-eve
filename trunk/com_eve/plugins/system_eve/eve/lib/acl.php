@@ -217,61 +217,130 @@ class EveACL extends JObject {
 		return $this->ownerCorporationIDs;
 	}
 	
+	static protected $roles = array(
+		'Director' => '1',
+		'PersonnelManager' => '128',
+		'Accountant' => '256',
+		'SecurityOfficer' => '512',
+		'FactoryManager' => '1024',
+		'StationManager' => '2048',
+		'Auditor' => '4096',
+		'HangarCanTake1' => '8192',
+		'HangarCanTake2' => '16384',
+		'HangarCanTake3' => '32768',
+		'HangarCanTake4' => '65536',
+		'HangarCanTake5' => '131072',
+		'HangarCanTake6' => '262144',
+		'HangarCanTake7' => '524288',
+		'HangarCanQuery1' => '1048576',
+		'HangarCanQuery2' => '2097152',
+		'HangarCanQuery3' => '4194304',
+		'HangarCanQuery4' => '8388608',
+		'HangarCanQuery5' => '16777216',
+		'HangarCanQuery6' => '33554432',
+		'HangarCanQuery7' => '67108864',
+		'AccountCanTake1' => '134217728',
+		'AccountCanTake2' => '268435456',
+		'AccountCanTake3' => '536870912',
+		'AccountCanTake4' => '1073741824',
+		'AccountCanTake5' => '2147483648',
+		'AccountCanTake6' => '4294967296',
+		'AccountCanTake7' => '8589934592',
+		'AccountCanQuery1' => '17179869184',
+		'AccountCanQuery2' => '34359738368',
+		'AccountCanQuery3' => '68719476736',
+		'AccountCanQuery4' => '137438953472',
+		'AccountCanQuery5' => '274877906944',
+		'AccountCanQuery6' => '549755813888',
+		'AccountCanQuery7' => '1099511627776',
+		'EquipmentConfig' => '2199023255552',
+		'ContainerCanTake1' => '4398046511104',
+		'ContainerCanTake2' => '8796093022208',
+		'ContainerCanTake3' => '17592186044416',
+		'ContainerCanTake4' => '35184372088832',
+		'ContainerCanTake5' => '70368744177664',
+		'ContainerCanTake6' => '140737488355328',
+		'ContainerCanTake7' => '281474976710656',
+		'CanRentOffice' => '562949953421312',
+		'CanRentFactorySlot' => '1125899906842624',
+		'CanRentResearchSlot' => '2251799813685248',
+		'JuniorAccountant' => '4503599627370496',
+		'StarbaseConfig' => '9007199254740992',
+		'Trader' => '18014398509481984',
+		'ChatManager' => '36028797018963968',
+		'ContractManager' => '72057594037927936',
+		'InfrastructureTacticalOfficer' => '144115188075855872',
+		'StarbaseCaretaker' => '288230376151711744',);
+	
+	static protected $generalRoles = array('Director', 'PersonnelManager', 'Accountant', 
+		'SecurityOfficer', 'FactoryManager', 'StationManager', 'Auditor', 
+		'EquipmentConfig',
+		'CanRentOffice', 'CanRentFactorySlot', 'CanRentResearchSlot', 'JuniorAccountant', 'StarbaseConfig', 
+		'Trader', 'ChatManager', 'ContractManager', 'InfrastructureTacticalOfficer', 'StarbaseCaretaker');
+	
+	public function getRoles($name = null)
+	{
+		$result = array();
+		switch (strtolower($name)) {
+			case 'general':
+				foreach (self::$generalRoles as $key) {
+					$result[$key] = self::$roles[$key]; 
+				}
+				break;
+			case 'hangar':
+				for ($i = 1; $i <= 7; $i += 1) {
+					$result['HangarCanTake'.$i] = self::$roles['HangarCanTake'.$i];
+					$result['HangarCanQuery'.$i] = self::$roles['HangarCanQuery'.$i];
+				}
+				break;
+			case 'account':
+				for ($i = 1; $i <= 7; $i += 1) {
+					$result['AccountCanTake'.$i] = self::$roles['AccountCanTake'.$i];
+					$result['AccountCanQuery'.$i] = self::$roles['AccountCanQuery'.$i];
+				}
+				break;
+			case 'container':
+				for ($i = 1; $i <= 7; $i += 1) {
+					$result['ContainerCanTake'.$i] = self::$roles['ContainerCanTake'.$i];
+				}
+				break;
+			default:
+				$result = self::$roles;
+				
+		}
+		return $result;
+	}
+	
+	public function hasRole($role, $roles)
+	{
+		if (isset(self::$roles[$role])) {
+			$role = self::$roles[$role];
+		}
+		if (function_exists('gmp_init')) {
+			$role = gmp_init($role);
+			$roles = gmp_init($roles);
+			$and = gmp_and($role, $roles);
+			return (bool) gmp_strval($and);
+		} else {
+			return false;
+		}
+	}
+	
+	public function sumRoles($roles)
+	{
+		if (!is_array($roles)) {
+			return '0';
+		}
+		if (function_exists('gmp_init')) {
+			$sum = gmp_init('0');
+			foreach ($roles as $role) {
+				$role = gmp_init($role);
+				$sum = gmp_add($sum, $role);
+			}
+			return gmp_strval($sum);
+		} else {
+			return '0';
+		}
+	}
+	
 }
-
-
-
-$roles = array(
-'corpRoleDirector' => '1',
-'corpRolePersonnelManager' => '128',
-'corpRoleAccountant' => '256',
-'corpRoleSecurityOfficer' => '512',
-'corpRoleFactoryManager' => '1024',
-'corpRoleStationManager' => '2048',
-'corpRoleAuditor' => '4096',
-'corpRoleHangarCanTake1' => '8192',
-'corpRoleHangarCanTake2' => '16384',
-'corpRoleHangarCanTake3' => '32768',
-'corpRoleHangarCanTake4' => '65536',
-'corpRoleHangarCanTake5' => '131072',
-'corpRoleHangarCanTake6' => '262144',
-'corpRoleHangarCanTake7' => '524288',
-'corpRoleHangarCanQuery1' => '1048576',
-'corpRoleHangarCanQuery2' => '2097152',
-'corpRoleHangarCanQuery3' => '4194304',
-'corpRoleHangarCanQuery4' => '8388608',
-'corpRoleHangarCanQuery5' => '16777216',
-'corpRoleHangarCanQuery6' => '33554432',
-'corpRoleHangarCanQuery7' => '67108864',
-'corpRoleAccountCanTake1' => '134217728',
-'corpRoleAccountCanTake2' => '268435456',
-'corpRoleAccountCanTake3' => '536870912',
-'corpRoleAccountCanTake4' => '1073741824',
-'corpRoleAccountCanTake5' => '2147483648',
-'corpRoleAccountCanTake6' => '4294967296',
-'corpRoleAccountCanTake7' => '8589934592',
-'corpRoleAccountCanQuery1' => '17179869184',
-'corpRoleAccountCanQuery2' => '34359738368',
-'corpRoleAccountCanQuery3' => '68719476736',
-'corpRoleAccountCanQuery4' => '137438953472',
-'corpRoleAccountCanQuery5' => '274877906944',
-'corpRoleAccountCanQuery6' => '549755813888',
-'corpRoleAccountCanQuery7' => '1099511627776',
-'corpRoleEquipmentConfig' => '2199023255552',
-'corpRoleContainerCanTake1' => '4398046511104',
-'corpRoleContainerCanTake2' => '8796093022208',
-'corpRoleContainerCanTake3' => '17592186044416',
-'corpRoleContainerCanTake4' => '35184372088832',
-'corpRoleContainerCanTake5' => '70368744177664',
-'corpRoleContainerCanTake6' => '140737488355328',
-'corpRoleContainerCanTake7' => '281474976710656',
-'corpRoleCanRentOffice' => '562949953421312',
-'corpRoleCanRentFactorySlot' => '1125899906842624',
-'corpRoleCanRentResearchSlot' => '2251799813685248',
-'corpRoleJuniorAccountant' => '4503599627370496',
-'corpRoleStarbaseConfig' => '9007199254740992',
-'corpRoleTrader' => '18014398509481984',
-'corpRoleChatManager' => '36028797018963968',
-'corpRoleContractManager' => '72057594037927936',
-'corpRoleInfrastructureTacticalOfficer' => '144115188075855872',
-'corpRoleStarbaseCaretaker' => '288230376151711744',);
