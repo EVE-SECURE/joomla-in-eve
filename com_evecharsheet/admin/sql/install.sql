@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS `#__eve_skillqueue` (
   `level` int(11) NOT NULL,
   `startSP` int(11) NOT NULL,
   `endSP` int(11) NOT NULL,
-  `startTime` date NOT NULL, 
-  `endTime` date NOT NULL, 
+  `startTime` datetime NOT NULL, 
+  `endTime` datetime NOT NULL, 
   PRIMARY KEY  (`characterID`,`typeID`, `level`)
 ) DEFAULT CHARSET=utf8;
 
