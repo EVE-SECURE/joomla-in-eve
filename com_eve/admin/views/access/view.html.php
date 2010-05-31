@@ -37,7 +37,8 @@ class EveViewAccess extends JView {
 		$groups		= $this->get('Groups');
 		$pagination	= $this->get('Pagination');
 		$characterGroups = $this->get('CharacterGroups', 'Sectionaccess');
-
+		$corporationGroups = $this->get('CorporationGroups', 'Sectionaccess');
+		
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -48,6 +49,7 @@ class EveViewAccess extends JView {
 		$this->assignRef('items',			$items);
 		$this->assignRef('groups',			$groups);
 		$this->assignRef('characterGroups',	$characterGroups);
+		$this->assignRef('corporationGroups',	$corporationGroups);
 		$this->assignRef('pagination',		$pagination);
 		
 		parent::display($tpl);

@@ -123,7 +123,7 @@ CREATE TABLE `jos_eve_sections` (
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `access` int(11) NOT NULL default '0',
-  `roles` bigint(20) unsigned default NULL,
+  `roles` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=utf8;

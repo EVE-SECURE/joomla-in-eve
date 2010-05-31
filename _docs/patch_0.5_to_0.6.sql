@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
   PRIMARY KEY  (`section`,`corporationID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-ALTER TABLE `jos_eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NULL AFTER `access` ;
+ALTER TABLE `jos_eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;
 
 
 ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;

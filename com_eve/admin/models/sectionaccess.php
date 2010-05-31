@@ -160,9 +160,9 @@ class EveModelSectionaccess extends EveModel
 		if ($this->getState('nullOption', true)) {
 			array_unshift($groups, JHTML::_('select.option', 'NULL', 'Com_Eve_Access_Option_Default'));
 		}
-		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_IN_OWNER_CORPORATION, 'Com_Eve_Access_Option_Corporation');
-		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_OWNED_BY_USER, 'Com_Eve_Access_Option_Personal');
-		//$groups[] = JHTML::_('select.option', EveACL::CHARACTER_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
+		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_MEMBERS, 'Com_Eve_Access_Option_Members');
+		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_MEMBER_ROLES, 'Com_Eve_Access_Option_Roles');
+		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
 		
 		return $groups;
 	}
