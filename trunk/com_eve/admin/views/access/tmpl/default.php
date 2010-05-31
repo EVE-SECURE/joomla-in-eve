@@ -68,6 +68,8 @@ $userId	= $user->get('id');
 				<td>
 					<?php if ($item->entity == 'character'): ?>
 						<?php echo JHTML::_('select.genericlist', $this->characterGroups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
+					<?php elseif ($item->entity == 'corporation'): ?>
+						<?php echo JHTML::_('select.genericlist', $this->corporationGroups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
 					<?php else: ?>
 						<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
 					<?php endif; ?>

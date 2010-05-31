@@ -48,6 +48,8 @@ class plgSearchEve extends JPlugin {
 				$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
 				$q->addTable('#__eve_corporations', 'co');
 				$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+				$acl = EveFactory::getACL();
+				$acl->setCorporationQuery($q, 'corporation', 'co.');
 				break;
 			case 'alliance':
 				$field1 = 'al.name';

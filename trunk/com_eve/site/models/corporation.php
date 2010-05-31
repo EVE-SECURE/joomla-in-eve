@@ -28,6 +28,15 @@ jimport('joomla.application.component.model');
 
 class EveModelCorporation extends JModelItem
 {
+	public function __construct($config = array())
+	{
+		parent::__construct($config);
+		$eveparams = JComponentHelper::getParams('com_eve');
+		$dbdump_database = $eveparams->get('dbdump_database');
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
+		
+	}
+	
 	protected function _populateState()
 	{
 		$id = JRequest::getInt('corporationID');
@@ -45,7 +54,7 @@ class EveModelCorporation extends JModelItem
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
 			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-			$q->addJoin('staStations', 'st', 'co.stationID=st.stationID');
+			$q->addJoin($this->dbdump.'staStations', 'st', 'co.stationID=st.stationID');
 			$q->addQuery('co.*');
 			$q->addQuery('ch.name AS ceoName');
 			$q->addQuery('al.name AS allianceName', 'al.shortName AS allianceShortName');
@@ -104,13 +113,16 @@ class EveModelCorporation extends JModelItem
 	
 	public function getComponents()
 	{
-		$user = JFactory::getUser();
+		$item = $this->getItem();
 		$dbo = $this->getDBO();
+		
 		$q = EveFactory::getQuery($dbo);
-		$q->addTable('#__eve_sections');
+		$q->addTable('#__eve_sections', 's');
 		$q->addWhere("entity = 'corporation'");
 		$q->addWhere('published');
-		$q->addWhere('access <='.intval($user->get('aid')));
+		$acl = EveFactory::getACL();
+		$acl->setCorporationQuery($q, 's.', $item);
+		
 		$q->addOrder('ordering');
 		$result = $q->loadObjectList();
 		return $result;
