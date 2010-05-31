@@ -27,6 +27,8 @@ $i = 0;
 					$i += 1;
 					?>
 				<?php endforeach; ?>
+					<td></td>
+				<?php $i += 1; ?>
 				</tr>
 		</table>
 	</fieldset>

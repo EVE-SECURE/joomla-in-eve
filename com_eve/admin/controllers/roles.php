@@ -30,6 +30,7 @@ class EveControllerRoles extends EveController {
 		parent::__construct( $config );
 		
 		$this->registerTask('applysection', 'savesection');
+		$this->registerTask('applysectioncorporation', 'savesectioncorporation');
 		
 	}
 	
@@ -140,13 +141,14 @@ class EveControllerRoles extends EveController {
 		
 		$model	= &$this->getModel($modelName, 'EveModel');
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporation&layout=edit', false));
-	}	
+	}
+	
 	/**
-	 * Method to save a character.
+	 * Method to save a Section.
 	 *
 	 * @access	public
 	 * @return	void
-	 * @since	1.0
+	 * @since	0.6
 	 */
 	public function saveSection()
 	{
@@ -176,8 +178,86 @@ class EveControllerRoles extends EveController {
 				}
 			}
 
-			// Save the data in the session.
-			$app->setUserState('com_eve.section.data', $data);
+			// Redirect back to the edit screen.
+			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=roles&layout=edit', false));
+			return false;
+		}
+
+		// Attempt to save the character.
+		$return = $model->save($data);
+
+		if ($return === false) {
+			// Save failed, go back to the character and display a notice.
+			$message = JText::sprintf('JError_Save_failed', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit', $message, 'error');
+			return false;
+		}
+		
+		/*
+		// Save succeeded, check-in the character.
+		if (!$model->checkin()) {
+			// Check-in failed, go back to the character and display a notice.
+			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
+			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
+			return false;
+		}
+		*/
+
+		$this->setMessage(JText::_('JController_Save_success'));
+
+		// Redirect the user and adjust session state based on the chosen task.
+		switch (strtolower($this->_task)) {
+			case 'applysection':
+				// Redirect back to the edit screen.
+				$app->setUserState('com_eve.section.id', $return);
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=roles&layout=edit', false));
+				break;
+
+			default:
+				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.section.id', null);
+				$app->setUserState('com_eve.section.data', null);
+
+				// Redirect to the list screen.
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
+				break;
+		}
+	}	
+	
+	/**
+	 * Method to save a Section.
+	 *
+	 * @access	public
+	 * @return	void
+	 * @since	0.6
+	 */
+	public function saveSectionCorporation()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		// Initialize variables.
+		$app	= &JFactory::getApplication();
+		$model	= $this->getModel('SectionCorporationRoles');
+		$data	= JRequest::getVar('jform', array(), 'post', 'array');
+
+		// Validate the posted data.
+		$data	= $model->validate($data);
+		
+		// Check for validation errors.
+		if ($data === false)
+		{
+			// Get the validation messages.
+			$errors	= $model->getErrors();
+
+			// Push up to three validation messages out to the user.
+			for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
+				if (JError::isError($errors[$i])) {
+					$app->enqueueMessage($errors[$i]->getMessage(), 'notice');
+				} else {
+					$app->enqueueMessage($errors[$i], 'notice');
+				}
+			}
 
 			// Redirect back to the edit screen.
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=roles&layout=edit', false));
@@ -207,20 +287,21 @@ class EveControllerRoles extends EveController {
 		$this->setMessage(JText::_('JController_Save_success'));
 
 		// Redirect the user and adjust session state based on the chosen task.
-		switch ($this->_task) {
-			case 'applysection':
+		switch (strtolower($this->_task)) {
+			case 'applysectioncorporation':
 				// Redirect back to the edit screen.
-				$app->setUserState('com_eve.section.id', $return);
+				$app->setUserState('com_eve.sectionCorporation.corporationID', $data['corporationID']);
+				$app->setUserState('com_eve.sectionCorporation.section', $data['section']);
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=roles&layout=edit', false));
 				break;
 
 			default:
 				// Clear the member id and data from the session.
-				$app->setUserState('com_eve.section.id', null);
-				$app->setUserState('com_eve.section.data', null);
+				$app->setUserState('com_eve.sectionCorporation.corporationID', null);
+				$app->setUserState('com_eve.sectionCorporation.section', null);
 
 				// Redirect to the list screen.
-				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
+				$this->setRedirect(JRoute::_('index.php?option=com_eve&task=corporation.edit&corporationID='.$data['corporationID'], false));
 				break;
 		}
 	}	

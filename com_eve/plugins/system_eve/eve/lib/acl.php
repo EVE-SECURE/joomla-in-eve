@@ -270,13 +270,15 @@ class EveACL extends JObject {
 		'ChatManager' => '36028797018963968',
 		'ContractManager' => '72057594037927936',
 		'InfrastructureTacticalOfficer' => '144115188075855872',
-		'StarbaseCaretaker' => '288230376151711744',);
+		'StarbaseCaretaker' => '288230376151711744',
+		'FittingManager' => '576460752303423488');
 	
 	static protected $generalRoles = array('Director', 'PersonnelManager', 'Accountant', 
 		'SecurityOfficer', 'FactoryManager', 'StationManager', 'Auditor', 
 		'EquipmentConfig',
 		'CanRentOffice', 'CanRentFactorySlot', 'CanRentResearchSlot', 'JuniorAccountant', 'StarbaseConfig', 
-		'Trader', 'ChatManager', 'ContractManager', 'InfrastructureTacticalOfficer', 'StarbaseCaretaker');
+		'Trader', 'ChatManager', 'ContractManager', 'InfrastructureTacticalOfficer', 'StarbaseCaretaker',
+		'FittingManager');
 	
 	public function getRoles($name = null)
 	{

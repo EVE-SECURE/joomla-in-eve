@@ -30,6 +30,8 @@ class EveModelSectionCorporationRoles extends JModelItem {
 	
 	public function validate(&$data)
 	{
+		$data['corporationID'] = JArrayHelper::getValue($data, 'corporationID', 0, 'int');
+		$data['section'] = JArrayHelper::getValue($data, 'section', 0, 'int');
 		$roles = JArrayHelper::getValue($data, 'roles', array());
 		$acl = EveFactory::getACL();
 		$data['roles'] = $acl->sumRoles($roles);
@@ -81,32 +83,22 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		
 	public function save($data)
 	{
-		$id	= (int) $this->getState('section.id');
-
-		// Get a character row instance.
-		$table = &$this->getTable();
-		
-		$table->load($id);
-		
-		// Bind the data
-		if (!$table->bind($data)) {
-			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
+		$corporationID = JArrayHelper::getValue($data, 'corporationID', 0, 'int');
+		$section = JArrayHelper::getValue($data, 'section', 0, 'int');
+		$roles = JArrayHelper::getValue($data, 'roles');
+		$access = 'NULL';
+	
+		$dbo = $this->getDBO();
+		$sql = sprintf('INSERT INTO #__eve_section_corporation_access (section, corporationID, access, roles) VALUES (%1$s, %2$s, %3$s, %4$s) '.
+			'ON DUPLICATE KEY UPDATE access = %3$s, roles=%4$s', $section, $corporationID, $access, $roles);
+		$dbo->setQuery($sql);
+		$dbo->query();
+		if ($error = $dbo->getError()) {
+			$this->setError($error);
 			return false;
 		}
 		
-		// Check the data
-		if (!$table->check()) {
-			$this->setError($table->getError());
-			return false;
-		}
-		
-		// Store the data
-		if (!$table->store()) {
-			$this->setError($this->_db->getErrorMsg());
-			return false;
-		}
-
-		return $table->id;		
+		return true;
 	}
 	
 }
