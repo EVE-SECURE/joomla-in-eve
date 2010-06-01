@@ -39,6 +39,7 @@ class EveModelSectionroles extends JModelItem {
 		$roles = JArrayHelper::getValue($data, 'roles', array());
 		$acl = EveFactory::getACL();
 		$data['roles'] = $acl->sumRoles($roles);
+		$data['access'] = EveACL::CORPORATION_MEMBER_ROLES;
 		return $data;
 	}
 	

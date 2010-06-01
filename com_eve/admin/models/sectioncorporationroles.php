@@ -35,6 +35,7 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		$roles = JArrayHelper::getValue($data, 'roles', array());
 		$acl = EveFactory::getACL();
 		$data['roles'] = $acl->sumRoles($roles);
+		$data['access'] = EveACL::CORPORATION_MEMBER_ROLES;
 		return $data;
 	}
 	
@@ -86,7 +87,7 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		$corporationID = JArrayHelper::getValue($data, 'corporationID', 0, 'int');
 		$section = JArrayHelper::getValue($data, 'section', 0, 'int');
 		$roles = JArrayHelper::getValue($data, 'roles');
-		$access = 'NULL';
+		$access = JArrayHelper::getValue($data, 'access');
 	
 		$dbo = $this->getDBO();
 		$sql = sprintf('INSERT INTO #__eve_section_corporation_access (section, corporationID, access, roles) VALUES (%1$s, %2$s, %3$s, %4$s) '.

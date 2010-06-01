@@ -201,6 +201,11 @@ class EveControllerCorporation extends EveController {
 			return false;
 		}
 
+		$corporation = $model->getItem($return);
+		$sectionaccessModel = & $this->getModel('Sectionaccess');
+		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
+		$sectionaccessModel->setCorporationList($data, $corporation);
+		
 		// Save succeeded, check-in the corporation.
 		if (!$model->checkin()) {
 			// Check-in failed, go back to the corporation and display a notice.

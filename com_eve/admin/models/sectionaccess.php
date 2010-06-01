@@ -146,6 +146,30 @@ class EveModelSectionaccess extends EveModel
 		return $list;
 	}
 	
+	public function setCorporationList($data, $corporation)
+	{
+		$corporationID = $this->getState('corporation.corporationID');
+		$list = $this->getCorporationList();
+		$dbo = $this->getDBO();
+		foreach ($list as $i => $item) {
+			$itemData = JArrayHelper::getValue($data, $i);
+			if (!is_array($itemData)) {
+				continue;
+			}
+			if (JArrayHelper::getValue($itemData, 'section') != $item->section) {
+				continue;
+			}
+			$access = JArrayHelper::getValue($itemData, 'access');
+			$access = is_numeric($access) ? (int) $access : 'NULL';
+			$rolesUpdate = $access == 'NULL' ? ', roles = NULL' : '';  
+			$sql = sprintf('INSERT INTO #__eve_section_corporation_access (section, corporationID, access, roles) VALUES (%1$s, %2$s, %3$s, NULL) '.
+				'ON DUPLICATE KEY UPDATE access = %3$s'.$rolesUpdate,
+				$item->section, $corporationID, $access);
+			$dbo->setQuery($sql);
+			$dbo->query();
+		}
+	}	
+	
 	public function getCorporationGroups()
 	{
 		$dbo = $this->getDBO();
