@@ -54,14 +54,56 @@ foreach ($plugins as $plugin) {
 
 function com_install() {
 	$app = JFactory::getApplication();
+	jimport('joomla.filesystem.file');
+	$manifestPath = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'eve.xml';
+	$version = null;
+	if (JFile::exists($manifestPath)) {
+		$manifestContent = JFile::read($manifestPath);
+		$manifest = new SimpleXMLElement($manifestContent);
+		$version = (string) $manifest->version;
+		$versionNumbers = explode('.', $version);
+		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
+	}
 	
 	$dbo = JFactory::getDBO();
-	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eve'";
-	$dbo->setQuery($sql);
-	if ($dbo->query()) {
-		$msg = JText::sprintf('Plugins enabled');
-		$app->enqueueMessage($msg);
+	switch ($version) {
+		case '0.5':
+			$sql = "ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);";
+			$dbo->setQuery($sql);
+			$dbo->query();
+			if ($error = $dbo->getError()) {
+				$app->enqueueMessage($error, 'error');
+			}
+			$sql = "ALTER TABLE `#__eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;";
+			$dbo->setQuery($sql);
+			$dbo->query();
+			if ($error = $dbo->getError()) {
+				$app->enqueueMessage($error, 'error');
+			}
+			
+			break;
+		default:
+			//fresh install
+			$sql = "SELECT id FROM `#__eve_apicalls` WHERE `call` = 'AllianceList'";
+			$dbo->setQuery($sql);
+			$id = $dbo->loadResult();
+			if ($id) {
+				$sql = "INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES ". 
+					"(".$id.", NULL, NULL, '0000-00-00 00:00:00', 1);";
+				$dbo->setQuery($sql);
+				$dbo->query();
+			}
+			
+			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eve'";
+			$dbo->setQuery($sql);
+			if ($dbo->query()) {
+				$msg = JText::sprintf('Plugins enabled');
+				$app->enqueueMessage($msg);
+			}
 	}
+	
+	
+	
 	
 	$cron = JComponentHelper::getComponent('com_cron', true);
 	if ($cron->enabled) {

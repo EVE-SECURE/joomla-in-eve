@@ -1,6 +1,4 @@
--- 
--- Table structure for table `#__eve_section_character_access`
--- 
+-- com_eve
 
 CREATE TABLE IF NOT EXISTS `#__eve_section_character_access` (
   `section` int(11) NOT NULL,
@@ -17,7 +15,10 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
   PRIMARY KEY  (`section`,`corporationID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-ALTER TABLE `jos_eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;
+ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);
 
+ALTER TABLE `#__eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;
+
+-- com_evecharsheet
 
 ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;
