@@ -51,6 +51,11 @@ class EveControllerRoles extends EveController {
 
 		$app	= &JFactory::getApplication();
 		$modelName = $app->getUserState('com_eve.roles.model');
+		if (!$modelName) {
+			$msg = JText::_('Unknown role context');
+			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false), $msg, 'error');
+			return false;
+		}
 		$model = & $this->getModel($modelName);
 		$view->setModel($model, true);
 
@@ -215,6 +220,7 @@ class EveControllerRoles extends EveController {
 
 			default:
 				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.roles.model', null);
 				$app->setUserState('com_eve.section.id', null);
 				$app->setUserState('com_eve.section.data', null);
 
@@ -297,6 +303,7 @@ class EveControllerRoles extends EveController {
 
 			default:
 				// Clear the member id and data from the session.
+				$app->setUserState('com_eve.roles.model', null);
 				$app->setUserState('com_eve.sectionCorporation.corporationID', null);
 				$app->setUserState('com_eve.sectionCorporation.section', null);
 
