@@ -1,4 +1,5 @@
 DELETE FROM `#__eve_sections` WHERE `component`='charsheet';
+DELETE FROM `#__eve_apicalls` WHERE `call`='SkillQueue' OR `call`='Titles';
 DROP TABLE IF EXISTS `#__eve_charskills`;
 DROP TABLE IF EXISTS `#__eve_skillqueue`;
 DROP TABLE IF EXISTS `#__eve_charcertificates`;

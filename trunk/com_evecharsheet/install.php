@@ -50,14 +50,32 @@ foreach ($plugins as $plugin) {
 
 function com_install() {
 	$app = JFactory::getApplication();
-
-	$dbo = JFactory::getDBO();
-	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evecharsheet'";
-	$dbo->setQuery($sql);
-	if ($dbo->query()) {
-		$msg = JText::sprintf('Plugins enabled');
-		$app->enqueueMessage($msg);
+	jimport('joomla.filesystem.file');
+	$manifestPath = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evecharsheet'.DS.'evecharsheet.xml';
+	$version = null;
+	if (JFile::exists($manifestPath)) {
+		$manifestContent = JFile::read($manifestPath);
+		$manifest = new SimpleXMLElement($manifestContent);
+		$version = (string) $manifest->version;
+		$versionNumbers = explode('.', $version);
+		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
 	}
-	EveHelper::scheduleApiCalls('evecharsheet', true);
+	
+	$dbo = JFactory::getDBO();
+	switch ($version) {
+		case '0.5':
+			$sql = "ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;";
+			$dbo->setQuery($sql);
+			$dbo->query();
+			break;
+		default:
+			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evecharsheet'";
+			$dbo->setQuery($sql);
+			if ($dbo->query()) {
+				$msg = JText::sprintf('Plugins enabled');
+				$app->enqueueMessage($msg);
+			}
+			EveHelper::scheduleApiCalls('evecharsheet', true);
+	}
 	return true;
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install version="1.5" type="plugin" group="search">
+<install method="upgrade" version="1.5" type="plugin" group="search">
 	<name>Search - EVE Character Sheet</name>
 	<author>Pavol Kovalik</author>
 	<creationDate>March 2009</creationDate>
@@ -7,7 +7,7 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>kovalikp@gmail.com</authorEmail>
 	<authorUrl>http://www.code-box.sk</authorUrl>
-	<version>1.5</version>
+	<version>0.6</version>
 	<description>ALLOWS SEARCHING OF CHARACTER</description>
 	<files>
 		<filename plugin="evecharsheet">evecharsheet.php</filename>
