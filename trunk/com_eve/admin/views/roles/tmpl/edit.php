@@ -7,6 +7,7 @@
 defined('_JEXEC') or die();
 
 JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
+JHTML::script('roles.js', 'administrator/components/com_eve/assets/js/');
 JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 
 $i = 0;
