@@ -124,7 +124,8 @@ CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `paginationPerPage` int(11) default NULL,
   `delay` int(11) NOT NULL default '0',
   `params` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `type_call` (`type`,`call`)
 ) DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -160,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_sections` (
   `ordering` int(11) NOT NULL default '0',
   `published` tinyint(1) NOT NULL default '0',
   `access` tinyint(1) NOT NULL default '0',
-  `roles` bigint( 20 ) UNSIGNED NOT NULL DEFAULT '0'
+  `roles` bigint( 20 ) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) DEFAULT CHARSET=utf8;
@@ -190,19 +191,14 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
 
 
 -- 
--- Data for table `#__eve_schedule`
+-- Data for table `#__eve_apicalls`
 -- 
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('account', 'Characters', 'User', 'Limited', 0, ''),
 ('char', 'CharacterSheet', 'Character', 'Limited', 0, ''),
-('corp', 'CorporationSheet', 'Character', 'Limited', 0, '');
-
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+('corp', 'CorporationSheet', 'Character', 'Limited', 0, ''),
 ('eve', 'AllianceList', 'None', 'None', 0, '');
-SET @lastid = LAST_INSERT_ID();
-INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES 
-(@lastid, NULL, NULL, '0000-00-00 00:00:00', 1);
 
 -- 
 -- Data for table `#__eve_sections`

@@ -107,7 +107,8 @@ CREATE TABLE IF NOT EXISTS `jos_eve_schedule` (
   `characterID` int(11) default NULL,
   `next` datetime NOT NULL,
   `published` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `type_call` (`type`,`call`)
 ) DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `jos_eve_sections`;
