@@ -205,6 +205,8 @@ class EveControllerCharacter extends EveController {
 			return false;
 		}
 		
+		
+		$character = $model->getItem($return);
 		$apischeduleModel = & $this->getModel('Apischedule');
 		$data = JRequest::getVar('apischedule', array(), 'post', 'array');
 		$apischeduleModel->setCharacterList($data, $character);
