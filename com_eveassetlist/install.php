@@ -53,14 +53,30 @@ foreach ($plugins as $plugin) {
 
 function com_install() {
 	$app = JFactory::getApplication();
-
-	$dbo = JFactory::getDBO();
-	$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eveassetlist'";
-	$dbo->setQuery($sql);
-	if ($dbo->query()) {
-		$msg = JText::sprintf('Plugins enabled');
-		$app->enqueueMessage($msg);
+	jimport('joomla.filesystem.file');
+	$manifestPath = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eveassetlist'.DS.'eveassetlist.xml';
+	$version = null;
+	if (JFile::exists($manifestPath)) {
+		$manifestContent = JFile::read($manifestPath);
+		$manifest = new SimpleXMLElement($manifestContent);
+		$version = (string) $manifest->version;
+		$versionNumbers = explode('.', $version);
+		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
 	}
-	EveHelper::scheduleApiCalls('eveassetlist', true);
+	
+	$dbo = JFactory::getDBO();
+	switch ($version) {
+		case '0.5':
+		case '0.6':
+			break;
+		default:
+			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eveassetlist'";
+			$dbo->setQuery($sql);
+			if ($dbo->query()) {
+				$msg = JText::sprintf('Plugins enabled');
+				$app->enqueueMessage($msg);
+			}
+			EveHelper::scheduleApiCalls('eveassetlist', true);
+	}
 	return true;
 }

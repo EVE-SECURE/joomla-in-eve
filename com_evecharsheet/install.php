@@ -67,6 +67,7 @@ function com_install() {
 			$sql = "ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;";
 			$dbo->setQuery($sql);
 			$dbo->query();
+		case '0.6':
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evecharsheet'";

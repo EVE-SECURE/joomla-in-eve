@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS `#__eve_assets` (
   PRIMARY KEY  (`entityID`,`itemID`)
 );
 
-INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
-('charassetlist', 'Asset List', 'asset-list', 'character', 'assetlist', 'character', '', '0', '1', '2'),
-('corpassetlist', 'Asset List', 'asset-list', 'corporation', 'assetlist', 'corporation', '', '0', '1', '2');
+INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
+('charassetlist', 'Asset List', 'asset-list', 'character', 'assetlist', 'character', '', '0', '1', '2', '0'),
+('corpassetlist', 'Asset List', 'asset-list', 'corporation', 'assetlist', 'corporation', '', '0', '1', '100', '558552041120257');
 
-INSERT INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'AssetList', 'Character', 'Full', 0, ''),
 ('corp', 'AssetList', 'Character', 'Full', 0, '');
 
