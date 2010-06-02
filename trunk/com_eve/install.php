@@ -80,7 +80,7 @@ function com_install() {
 			if ($error = $dbo->getError()) {
 				$app->enqueueMessage($error, 'error');
 			}
-			
+		case '0.6':
 			break;
 		default:
 			//fresh install

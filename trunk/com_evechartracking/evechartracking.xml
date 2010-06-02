@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
-<install type="component" version="1.5.0">
+<install method="upgrade" type="component" version="1.5.0">
 	<name>EVECharTracking</name>
 	<creationDate>March 2009</creationDate>
 	<author>Pavol Kovalik</author>
@@ -8,14 +8,14 @@
 	<authorUrl>http://code-box.sk</authorUrl>
 	<copyright>(C) 2009 Pavol Kovalik</copyright>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
-	<version>0.5</version>
+	<version>0.6</version>
 	<description>Joomla! in EVE - Character Tracking</description>
 	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<queries>
-			<query>INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '2');</query>
+			<query>INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '100', '4225');</query>
 			<query>INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
 		</queries>
 	</install>
@@ -38,7 +38,7 @@
 	<administration>
 		<menu img="components/com_eve/assets/icon-16-corporation.png">EVE Character Tracking</menu>
 		<files folder="admin">
-			<filename>admin.evechartracking.php</filename>
+			<filename>evechartracking.php</filename>
 			<filename>config.xml</filename>
 			<filename>controller.php</filename>
 			<filename>index.html</filename>
