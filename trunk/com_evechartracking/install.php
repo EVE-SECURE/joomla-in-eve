@@ -65,6 +65,7 @@ function com_install() {
 		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
 	}
 	switch ($version) {
+		case '0.2':
 		case '0.5':
 		case '0.6':
 			break;

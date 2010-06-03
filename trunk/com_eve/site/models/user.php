@@ -68,6 +68,9 @@ class EveModelUser extends JModelItem
 	function getCharacters()
 	{
 		$id = $this->getState('user.id');
+		if (!$id) {
+			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+		}
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_characters', 'c');

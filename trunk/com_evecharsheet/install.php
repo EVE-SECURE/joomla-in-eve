@@ -63,6 +63,7 @@ function com_install() {
 	
 	$dbo = JFactory::getDBO();
 	switch ($version) {
+		case '0.2':
 		case '0.5':
 			$sql = "ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;";
 			$dbo->setQuery($sql);

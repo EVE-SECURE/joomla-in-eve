@@ -111,6 +111,45 @@ class EveController extends JController {
 		return $filename;
 	}
 	
+	public function execute($task)
+	{
+		try {
+			$this->_task = $task;
+	
+			$task = strtolower( $task );
+			if (isset( $this->_taskMap[$task] )) {
+				$doTask = $this->_taskMap[$task];
+			} elseif (isset( $this->_taskMap['__default'] )) {
+				$doTask = $this->_taskMap['__default'];
+			} else {
+				throw new Exception(JText::_('Task ['.$task.'] not found'), 404);
+			}
+	
+			// Record the actual task being fired
+			$this->_doTask = $doTask;
+	
+			// Make sure we have access
+			if ($this->authorize($doTask)) {
+				$retval = $this->$doTask();
+				return $retval;
+			} else {
+				throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			}
+		}
+		catch (Exception $e){
+			$user = JFactory::getUser();
+			if ($e->getCode() == 403 && $user->get('id') == 0) {
+				$uri		= JFactory::getURI();
+				$return		= base64_encode($uri->toString());
+				$url = JRoute::_('index.php?option=com_user&view=login&return='.$return, false);
+				$this->setRedirect($url, $e->getMessage());
+				return;
+			}
+			
+			return JError::raiseError($e->getCode(), $e->getMessage());
+		}
+	}
+	
 	public function authorize($task)
 	{
 		$result = parent::authorize($task);

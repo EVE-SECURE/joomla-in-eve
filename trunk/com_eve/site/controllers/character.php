@@ -77,15 +77,13 @@ class EveControllerCharacter extends EveController {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$user = JFactory::getUser();
 		if (!$user->get('id')) {
-			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
-			return false;
+			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
 		// Get/Create the character model
 		$characterModel = & $this->getModel('Character');
 		$character = $characterModel->getItem();
 		if ($character->ownerID != $user->get('id')) {
-			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
-			return false;
+			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
 		
 		$apischeduleModel = & $this->getModel('Apischedule');
@@ -102,15 +100,13 @@ class EveControllerCharacter extends EveController {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$user = JFactory::getUser();
 		if (!$user->get('id')) {
-			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
-			return false;
+			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
 		// Get/Create the character model
 		$characterModel = & $this->getModel('Character');
 		$character = $characterModel->getItem();
 		if ($character->ownerID != $user->get('id')) {
-			JError::raiseError(403, JText::_('ALERTNOTAUTH'));
-			return false;
+			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
 		
 		$sectionaccessModel = & $this->getModel('Sectionaccess');

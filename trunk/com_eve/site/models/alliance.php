@@ -39,26 +39,21 @@ class EveModelAlliance extends JModelItem
 	
 	protected function _loadItem($id)
 	{
-		try {
-			$dbo = $this->getDBO();
-			$q = EveFactory::getQuery($dbo);
-			$q->addTable('#__eve_alliances', 'al');
-			$q->addJoin('#__eve_corporations', 'co', 'al.executorCorpID=co.corporationID');
-			$q->addQuery('al.*');
-			$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorCorpTicker');
-			$q->addWhere('al.allianceID='. intval($id));
-			$data = $q->loadObject();
-			
-			if ($error = $dbo->getErrorMsg()) {
-				throw new Exception($error);
-			}
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_alliances', 'al');
+		$q->addJoin('#__eve_corporations', 'co', 'al.executorCorpID=co.corporationID');
+		$q->addQuery('al.*');
+		$q->addQuery('co.corporationName AS executorCorpName', 'co.ticker AS executorCorpTicker');
+		$q->addWhere('al.allianceID='. intval($id));
+		$data = $q->loadObject();
+		
+		if ($error = $dbo->getErrorMsg()) {
+			throw new Exception($error, 500);
+		}
 
-			if (empty($data)) {
-				throw new Exception(JText::_('Com_Eve_Error_Alliance_not_found'), 404);
-			}
-		} catch (Exception $e) {
-			$this->setError($e);
-			$data = false;
+		if (empty($data)) {
+			throw new Exception(JText::_('Com_Eve_Error_Alliance_not_found'), 404);
 		}
 
 		return $data;
