@@ -7,8 +7,8 @@
 	<author>Pavol Kovalik</author>
 	<creationDate>May 2009</creationDate>
 	<authoremail>kovalikp@gmail.com</authoremail>
-	<authorurl>http://eve.code-box.sk</authorurl>
-	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
+	<authorurl>http://code-box.sk</authorurl>
+	<copyright>(C) 2008 - 2010 Pavol Kovalik. All rights reserved.</copyright>
 	<description></description>
 	<files>
 		<filename plugin="eve">eve.php</filename>

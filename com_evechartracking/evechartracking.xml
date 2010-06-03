@@ -2,11 +2,11 @@
 <!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
 <install method="upgrade" type="component" version="1.5.0">
 	<name>EVECharTracking</name>
-	<creationDate>March 2009</creationDate>
+	<creationDate></creationDate>
 	<author>Pavol Kovalik</author>
 	<authorEmail>kovalikp@gmail.com</authorEmail>
 	<authorUrl>http://code-box.sk</authorUrl>
-	<copyright>(C) 2009 Pavol Kovalik</copyright>
+	<copyright>(C) 2009 - 2010 Pavol Kovalik. All rights reserved.</copyright>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>0.6</version>
 	<description>Joomla! in EVE - Character Tracking</description>
