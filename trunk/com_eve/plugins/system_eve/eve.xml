@@ -5,10 +5,10 @@
 	<description>Joomla! in EVE</description>
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<author>Pavol Kovalik</author>
-	<creationDate>April 2008</creationDate>
+	<creationDate></creationDate>
 	<authoremail>kovalikp@gmail.com</authoremail>
-	<authorurl>http://eve.webnamieru.sk</authorurl>
-	<copyright>(C) 2008 - 2009 Pavol Kovalik</copyright>
+	<authorurl>http://code-box.sk</authorurl>
+	<copyright>(C) 2008 - 2010 Pavol Kovalik. All rights reserved.</copyright>
 	<description>Initializes stuff when accessing site from EVE IGB</description>
 	<files>
 		<filename plugin="eve">eve.php</filename>

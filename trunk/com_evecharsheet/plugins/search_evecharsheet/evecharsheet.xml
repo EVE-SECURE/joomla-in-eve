@@ -2,8 +2,8 @@
 <install method="upgrade" version="1.5" type="plugin" group="search">
 	<name>Search - EVE Character Sheet</name>
 	<author>Pavol Kovalik</author>
-	<creationDate>March 2009</creationDate>
-	<copyright>Copyright (C) 2009 Pavol Kovalik. All rights reserved.</copyright>
+	<creationDate></creationDate>
+	<copyright>(C) 2009 - 2010 Pavol Kovalik. All rights reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>kovalikp@gmail.com</authorEmail>
 	<authorUrl>http://www.code-box.sk</authorUrl>

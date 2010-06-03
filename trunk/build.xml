@@ -16,19 +16,38 @@
 	</target>
 	
 	<target name="build_component">
+		<copy todir="${testdir}/${component.name}" overwrite="${overwrite}">
+			<fileset dir="${project.basedir}/${component.name}">
+				<exclude name="**/*.xml"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${testdir}/${component.name}" overwrite="${overwrite}">
+			<filterchain>
+				<replaceregexp>
+					<regexp pattern="&lt;creationDate&gt;.*&lt;/creationDate&gt;" replace="&lt;creationDate&gt;${build.date}&lt;/creationDate&gt;" ignoreCase="true"/>
+					<regexp pattern="&lt;version&gt;.*&lt;/version&gt;" replace="&lt;version&gt;${build.version}&lt;/version&gt;" ignoreCase="true"/>
+
+				</replaceregexp>
+			</filterchain>
+			<fileset dir="${project.basedir}/${component.name}">
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+
 		
-		<fileset dir="${project.basedir}/${component.name}/" id="allfiles">
+		<fileset dir="${testdir}/${component.name}" id="allfiles">
 			<include name="admin/**" />
             <include name="site/**" />
             <include name="plugins/**" />
             <include name="*.*" />
 		</fileset>
 		
-		<delete file="${component.name}.zip" quiet="true" />
-        <zip destfile="${component.name}.zip">
+		<delete file="${testdir}/${component.name}-${build.version}.zip" quiet="true" />
+        <zip destfile="${testdir}/${component.name}-${build.version}.zip">
             <fileset refid="allfiles" />
         </zip>
-		
+		<delete dir="${testdir}/${component.name}" quiet="true" />
 		
 	</target>
 	
