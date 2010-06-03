@@ -48,30 +48,25 @@ class EveModelCorporation extends JModelItem
 	
 	protected function _loadItem($id)
 	{
-		try {
-			$dbo = $this->getDBO();
-			$q = EveFactory::getQuery($dbo);
-			$q->addTable('#__eve_corporations', 'co');
-			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-			$q->addJoin($this->dbdump.'staStations', 'st', 'co.stationID=st.stationID');
-			$q->addQuery('co.*');
-			$q->addQuery('ch.name AS ceoName');
-			$q->addQuery('al.name AS allianceName', 'al.shortName AS allianceShortName');
-			$q->addQuery('stationName');
-			$q->addWhere('co.corporationID='. intval($id));		
-			$data = $q->loadObject();
-			
-			if ($error = $dbo->getErrorMsg()) {
-				throw new Exception($error);
-			}
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin($this->dbdump.'staStations', 'st', 'co.stationID=st.stationID');
+		$q->addQuery('co.*');
+		$q->addQuery('ch.name AS ceoName');
+		$q->addQuery('al.name AS allianceName', 'al.shortName AS allianceShortName');
+		$q->addQuery('stationName');
+		$q->addWhere('co.corporationID='. intval($id));		
+		$data = $q->loadObject();
+		
+		if ($error = $dbo->getErrorMsg()) {
+			throw new Exception($error, 500);
+		}
 
-			if (empty($data)) {
-				throw new Exception(JText::_('Com_Eve_Error_Corporation_not_found'), 404);
-			}
-		} catch (Exception $e) {
-			$this->setError($e);
-			$data = false;
+		if (empty($data)) {
+			throw new Exception(JText::_('Com_Eve_Error_Corporation_not_found'), 404);
 		}
 
 		return $data;

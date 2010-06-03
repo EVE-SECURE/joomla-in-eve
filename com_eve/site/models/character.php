@@ -38,31 +38,26 @@ class EveModelCharacter extends JModelItem
 	
 	protected function _loadItem($id)
 	{
-		try {
-			$dbo = $this->getDBO();
-			$q = EveFactory::getQuery($dbo);
-			$q->addTable('#__eve_characters', 'ch');
-			$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
-			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-			$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
-			$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
-			$q->addQuery('ch.*');
-			$q->addQuery('co.corporationName', 'co.ticker AS corporationTicker');
-			$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
-			$q->addQuery('owner.id AS ownerID', 'owner.name AS ownerName');
-			$q->addWhere('ch.characterID='. intval($id));
-			$data = $q->loadObject();
-			
-			if ($error = $dbo->getErrorMsg()) {
-				throw new Exception($error);
-			}
+		$dbo = $this->getDBO();
+		$q = EveFactory::getQuery($dbo);
+		$q->addTable('#__eve_characters', 'ch');
+		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
+		$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
+		$q->addQuery('ch.*');
+		$q->addQuery('co.corporationName', 'co.ticker AS corporationTicker');
+		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
+		$q->addQuery('owner.id AS ownerID', 'owner.name AS ownerName');
+		$q->addWhere('ch.characterID='. intval($id));
+		$data = $q->loadObject();
+		
+		if ($error = $dbo->getErrorMsg()) {
+			throw new Exception($error, 500);
+		}
 
-			if (empty($data)) {
-				throw new Exception(JText::_('Com_Eve_Error_Character_not_found'), 404);
-			}
-		} catch (Exception $e) {
-			$this->setError($e);
-			$data = false;
+		if (empty($data)) {
+			throw new Exception(JText::_('Com_Eve_Error_Character_not_found'), 404);
 		}
 
 		return $data;

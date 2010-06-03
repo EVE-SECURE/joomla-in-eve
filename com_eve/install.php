@@ -67,6 +67,7 @@ function com_install() {
 	
 	$dbo = JFactory::getDBO();
 	switch ($version) {
+		case '0.2':
 		case '0.5':
 			$sql = "ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);";
 			$dbo->setQuery($sql);
