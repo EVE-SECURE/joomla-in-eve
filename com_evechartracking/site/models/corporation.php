@@ -87,7 +87,7 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 		
 		$result = array();
 		foreach ($availables as $name) {
-			$show = $params->get('show_'.$name) > intval($onlyShown);
+			$show = $params->get('show_'.$name, 2) > intval($onlyShown);
 			$access = $params->get('access_'.$name, 0) <= $user->get('aid');
 			if ($show && $access) {
 				$result[$name] = $name; 
