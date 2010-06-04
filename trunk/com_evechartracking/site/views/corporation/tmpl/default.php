@@ -22,16 +22,19 @@ $pageClass = $this->params->get('pageclass_sfx');
 <input type="hidden" name="reset" value="1" />
 <?php foreach ($this->columns as $col): ?>
 	<span style="white-space: nowrap;">
-		<input type="checkbox" name="selectedColumns[<?php echo $col; ?>]" onchange="this.form.submit()" value="<?php echo $col; ?>" <?php echo isset($this->selectedColumns[$col]) ? 'checked="checked"' : ''; ?>> <?php echo $col; ?>
+		<input type="checkbox" name="selectedColumns[<?php echo $col; ?>]" 
+			onchange="this.form.submit()" value="<?php echo $col; ?>" 
+			<?php echo isset($this->selectedColumns[$col]) ? 'checked="checked"' : ''; ?>> 
+		<?php echo JText::_('Com_Evechartracking_'.$col); ?>
 	</span>
 <?php endforeach; ?>
 </form>
 
 <table>
 	<tr>
-		<th><?php echo JText::_('Character Name'); ?></th>
+		<th><?php echo JText::_('Com_Evechartracking_Character_Name'); ?></th>
 		<?php foreach ($this->selectedColumns as $col): ?>
-			<th><?php echo JText::_($col); ?>
+			<th><?php echo JText::_('Com_Evechartracking_'.$col); ?>
 		<?php endforeach; ?>
 	</tr>
 	<?php foreach ($this->members as $member): ?>

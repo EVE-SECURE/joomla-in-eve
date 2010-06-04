@@ -48,10 +48,10 @@ class EvechartrackingViewCorporation extends JView {
 				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title', $corporation->corporationName.' - '.JText::_('Member Tracking'));
+				$params->set('page_title', $corporation->corporationName.' - '.JText::_('Com_Evechartracking_Member_Tracking'));
 			}
 		} else {
-			$params->set('page_title', $corporation->corporationName.' - '.JText::_('Member Tracking'));
+			$params->set('page_title', $corporation->corporationName.' - '.JText::_('Com_Evechartracking_Member_Tracking'));
 		}
 		$document->setTitle($params->get('page_title'));
 		
@@ -90,7 +90,7 @@ class EvechartrackingViewCorporation extends JView {
 				$pathway->addItem($this->corporation->corporationName, 
 					EveRoute::_('corporation', $this->corporation, $this->corporation));
 			case 'corporation':
-				$pathway->addItem(JText::_('Member Tracking'), 
+				$pathway->addItem(JText::_('Com_Evechartracking_Member_Tracking'), 
 					EveRoute::_('chartracking', $this->corporation, $this->corporation));
 		}
 	}
@@ -99,6 +99,9 @@ class EvechartrackingViewCorporation extends JView {
 		switch($column) {
 			case 'name':
 				return JHTML::_('evelink.character', $member, $this->corporation); 
+				break;
+			case 'balance':
+				return number_format($member->$column, 2); 
 				break;
 			case 'baseName':
 				if ($member->baseID == 0) {
