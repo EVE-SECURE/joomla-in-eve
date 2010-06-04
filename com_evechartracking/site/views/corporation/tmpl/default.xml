@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Corporation View Layout">
-		<message>
-			<![CDATA[MESSAGE HERE]]>
-		</message>
+	<layout title="Com_Evechartracking_Corporation_Layout_Title">
+		<message>Com_Evechartracking_Corporation_Layout_Message</message>
 	</layout>
 	<state>
-		<name>Corporation View Layout</name>
-		<description>DESC HERE</description>
+		<name>Com_Evechartracking_Corporation_Layout_State_Name</name>
+		<description>Com_Evechartracking_Corporation_Layout_State_Desc</description>
 		<url addpath="/administrator/components/com_eve/elements">
-			<param name="corporationID" type="corporation" label="Corporation ID" description="Corporation ID to display" size="50"/>
+			<param name="corporationID" type="corporation" label="Com_Evechartracking_Corporation_Id_Label" description="Com_Evechartracking_Corporation_Id_Desc" size="50"/>
 		</url>
 	</state>
 </metadata>
