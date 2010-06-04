@@ -27,22 +27,13 @@ jimport('joomla.application.component.view');
 
 class EvechartrackingViewEvechartracking extends JView {
 	function display($tmpl = null) {
-		global $mainframe;
-		$template = $mainframe->getTemplate();
-		
-		$document =& JFactory::getDocument();
-		$document->addStyleSheet('components/com_eve/assets/common.css');
-		$document->addStyleDeclaration('.icon-32-refresh { background-image: url(templates/'.$template.'/images/toolbar/icon-32-refresh.png); }');
-		
-		$title = JText::_('EVE CHARACTER TRACKING');
+		$title = JText::_('Com_Evechartracking_Character_Tracking_Title');
 		JToolBarHelper::title($title, 'corporation');
 		JToolBarHelper::preferences('com_evechartracking', 480, 640);
-		JToolBarHelper::custom('', 'refresh', 'refresh', 'Refresh', false);
-
+		JToolBarHelper::custom('', 'refresh', 'refresh', 'Com_Evechartracking_Task_Refresh', false);
 		
 		$model = $this->getModel();
 		$tables = $model->getTableCheck();
-		
 		
 		$this->assignRef('tables', $tables);
 		
@@ -50,5 +41,3 @@ class EvechartrackingViewEvechartracking extends JView {
 
 	}
 }
-
-?>
