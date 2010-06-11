@@ -1,6 +1,6 @@
 <?php
 /**
- * @version		$Id: modelitem.php 14570 2010-02-04 07:07:15Z eddieajau $
+ * @version		$Id$
  * @copyright	Copyright (C) 2005 - 2010 Open Source Matters, Inc. All rights reserved.
  * @license		GNU General Public License version 2 or later; see LICENSE.txt
  */
