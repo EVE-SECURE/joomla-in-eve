@@ -67,7 +67,9 @@ function com_install() {
 		case '0.5':
 			$sql = "ALTER TABLE `#__eve_skillqueue` CHANGE `startTime` `startTime` DATETIME NOT NULL , CHANGE `endTime` `endTime` DATETIME NOT NULL;";
 			$dbo->setQuery($sql);
-			$dbo->query();
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
+			}
 		case '0.6':
 			break;
 		default:

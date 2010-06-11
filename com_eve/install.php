@@ -71,15 +71,22 @@ function com_install() {
 		case '0.5':
 			$sql = "ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);";
 			$dbo->setQuery($sql);
-			$dbo->query();
-			if ($error = $dbo->getError()) {
-				$app->enqueueMessage($error, 'error');
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
 			}
 			$sql = "ALTER TABLE `#__eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;";
 			$dbo->setQuery($sql);
-			$dbo->query();
-			if ($error = $dbo->getError()) {
-				$app->enqueueMessage($error, 'error');
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
+			}
+			$sql = "SHOW INDEXES IN `#__eve_sections` WHERE key_name='name';";
+			$dbo->setQuery($sql);
+			if (!$dbo->loadRow()) {
+				$sql = "ALTER IGNORE TABLE `#__eve_sections` ADD UNIQUE `name` (`name`);";
+				$dbo->setQuery($sql);
+				if (!$dbo->query()) {
+					$app->enqueueMessage($dbo->getError(), 'error');
+				}
 			}
 		case '0.6':
 			break;
@@ -92,19 +99,20 @@ function com_install() {
 				$sql = "INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES ". 
 					"(".$id.", NULL, NULL, '0000-00-00 00:00:00', 1);";
 				$dbo->setQuery($sql);
-				$dbo->query();
+				if (!$dbo->query()) {
+					$app->enqueueMessage($error = $dbo->getError(), 'error');
+				}
 			}
 			
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eve'";
 			$dbo->setQuery($sql);
-			if ($dbo->query()) {
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
+			} else {
 				$msg = JText::sprintf('Plugins enabled');
 				$app->enqueueMessage($msg);
 			}
 	}
-	
-	
-	
 	
 	$cron = JComponentHelper::getComponent('com_cron', true);
 	if ($cron->enabled) {
