@@ -37,10 +37,7 @@
 
 		
 		<fileset dir="${testdir}/${component.name}" id="allfiles">
-			<include name="admin/**" />
-            <include name="site/**" />
-            <include name="plugins/**" />
-            <include name="*.*" />
+            <include name="**" />
 		</fileset>
 		
 		<delete file="${testdir}/${component.name}-${build.version}.zip" quiet="true" />
