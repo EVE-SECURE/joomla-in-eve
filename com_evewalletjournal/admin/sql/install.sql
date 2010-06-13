@@ -24,6 +24,7 @@ PRIMARY KEY ( `refTypeID` )
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
 ('charwalletjournal', 'Wallet Journal', 'wallet-journal', 'character', 'walletjournal', 'character', '', '0', '1', '2', '0'),
+('userwalletjournal', 'Wallet Journal', 'wallet-journal', 'user', 'walletjournal', 'user', '', '0', '1', '0', '0'),
 ('corpwalletjournal', 'Wallet Journal', 'wallet-journal', 'corporation', 'walletjournal', 'corporation', '', '0', '1', '100', '4505798516408577');
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES 

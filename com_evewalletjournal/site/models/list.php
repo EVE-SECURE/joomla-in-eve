@@ -59,7 +59,23 @@ class EvewalletjournalModelList extends JModelList {
 		$q->addQuery('rt.refTypeName');
 		
 		$q->addWhere('accountKey = %1$s', $accountKey);
-		$q->addWhere('entityID = %1$s', $entityID);
+		
+		$orderings = array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1', 
+				'wj.ownername2', 'wj.argname1', 'wj.amount', 'wj.balance', 'wj.reason');
+		if ($this->_entity == 'user') {
+			$orderings[] = 'ch.name'; 
+			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=wj.entityID');
+			$q->addQuery('ch.name AS characterName');
+			$acl = EveFactory::getACL();
+			$chacracterIDs = $acl->getUserCharacterIDs();
+			if ($chacracterIDs) {
+				$q->addWhere('entityID IN ('.implode(', ', $chacracterIDs).')');
+			} else {
+				$q->addWhere('0 = 1');
+			}
+		} else {
+			$q->addWhere('entityID = %1$s', $entityID);
+		}
 		if ($refTypeID >= 0) {
 			$q->addWhere('wj.refTypeID='.$refTypeID);
 		}
@@ -70,8 +86,7 @@ class EvewalletjournalModelList extends JModelList {
 		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'wj.refID'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
-		if (!in_array(strtolower($ordering), array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1', 
-				'wj.ownername2', 'wj.argname1', 'wj.amount', 'wj.balance', 'wj.reason' ))) {
+		if (!in_array(strtolower($ordering), $orderings)) {
 			$ordering = 'wj.refID';
 		}
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
@@ -125,7 +140,12 @@ class EvewalletjournalModelList extends JModelList {
 		$params		= JComponentHelper::getParams('com_eve');
 		$context	= $this->_context.'.';
 		
-		$entityID = JRequest::getInt($this->_entity.'ID');
+		if ($this->_entity == 'user') {
+			$user = JFactory::getUser();
+			$entityID = $user->id;
+		} else {
+			$entityID = JRequest::getInt($this->_entity.'ID');
+		}
 		$this->setState('list.entityID', $entityID);
 		
 		// Load the filter state.
