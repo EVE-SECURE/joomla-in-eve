@@ -41,6 +41,10 @@ class EveViewRoles extends JView {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
+		if (!function_exists('gmp_init')) {
+			$app = JFactory::getApplication();
+			$app->enqueueMessage(JText::_('Com_Eve_Error_No_Gmp'), 'error');
+		}
 
 		$this->assignRef('state',	$state);
 		$this->assignRef('item',	$item);
