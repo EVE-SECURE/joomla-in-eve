@@ -56,6 +56,9 @@ class EveRoute
 			}
 			$entities = array($component->entity);
 		}
+		if ($component->entity == 'user') {
+			return JRoute::_($url, $xhtml);
+		}
 		foreach ($entities as $entity) {
 			if ($$entity) {
 				if (is_array($$entity)) {

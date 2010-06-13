@@ -77,6 +77,16 @@ class EveRouter {
 			}
 		}
 		
+		//check user sections
+		$sectionName = JArrayHelper::getValue($query, 'section');
+		$section = $this->getSection($sectionName);
+		if ($section && $section->entity == 'user') {
+			if (!empty($this->user)) {
+				$query['Itemid'] = reset($this->user)->id;
+				return reset($this->user);
+			}
+		}
+		
 		$entities = array('character', 'corporation', 'alliance');
 		
 		foreach ($entities as $entity) {

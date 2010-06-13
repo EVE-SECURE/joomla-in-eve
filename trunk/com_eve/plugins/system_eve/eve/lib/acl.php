@@ -28,7 +28,9 @@ class EveACL extends JObject {
 			return false;
 		}
 		$access = $section->access;
-		if ($section->entity == 'character') {
+		if ($section->entity == 'user') {
+			return (bool) $user->get('id');
+		} elseif ($section->entity == 'character') {
 			return $this->authorizeCharacter($section, $entityID);
 		} elseif ($section->entity == 'corporation') {
 			return $this->authorizeCorporation($section, $entityID);

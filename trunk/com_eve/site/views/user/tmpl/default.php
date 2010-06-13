@@ -20,7 +20,7 @@ JHTML::_('eve.contextmenu');
 
 <div>
 	<?php foreach ($this->components as $component): ?>
-		<a href="<?php echo EveRoute::_($component->name, $this->user); ?>">
+		<a href="<?php echo EveRoute::_($component->name); ?>">
 			<?php echo JText::_($component->title); ?>
 		</a> <br />
 	<?php endforeach; ?>
@@ -32,4 +32,3 @@ JHTML::_('eve.contextmenu');
 		<?php echo JHTML::_('evelink.character', $character); ?> <br />
 	<?php endforeach; ?>
 </div>
-
