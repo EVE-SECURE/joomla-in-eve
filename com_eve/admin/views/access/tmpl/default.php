@@ -66,13 +66,24 @@ $userId	= $user->get('id');
 				</td>
 				
 				<td>
-					<?php if ($item->entity == 'character'): ?>
-						<?php echo JHTML::_('select.genericlist', $this->characterGroups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
-					<?php elseif ($item->entity == 'corporation'): ?>
-						<?php echo JHTML::_('select.genericlist', $this->corporationGroups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
-					<?php else: ?>
-						<?php echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 'value', 'text', $item->access, 'access_'.$i.'_access', true); ?>
-					<?php endif; ?>
+					<?php
+					switch ($item->entity) {
+						case 'user':
+							break;
+						case 'character':
+							echo JHTML::_('select.genericlist', $this->characterGroups, 'access['.$i.'][access]', '', 
+								'value', 'text', $item->access, 'access_'.$i.'_access', true);
+							break;
+						case 'corporation':
+							echo JHTML::_('select.genericlist', $this->corporationGroups, 'access['.$i.'][access]', '', 
+								'value', 'text', $item->access, 'access_'.$i.'_access', true);
+							break;
+						case 'alliance':	
+						default:
+							echo JHTML::_('select.genericlist', $this->groups, 'access['.$i.'][access]', '', 
+								'value', 'text', $item->access, 'access_'.$i.'_access', true);
+					}
+					?>
 					<?php if ($item->entity == 'corporation'): ?>
 						<input type="button" class="" onclick="listItemTask('cb<?php echo $i; ?>', 'roles.editsection')" value="<?php echo JText::_('Edit Roles'); ?>"/>
 					<?php endif; ?>
