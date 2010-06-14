@@ -57,7 +57,6 @@ class EveassetlistModelList extends JModelList {
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_assets', 'al');
-		$q->addWhere('al.entityID = %1$s', $entityID);
 		$q->addJoin('#__eve_assets', 'con', 'con.itemID=al.containerID AND con.entityID=al.entityID');
 		$q->addJoin($this->dbdump.'invTypes', 'inv', 'inv.typeID=al.typeID');
 		$q->addJoin($this->dbdump.'invTypes', 'cinv', 'cinv.typeID=con.typeID');
@@ -104,6 +103,22 @@ class EveassetlistModelList extends JModelList {
 		}
 		
 		$q->addQuery($locationQuery);
+		
+		if ($this->_entity == 'user') {
+			$orderings[] = 'charactername'; 
+			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=al.entityID');
+			$q->addQuery('ch.name AS characterName');
+			$acl = EveFactory::getACL();
+			$chacracterIDs = $acl->getUserCharacterIDs();
+			if ($chacracterIDs) {
+				$q->addWhere('al.entityID IN ('.implode(', ', $chacracterIDs).')');
+			} else {
+				$q->addWhere('0 = 1');
+			}
+		} else {
+			$q->addWhere('al.entityID = %1$s', $entityID);
+		}
+		
 		
 		
 		/*if ($search) {
@@ -168,7 +183,12 @@ class EveassetlistModelList extends JModelList {
 		$params		= JComponentHelper::getParams('com_eve');
 		$context	= $this->_context.'.';
 		
-		$entityID = JRequest::getInt($this->_entity.'ID');
+		if ($this->_entity == 'user') {
+			$user = JFactory::getUser();
+			$entityID = $user->id;
+		} else {
+			$entityID = JRequest::getInt($this->_entity.'ID');
+		}
 		$this->setState('list.entityID', $entityID);
 		
 		// Load the filter state.
