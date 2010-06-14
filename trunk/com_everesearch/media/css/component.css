@@ -1,2 +1,5 @@
 @CHARSET "UTF-8";
-.number {text-align:right;}
+div.com-everesearch .number {text-align:right;}
+div.com-everesearch .list {width: 100%}
+div.com-everesearch .summary {width: 100%}
+div.com-everesearch table.summary caption {text-align:left;}
