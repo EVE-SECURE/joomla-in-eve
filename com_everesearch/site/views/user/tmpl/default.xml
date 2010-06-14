@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="User Research Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>User Research Layout</name>
+		<description>DESC HERE</description>
+		<params>
+		</params>
+	</state>
+</metadata>
