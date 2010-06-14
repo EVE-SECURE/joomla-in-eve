@@ -14,9 +14,7 @@ JHTML::stylesheet('component.css', 'media/com_everesearch/css/');
 
 ?>
 
-<?php if ($pageClass) : ?>
-	<div class="<?php echo $pageClass; ?>">
-<?php endif; ?>
+<div class="com-everesearch<?php echo $pageClass ? ' '.$pageClass : ''; ?>">
 <?php if ($this->params->get('show_page_title', 1)) : ?>
 	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
@@ -75,35 +73,34 @@ JHTML::stylesheet('component.css', 'media/com_everesearch/css/');
 	<?php endforeach; ?>
 	</tbody>
 </table>
-
 <?php echo $this->pagination->getListFooter(); ?>
 <input type="hidden" name="filter_order" value="<?php echo $this->listState->get('list.ordering', 'agentName'); ?>" />
 <input type="hidden" name="filter_order_Dir" value="<?php echo $this->listState->get('list.direction', 'asc'); ?>" />
 </form>
 
-<table class="summary">
-	<caption><?php echo JText::_('Com_Everesearch_Summary'); ?></caption>
-	<thead>
-		<tr>
-			<th><?php echo JText::_('Com_Everesearch_Research_Field'); ?></th>
-			<th class="number"><?php echo JText::_('Com_Everesearch_Current_Points'); ?></th>
-			<th class="number"><?php echo JText::_('Com_Everesearch_Points_Per_Day'); ?></th>
-			<th class="number"><?php echo JText::_('Com_Everesearch_Current_Datacores'); ?></th>
-			<th class="number"><?php echo JText::_('Com_Everesearch_Datacores_Per_Day'); ?></th>
-		</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($this->summary as $item) : ?>
-		<tr>
-			<td><?php echo $this->escape($item->skillTypeName); ?></td>
-			<td class="number"><?php echo number_format($item->currentPoints, 2); ?></td>
-			<td class="number"><?php echo number_format($item->pointsPerDay, 2); ?></td>
-			<td class="number"><?php echo number_format($item->currentDatacores, 2); ?></td>
-			<td class="number"><?php echo number_format($item->datacoresPerDay, 2); ?></td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
-<?php if ($pageClass) : ?>
-	</div>
+<?php if ($this->summary): ?>
+	<table class="summary">
+		<caption><?php echo JText::_('Com_Everesearch_Summary'); ?></caption>
+		<thead>
+			<tr>
+				<th><?php echo JText::_('Com_Everesearch_Research_Field'); ?></th>
+				<th class="number"><?php echo JText::_('Com_Everesearch_Current_Points'); ?></th>
+				<th class="number"><?php echo JText::_('Com_Everesearch_Points_Per_Day'); ?></th>
+				<th class="number"><?php echo JText::_('Com_Everesearch_Current_Datacores'); ?></th>
+				<th class="number"><?php echo JText::_('Com_Everesearch_Datacores_Per_Day'); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach ($this->summary as $item) : ?>
+			<tr>
+				<td><?php echo $this->escape($item->skillTypeName); ?></td>
+				<td class="number"><?php echo number_format($item->currentPoints, 2); ?></td>
+				<td class="number"><?php echo number_format($item->pointsPerDay, 2); ?></td>
+				<td class="number"><?php echo number_format($item->currentDatacores, 2); ?></td>
+				<td class="number"><?php echo number_format($item->datacoresPerDay, 2); ?></td>
+			</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
 <?php endif; ?>
+</div>

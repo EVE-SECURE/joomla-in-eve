@@ -119,8 +119,8 @@ class EveresearchModelList extends JModelList {
 		}
 		
 		if ($search) {
-			//$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
-			//	$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
+			$q->addWhere(sprintf('(ev.itemName LIKE %1$s OR inv.typeName LIKE %1$s OR sta.stationName LIKE %1$s)', 
+				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
 		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'agentName'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'asc'));
