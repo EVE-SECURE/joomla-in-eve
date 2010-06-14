@@ -101,4 +101,12 @@ class EveModelCharacter extends JModelItem
 		return $result;
 	}
 	
+	public function getIsUsersCharacter()
+	{
+		$acl = EveFactory::getACL();
+		$characterIDs = $acl->getUserCharacterIDs();
+		$item = $this->getItem();
+		return $item && in_array($item->characterID, $characterIDs);
+	}
+	
 }
