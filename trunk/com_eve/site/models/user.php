@@ -30,6 +30,7 @@ class EveModelUser extends JModelItem
 {
 	protected function _populateState()
 	{
+		$this->setState('entity', 'user');
 		$user = JFactory::getUser();
 		$id = intval($user->id);
 		$this->setState('user.id', $id);

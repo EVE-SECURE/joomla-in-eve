@@ -100,4 +100,53 @@ abstract class EveresearchView extends JView
 		}
 	}
 	
+	function loadTemplate($tpl = null, $layout = null)
+	{
+		if (!is_null($layout)) {
+			$previous = $this->setLayout($layout);
+		}
+		$result = parent::loadTemplate($tpl);
+		if (!is_null($layout)) {
+			$this->setLayout($previous);
+		}
+		return $result;
+	}
+	
+	/**
+	* Sets an entire array of search paths for templates or resources.
+	*
+	* @access protected
+	* @param string $type The type of path to set, typically 'template'.
+	* @param string|array $path The new set of search paths.  If null or
+	* false, resets to the current directory only.
+	*/
+	function _setPath($type, $path)
+	{
+		global $option;
+
+		// clear out the prior search dirs
+		$this->_path[$type] = array();
+
+		// always add the fallback directories as last resort
+		switch (strtolower($type))
+		{
+			case 'template':
+				$app = JFactory::getApplication();
+				$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $option);
+				
+				//common not overriden template sould be last
+				$this->_addPath('template', $this->_basePath.DS.'views'.DS.'_common'.DS.'tmpl');
+				// set the alternative template search dir
+				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.'_common';
+				$this->_addPath('template', $fallback);
+				//specific not overriden template sould be 2nd
+				$this->_addPath('template', $path);
+				//specific template override sould be 1st
+				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->getName();
+				$this->_addPath('template', $fallback);
+				break;
+			default:
+				$this->_addPath($type, $path);
+		}
+	}
 }
