@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="User Asset List Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>User Asset List Layout</name>
+		<description>DESC HERE</description>
+	</state>
+</metadata>

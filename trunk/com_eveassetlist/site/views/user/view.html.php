@@ -3,7 +3,7 @@
  * @version		$Id$
  * @author		Pavol Kovalik
  * @package		Joomla! in EVE
- * @subpackage	Research
+ * @subpackage	Asset List
  * @copyright	Copyright (C) 2008 Pavol Kovalik. All rights reserved.
  * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
  * This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,9 @@ defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EveresearchViewUser extends EveresearchView 
+class EveassetlistViewUser extends EveassetlistView 
 {
 	public $user;
-	public $characters;
 
 	protected function _setEntity($user, $params) 
 	{
@@ -36,17 +35,17 @@ class EveresearchViewUser extends EveresearchView
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
-				&& JArrayHelper::getValue($menu->query, 'option') == 'com_everesearch'
+				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eveassetlist'
 				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	JText::_('Research'));
+				$params->set('page_title',	JText::_('Asset List'));
 			}
 		} else {
-			$params->set('page_title', JText::_('Research'));
+			$params->set('page_title',JText::_('Asset List'));
 		}
 		$document->setTitle($params->get('page_title'));
-		$this->assignRef('user', 	$user);
+		$this->assignRef('user', $user);
 		
 		$characters = $this->get('Characters');
 		$this->assignRef('characters', $characters);
@@ -56,14 +55,13 @@ class EveresearchViewUser extends EveresearchView
 	{
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
-		if ($menu && $menu->component == 'com_everesearch') {
+		if ($menu && $menu->component == 'com_eveassetlist') {
 			return;
 		}
 		
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$pathway->addItem(JText::_('Research'), 
-			EveRoute::_('userresearch'));
+		$pathway->addItem(JText::_('Asset List'), 
+			EveRoute::_('userassetlist'));
 	}
-	
 }

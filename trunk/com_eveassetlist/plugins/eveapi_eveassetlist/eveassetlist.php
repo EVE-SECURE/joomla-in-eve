@@ -49,7 +49,7 @@ class plgEveapiEveAssetList extends EveApiPlugin {
 	private function _storeAssetList($xml, $entityID)
 	{
 		$dbo = JFactory::getDBO();
-		$sql = 'DELETE FROM #__eve_assets';
+		$sql = 'DELETE FROM #__eve_assets WHERE entityID='.$dbo->quote($entityID);
 		$dbo->setQuery($sql);
 		$dbo->query();
 		

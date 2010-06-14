@@ -20,7 +20,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
 
-<form action="<?php echo EveRoute::_('corpassetlist', $this->corporation, $this->corporation); ?>" name="adminForm" method="post">
+<form action="<?php echo EveRoute::_('userassetlist'); ?>" name="adminForm" method="post">
 <table>
 	<thead>
 		<tr>
