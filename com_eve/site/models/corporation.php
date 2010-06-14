@@ -39,6 +39,7 @@ class EveModelCorporation extends JModelItem
 	
 	protected function _populateState()
 	{
+		$this->setState('entity', 'corporation');
 		$id = JRequest::getInt('corporationID');
 		$this->setState('corporation.id', $id);
 		$params = JComponentHelper::getParams('com_eve');

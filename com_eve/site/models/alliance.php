@@ -30,11 +30,11 @@ class EveModelAlliance extends JModelItem
 {
 	protected function _populateState()
 	{
+		$this->setState('entity', 'alliance');
 		$id = JRequest::getInt('allianceID');
 		$this->setState('alliance.id', $id);
 		$params = JComponentHelper::getParams('com_eve');
 		$this->setState('params', $params);
-		
 	}
 	
 	protected function _loadItem($id)
