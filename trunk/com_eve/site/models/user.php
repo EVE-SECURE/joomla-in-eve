@@ -82,7 +82,7 @@ class EveModelUser extends JModelItem
 		$q->addQuery('al.allianceID, al.name AS allianceName');
 		$q->addWhere('a.owner=%s', $id);
 		$q->addOrder('name');
-		return $q->loadObjectList();
+		return $q->loadObjectList('characterID');
 		
 	}
 	
