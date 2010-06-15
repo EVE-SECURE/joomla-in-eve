@@ -30,10 +30,17 @@ class EveModelCharacter extends JModelItem
 {
 	protected function _populateState()
 	{
+		global $option;
 		$this->setState('entity', 'character');
 		$id = JRequest::getInt('characterID');
 		$this->setState('character.id', $id);
-		$params = JComponentHelper::getParams('com_eve');
+		$app = JFactory::getApplication();
+		$params = $app->getParams();
+		if ($option != 'com_eve') {
+			$eveparams = JComponentHelper::getParams('com_eve');
+			$params->merge($eveparams);
+		}
+		
 		$this->setState('params', $params);
 	}
 	
