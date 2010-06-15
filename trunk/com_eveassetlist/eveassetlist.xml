@@ -38,7 +38,7 @@
 	</languages>
 	
 	<administration>
-		<menu img="components/com_eveassetlist/assets/icon-16-assets.png">EVE Assets</menu>
+		<menu img="components/com_eveassetlist/assets/icon-16-assets.png">EVE Asset List</menu>
 		<languages folder="admin/language">
 			<language tag="en-GB">en-GB/en-GB.com_eveassetlist.ini</language>
 			<language tag="en-GB">en-GB/en-GB.com_eveassetlist.menu.ini</language>

@@ -39,10 +39,10 @@ class EveassetlistViewUser extends EveassetlistView
 				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	JText::_('Asset List'));
+				$params->set('page_title',	JText::_('Com_Eveassetlist_Asset_List_Title'));
 			}
 		} else {
-			$params->set('page_title',JText::_('Asset List'));
+			$params->set('page_title',JText::_('Com_Eveassetlist_Asset_List_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('user', $user);
@@ -61,7 +61,7 @@ class EveassetlistViewUser extends EveassetlistView
 		
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$pathway->addItem(JText::_('Asset List'), 
+		$pathway->addItem(JText::_('Com_Eveassetlist_Asset_List_Title'), 
 			EveRoute::_('userassetlist'));
 	}
 }
