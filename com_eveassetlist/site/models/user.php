@@ -25,14 +25,7 @@ defined('_JEXEC') or die();
 
 require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'user.php';
 
-class EveassetlistModelUser extends EveModelUser {
+class EveassetlistModelUser extends EveModelUser 
+{
 	
-	protected function _populateState()
-	{
-		parent::_populateState();
-		$params = JComponentHelper::getParams('com_eveassetlist');
-		$this->setState('params', $params);
-	}
-	
-
 }

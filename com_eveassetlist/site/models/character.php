@@ -25,15 +25,7 @@ defined('_JEXEC') or die();
 
 require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.php';
 
-class EveassetlistModelCharacter extends EveModelCharacter {
+class EveassetlistModelCharacter extends EveModelCharacter 
+{
 	
-	protected function _populateState()
-	{
-		parent::_populateState();
-		$id = JRequest::getInt('characterID');
-		$params = JComponentHelper::getParams('com_eveassetlist');
-		$this->setState('params', $params);
-	}
-	
-
 }
