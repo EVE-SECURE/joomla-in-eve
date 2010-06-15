@@ -54,11 +54,17 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 		);
 	}
 	
+	private function _onDuplicateUpdate($field)
+	{
+		$dbo = JFactory::getDBO();
+		return $dbo->nameQuote($field).'=VALUES('.$dbo->nameQuote($field).')';
+	}
+	
 	private function _storeMarketOrders($xml, $entityID)
 	{
 		$dbo = JFactory::getDBO();
-		$sql = 'INSERT IGNORE INTO #__eve_marketorders (';
-		$sql .= implode(',', $this->_fields);
+		$sql = 'INSERT INTO #__eve_marketorders (';
+		$sql .= implode(',', array_map(array($dbo, 'nameQuote'), $this->_fields));
 		$sql .= ") VALUES ";
 		$values = array();
 		foreach ($xml->result->orders->toArray() as $entry) {
@@ -69,8 +75,10 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 			}
 			$values[] = '('.implode(',', $value).')';
 		}
+		$sql .= implode(",", $values);
+		$sql .= ' ON DUPLICATE KEY UPDATE ';
+		$sql .= implode(',', array_map(array($this, '_onDuplicateUpdate'), array_slice($this->_fields, 2, -1)));
 		if ($values) {
-			$sql .= implode(",", $values);
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
