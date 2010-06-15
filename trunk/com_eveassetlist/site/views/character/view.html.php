@@ -37,7 +37,7 @@ class EveassetlistViewCharacter extends EveassetlistView
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eveassetlist'
 				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
-				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+				&& JArrayHelper::getValue($menu->query, 'characterID', null, 'int') == $character->characterID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
 				$params->set('page_title',	$character->name.' - '.JText::_('Com_Eveassetlist_Asset_List_Title'));

@@ -25,15 +25,7 @@ defined('_JEXEC') or die();
 
 require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'corporation.php';
 
-class EveassetlistModelCorporation extends EveModelCorporation {
-	
-	protected function _populateState()
-	{
-		parent::_populateState();
-		$id = JRequest::getInt('corporationID');
-		$params = JComponentHelper::getParams('com_eveassetlist');
-		$this->setState('params', $params);
-	}
-	
+class EveassetlistModelCorporation extends EveModelCorporation
+{
 
 }

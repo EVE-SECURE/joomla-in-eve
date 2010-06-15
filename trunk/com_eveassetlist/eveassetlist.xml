@@ -36,6 +36,9 @@
 	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_eveassetlist.ini</language>
 	</languages>
+	<media folder="media" destination="com_eveassetlist">
+		<filename>css/component.css</filename>
+	</media>
 	
 	<administration>
 		<menu img="components/com_eveassetlist/assets/icon-16-assets.png">EVE Asset List</menu>

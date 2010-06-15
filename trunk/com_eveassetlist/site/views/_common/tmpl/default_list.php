@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Com_Eveassetlist_Item_Type', 'inv.typeName', 
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
-			<th><?php echo JHTML::_('grid.sort',  'Com_Eveassetlist_Quantity', 'al.quantity', 
+			<th class="number"><?php echo JHTML::_('grid.sort',  'Com_Eveassetlist_Quantity', 'al.quantity', 
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Com_Eveassetlist_Location', 'locationName', 
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
@@ -32,7 +32,7 @@ defined('_JEXEC') or die();
 		<tr>
 			<td><?php echo $item->itemID; ?></td>
 			<td><?php echo JHTML::_('evelink.type', $item); ?>
-			<td>
+			<td class="number">
 				<?php if ($item->singleton): ?>
 					<?php echo JText::_('Com_Eveassetlist_Singleton'); ?>
 				<?php else: ?>
@@ -46,7 +46,6 @@ defined('_JEXEC') or die();
 					<?php echo JHTML::_('evelink.type', array($item, 'containerType')); ?>
 				<?php endif; ?>
 			</td>
-
 
 			<?php if ($this->state->get('entity') == 'user'): 
 				$character = $this->characters[$item->entityID];
