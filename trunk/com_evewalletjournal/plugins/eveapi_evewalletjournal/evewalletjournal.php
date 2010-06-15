@@ -56,7 +56,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	{
 		$dbo = JFactory::getDBO();
 		$sql = 'INSERT IGNORE INTO #__eve_walletjournal (';
-		$sql .= implode(',', $this->_fields);
+		$sql .= implode(',', array_map(array($dbo, 'nameQuote'), $this->_fields));
 		$sql .= ") VALUES ";
 		$values = array();
 		foreach ($xml->result->entries->toArray() as $entry) {

@@ -54,7 +54,7 @@ class plgEveapiEveAssetList extends EveApiPlugin {
 		$dbo->query();
 		
 		$sql = 'INSERT IGNORE INTO #__eve_assets (';
-		$sql .= implode(',', $this->_fields);
+		$sql .= implode(',', array_map(array($dbo, 'nameQuote'), $this->_fields));
 		$sql .= ") VALUES ";
 		$values = array();
 		foreach ($xml->result->assets as $asset) {
