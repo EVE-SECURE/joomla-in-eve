@@ -98,7 +98,7 @@ abstract class EveassetlistView extends JView
 		}
 	}
 	
-	function loadTemplate($tpl = null, $layout = null, $view = null)
+	function loadTemplate($tpl = null, $layout = null)
 	{
 		if (!is_null($layout)) {
 			$previous = $this->setLayout($layout);
@@ -133,9 +133,9 @@ abstract class EveassetlistView extends JView
 				$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $option);
 				
 				//common not overriden template sould be last
-				$this->_addPath('template', $this->_basePath.DS.'views'.DS.'common'.DS.'tmpl');
+				$this->_addPath('template', $this->_basePath.DS.'views'.DS.'_common'.DS.'tmpl');
 				// set the alternative template search dir
-				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.'common';
+				$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.'_common';
 				$this->_addPath('template', $fallback);
 				//specific not overriden template sould be 2nd
 				$this->_addPath('template', $path);

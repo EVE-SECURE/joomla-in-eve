@@ -48,7 +48,6 @@ class EveresearchViewCharacter extends EveresearchView
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('character', 	$character);
 		$this->assign('isUsersCharacter', $this->get('IsUsersCharacter'));
-		
 	}
 	
 	protected function _setPathway()
