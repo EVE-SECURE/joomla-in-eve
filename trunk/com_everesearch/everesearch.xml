@@ -36,6 +36,9 @@
 	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_everesearch.ini</language>
 	</languages>
+	<media folder="media" destination="com_everesearch">
+		<filename>css/component.css</filename>
+	</media>
 	
 	<administration>
 		<menu img="components/com_everesearch/assets/icon-16-research.png">EVE Research</menu>
