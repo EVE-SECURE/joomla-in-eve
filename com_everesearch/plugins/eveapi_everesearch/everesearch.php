@@ -48,7 +48,7 @@ class plgEveapiEveresearch extends EveApiPlugin {
 	{
 		$dbo = JFactory::getDBO();
 		$sql = 'INSERT IGNORE INTO #__eve_research (';
-		$sql .= implode(',', $this->_fields);
+		$sql .= implode(',', array_map(array($dbo, 'nameQuote'), $this->_fields));
 		$sql .= ") VALUES ";
 		$values = array();
 		foreach ($xml->result->research->toArray() as $entry) {
