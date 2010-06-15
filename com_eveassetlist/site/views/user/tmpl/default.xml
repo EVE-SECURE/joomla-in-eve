@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="User Asset List Layout">
-		<message>
-			<![CDATA[MESSAGE HERE]]>
-		</message>
+	<layout title="Com_Eveassetlist_User_Layout_Title">
+		<message>Com_Eveassetlist_User_Layout_Message</message>
 	</layout>
 	<state>
-		<name>User Asset List Layout</name>
-		<description>DESC HERE</description>
+		<name>Com_Eveassetlist_User_Layout_State_Name</name>
+		<description>Com_Eveassetlist_User_Layout_State_Desc</description>
 	</state>
 </metadata>

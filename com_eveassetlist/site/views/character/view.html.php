@@ -40,10 +40,10 @@ class EveassetlistViewCharacter extends EveassetlistView
 				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$character->name.' - '.JText::_('Asset List'));
+				$params->set('page_title',	$character->name.' - '.JText::_('Com_Eveassetlist_Asset_List_Title'));
 			}
 		} else {
-			$params->set('page_title',	$character->name.' - '.JText::_('Asset List'));
+			$params->set('page_title',	$character->name.' - '.JText::_('Com_Eveassetlist_Asset_List_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('character', 	$character);
@@ -79,7 +79,7 @@ class EveassetlistViewCharacter extends EveassetlistView
 				$pathway->addItem($this->character->name, 
 					EveRoute::_('character', $this->character, $this->character, $this->character));
 			case 'character':
-				$pathway->addItem(JText::_('Asset List'), 
+				$pathway->addItem(JText::_('Com_Eveassetlist_Asset_List_Title'), 
 					EveRoute::_('charassetlist', $this->character, $this->character, $this->character));
 		}
 	}

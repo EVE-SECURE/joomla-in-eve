@@ -40,10 +40,10 @@ class EveassetlistViewCorporation extends EveassetlistView
 				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Asset List'));
+				$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Com_Eveassetlist_Asset_List_Title'));
 			}
 		} else {
-			$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Asset List'));
+			$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Com_Eveassetlist_Asset_List_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
 		
@@ -76,7 +76,7 @@ class EveassetlistViewCorporation extends EveassetlistView
 				$pathway->addItem($this->corporation->corporationName, 
 					EveRoute::_('corporation', $this->corporation, $this->corporation));
 			case 'corporation':
-				$pathway->addItem(JText::_('Asset List'), 
+				$pathway->addItem(JText::_('Com_Eveassetlist_Asset_List_Title'), 
 					EveRoute::_('corpassetlist', $this->corporation, $this->corporation));
 		}
 	}
