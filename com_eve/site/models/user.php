@@ -30,13 +30,19 @@ class EveModelUser extends JModelItem
 {
 	protected function _populateState()
 	{
+		global $option;
 		$this->setState('entity', 'user');
 		$user = JFactory::getUser();
 		$id = intval($user->id);
 		$this->setState('user.id', $id);
-		$params = JComponentHelper::getParams('com_eve');
-		$this->setState('params', $params);
+		$app = JFactory::getApplication();
+		$params = $app->getParams();
+		if ($option != 'com_eve') {
+			$eveparams = JComponentHelper::getParams('com_eve');
+			$params->merge($eveparams);
+		}
 		
+		$this->setState('params', $params);
 	}
 
 	protected function _loadItem($pk) {

@@ -34,15 +34,20 @@ class EveModelCorporation extends JModelItem
 		$eveparams = JComponentHelper::getParams('com_eve');
 		$dbdump_database = $eveparams->get('dbdump_database');
 		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
-		
 	}
 	
 	protected function _populateState()
 	{
+		global $option;
 		$this->setState('entity', 'corporation');
 		$id = JRequest::getInt('corporationID');
 		$this->setState('corporation.id', $id);
-		$params = JComponentHelper::getParams('com_eve');
+		$app = JFactory::getApplication();
+		$params = $app->getParams();
+		if ($option != 'com_eve') {
+			$eveparams = JComponentHelper::getParams('com_eve');
+			$params->merge($eveparams);
+		}
 		$this->setState('params', $params);
 		
 	}
