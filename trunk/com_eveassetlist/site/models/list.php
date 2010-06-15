@@ -104,6 +104,8 @@ class EveassetlistModelList extends JModelList {
 		
 		$q->addQuery($locationQuery);
 		
+		$orderings = array('al.itemid', 'inv.typename', 'al.quantity', 'al.singleton', 
+			 'fla.flagtext', 'locationname', 'containertypename');
 		if ($this->_entity == 'user') {
 			$orderings[] = 'charactername'; 
 			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=al.entityID');
@@ -121,14 +123,13 @@ class EveassetlistModelList extends JModelList {
 		
 		
 		
-		/*if ($search) {
-			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
+		if ($search) {
+			$q->addWhere(sprintf('(inv.typeName LIKE %1$s OR cinv.typeName LIKE %1$s)', 
 				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
-		}*/
+		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'al.itemID'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
-		if (!in_array(strtolower($ordering), array('al.itemid', 'inv.typename', 'al.quantity', 'al.singleton', 
-			 'fla.flagtext', 'locationname', 'containertypename'))) {
+		if (!in_array(strtolower($ordering), $orderings)) {
 			$ordering = 'al.itemID';
 		}
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
