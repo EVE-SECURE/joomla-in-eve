@@ -46,8 +46,8 @@ $model = JModel::getInstance('Plugins', 'InstallerModel');
 $model->remove($plugins);
 
 function com_uninstall() {
-	EveHelper::clearApiCalls('char', 'Assets');
-	EveHelper::clearApiCalls('corp', 'Assets');
+	EveHelper::clearApiCalls('char', 'AssetList');
+	EveHelper::clearApiCalls('corp', 'AssetList');
 	
 	return true;
 }
