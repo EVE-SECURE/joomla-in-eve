@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="Character Market Orders Layout">
-		<message>
-			<![CDATA[MESSAGE HERE]]>
-		</message>
+	<layout title="Com_Evemarketorders_User_Layout_Title">
+		<message>Com_Evemarketorders_User_Layout_Message</message>
 	</layout>
 	<state>
-		<name>Character Market Orders Layout</name>
-		<description>DESC HERE</description>
-		<url addpath="/administrator/components/com_eve/elements">
-			<param name="characterID" type="character" label="Character ID" description="Character ID to display" size="50"/>
-		</url>
-		<params>
-		</params>
+		<name>Com_Evemarketorders_User_Layout_State_Name</name>
+		<description>Com_Evemarketorders_User_Layout_State_Desc</description>
 	</state>
 </metadata>
