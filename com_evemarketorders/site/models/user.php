@@ -23,8 +23,8 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.php';
+require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'user.php';
 
-class EvemarketordersModelCharacter extends EveModelCharacter {
+class EvemarketordersModelUser extends EveModelUser {
 	
 }

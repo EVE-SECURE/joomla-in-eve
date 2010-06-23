@@ -77,7 +77,21 @@ class EvemarketordersModelList extends JModelList {
 			$q->addQuery('co.corporationID', 'co.corporationName', 'co.ticker AS corporationTicker');
 			$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName AS allianceShortName');
 		}
-		$q->addWhere('entityID = %1$s', $entityID);
+		
+		if ($this->_entity == 'user') {
+			$orderings[] = 'charactername'; 
+			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=mo.entityID');
+			$q->addQuery('ch.name AS characterName');
+			$acl = EveFactory::getACL();
+			$chacracterIDs = $acl->getUserCharacterIDs();
+			if ($chacracterIDs) {
+				$q->addWhere('mo.entityID IN ('.implode(', ', $chacracterIDs).')');
+			} else {
+				$q->addWhere('0 = 1');
+			}
+		} else {
+			$q->addWhere('mo.entityID = %1$s', $entityID);
+		}
 		
 		if ($search) {
 			//TODO: search

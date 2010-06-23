@@ -27,13 +27,4 @@ require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'corporation
 
 class EvemarketordersModelCorporation extends EveModelCorporation {
 	
-	protected function _populateState()
-	{
-		parent::_populateState();
-		$id = JRequest::getInt('corporationID');
-		$params = JComponentHelper::getParams('com_evemarketorders');
-		$this->setState('params', $params);
-	}
-	
-
 }
