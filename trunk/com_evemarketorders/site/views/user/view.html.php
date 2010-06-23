@@ -25,59 +25,45 @@ defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EvemarketordersViewCorporation extends EvemarketordersView 
+class EvemarketordersViewUser extends EvemarketordersView 
 {
-	public $corporation;
+	public $user;
 
-	protected function _setEntity($corporation, $params) 
+	protected function _setEntity($user, $params) 
 	{
 		$document = JFactory::getDocument();
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evemarketorders'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'corporation'  
-				&& JArrayHelper::getValue($menu->query, 'corporationID', null, 'int') == $corporation->corporationID) {
+				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Com_Evemarketorders_Market_Orders_Title'));
+				$params->set('page_title',	JText::_('Com_Evemarketorders_Market_Orders_Title'));
 			}
 		} else {
-			$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Com_Evemarketorders_Market_Orders_Title'));
+			$params->set('page_title',	JText::_('Com_Evemarketorders_Market_Orders_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
+		$this->assignRef('user', 	$user);
 		
-		$this->assignRef('corporation', $corporation);
-		
+		$characters = $this->get('Characters');
+		$this->assignRef('characters', $characters);
 	}
 	
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
-		if ($menu) {
-			if ($menu->component == 'com_evemarketorders') {
-				return;
-			}
-			$view = JArrayHelper::getValue($menu->query, 'view');
-		} else {
-			$view = null;
+		if ($menu && $menu->component == 'com_evemarketorders') {
+			return;
 		}
 		
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		switch ($view) {
-			case null:
-				if ($this->corporation->allianceID) {
-					$pathway->addItem($this->corporation->allianceName, 
-						EveRoute::_('alliance', $this->corporation));
-				}
-			case 'alliance':
-				$pathway->addItem($this->corporation->corporationName, 
-					EveRoute::_('corporation', $this->corporation, $this->corporation));
-			case 'corporation':
-				$pathway->addItem(JText::_('Market Orders'), 
-					EveRoute::_('corpmarketorders', $this->corporation, $this->corporation));
-		}
+		$pathway->addItem(JText::_('Com_Evemarketorders_Market_Orders_Title'), 
+			EveRoute::_('usermarketorders'));
+		
 	}
+	
 }

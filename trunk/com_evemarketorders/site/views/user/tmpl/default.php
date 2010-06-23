@@ -19,19 +19,12 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
 
-<form action="<?php echo EveRoute::_('charmarketorders', $this->character, $this->character, $this->character); ?>" name="adminForm" method="post">
+<form action="<?php echo EveRoute::_('usermarketorders'); ?>" name="adminForm" method="post">
 <div>
 	<?php echo JHTML::_('filter.search', $this->listState->get('filter.search')); ?>
 </div>
-<?php if ($this->isUsersCharacter): ?>
-<div>
-	<a href="<?php echo EveRoute::_('usermarketorders'); ?>">
-		<?php echo JText::_('Com_Evemarketorders_Users_Characters_Marker_Orders');?>
-	</a>
-</div>
-<?php endif; ?>
 
-<?php echo $this->loadTemplate('list'); ?>	
+<?php echo $this->loadTemplate('list'); ?>
 
 <?php echo $this->pagination->getListFooter(); ?>
 <input type="hidden" name="filter_order" value="<?php echo $this->listState->get('list.ordering', 'mo.issued'); ?>" />

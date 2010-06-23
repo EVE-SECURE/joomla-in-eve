@@ -37,16 +37,17 @@ class EvemarketordersViewCharacter extends EvemarketordersView
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evemarketorders'
 				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
-				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+				&& JArrayHelper::getValue($menu->query, 'characterID', null, 'int') == $character->characterID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$character->name.' - '.JText::_('Market Orders'));
+				$params->set('page_title',	$character->name.' - '.JText::_('Com_Evemarketorders_Market_Orders_Title'));
 			}
 		} else {
-			$params->set('page_title',	$character->name.' - '.JText::_('Market Orders'));
+			$params->set('page_title',	$character->name.' - '.JText::_('Com_Evemarketorders_Market_Orders_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('character', 	$character);
+		$this->assign('isUsersCharacter', $this->get('IsUsersCharacter'));
 		
 	}
 	
