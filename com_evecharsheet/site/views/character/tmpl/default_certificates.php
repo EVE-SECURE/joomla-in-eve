@@ -8,13 +8,13 @@ defined('_JEXEC') or die();
 ?>
 
 <div class="evecharsheet-certificates">
-<h2><?php echo JText::_('Certificates'); ?></h2>
-<a class="expand-all-certificates" href="#" title="<?php echo JText::_('Expand all certificates'); ?>">
-	<?php echo JText::_('Expand all certificates'); ?>
+<h2><?php echo JText::_('Com_Evecharsheet_Certificates'); ?></h2>
+<a class="expand-all-certificates" href="#" title="<?php echo JText::_('Com_Evecharsheet_Expand_All_Certificates'); ?>">
+	<?php echo JText::_('Com_Evecharsheet_Expand_All_Certificates'); ?>
 </a> 
 | 
-<a class="collapse-all-certificates" href="#" title="<?php echo JText::_('Collapse all certificates'); ?>">
-	<?php echo JText::_('Collapse all certificates'); ?>
+<a class="collapse-all-certificates" href="#" title="<?php echo JText::_('Com_Evecharsheet_Collapse_All_Certificates'); ?>">
+	<?php echo JText::_('Com_Evecharsheet_Collapse_All_Certificates'); ?>
 </a>
 
 <?php foreach ($this->categories as $category): ?>
@@ -35,12 +35,12 @@ defined('_JEXEC') or die();
 		<?php endforeach; ?>
 		</table>
 		<div>
-			<?php echo JText::sprintf('%s certificates in this category', count($category->certificates)); ?>
+			<?php echo JText::sprintf('Com_Evecharsheet_N_Certificates_In_Category', count($category->certificates)); ?>
 		</div>
 	<?php else: ?>
 		<div class="certificate-category">
 		</div>
-			<?php echo JText::_('No certificates in this category'); ?>
+			<?php echo JText::_('Com_Evecharsheet_0_Certificates_In_Category'); ?>
 	<?php endif; ?>
 <?php endforeach; ?>
 </div>

@@ -11,35 +11,32 @@ JHTML::stylesheet('component.css', 'media/com_evecharsheet/css/');
 JHTML::script('collapsibles.js', 'media/com_evecharsheet/js/');
 JHTML::_('behavior.mootools');
 JHTML::_('eve.contextmenu');
-$pageClass = $this->params->get('pageclass_sfx');
 ?>
 
-<?php if ($pageClass) : ?>
-	<div class="<?php echo $pageClass; ?>">
-<?php endif; ?>
+<div class="com-evecharsheet<?php echo $this->params->get('pageclass_sfx'); ?>">
 <?php if ($this->params->get('show_page_title', 1)) : ?>
 	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
 
 <div class="evecharsheet-heading">
 	<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
-	<span><?php echo JText::_('Character Name'); ?>:</span> 
+	<span><?php echo JText::_('Com_Evecharsheet_Character_Name'); ?>:</span> 
 		<?php echo JHTML::_('evelink.character', $this->character); ?> <br /> <br />
-	<span><?php echo JText::_('Race'); ?>:</span> 
+	<span><?php echo JText::_('Com_Evecharsheet_Race'); ?>:</span> 
 		<?php echo $this->character->race; ?> <br />
-	<span><?php echo JText::_('Gender'); ?>:</span>
+	<span><?php echo JText::_('Com_Evecharsheet_Gender'); ?>:</span>
 		<?php echo $this->character->gender; ?> <br />
-	<span><?php echo JText::_('Blood Line'); ?>:</span>
+	<span><?php echo JText::_('Com_Evecharsheet_Blood_Line'); ?>:</span>
 		<?php echo $this->character->bloodLine; ?> <br />
 	<?php if ($this->show('balance')): ?>
-		<span><?php echo JText::_('Balance'); ?>:</span>
+		<span><?php echo JText::_('Com_Evecharsheet_Balance'); ?>:</span>
 			<?php echo number_format($this->character->balance); ?> <br />
 	<?php endif; ?>
-	<span><?php echo JText::_('Corporation'); ?>:</span>
+	<span><?php echo JText::_('Com_Evecharsheet_Corporation'); ?>:</span>
 		<?php echo JHTML::_('evelink.corporation', $this->character); ?> <br />
 	
 	<?php if ($this->character->allianceID) : ?>
-		<span><?php echo JText::_('Alliance'); ?>:</span>
+		<span><?php echo JText::_('Com_Evecharsheet_Alliance'); ?>:</span>
 			<?php echo JHTML::_('evelink.alliance', $this->character); ?> <br />
 	<?php endif; ?>
 </div>
@@ -72,6 +69,4 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<?php echo $this->loadTemplate('titles'); ?>
 <?php endif; ?>
 
-<?php if ($pageClass) : ?>
-	</div>
-<?php endif; ?>
+</div>
