@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 
 ?>
 <div class="evecharsheet-roles">
-<h2><?php echo JText::_('Roles'); ?></h2>
+<h2><?php echo JText::_('Com_Evecharsheet_Roles'); ?></h2>
 <table>
 	<tr>
 		<th></th>

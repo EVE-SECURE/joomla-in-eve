@@ -8,14 +8,14 @@ defined('_JEXEC') or die();
 ?>
 
 <div class="evecharsheet-skills">
-<h2><?php echo JText::_('Skills'); ?></h2>
+<h2><?php echo JText::_('Com_Evecharsheet_Skills'); ?></h2>
 
-<a class="expand-all-skills" href="#" title="<?php echo JText::_('Expand all skills'); ?>">
-	<?php echo JText::_('Expand all skills'); ?>
+<a class="expand-all-skills" href="#" title="<?php echo JText::_('Com_Evecharsheet_Expand_All_Skills'); ?>">
+	<?php echo JText::_('Com_Evecharsheet_Expand_All_Skills'); ?>
 </a> 
 | 
-<a class="collapse-all-skills" href="#" title="<?php echo JText::_('Collapse all skills'); ?>">
-	<?php echo JText::_('Collapse all skills'); ?>
+<a class="collapse-all-skills" href="#" title="<?php echo JText::_('Com_Evecharsheet_Collapse_All_Skills'); ?>">
+	<?php echo JText::_('Com_Evecharsheet_Collapse_All_Skills'); ?>
 </a>
 
 
@@ -37,14 +37,14 @@ defined('_JEXEC') or die();
 		<?php endforeach; ?>
 		</table>
 		<div>
-			<?php echo JText::sprintf('%s skills trained for total of %s skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
-			<?php echo JText::sprintf('Skill Cost %s', number_format($group->skillPrice)); ?>
+			<?php echo JText::sprintf('Com_Evecharsheet_N_Skills_M_Skillpoints', $group->skillCount, number_format($group->skillpoints)); ?><br />
+			<?php echo JText::sprintf('Com_Evecharsheet_Skill_Cost_N', number_format($group->skillPrice)); ?>
 		</div>
 	<?php else: ?>
 		<div class="skill-group">
 		</div>
 		<div>
-			<?php echo JText::_('No skills in this category'); ?>
+			<?php echo JText::_('Com_Evecharsheet_No_Skills_In_Category'); ?>
 		</div>
 	<?php endif; ?>
 <?php endforeach; ?>

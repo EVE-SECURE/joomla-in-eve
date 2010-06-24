@@ -56,13 +56,13 @@ class EvecharsheetViewCharacter extends JView {
 		if (is_object($menu)
 				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evecharsheet'
 				&& JArrayHelper::getValue($menu->query, 'view') == 'character'  
-				&& JArrayHelper::getValue($menu->query, 'characterID') == $character->characterID) {
+				&& JArrayHelper::getValue($menu->query, 'characterID', null, 'int') == $character->characterID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$character->name.' - '.JText::_('Character Sheet'));
+				$params->set('page_title',	$character->name.' - '.JText::_('Com_Evecharsheet_Character_Sheet_Title'));
 			}
 		} else {
-			$params->set('page_title',	$character->name.' - '.JText::_('Character Sheet'));
+			$params->set('page_title',	$character->name.' - '.JText::_('Com_Evecharsheet_Character_Sheet_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
 		
@@ -118,7 +118,7 @@ class EvecharsheetViewCharacter extends JView {
 				$pathway->addItem($this->character->name, 
 					EveRoute::_('character', $this->character, $this->character, $this->character));
 			case 'character':
-				$pathway->addItem(JText::_('Character Sheet'), 
+				$pathway->addItem(JText::_('Com_Evecharsheet_Character_Sheet_Title'), 
 					EveRoute::_('charsheet', $this->character, $this->character, $this->character));
 		}
 	}

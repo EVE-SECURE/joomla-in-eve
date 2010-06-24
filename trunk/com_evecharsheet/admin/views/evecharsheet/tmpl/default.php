@@ -10,9 +10,9 @@ defined('_JEXEC') or die();
 <form action="<?php echo JRoute::_('index.php?option=com_evecharsheet'); ?>" method="post" name="adminForm">
 <?php foreach($this->tables as $table => $result): ?>
 	<?php if ($result): ?>
-		<?php printf(JText::_('TABLE %s IS PRESENT'), $table); ?><br />
+		<?php printf(JText::_('Com_Evecharsheet_Table_Found'), $table); ?><br />
 	<?php else: ?>
-		<?php printf(JText::_('TABLE %s IS MISSING'), $table); ?><br />
+		<?php printf(JText::_('Com_Evecharsheet_Table_Missing'), $table); ?><br />
 	<?php endif; ?>
 
 <?php endforeach; ?>

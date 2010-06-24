@@ -8,7 +8,7 @@ defined('_JEXEC') or die();
 
 ?>
 <div class="evecharsheet-skillqueue">
-	<h2><?php echo JText::_('Skill Queue'); ?></h2>
+	<h2><?php echo JText::_('Com_Evecharsheet_Skill_Queue'); ?></h2>
 	<table>
 	<?php foreach ($this->queue as $skill): ?>
 		<tr>
