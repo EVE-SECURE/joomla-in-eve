@@ -84,7 +84,6 @@ INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `compon
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');
 
 INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
-('char', 'SkillQueue', 'Character', 'Limited', 0, ''),
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
 INSERT INTO jos_eve_roles (`roleID`, `roleName`) VALUES

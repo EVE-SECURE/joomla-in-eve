@@ -104,7 +104,6 @@ PRIMARY KEY ( `characterID` )
 
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
-('char', 'SkillQueue', 'Character', 'Limited', 0, ''),
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
