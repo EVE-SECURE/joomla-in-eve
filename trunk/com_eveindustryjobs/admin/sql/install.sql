@@ -37,9 +37,9 @@ PRIMARY KEY  (`entityID`,`jobID`)
 );
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
-('charindustryjobs', 'Industry Jobs', 'industry-jobs', 'character', 'industryjobs', 'character', '', '0', '1', '2', '0'),
-('userindustryjobs', 'Industry Jobs', 'industry-jobs', 'user', 'industryjobs', 'user', '', '0', '1', '2', '0'),
-('corpindustryjobs', 'Industry Jobs', 'industry-jobs', 'corporation', 'industryjobs', 'corporation', '', '0', '1', '100', '0');
+('charindustryjobs', 'Industry Jobs', 'industry-jobs', 'character', 'industryjobs', 'character', '', '0', '1', '100', '0'),
+('userindustryjobs', 'Industry Jobs', 'industry-jobs', 'user', 'industryjobs', 'user', '', '0', '1', '1', '0'),
+('corpindustryjobs', 'Industry Jobs', 'industry-jobs', 'corporation', 'industryjobs', 'corporation', '', '0', '1', '100', '3377699720527873');
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'IndustryJobs', 'Character', 'Full', 0, ''),

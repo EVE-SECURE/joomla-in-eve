@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS `#__eve_assets` (
 );
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
-('charassetlist', 'Asset List', 'asset-list', 'character', 'assetlist', 'character', '', '0', '1', '2', '0'),
-('userassetlist', 'Asset List', 'asset-list', 'user', 'assetlist', 'user', '', '0', '1', '2', '0'),
+('charassetlist', 'Asset List', 'asset-list', 'character', 'assetlist', 'character', '', '0', '1', '100', '0'),
+('userassetlist', 'Asset List', 'asset-list', 'user', 'assetlist', 'user', '', '0', '1', '1', '0'),
 ('corpassetlist', 'Asset List', 'asset-list', 'corporation', 'assetlist', 'corporation', '', '0', '1', '100', '558552041120257');
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
