@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS `#__eve_research` (
 );
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
-('charresearch', 'Research', 'research', 'character', 'research', 'character', '', '0', '1', '2', '0'),
-('userresearch', 'Research', 'research', 'user', 'research', 'user', '', '0', '1', '0', '0');
+('charresearch', 'Research', 'research', 'character', 'research', 'character', '', '0', '1', '100', '0'),
+('userresearch', 'Research', 'research', 'user', 'research', 'user', '', '0', '1', '1', '0');
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES 
 ('char', 'Research', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '');
