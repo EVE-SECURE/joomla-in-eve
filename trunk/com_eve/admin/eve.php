@@ -28,6 +28,7 @@ if (!JPluginHelper::isEnabled('system', 'eve')) {
 	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
 } else {
 	$task = JRequest::getVar('task', 'display');
+	$task = $task == '' ? 'display' : $task;
 	$view = JRequest::getVar('view');
 	if ($task == 'display' && ($view == 'character' || $view == 'corporation' || $view == 'access' || $view == 'roles')) {
 		JRequest::setVar('task', "$view.$task");
