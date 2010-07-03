@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <metadata>
-	<layout title="User Wallet Journal Layout">
-		<message>
-			<![CDATA[MESSAGE HERE]]>
-		</message>
+	<layout title="Com_Evewalletjournal_User_Layout_Title">
+		<message>Com_Evewalletjournal_User_Layout_Message</message>
 	</layout>
 	<state>
-		<name>User Wallet Journal Layout</name>
-		<description>DESC HERE</description>
-		<params>
-		</params>
+		<name>Com_Evewalletjournal_User_Layout_State_Name</name>
+		<description>Com_Evewalletjournal_User_Layout_State_Desc</description>
 	</state>
 </metadata>
