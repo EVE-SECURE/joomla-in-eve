@@ -93,8 +93,6 @@ class EveModelCorporation extends EveModel {
 		// Get a corporation row instance.
 		$table = &$this->getItem($corporationID);
 		
-		$ownerPast = $table->owner;
-		
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
@@ -116,25 +114,6 @@ class EveModelCorporation extends EveModel {
 			return false;
 		}
 			
-		$ownerNow = $table->owner; 
-		if ($ownerNow != $ownerPast) {
-			$q = $this->getQuery();
-			$q->addTable('#__eve_corporations', 'co');
-			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-			$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-			$q->addWhere('(al.owner = 0 OR al.owner IS NULL)');
-			$q->addWhere('co.corporationID=%s', intval($table->corporationID));
-			$q->addQuery('ch.characterID', 'ch.userID');
-			$ceos = $q->loadObjectList();
-			
-			JPluginHelper::importPlugin('eveapi');
-			foreach ($ceos as $ceo) {
-				if ($ceo->userID && $ceo->characterID) {
-					$dispatcher =& JDispatcher::getInstance();
-					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
-				}
-			}
-		}
 		return $table->corporationID;
 	}
 
@@ -401,5 +380,45 @@ class EveModelCorporation extends EveModel {
 			$app->enqueueMessage(JText::sprintf('MEMBERS FROM %s CORPORATIONS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
+	
+	public function setOwner($cid, $isOwner)
+	{
+		$app = JFactory::getApplication();
+		$q = $this->getQuery();
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
+		$q->addWhere('co.corporationID IN ('. implode(',', $cid).')');
+		$q->addQuery('co.corporationID', 'co.corporationName');
+		$q->addQuery('ch.characterID', 'ch.userID');
+		$q->addQuery('co.owner', 'al.owner AS derived_owner');
+		$ceos = $q->loadObjectList();
+		
+		$result = 0;
+		JPluginHelper::importPlugin('eveapi');
+		foreach ($ceos as $ceo) {
+			$corporation = EveFactory::getInstance('Corporation', $ceo->corporationID);
+			$corporation->owner = $isOwner ? 1 : null;
+			$corporation->store(true);
+
+			if (($ceo->owner != $isOwner) && !$ceo->derived_owner) {
+				$result += 1;
+			}
+			
+			if ($ceo->userID && $ceo->characterID) {
+				$dispatcher =& JDispatcher::getInstance();
+				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $isOwner));
+				continue;
+			} else {
+				if ($isOwner) {
+					$app->enqueueMessage(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName), 'error');
+				}
+			}
+		}
+		
+		return $result;
+		
+	}
+	
 	
 }

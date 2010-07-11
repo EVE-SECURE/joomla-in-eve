@@ -52,14 +52,6 @@ JHTML::addIncludePath(JPATH_COMPONENT_ADMINISTRATOR.DS.'helpers'.DS.'html');
 						<?php echo JHTML::_('eve.alliancelist', 'jform[allianceID]', null, $this->item->allianceID, 'jformallianceID'); ?>
 					</td>
 				</tr>
-				<tr>
-					<td class="key">
-						<label for="jformowner"><?php echo JText::_('OWNER?'); ?></label>
-					</td>
-					<td>
-						<?php echo JHTML::_('select.booleanlist', 'jform[owner]', null, $this->item->owner); ?>
-					</td>
-				</tr>				
 			</tbody>
 		</table>
 	</fieldset>

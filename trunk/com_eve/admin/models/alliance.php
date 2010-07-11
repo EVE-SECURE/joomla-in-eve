@@ -93,8 +93,6 @@ class EveModelAlliance extends EveModel {
 		// Get a alliance row instance.
 		$table = &$this->getItem($allianceID);
 		
-		$ownerPast = $table->owner;
-		
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
@@ -116,25 +114,6 @@ class EveModelAlliance extends EveModel {
 			return false;
 		}
 		
-		$ownerNow = $table->owner;
-		if ($ownerNow != $ownerPast) {
-			$q = $this->getQuery();
-			$q->addTable('#__eve_corporations', 'co');
-			$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-			$q->addWhere('co.owner = 0');
-			$q->addWhere('co.allianceID=%s', intval($table->allianceID));
-			$q->addQuery('ch.characterID', 'ch.userID');
-			$ceos = $q->loadObjectList();
-			
-			JPluginHelper::importPlugin('eveapi');
-			foreach ($ceos as $ceo) {
-				if ($ceo->userID && $ceo->characterID) {
-					$dispatcher =& JDispatcher::getInstance();
-					$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
-				}
-			}
-		}
-	
 		return $table->allianceID;
 	}
 
@@ -394,6 +373,26 @@ class EveModelAlliance extends EveModel {
 		catch (Exception $e) {
 			JError::raiseError($e->getCode(), $e->getMessage());
 		}		
+	}
+	
+	public function setOwner($cid, $isOwner)
+	{
+		$q = $this->getQuery();
+		$q->addTable('#__eve_corporations', 'co');
+		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
+		$q->addWhere('co.owner = 0');
+		$q->addWhere('co.allianceID=%s', intval($table->allianceID));
+		$q->addQuery('ch.characterID', 'ch.userID');
+		$ceos = $q->loadObjectList();
+		
+		JPluginHelper::importPlugin('eveapi');
+		foreach ($ceos as $ceo) {
+			if ($ceo->userID && $ceo->characterID) {
+				$dispatcher =& JDispatcher::getInstance();
+				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
+			}
+		}
+		
 	}
 	
 }
