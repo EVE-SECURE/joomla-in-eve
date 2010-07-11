@@ -60,6 +60,10 @@ class EveViewCorporations extends JView {
 		JToolBarHelper::title($title, 'corporation');
 		JToolBarHelper::custom('corporation.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
 		JToolBarHelper::custom('corporation.getMemberTracking', 'character', 'character', 'Member Tracking', true);
+		JToolBarHelper::spacer();
+		JToolBarHelper::custom('corporation.setowner', 'default', 'default', 'Com_Eve_Set_Owner', true);;
+		JToolBarHelper::custom('corporation.unsetowner', 'default-cancel', 'default-cancel', 'Com_Eve_Unset_Owner', true);;
+		JToolBarHelper::spacer();
 		JToolBarHelper::addNew('corporation.add');
 		JToolBarHelper::editList('corporation.edit');
 		JToolBarHelper::deleteList('', 'corporation.delete');

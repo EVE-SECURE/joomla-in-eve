@@ -258,6 +258,36 @@ class EveControllerAlliance extends EveController {
 		$model->apiGetAllianceMembers($cid);
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
+
+	public function setOwner()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+				
+		$isOwner = strtolower($this->_task) == 'setowner';
+		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			return false;
+		}
+		
+		$model = $this->getModel('Alliance', 'EveModel');
+		$result = $model->setOwner($cid, $isOwner);
+		
+		if ($result) {
+			$app = JFactory::getApplication();
+			if ($isOwner) {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
+			} else {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+			}
+		}
+	}
 	
 	public function search()
 	{

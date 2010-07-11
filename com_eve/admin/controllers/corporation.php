@@ -33,6 +33,7 @@ class EveControllerCorporation extends EveController {
 		$this->registerTask('apply', 'save');
 		$this->registerTask('getCorporationSheet', 'getCorporationSheet');
 		$this->registerTask('getMemberTracking', 'getMemberTracking');
+		$this->registerTask('unsetOwner', 'setOwner');
 	}
 	
 	/**
@@ -291,6 +292,36 @@ class EveControllerCorporation extends EveController {
 		//@todo: message, error output
 		$model->apiGetMemberTracking($cid);
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+	}
+	
+	public function setOwner()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+				
+		$isOwner = strtolower($this->_task) == 'setowner';
+		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			return false;
+		}
+		
+		$model = $this->getModel('Corporation', 'EveModel');
+		$result = $model->setOwner($cid, $isOwner);
+		
+		if ($result) {
+			$app = JFactory::getApplication();
+			if ($isOwner) {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
+			} else {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+			}
+		}
 	}
 	
 	public function search()

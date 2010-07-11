@@ -46,6 +46,14 @@
 	 background-image: url(icon-32-character.png);
 }
 
+.icon-32-default {
+	 background-image: url(icon-32-default.png);
+}
+
+.icon-32-default-cancel {
+	 background-image: url(icon-32-default-cancel.png);
+}
+
 .icon-32-schedule {
 	 background-image: url(icon-32-schedule.png);
 }

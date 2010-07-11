@@ -60,6 +60,10 @@ class EveViewAlliances extends JView {
 		JToolBarHelper::title($title, 'alliance');
 		JToolBarHelper::custom('alliance.getAllianceList', 'alliance', 'alliance', 'Alliance List', false);
 		JToolBarHelper::custom('alliance.getAllianceMembers', 'corporation', 'corporation', 'Alliance Members', true);
+		JToolBarHelper::spacer();
+		JToolBarHelper::custom('alliance.setowner', 'default', 'default', 'Com_Eve_Set_Owner', true);;
+		JToolBarHelper::custom('alliance.unsetowner', 'default-cancel', 'default-cancel', 'Com_Eve_Unset_Owner', true);;
+		JToolBarHelper::spacer();
 		JToolBarHelper::addNew('alliance.add');
 		JToolBarHelper::editList('alliance.edit');
 		JToolBarHelper::deleteList('', 'alliance.delete');
