@@ -25,19 +25,18 @@ foreach ($this->tables as $tableName => $tableExists) {
 		<?php if (!$this->ownerCorporations): ?>
 			<h4><?php echo JText::_('No owner corporation set'); ?></h4>
 			<ol>
-				<li><?php echo JText::_('Go to'); ?> 
-					<a href="<?php echo JRoute::_('index.php?option=com_eve&view=corporations'); ?>"><?php echo JText::_('Corporations') ?></a>
-					<?php echo JText::_('or'); ?>
-					<a href="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>"><?php echo JText::_('Alliances') ?></a>
+				<li>
+					<?php echo 
+					JText::sprintf('COM_EVE_SET_OWNER_HINT_REGISTER_ACCOUNTS', 
+						JRoute::_('index.php?option=com_eve&view=accounts')); ?> 
+				</li>
+				<li><?php echo 
+					JText::sprintf('COM_EVE_SET_OWNER_HINT_LINKS', 
+						JRoute::_('index.php?option=com_eve&view=corporations'), 
+						JRoute::_('index.php?option=com_eve&view=alliances')); ?> 
 				</li>
 				<li>
-					<?php echo JText::_('Create new or edit existing corporation or alliance'); ?>
-				</li>
-				<li>
-					<?php echo JText::_('Set OWNER to "yes"'); ?>
-				</li>
-				<li>
-					<?php echo JText::_('Save'); ?>
+					<?php echo JText::_('COM_EVE_SET_OWNER_HINT_SET_OWNER'); ?>
 				</li>
 			</ol>
 		<?php else: ?>

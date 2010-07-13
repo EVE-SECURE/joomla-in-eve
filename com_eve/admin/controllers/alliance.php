@@ -33,6 +33,7 @@ class EveControllerAlliance extends EveController {
 		$this->registerTask('apply', 'save');
 		$this->registerTask('get_alliance_list', 'getAllianceList');
 		$this->registerTask('get_alliance_members', 'getAllianceMembers');
+		$this->registerTask('unsetOwner', 'setOwner');
 	}
 	
 	/**
@@ -240,53 +241,96 @@ class EveControllerAlliance extends EveController {
 	}
 	
 	function getAllianceList() {
-		$model = & $this->getModel('Alliance', 'EveModel');
-		$model->apiGetAllianceList();
-		
-		//@todo: message, error output
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+		// Set default redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+		// Get application
+		$app = JFactory::getApplication();
+		
+		$model = $this->getModel('Alliance', 'EveModel');
+		$result = $model->apiGetAllianceList();
+		
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
+		if ($result) {
+			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED')); 
+		}
 	}
 	
 	function getAllianceMembers() {
-		$model = & $this->getModel('Alliance', 'EveModel');
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
-		// Sanitize the input.
-		JArrayHelper::toInteger($cid);
-		
-		//@todo: message, error output
-		$model->apiGetAllianceMembers($cid);
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
-	}
-
-	public function setOwner()
-	{
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
-
+		// Set default redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
-				
-		$isOwner = strtolower($this->_task) == 'setowner';
+		// Get application
+		$app = JFactory::getApplication();
+
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
-		
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
 		
+		//@todo: message, error output
 		$model = $this->getModel('Alliance', 'EveModel');
-		$result = $model->setOwner($cid, $isOwner);
+		$model->apiGetAllianceMembers($cid);
 		
-		if ($result) {
-			$app = JFactory::getApplication();
-			if ($isOwner) {
-				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
-			} else {
-				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
+		$app->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
+		
+	}
+	
+	public function setOwner()
+	{
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+		// Set default redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
+		// Get application
+		$app = JFactory::getApplication();
+		
+		$isOwner = strtolower($this->_task) == 'setowner';
+		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
+		// Sanitize the input.
+		JArrayHelper::toInteger($cid);
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			return false;
+		}
+				
+		$model = $this->getModel('Alliance', 'EveModel');
+		if ($isOwner) {
+			$model->apiGetAllianceMembers($cid);
+		}
+		$result = $model->setOwner($cid, $isOwner);
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
+		
+		$corporationIDs = $model->getAllianceMemberIDs($cid);
+		//print_r($corporationIDs);die;
+		if ($corporationIDs) {
+			$model = $this->getModel('Corporation', 'EveModel');
+			$result = $model->setOwner($corporationIDs, $isOwner, false);
+			foreach ($model->getErrors() as $error) {
+				$app->enqueueMessage($error, 'error');
+			}
+			if ($result) {
+				$app = JFactory::getApplication();
+				if ($isOwner) {
+					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
+				} else {
+					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+				}
 			}
 		}
+		
 	}
 	
 	public function search()

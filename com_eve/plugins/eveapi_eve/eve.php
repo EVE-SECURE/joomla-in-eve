@@ -110,8 +110,8 @@ class plgEveapiEve extends EveApiPlugin {
 		if ($fromCache) {
 			return;
 		}
-		$alliances = $xml->result->alliances->toArray();
-		foreach ($alliances as $array) {
+		foreach ($xml->result->alliances as $ally) {
+			$array = $ally->toArray();
 			$alliance = EveFactory::getInstance('Alliance', $array['allianceID']);
 			$alliance->save($array);
 		}

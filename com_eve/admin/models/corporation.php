@@ -292,6 +292,7 @@ class EveModelCorporation extends EveModel {
 		
 		$ale = $this->getAleEVEOnline();
 		$xml = null;
+		$options = array();
 		if ($useCeoApi) {
 			$ceo = $this->getInstance('Character', $corporation->ceoID);
 			$account = $this->getInstance('Account', $ceo->userID);
@@ -299,6 +300,7 @@ class EveModelCorporation extends EveModel {
 				try {
 					$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
 					$xml = $ale->corp->CorporationSheet();
+					$options['characterID'] = $ceo->characterID;
 				}
 				catch (AleExceptionEVEAuthentication $e) {
 					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporation->corporationID), ALE_AUTH_NONE);
@@ -308,9 +310,7 @@ class EveModelCorporation extends EveModel {
 		if (is_null($xml)) {
 			$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporation->corporationID), ALE_AUTH_NONE);
 		}
-		$dispatcher->trigger('corpCorporationSheet', 
-			array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID)));
-		
+		$dispatcher->trigger('corpCorporationSheet', array($xml, $ale->isFromCache(), $options));
 	}
 	
 	public function apiGetCorporationSheet($cid) {
@@ -368,7 +368,7 @@ class EveModelCorporation extends EveModel {
 		return $count;
 	}
 	
-	public function setOwner($cid, $isOwner)
+	public function setOwner($cid, $isOwner, $store = true)
 	{
 		$q = $this->getQuery();
 		$q->addTable('#__eve_corporations', 'co');
@@ -384,19 +384,28 @@ class EveModelCorporation extends EveModel {
 		JPluginHelper::importPlugin('eveapi');
 		foreach ($ceos as $ceo) {
 			$corporation = EveFactory::getInstance('Corporation', $ceo->corporationID);
-			$corporation->owner = $isOwner ? 1 : null;
-			$corporation->store(true);
-
-			if (($ceo->owner != $isOwner) && !$ceo->derived_owner) {
-				$result += 1;
+			if ($store) {
+				$corporation->owner = $isOwner ? 1 : null;
+				$corporation->store(true);
 			}
+
+			$setOwner = $ceo->derived_owner || $corporation->owner;
+			if (!$store && $ceo->owner && !$isOwner) {
+				//unseting alliance, but corporation is set as owner
+				continue;
+			} 
+			if ($store && $ceo->derived_owner && !$isOwner) {
+				//unsetting corporatation, but alliance is owner
+				continue;
+			}
+			$result += 1;
 			
 			if ($ceo->userID && $ceo->characterID) {
 				$dispatcher =& JDispatcher::getInstance();
-				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $isOwner));
+				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $setOwner));
 				continue;
 			} else {
-				if ($isOwner) {
+				if ($setOwner) {
 					$this->setError(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName));
 				}
 			}
