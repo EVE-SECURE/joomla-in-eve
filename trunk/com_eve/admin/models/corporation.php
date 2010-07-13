@@ -285,37 +285,40 @@ class EveModelCorporation extends EveModel {
 		return $this->getInstance('Corporation', $corporationID);
 	}
 	
-	function apiGetCorporationSheet($cid) {
-		$app = JFactory::getApplication();
-		JArrayHelper::toInteger($cid);
-		
-		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO CORPORATION SELECTED'));
-			return false;
-		}
+	protected function corporationSheet($corporation, $useCeoApi = true)
+	{
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
-		$count = 0;
 		$ale = $this->getAleEVEOnline();
+		$xml = null;
+		if ($useCeoApi) {
+			$ceo = $this->getInstance('Character', $corporation->ceoID);
+			$account = $this->getInstance('Account', $ceo->userID);
+			if ($account->apiKey) {
+				try {
+					$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
+					$xml = $ale->corp->CorporationSheet();
+				}
+				catch (AleExceptionEVEAuthentication $e) {
+					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporation->corporationID), ALE_AUTH_NONE);
+				}
+			}
+		}
+		if (is_null($xml)) {
+			$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporation->corporationID), ALE_AUTH_NONE);
+		}
+		$dispatcher->trigger('corpCorporationSheet', 
+			array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID)));
+		
+	}
+	
+	public function apiGetCorporationSheet($cid) {
+		$count = 0;
 		foreach ($cid as $corporationID) {
 			try {
 				$corporation = $this->getCorporation($corporationID);
-				$ceo = $this->getInstance('Character', $corporation->ceoID);
-				$account = $this->getInstance('Account', $ceo->userID);
-				if ($account->apiKey) {
-					try {
-						$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
-						$xml = $ale->corp->CorporationSheet();
-					}
-					catch (AleExceptionEVEAuthentication $e) {
-						$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
-					}
-				} else {
-					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
-				}
-				$dispatcher->trigger('corpCorporationSheet', 
-					array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID)));
+				$this->corporationSheet($corporation, true);
 				$count += 1;
 			}
 			catch (RuntimeException $e) {
@@ -325,21 +328,10 @@ class EveModelCorporation extends EveModel {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
 		}
-		if ($count == 1) {
-			$app->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
-		}
-		if ($count > 1) {
-			$app->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
-		}
+		return $count;
 	}
 	
 	function apiGetMemberTracking($cid) {
-		$app = JFactory::getApplication();
-
-		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO CORPORATION SELECTED'));
-			return false;
-		}
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		
@@ -351,7 +343,7 @@ class EveModelCorporation extends EveModel {
 				$ceo = $this->getInstance('Character', $corporation->ceoID);
 				$account = $this->getInstance('Account', $ceo->userID);
 				if (!$account->isLoaded()) {
-					$app->enqueueMessage(JText::_('COULD NOT LOAD CEO API CREDENTIALS', $corporation->corporationName, $corporation->corporationID), 'error');
+					$this->setError(JText::_('COULD NOT LOAD CEO API CREDENTIALS', $corporation->corporationName, $corporation->corporationID));
 					continue;
 				}
 				
@@ -373,17 +365,11 @@ class EveModelCorporation extends EveModel {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
 		}
-		if ($count == 1) {
-			$app->enqueueMessage(JText::_('MEMBERS FROM CORPORATION SUCCESSFULLY IMPORTED'));
-		}
-		if ($count > 1) {
-			$app->enqueueMessage(JText::sprintf('MEMBERS FROM %s CORPORATIONS SUCCESSFULLY IMPORTED', $count));
-		}
+		return $count;
 	}
 	
 	public function setOwner($cid, $isOwner)
 	{
-		$app = JFactory::getApplication();
 		$q = $this->getQuery();
 		$q->addTable('#__eve_corporations', 'co');
 		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
@@ -411,7 +397,7 @@ class EveModelCorporation extends EveModel {
 				continue;
 			} else {
 				if ($isOwner) {
-					$app->enqueueMessage(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName), 'error');
+					$this->setError(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName));
 				}
 			}
 		}

@@ -271,36 +271,74 @@ class EveControllerCorporation extends EveController {
 	}
 	
 	function getCorporationSheet() {
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+		// Set default redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+		// Get application
+		$app = JFactory::getApplication();
+				
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		$model = & $this->getModel('Corporation', 'EveModel');
-		
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			return false;
+		}
 		
-		//@todo: message, error output
-		$model->apiGetCorporationSheet($cid);
+		$model = $this->getModel('Corporation', 'EveModel');
+		$result = $model->apiGetCorporationSheet($cid);
+
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
+		if ($count == 1) {
+			$app->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
+		} elseif ($count > 1) {
+			$app->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
+		}
+		
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
 	
 	function getMemberTracking() {
+		// Check for request forgeries.
+		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
+		// Set default redirect
+		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+		// Get application
+		$app = JFactory::getApplication();
+				
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		$model = & $this->getModel('Corporation', 'EveModel');
-		
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
+		if (!count($cid)) {
+			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			return false;
+		}
 		
-		//@todo: message, error output
-		$model->apiGetMemberTracking($cid);
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
+		$model = $this->getModel('Corporation', 'EveModel');
+		$result = $model->apiGetMemberTracking($cid);
+		
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
+		if ($result == 1) {
+			$app->enqueueMessage(JText::_('MEMBERS FROM CORPORATION SUCCESSFULLY IMPORTED'));
+		} elseif ($result > 1) {
+			$app->enqueueMessage(JText::sprintf('MEMBERS FROM %s CORPORATIONS SUCCESSFULLY IMPORTED', $result));
+		}
 	}
 	
 	public function setOwner()
 	{
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
-
+		// Set default redirect
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
-				
+		// Get application
+		$app = JFactory::getApplication();
+		
 		$isOwner = strtolower($this->_task) == 'setowner';
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
@@ -312,8 +350,14 @@ class EveControllerCorporation extends EveController {
 		}
 		
 		$model = $this->getModel('Corporation', 'EveModel');
+		if ($isOwner) {
+			$model->apiGetCorporationSheet($cid);
+		}
 		$result = $model->setOwner($cid, $isOwner);
-		
+
+		foreach ($model->getErrors() as $error) {
+			$app->enqueueMessage($error, 'error');
+		}
 		if ($result) {
 			$app = JFactory::getApplication();
 			if ($isOwner) {
