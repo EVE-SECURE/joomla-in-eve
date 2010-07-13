@@ -48,10 +48,10 @@ defined('_JEXEC') or die();
 			<td><?php echo $this->getReason($item); ?></td>
 
 			<?php if ($this->state->get('entity') == 'user'): 
-				$character = $this->characters[$item->characterID];
+				$character = $this->characters[$item->entityID];
 				?>
 				<td>
-					<a href="<?php echo EveRoute::_('charresearch', $character, $character, $character); ?>">
+					<a href="<?php echo EveRoute::_('charwalletjournal', $character, $character, $character); ?>">
 						<?php echo $this->escape($item->characterName); ?>
 					</a>
 				</td>

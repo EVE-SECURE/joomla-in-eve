@@ -47,6 +47,8 @@ class EvewalletjournalViewUser extends EvewalletjournalView
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('character', 	$user);
 		
+		$characters = $this->get('Characters');
+		$this->assignRef('characters', $characters);
 	}
 	
 	protected function _setPathway()
