@@ -302,18 +302,16 @@ class EveModelAlliance extends EveModel {
 	}
 	
 	function apiGetAllianceList() {
-		$app = JFactory::getApplication();
-		$ale = $this->getAleEVEOnline();
 		try {
+			$ale = $this->getAleEVEOnline();
 			$xml = $ale->eve->AllianceList();
 			
 			JPluginHelper::importPlugin('eveapi');
-			$dispatcher =& JDispatcher::getInstance();
+			$dispatcher =JDispatcher::getInstance();
 			
-			$dispatcher->trigger('eveAllianceList', 
-				array($xml, $ale->isFromCache(), array()));
+			$dispatcher->trigger('eveAllianceList', array($xml, $ale->isFromCache(), array()));
 			
-			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
+			return true;
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());
@@ -321,19 +319,12 @@ class EveModelAlliance extends EveModel {
 		catch (Exception $e) {
 			JError::raiseError($e->getCode(), $e->getMessage());
 		}
+		return false;
 	}
 	
 	function apiGetAllianceMembers($cid) {
-		$app = JFactory::getApplication();
-		
-		JArrayHelper::toInteger($cid);
-		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO ALLIANCE SELECTED'));
-			return false;
-		}
-		
-		$ale = $this->getAleEVEOnline();
 		try {
+			$ale = $this->getAleEVEOnline();
 			$xml = $ale->eve->AllianceList();
 			
 			JPluginHelper::importPlugin('eveapi');
@@ -365,34 +356,38 @@ class EveModelAlliance extends EveModel {
 					JError::raiseError($e->getCode(), $e->getMessage());
 				}
 			}
-			$app->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
+			return $count;
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());
 		}
 		catch (Exception $e) {
 			JError::raiseError($e->getCode(), $e->getMessage());
-		}		
+		}
 	}
-	
-	public function setOwner($cid, $isOwner)
+
+	public function getAllianceMemberIDs($cid)
 	{
 		$q = $this->getQuery();
 		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-		$q->addWhere('co.owner = 0');
-		$q->addWhere('co.allianceID=%s', intval($table->allianceID));
-		$q->addQuery('ch.characterID', 'ch.userID');
-		$ceos = $q->loadObjectList();
-		
-		JPluginHelper::importPlugin('eveapi');
-		foreach ($ceos as $ceo) {
-			if ($ceo->userID && $ceo->characterID) {
-				$dispatcher =& JDispatcher::getInstance();
-				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $ownerNow));
-			}
+		$q->addWhere('co.allianceID IN ('. implode(',', $cid).')');
+		$q->addQuery('co.corporationID');
+		$result = $q->loadResultArray();
+		return $result;
+	}
+
+	
+	public function setOwner($cid, $isOwner)
+	{
+		$count = 0;
+		foreach ($cid as $allianceID) {
+			$alliance = EveFactory::getInstance('Alliance', $allianceID);
+			$alliance->owner = $isOwner ? 1 : null;
+			$alliance->store(true);
+			$count += 1;
+			
 		}
-		
+		return $count;
 	}
 	
 }
