@@ -81,4 +81,27 @@ abstract class JHTMLEve {
 		
 	}
 	
+	static function image($type, $item, $size = 64)
+	{
+		if (is_array($item)) {
+			$itemID = JArrayHelper::getValue($item, 1, $type).'ID'.JArrayHelper::getValue($item, 2, '');
+			$itemName = JArrayHelper::getValue($item, 1, $type).'Name'.JArrayHelper::getValue($item, 2, '');
+			$itemObj = $item[0];
+		} else {
+			$itemID = $type.'ID';
+			$itemName = $type.'Name';
+			$itemObj = $item;
+		}
+		if (!isset($itemObj->$itemName)) {
+			$itemName = 'name';
+		}
+		if ($type == 'character') {
+			$suffix = '.jpg';
+		} else {
+			$suffix = '.png';
+		}
+		$src = 'http://image.eveonline.com/'.ucfirst($type).'/'.$itemObj->$itemID.'_'.$size.$suffix;
+		return JHTML::_('image', $src, $itemObj->$itemName);
+	}
+	
 }

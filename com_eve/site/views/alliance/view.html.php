@@ -46,10 +46,10 @@ class EveViewAlliance extends JView
 				&& JArrayHelper::getValue($menu->query, 'allianceID') == $alliance->allianceID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$alliance->name);
+				$params->set('page_title',	$alliance->name.' ['.$alliance->shortName.']');
 			}
 		} else {
-			$params->set('page_title',	$alliance->name);
+			$params->set('page_title',	$alliance->name.' ['.$alliance->shortName.']');
 		}
 		$document->setTitle($params->get('page_title'));
 		
