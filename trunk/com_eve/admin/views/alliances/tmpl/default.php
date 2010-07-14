@@ -14,16 +14,14 @@ $userId	= $user->get('id');
 
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=alliances'); ?>" method="post" name="adminForm">
-	<table>
-		<tr>
-			<td align="left" width="100%">
-				<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
-			</td>
-			<td nowrap="nowrap">
-				<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'Owner alliances only'); ?>
-			</td>
-		</tr>
-	</table>
+	<fieldset if="filter-bar">
+		<div class="filter-search fltlft">
+			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
+		</div>
+		<div class="filter-select fltrt">
+			<?php echo JHTML::_('filter.owner', $this->state->get('filter.owner'), 'Owner alliances only'); ?>
+		</div>
+	</fieldset>
 	<?php if (count($this->items)) : ?>
 	<table class="adminlist" cellspacing="1">
 		<thead>

@@ -13,14 +13,13 @@ $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=accounts'); ?>" method="post" name="adminForm">
-	<fieldset class="filter">
-		<div class="left">
+	<fieldset if="filter-bar">
+		<div class="filter-search fltlft">
 			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
 		</div>
-		<div class="right">
+		<div class="filter-select fltrt">
 		</div>
 	</fieldset>
-	<?php if (count($this->items)) : ?>
 	<table class="adminlist" cellspacing="1">
 		<thead>
 			<tr>
@@ -68,9 +67,6 @@ $userId	= $user->get('id');
 		<?php endforeach; ?>
 		</tbody>
 	</table>
-	<?php else : ?>
-		<?php echo JText::_( 'NO USERS REGISTERED' ); ?>
-	<?php endif; ?>
 
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
