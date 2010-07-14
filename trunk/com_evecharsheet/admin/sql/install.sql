@@ -106,8 +106,9 @@ PRIMARY KEY ( `characterID` )
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
-INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
-('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');
+INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
+('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1', '0'),
+('usercharsheet', 'Character Sheets', 'character-sheets', 'user', 'charsheet', 'user', '', '0', '1', '1', '0');
 
 INSERT IGNORE INTO #__eve_roles (`roleID`, `roleName`) VALUES
 (1, 'roleDirector'),
