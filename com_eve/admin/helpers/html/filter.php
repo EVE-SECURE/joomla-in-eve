@@ -30,7 +30,7 @@ abstract class JHTMLFilter {
 		if (is_null($id)) {
 			$id = $name;
 		}
-		return '<label for="'.$id.'">'.JText::_('Filter'). ':</label>'.
+		return '<label for="'.$id.'">'.JText::_('Filter'). ': </label>'.
 		'<input class="inputbox" type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" /> '.
 		'<button class="button" onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button> '.
 		'<button class="button" onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button> ';

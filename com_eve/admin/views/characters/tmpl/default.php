@@ -13,23 +13,14 @@ $user	= &JFactory::getUser();
 $userId	= $user->get('id');
 ?>
 <form action="<?php echo JRoute::_('index.php?option=com_eve&view=characters'); ?>" method="post" name="adminForm">
-	<fieldset class="filter">
-		<div class="left">
+	<fieldset if="filter-bar">
+		<div class="filter-search fltlft">
 			<?php echo JHTML::_('filter.search', $this->state->get('filter.search')); ?>
 		</div>
-		<div class="right">
-			<?php echo JHTML::_('filter.membersof', $this->state->get('filter.membersof')) ?>
-			<!-- <ol>
-				<li>
-					make
-				</li>
-				<li>
-					css
-				</li>
-			</ol>  -->
+		<div class="filter-select fltrt">
+			<?php echo JHTML::_('filter.membersof', $this->state->get('filter.membersof')); ?>
 		</div>
 	</fieldset>
-	<?php if (count($this->items)) : ?>
 	<table class="adminlist" cellspacing="1">
 		<thead>
 			<tr>
@@ -84,9 +75,6 @@ $userId	= $user->get('id');
 		
 		</tbody>
 	</table>
-	<?php else : ?>
-		<?php echo JText::_('NO CHARACTERS REGISTERED'); ?>
-	<?php endif; ?>
 
 	<input type="hidden" name="task" value="" />
 	<input type="hidden" name="boxchecked" value="0" />
