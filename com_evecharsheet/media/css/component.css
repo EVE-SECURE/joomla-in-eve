@@ -30,4 +30,17 @@ div.evecharsheet-list div p {
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-}	
+}
+
+.icon-16-charsheet {
+	 background-image: url(../../../administrator/components/com_eve/assets/icon-16-character.png);
+}
+.icon-32-charsheet {
+	 background-image: url(../../../administrator/components/com_eve/assets/icon-32-character.png);
+}
+.icon-48-charsheet {
+	 background-image: url(../../../administrator/components/com_eve/assets/icon-48-character.png);
+}
+.icon-64-charsheet {
+	 background-image: url(../../../administrator/components/com_eve/assets/icon-64-character.png);
+}
