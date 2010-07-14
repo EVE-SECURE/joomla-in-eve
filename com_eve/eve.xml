@@ -37,6 +37,7 @@
 	</languages>
 	<media folder="media" destination="com_eve">
 		<filename>css/autocompleter.css</filename>
+		<filename>css/component.css</filename>
 		<filename>css/contextmenu.css</filename>
 		<filename>images/icon07_04.png</filename>
 		<filename>images/icon09_01.png</filename>

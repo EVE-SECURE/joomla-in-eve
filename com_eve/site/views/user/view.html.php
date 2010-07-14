@@ -4,7 +4,7 @@
  * @version		$Id$
  * @author		Pavol Kovalik
  * @package		Joomla! in EVE
- * @subpackage	Community Builder - Character Sheet
+ * @subpackage	Core
  * @copyright	Copyright (C) 2009 Pavol Kovalik. All rights reserved.
  * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
  * This program is free software: you can redistribute it and/or modify
