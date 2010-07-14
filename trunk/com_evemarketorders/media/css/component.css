@@ -1,3 +1,16 @@
 @CHARSET "UTF-8";
 div.com-evemarketorders .number {text-align:right;}
 div.com-evemarketorders .list {width: 100%}
+
+.icon-16-marketorders {
+	 background-image: url(../../../administrator/components/com_evemarketorders/assets/icon-16-market.png);
+}
+.icon-32-marketorders {
+	 background-image: url(../../../administrator/components/com_evemarketorders/assets/icon-32-market.png);
+}
+.icon-48-marketorders {
+	 background-image: url(../../../administrator/components/com_evemarketorders/assets/icon-48-market.png);
+}
+.icon-64-marketorders {
+	 background-image: url(../../../administrator/components/com_evemarketorders/assets/icon-64-market.png);
+}
