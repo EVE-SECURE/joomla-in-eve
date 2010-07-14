@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Com_Evecharsheet_User_Layout_Title">
+		<message>Com_Evecharsheet_User_Layout_Message</message>
+	</layout>
+	<state>
+		<name>Com_Evecharsheet_User_Layout_State_Name</name>
+		<description>Com_Evecharsheet_User_Layout_State_Desc</description>
+	</state>
+</metadata>
