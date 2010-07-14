@@ -102,7 +102,7 @@ class EveModelUser extends JModelItem
 		$q->addWhere("entity = 'user'");
 		$q->addWhere('published');
 		$q->addWhere('access <='.intval($user->get('aid')));
-		$q->addOrder('ordering');
+		$q->addOrder('title');
 		$result = $q->loadObjectList();
 		return $result;
 	}
