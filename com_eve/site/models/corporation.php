@@ -121,6 +121,7 @@ class EveModelCorporation extends JModelItem
 		$q->addTable('#__eve_sections', 's');
 		$q->addWhere("entity = 'corporation'");
 		$q->addWhere('published');
+		$q->addOrder('s.title');
 		$acl = EveFactory::getACL();
 		$acl->setCorporationQuery($q, 's.', $item);
 		

@@ -101,6 +101,7 @@ class EveModelCharacter extends JModelItem
 		$q->addTable('#__eve_sections', 's');
 		$q->addWhere("s.entity = 'character'");
 		$q->addWhere('s.published');
+		$q->addOrder('s.title');
 		$acl = EveFactory::getACL();
 		$acl->setCharacterQuery($q, 's.', $item);
 		
