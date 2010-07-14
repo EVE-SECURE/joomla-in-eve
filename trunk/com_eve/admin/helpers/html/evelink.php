@@ -79,7 +79,7 @@ abstract class JHTMLevelink {
 		}
 		$class = 'ccpeve alliance-'.$allianceObj->$allianceID;
 		$html = '<a class="'.$class.'" href="'.EveRoute::alliance($alliance).'">'.
-					$allianceObj->$allianceName.' &lt;'.$allianceObj->$allianceShortName.'&gt;'.
+					$allianceObj->$allianceName.' ['.$allianceObj->$allianceShortName.']'.
 				'</a>';
 		return $html;
 	}

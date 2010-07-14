@@ -16,31 +16,33 @@ foreach ($this->components as $component) {
 }
 ?>
 
-<div class="com-evecharsheet<?php echo $pageClass ? ' '.$pageClass : ''; ?>">
+<div class="com-eve<?php echo $pageClass ? ' '.$pageClass : ''; ?>">
 <?php if ($this->params->get('show_page_title', 1)) : ?>
 	<h1><?php echo $this->escape($this->params->get('page_title')); ?></h1>
 <?php endif; ?>
 
-<div class="eve-component-list">
-	<h2><?php echo JText::_('Com_Eve_Components');?></h2>
-	<?php foreach ($this->components as $component): ?>
-		<div>
-			<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>
-			<p>
-			<a href="<?php echo EveRoute::_($component->name); ?>">
-				<?php echo JText::_($component->title); ?>
-			</a>
-			</p>
-		</div>
-	<?php endforeach; ?>
-</div>
+<?php if ($this->components): ?>
+	<div class="eve-component-list">
+		<h2><?php echo JText::_('Com_Eve_Components');?></h2>
+		<?php foreach ($this->components as $component): ?>
+			<div>
+				<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>
+				<p>
+				<a href="<?php echo EveRoute::_($component->name); ?>">
+					<?php echo JText::_($component->title); ?>
+				</a>
+				</p>
+			</div>
+		<?php endforeach; ?>
+	</div>
+<?php endif; ?>
 
-<div class="eve-character-list">
+<div class="eve-item-list">
 	<h2><?php echo JText::_('Com_Eve_Characters');?></h2>
 	<?php foreach ($this->characters as $character) : ?>
 		<div>
 			<a href="<?php echo EveRoute::_('character', $character, $character, $character); ?>">
-				<?php echo JHTML::_('image', 'http://img.eve.is/serv.asp?s=64&c='.$character->characterID, $character->name); ?>
+				<?php echo JHTML::_('eve.image', 'character', $character, 64); ?>
 			</a>
 			<br />
 			<p>
@@ -51,4 +53,5 @@ foreach ($this->components as $component) {
 		</div>
 	<?php endforeach; ?>
 </div>
+
 </div>

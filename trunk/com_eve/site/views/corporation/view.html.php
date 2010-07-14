@@ -46,10 +46,10 @@ class EveViewCorporation extends JView
 				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title',	$corporation->corporationName);
+				$params->set('page_title',	$corporation->corporationName.' ['.$corporation->ticker.']');
 			}
 		} else {
-			$params->set('page_title',	$corporation->corporationName);
+			$params->set('page_title',	$corporation->corporationName.' ['.$corporation->ticker.']');
 		}
 		$document->setTitle($params->get('page_title'));
 		
