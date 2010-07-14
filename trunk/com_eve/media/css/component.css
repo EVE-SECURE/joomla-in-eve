@@ -1,0 +1,52 @@
+@CHARSET "UTF-8";
+
+div.eve-component-list + div {
+	clear:both;
+}
+div.eve-component-list > div {
+	float: left;
+	margin: 10px 
+}
+div.eve-component-list .component-icon {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	background-repeat:no-repeat;
+	width: 64px;
+	height: 64px;
+}
+div.eve-component-list div p {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+div.eve-character-list + div {
+	clear:both
+}
+div.eve-character-list div {
+	float: left;
+	margin: 10px 
+}
+div.eve-character-list div img {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+div.eve-character-list div p {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.apischedule {
+	width:50%;
+	float: left;
+}
+
+.sectionaccess {
+	width:50%;
+	float: left;
+}
