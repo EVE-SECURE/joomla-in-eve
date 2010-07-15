@@ -54,7 +54,6 @@ class plgCronEve extends JPlugin {
 		//$ale = new AleEVEOnline();
 		$ale = EveFactory::getAleEVEOnline($dbo);
 		
-		$this_tz = new DateTimeZone(date_default_timezone_get());
 		$utc_tz = new DateTimeZone('UTC');
 		//JDate::toMySQL()
 		
@@ -132,7 +131,6 @@ class plgCronEve extends JPlugin {
 			}
 			if (!is_null($next)) {
 				$next->modify('+'.$row->delay.' minutes');
-				$next->setTimezone($this_tz);
 				$schedule = EveFactory::getInstance('schedule', $row->id);
 				$schedule->next = $next->format('Y-m-d H:i:s');
 				$schedule->store();
