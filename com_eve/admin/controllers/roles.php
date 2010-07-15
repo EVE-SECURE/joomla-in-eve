@@ -56,7 +56,7 @@ class EveControllerRoles extends EveController {
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false), $msg, 'error');
 			return false;
 		}
-		$model = & $this->getModel($modelName);
+		$model = $this->getModel($modelName);
 		$view->setModel($model, true);
 
 		// Set the layout
