@@ -62,6 +62,9 @@ class getEvecharsheetTab extends cbTabHandler
 	//Construnctor
 	public function __construct()
 	{
+		$lang = JFactory::getLanguage();
+		$lang->load('com_evecharsheet');
+		
 		$this->cbTabHandler();
 		
 		$this->_basePath = JPATH_BASE.DS.'components'.DS.$this->_option;
