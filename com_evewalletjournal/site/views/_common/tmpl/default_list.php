@@ -29,7 +29,7 @@ defined('_JEXEC') or die();
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 					
 			<?php if ($this->state->get('entity') == 'user'): ?>
-				<th><?php echo JHTML::_('grid.sort',  'Com_Everesearch_Character', 'characterName', 
+				<th><?php echo JHTML::_('grid.sort',  'Com_Evewalletjournal_Character', 'characterName', 
 						$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<?php endif; ?>
 		</tr>
