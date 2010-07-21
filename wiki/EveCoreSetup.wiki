@@ -31,6 +31,9 @@ New users will now register in two steps:
 
 Note: The one userID/API key cannot be used to unblock Joomla! account as long as it's assigned to another account. This is security measure to prevent other people to get access to your site in case they get someone's API key. Make sure your corp mates register at your site as soon as possible they god admitted to corporation.
 
+= Keeping default account registration =
+Go to Extensions -> Plugin Manager -> Disable User - EVE plugin
+
 = Static Data Dump =
 
-You can download here: [http://wiki.eve-id.net/CCP_Database_Dump_Resources]. Download it and import it to your Joomla database. Core component does not require dump, but almost every other component like Character Sheet or Character Tracking will do so.
+You can download here: [http://wiki.eve-id.net/CCP_Database_Dump_Resources]. Download it and import it. You can use different database for dump, just make sure Joomla has access to it. If you choose different database, go to Components -> EVE -> Overview -> Parameters and set _STATIC DATA DUMP DATABASE_ to name of said database. Reload the overview and check _CCP Static Data Dump Info_ to make sure all tables are imported.
