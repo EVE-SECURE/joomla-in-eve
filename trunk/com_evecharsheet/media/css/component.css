@@ -14,6 +14,27 @@ div.heading-collapsed {
 	cursor: pointer;
 }
 
+div.evecharsheet-portrait {
+	margin: 0em 1em 1em 1em;
+	float: left;
+}
+
+div.evecharsheet-heading  {
+	float: left;
+	width: 50%;
+}
+
+div.evecharsheet-portrait + div {
+	clear: left;
+}
+
+div.evecharsheet-heading span {
+	display: block;
+	width: 10em;
+	float: left;
+}
+
+	
 div.evecharsheet-list div {
 	float: left;
 	margin: 10px 
@@ -43,4 +64,22 @@ div.evecharsheet-list div p {
 }
 .icon-64-charsheet {
 	 background-image: url(../../../administrator/components/com_eve/assets/icon-64-character.png);
+}
+
+div.evecharsheet-skills {
+	width: 50%;
+	float: left;
+}
+
+div.evecharsheet-certificates {
+	width: 50%;
+	float: left;
+}
+
+div.evecharsheet-roles {
+	clear: left;
+}
+
+div.evecharsheet-titles {
+	clear: left;
 }

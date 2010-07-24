@@ -25,11 +25,11 @@ defined('_JEXEC') or die();
 		<table class="certificate-category">
 		<?php foreach ($category->certificates as $certificate): ?>
 			<tr>
-				<td class="certificate-label" title="<?php echo $certificate->description; ?>" >
+				<td class="certificate-label hasTip" title="<?php echo $certificate->description; ?>" >
 					<?php echo $certificate->className; ?>
 				</td>
 				<td class="certificate-level">
-					<img src="<?php echo JURI::base(); ?>media/com_evecharsheet/images/level<?php echo $certificate->grade; ?>.gif" border="0" alt="Grate <?php echo $certificate->grade; ?>" title="<?php echo number_format($certificate->grade); ?>" />
+					<?php echo JHTML::image('media/com_evecharsheet/images/level'.$certificate->grade.'.gif', 'Grade '.$certificate->grade, 'title="'.number_format($certificate->grade).'"'); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

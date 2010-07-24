@@ -11,6 +11,7 @@ JHTML::stylesheet('component.css', 'media/com_evecharsheet/css/');
 JHTML::script('collapsibles.js', 'media/com_evecharsheet/js/');
 JHTML::_('behavior.mootools');
 JHTML::_('eve.contextmenu');
+JHTML::_('behavior.tooltip');
 ?>
 
 <div class="com-evecharsheet<?php echo $this->params->get('pageclass_sfx'); ?>">
@@ -19,9 +20,8 @@ JHTML::_('eve.contextmenu');
 <?php endif; ?>
 
 <div class="evecharsheet-heading">
-	<img src="http://img.eve.is/serv.asp?s=<?php echo $this->params->get('portraitsize', 256); ?>&c=<?php echo $this->character->characterID; ?>" /> <br />
 	<span><?php echo JText::_('Com_Evecharsheet_Character_Name'); ?>:</span> 
-		<?php echo JHTML::_('evelink.character', $this->character); ?> <br /> <br />
+		<?php echo JHTML::_('evelink.character', $this->character); ?> <br />
 	<span><?php echo JText::_('Com_Evecharsheet_Race'); ?>:</span> 
 		<?php echo $this->character->race; ?> <br />
 	<span><?php echo JText::_('Com_Evecharsheet_Gender'); ?>:</span>
@@ -40,6 +40,11 @@ JHTML::_('eve.contextmenu');
 			<?php echo JHTML::_('evelink.alliance', $this->character); ?> <br />
 	<?php endif; ?>
 </div>
+
+<div class="evecharsheet-portrait">
+	<?php echo JHTML::_('eve.image', 'character', $this->character, $this->params->get('portraitsize', 256)); ?>
+</div>
+
 
 <?php if ($this->show('clone')): ?>
 	<?php echo $this->loadTemplate('clone'); ?>

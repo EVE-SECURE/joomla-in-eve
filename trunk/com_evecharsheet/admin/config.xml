@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<params>
-		<param name="portraitsize" type="radio" default="256"
+		<param name="portraitsize" type="list" default="256"
 			label="Com_Evecharsheet_Portrait_Size_Label" description="Com_Evecharsheet_Portrait_Size_Desc">
+			<option value="32">32 x 32</option>
 			<option value="64">64 x 64</option>
+			<option value="128">128 x 128</option>
+			<option value="200">200 x 200</option>
 			<option value="256">256 x256</option>
 		</param>
 		<param name="show_balance" type="radio" default="1"

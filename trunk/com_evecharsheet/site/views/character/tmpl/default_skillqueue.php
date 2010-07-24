@@ -19,7 +19,7 @@ defined('_JEXEC') or die();
 				<?php echo $skill->typeName; ?>
 			</td>
 			<td class="skill-level">
-				<img src="<?php echo JURI::base(); ?>media/com_evecharsheet/images/level<?php echo $skill->level; ?>.gif" border="0" alt="Level <?php echo $skill->level; ?>" title="<?php echo number_format($skill->endSP); ?>" />
+				<?php echo JHTML::image('media/com_evecharsheet/images/level'.$skill->level.'.gif', 'Level '.$skill->level, 'title="'.number_format($skill->endSP).'"'); ?>
 			</td>
 			<td>
 				<?php echo JHTML::_('date', $skill->startTime, JText::_('DATE_FORMAT_LC2')); ?>

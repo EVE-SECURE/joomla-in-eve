@@ -13,7 +13,7 @@ defined('_JEXEC') or die();
 	<tr>
 		<th></th>
 		<?php foreach ($this->roleLocations as $location): ?>
-			<th><?php echo JText::_($location); ?></th>
+			<th><?php echo JText::_('Com_Evecharsheet_'.$location); ?></th>
 		<?php endforeach ?>
 	<tr>
 <?php foreach ($this->roles as $role): ?>
