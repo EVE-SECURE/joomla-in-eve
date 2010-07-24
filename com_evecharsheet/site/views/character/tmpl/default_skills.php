@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
 		<table class="skill-group">
 		<?php foreach ($group->skills as $skill): ?>
 			<tr>
-				<td class="skill-label" title="<?php echo $skill->description; ?>" >
+				<td class="skill-label hasTip" title="<?php echo $skill->description; ?>" >
 					<?php echo $skill->typeName; ?>
 				</td>
 				<td class="skill-level">
