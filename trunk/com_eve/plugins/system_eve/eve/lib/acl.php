@@ -300,8 +300,8 @@ class EveACL extends JObject {
 		PRIMARY KEY ( `userid` , `corporationID` )
 		) ENGINE = MEMORY 
 		SELECT ac.owner AS userid, ch.corporationID, BIT_OR(ch.roles) as roles
-			FROM jos_eve_accounts AS ac
-			JOIN jos_eve_characters AS ch ON ac.userID=ch.userID
+			FROM #__eve_accounts AS ac
+			JOIN #__eve_characters AS ch ON ac.userID=ch.userID
 			WHERE ac.owner > 0
 			GROUP BY ac.owner, ch.corporationID;";
 		$dbo = JFactory::getDBO();
