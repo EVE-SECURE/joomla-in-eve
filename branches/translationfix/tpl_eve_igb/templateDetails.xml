@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE install PUBLIC "-//Joomla! 1.5//DTD template 1.0//EN" "http://dev.joomla.org/xml/1.5/template-install.dtd">
+<install version="1.5" type="template">
+	<name>eve_igb</name>
+	<creationDate>April 2008</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code.google.com/p/joomla-in-eve/</authorUrl>
+	<copyright>(C) 2008 Pavol Kovalik</copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<version>0.1 Alpha</version>
+	<description>EVE IGB compatible template for Joomla!</description>
+	<files>
+		<filename>html/com_user/register/default.php</filename>
+		<filename>html/com_user/remind/default.php</filename>
+		<filename>html/com_user/reset/complete.php</filename>
+		<filename>html/com_user/reset/confirm.php</filename>
+		<filename>html/com_user/reset/default.php</filename>
+		<filename>html/com_user/user/form.php</filename>
+		<filename>html/com_content/article/default.php</filename>
+		<filename>html/com_content/category/blog_item.php</filename>
+		<filename>html/com_content/frontpage/default_item.php</filename>
+		<filename>html/com_content/section/blog_item.php</filename>
+		<filename>html/com_simplestforum/postlist/default_form.php</filename>
+		<filename>css/general.css</filename>
+		<filename>component.php</filename>
+		<filename>favicon.ico</filename>
+		<filename>index.html</filename>
+		<filename>index.php</filename>
+		<filename>params.ini</filename>
+		<filename>templateDetails.xml</filename>
+		<filename>template_thumbnail.png</filename>
+	</files>
+	<!-- languages>
+		<language tag="en-GB"></language>
+	</languages-->
+	<administration></administration>
+	<positions>
+		<position>top</position>
+		<position>breadcrumb</position>
+		<position>left</position>
+		<position>right</position>
+		<position>footer</position>
+		<position>debug</position>
+	</positions>
+	<params></params>
+	
+</install>

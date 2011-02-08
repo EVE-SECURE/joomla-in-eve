@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	/**
+ * @version		$Id$
+ * @author		Pavol Kovalik
+ * @package		Joomla! in EVE
+ * @subpackage	Community Builder - Character Sheet
+ * @copyright	Copyright (C) 2009 Pavol Kovalik. All rights reserved.
+ * @license		GNU/GPL, see http://www.gnu.org/licenses/gpl.html
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+-->
+
+<cbinstall version="1.0.3" type="plugin" group="user">
+	<name>evecharsheet</name>
+	<creationDate>August 2009</creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2009 - 2010 Pavol Kovalik </copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<version>1.2</version>
+	<description>Community Builder plugin displays character sheets of EVE online.</description>
+	
+	<files>
+		<filename plugin="evecharsheet">evecharsheet.php</filename>
+		<filename>index.html</filename>
+		<filename>install.evecharsheet.php</filename>
+		<filename>uninstall.evecharsheet.php</filename>
+	</files>
+	<params>
+		<param name="listallcharacters" type="radio" default="0"
+			label="List All Characters" description="Set to No to hide alt characters not in owner corporations">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="portraitsize" type="radio" default="256"
+			label="Portrait Size" description="Portrait Size">
+			<option value="64">64 x 64</option>
+			<option value="256">256 x256</option>
+		</param>
+		<param name="showbalance" type="radio" default="1"
+			label="Show Balance" description="Show Account Balance.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showclone" type="radio" default="1"
+			label="Show Clone" description="Show Clone Name and Grade.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showattributes" type="radio" default="1"
+			label="Show Attributes" description="Show Attributes Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showskills" type="radio" default="1"
+			label="Show Skills" description="Show Skills Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showcertificates" type="radio" default="1"
+			label="Show Certificates" description="Show Certificates Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showroles" type="radio" default="1"
+			label="Show Roles" description="Show Corporation Roles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showtitles" type="radio" default="1"
+			label="Show Titles" description="Show Corporation Titles Table.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="showskillqueue" type="radio" default="1"
+			label="Show Skill Queue"
+			description="Show Skill Queue.">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+
+	</params>
+	<tabs>
+		<tab name="My Eve Online Characters" description="Displays Character Sheets from com_charsheet component" class="getEvecharsheetTab" position="cb_tabmain" displaytype="tab">
+			<params></params>
+			<fields></fields>
+		</tab>
+	</tabs>
+	<install>
+		<queries></queries>
+	</install>
+	<uninstall>
+		<queries></queries>
+	</uninstall>
+	<database>
+
+	</database>
+	<installfile>install.evecharsheet.php</installfile>
+	<uninstallfile>uninstall.evecharsheet.php</uninstallfile>
+</cbinstall>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Api Input Layout">
+		<message>
+			<![CDATA[MESSAGE HERE]]>
+		</message>
+	</layout>
+	<state>
+		<name>Default Layout</name>
+		<description>DESC HERE</description>
+		<params>
+		</params>
+	</state>
+</metadata>

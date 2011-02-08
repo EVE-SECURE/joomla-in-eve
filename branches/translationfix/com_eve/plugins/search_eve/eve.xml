@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install method="upgrade" version="1.5" type="plugin" group="search">
+	<name>Search - EVE</name>
+	<author>Pavol Kovalik</author>
+	<creationDate></creationDate>
+	<copyright>Copyright (C) 2010 Pavol Kovalik. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://www.code-box.sk</authorUrl>
+	<version>0.6</version>
+	<description>ALLOWS SEARCHING OF EVE ENTITIES</description>
+	<files>
+		<filename plugin="eve">eve.php</filename>
+	</files>
+	<params>
+		<param name="search_limit" type="text" size="5" default="50" label="Search Limit" description="Number of Search items to return"/>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="search_characters" type="radio" default="1" label="Search Characters" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="search_corporations" type="radio" default="1" label="Search Characters" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+		<param name="search_alliances" type="radio" default="1" label="Search Alliances" description="">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</param>
+	</params>
+</install>

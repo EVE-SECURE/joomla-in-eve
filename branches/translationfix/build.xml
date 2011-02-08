@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Joomla! in EVE" default="build" basedir=".">
+	<property file="joomla-in-eve.properties" />
+	
+	<fileset dir="${project.basedir}/com_eve/site" id="site.com_eve">
+		<include name="*"/>
+	</fileset>
+	
+	<target name="copy_cron">
+		<!-- copy cron -->
+		<copy todir="${testdir}/com_cron/cron" overwrite="${overwrite}">
+			<fileset dir="${project.basedir}/cron">
+				<include name="**" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="build_component">
+		<copy todir="${testdir}/${component.name}" overwrite="${overwrite}">
+			<fileset dir="${project.basedir}/${component.name}">
+				<exclude name="**/*.xml"/>
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<copy todir="${testdir}/${component.name}" overwrite="${overwrite}">
+			<filterchain>
+				<replaceregexp>
+					<regexp pattern="&lt;creationDate&gt;.*&lt;/creationDate&gt;" replace="&lt;creationDate&gt;${build.date}&lt;/creationDate&gt;" ignoreCase="true"/>
+					<regexp pattern="&lt;version&gt;.*&lt;/version&gt;" replace="&lt;version&gt;${build.version}&lt;/version&gt;" ignoreCase="true"/>
+
+				</replaceregexp>
+			</filterchain>
+			<fileset dir="${project.basedir}/${component.name}">
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+
+		
+		<fileset dir="${testdir}/${component.name}" id="allfiles">
+            <include name="**" />
+		</fileset>
+		
+		<delete file="${testdir}/${component.name}-${build.version}.zip" quiet="true" />
+        <zip destfile="${testdir}/${component.name}-${build.version}.zip">
+            <fileset refid="allfiles" />
+        </zip>
+		<delete dir="${testdir}/${component.name}" quiet="true" />
+		
+	</target>
+	
+	<target name="copy_component">
+		
+		<if>
+			<equals arg1="${copy.site}" arg2="yes" />
+			<then>
+				<!-- copy component site -->
+				<copy todir="${testdir}/components/${component.name}" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/site">
+						<exclude name="language/**" />
+						<exclude name="language" />
+						<include name="**"/>
+					</fileset>
+				</copy>
+				
+				<!-- copy component site languages -->
+				<copy todir="${testdir}/language" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/site/language">
+						<include name="**"/>
+					</fileset>
+				</copy>
+			</then>
+			<else>
+				<echo message="Skipping component site" />
+			</else>
+		</if>
+				
+		<if>
+			<equals arg1="${copy.admin}" arg2="yes" />
+			<then>
+				<!-- copy component manifest and install scripts -->
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}">
+						<include name="*"/>
+					</fileset>
+				</copy>
+				
+				<!-- copy component admin -->
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/admin">
+						<exclude name="language/**" />
+						<exclude name="language" />
+						<include name="**"/>
+					</fileset>
+				</copy>
+				
+				<!-- copy component site languages -->
+				<copy todir="${testdir}/administrator/language" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/admin/language">
+						<include name="**"/>
+					</fileset>
+				</copy>
+			</then>
+			<else>
+				<echo message="Skipping component admin" />
+			</else>
+		</if>
+		
+		<if>
+			<equals arg1="${copy.plugins}" arg2="true" />
+			<then>
+			
+				<!-- copy plugins -->
+				<property name="component.plugins" value="false" override="true" />
+				<available file="${project.basedir}/${component.name}/plugins" type="dir" property="component.plugins"/>
+				<if>
+					<equals arg1="${component.plugins}" arg2="true" />
+					<then>
+						<!-- language files -->
+						<copy todir="${testdir}/administrator/language/en-GB" overwrite="${overwrite}">
+							<mapper type="flatten" />
+							<fileset dir="${project.basedir}/${component.name}/plugins/">
+								<include name="**/en-GB.*.ini"/>
+							</fileset>
+						</copy>
+		
+						<!-- other files -->
+						<copy todir="${testdir}/plugins" overwrite="${overwrite}">
+							<mapper type="regexp" from="([a-z]+)_[a-z]+(.*)" to="\1\2"/>
+							<fileset dir="${project.basedir}/${component.name}/plugins/">
+								<exclude name="**/en-GB.*.ini"/>
+								<include name="**"/>
+							</fileset>
+						</copy>
+						
+					</then>
+					<else>
+						<echo message="No plugins for ${component.name}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<echo message="Skipping plugins and languages" />
+			</else>
+		</if>
+		
+		<if>
+			<equals arg1="${copy.media}" arg2="true" />
+			<then>
+			
+				<!-- copy media -->
+				<property name="component.media" value="false" override="true" />
+				<available file="${project.basedir}/${component.name}/media" type="dir" property="component.media"/>
+				<if>
+					<equals arg1="${component.media}" arg2="true" />
+					<then>
+		
+						<!-- media files -->
+						<copy todir="${testdir}/media/${component.name}" overwrite="${overwrite}">
+							<fileset dir="${project.basedir}/${component.name}/media/">
+								<include name="**"/>
+							</fileset>
+						</copy>
+						
+					</then>
+					<else>
+						<echo message="No media for ${component.name}" />
+					</else>
+				</if>
+			</then>
+			<else>
+				<echo message="Skipping media" />
+			</else>
+		</if>
+		
+	</target>
+	
+	<target name="build">
+		<if>
+			<equals arg1="${copy.cron}" arg2="yes" />
+			<then>
+				<phingcall target="copy_cron" />
+			</then>
+			<else>
+				<echo message="Skipping cron" />
+			</else>
+		</if>
+		
+		<if>
+			<equals arg1="${build.zip}" arg2="yes" />
+			<then>
+				<foreach list="${components}" param="component.name" target="build_component" />
+			</then>
+			<else>
+				<echo message="Skipping build components" />
+			</else>
+		</if>
+		
+		<if>
+			<equals arg1="${copy.cb}" arg2="yes" />
+			<then>
+				<copy todir="${testdir}/components/com_comprofiler/plugin/user">
+					<fileset dir="${project.basedir}/community_builder">
+						<include name="**"/>
+					</fileset>
+				</copy>
+			</then>
+			<else>
+				<echo message="Skipping Community Builder Plugin" />
+			</else>
+		</if>
+		
+		<foreach list="${components}" param="component.name" target="copy_component" />
+		
+		
+	</target>
+	
+</project>

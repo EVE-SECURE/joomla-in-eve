@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install method="upgrade" version="1.5" type="plugin" group="eveapi">
+	<name>Eveapi - EVE Industry Jobs</name>
+	<version>0.6</version>
+	<description>Joomla! in EVE</description>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<author>Pavol Kovalik</author>
+	<creationDate></creationDate>
+	<authoremail>kovalikp@gmail.com</authoremail>
+	<authorurl>http://code-box.sk</authorurl>
+	<copyright>(C) 2008 - 2010 Pavol Kovalik. All rights reserved.</copyright>
+	<description></description>
+	<files>
+		<filename plugin="eveindustryjobs">eveindustryjobs.php</filename>
+	</files>
+	<params>
+	</params>
+</install>
