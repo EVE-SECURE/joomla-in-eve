@@ -52,7 +52,10 @@ class EveControllerSchedule extends EveController {
 		$result 	= $model->setEnabled($cid, $enable);
 		if ($result) {
 			$n = count( $cid );
-			$this->setMessage( JText::sprintf( $enable ? 'Items enabled' : 'Items disabled', $n ) );
+			$message = $enable ? 
+				JText::sprintf('COM_EVE_SCHEDULE_N_ITEMS_ENABLED', $n ) :
+				JText::sprintf('COM_EVE_SCHEDULE_N_ITEMS_DISABLED', $n );
+			$this->setMessage($message);
 		}
 		$url = 'index.php?option=com_eve&view=schedule';
 		$this->setRedirect(JRoute::_($url, false));

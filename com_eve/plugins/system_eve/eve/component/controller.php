@@ -133,7 +133,7 @@ class EveController extends JController {
 				$retval = $this->$doTask();
 				return $retval;
 			} else {
-				throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+				throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 			}
 		}
 		catch (Exception $e){

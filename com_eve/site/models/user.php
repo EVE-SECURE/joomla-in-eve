@@ -76,7 +76,7 @@ class EveModelUser extends JModelItem
 	{
 		$id = $this->getState('user.id');
 		if (!$id) {
-			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 		}
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);

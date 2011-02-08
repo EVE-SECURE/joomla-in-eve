@@ -255,7 +255,7 @@ class EveControllerAlliance extends EveController {
 			$app->enqueueMessage($error, 'error');
 		}
 		if ($result) {
-			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED')); 
+			$app->enqueueMessage(JText::_('COM_EVE_ALLIANCE_LIST_SUCCESSFULLY_PROCESSED')); 
 		}
 	}
 	
@@ -271,7 +271,7 @@ class EveControllerAlliance extends EveController {
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			JError::raiseWarning(500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED'));
 			return false;
 		}
 		
@@ -300,7 +300,7 @@ class EveControllerAlliance extends EveController {
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
+			JError::raiseWarning(500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED'));
 			return false;
 		}
 				
@@ -324,9 +324,9 @@ class EveControllerAlliance extends EveController {
 			if ($result) {
 				$app = JFactory::getApplication();
 				if ($isOwner) {
-					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
+					$app->enqueueMessage(JText::sprintf('COM_EVE_N_CORPORATIONS_SET_AS_OWNER', $result));
 				} else {
-					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+					$app->enqueueMessage(JText::sprintf('COM_EVE_N_CORPORATIONS_UNSET_AS_OWNER', $result));
 				}
 			}
 		}

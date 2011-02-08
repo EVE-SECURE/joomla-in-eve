@@ -31,11 +31,11 @@ class EveModelEncryption extends JModel {
 	{
 		$result = array();
 		
-		$result[] = JHTML::_('select.option', '', '- '.JText::_('None').' -');
+		$result[] = JHTML::_('select.option', '', JText::_('COM_EVE_OPTION_NONE'));
 		if (function_exists('mcrypt_encrypt')) {
 			$algorithms = mcrypt_list_algorithms();
 			foreach ($algorithms as $cipher) {
-				$result[] = JHTML::_('select.option', $cipher, JText::_(mcrypt_get_cipher_name($cipher)));
+				$result[] = JHTML::_('select.option', $cipher, mcrypt_get_cipher_name($cipher));
 			}
 		}
 		return $result;
@@ -45,11 +45,11 @@ class EveModelEncryption extends JModel {
 	{
 		$result = array();
 		
-		$result[] = JHTML::_('select.option', '', '- '.JText::_('None').' -');
+		$result[] = JHTML::_('select.option', '', JText::_('COM_EVE_OPTION_NONE'));
 		if (function_exists('mcrypt_encrypt')) {
 			$modes = mcrypt_list_modes();
 			foreach ($modes as $mode) {
-				$result[] = JHTML::_('select.option', $mode, JText::_($mode));
+				$result[] = JHTML::_('select.option', $mode, $mode);
 			}
 		}
 		return $result;
@@ -85,12 +85,12 @@ class EveModelEncryption extends JModel {
 		jimport('joomla.filesystem.path');
 		if (!$app->getCfg('ftp_enable') && JFile::exists($fname) && 
 				JPath::isOwner($fname) && !JPath::setPermissions($fname, '0644')) {
-			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not make %s writable', $fname));
+			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('COM_EVE_ERROR_COULT_NOT_WRITE_TO_FILE', $fname));
 			return false;
 		}
 		$result = JFile::write($fname, $this->getConfigContent());
 		if (!$result) {
-			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not write to %s', $fname));
+			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('COM_EVE_ERROR_COULT_NOT_WRITE_TO_FILE', $fname));
 		}
 		return $result;
 	}
@@ -104,19 +104,19 @@ class EveModelEncryption extends JModel {
 		if (strlen($cipher) > 0 && function_exists('mcrypt_encrypt')) {
 			$algorithms = mcrypt_list_algorithms();
 			if (!in_array($cipher, $algorithms)) {
-				JError::raiseWarning(0, JText::_('Invalid Cipher'));
+				JError::raiseWarning(0, JText::_('COM_EVE_ERROR_INVALID_ENCRYPTION_CYPHER'));
 				return false;
 			}
 			$modes = mcrypt_list_modes();
 			if (!in_array($mode, $modes)) {
-				$this->setError(JText::_('Invalid Mode'));
+				$this->setError(JText::_('COM_EVE_ERROR_INVALID_ENCRYPTION_MODE'));
 				return false;
 			}
 			$iv_size = mcrypt_get_iv_size($cipher, $mode);
 			$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);			
 		} else {
 			if (strlen($cipher) > 0) {
-				JError::raiseNotice(0, JText::_('Encryption not supported'));
+				JError::raiseNotice(0, JText::_('COM_EVE_ERROR_INVALID_ENCRYPTION'));
 			}
 			$cipher = '';
 			$mode = '';

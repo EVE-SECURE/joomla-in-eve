@@ -54,7 +54,7 @@ class EveViewAccounts extends JView {
 	 * Setup the Toolbar
 	 */
 	protected function _setToolbar() {
-		$title = JText::_('EVE ACCOUNT MANAGER');
+		$title = JText::_('COM_EVE_ACCOUNTS_TITLE');
 		JToolBarHelper::title($title, 'account');
 		JToolBarHelper::custom('account.getCharacters', 'character', 'character', 'Characters', true);
 		JToolBarHelper::addNew('account.add');

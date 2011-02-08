@@ -41,7 +41,7 @@ abstract class JHTMLEve {
 		$dbo->setQuery($query);
 		$alliances = $dbo->loadObjectList();
 		
-		$noalliance = array('allianceID' => '0', 'name'=>JText::_('NOT MEMBER OF ALLIANCE'));
+		$noalliance = array('allianceID' => '0', 'name'=>JText::_('COM_EVE_CORPORATION_NOT_ALLIANCE_MEMBER'));
 		$noalliance = array('0' => JArrayHelper::toObject($noalliance));
 		$alliances = array_merge($noalliance, $alliances);
 		
@@ -59,7 +59,7 @@ abstract class JHTMLEve {
 		$users = $q->loadObjectList();
 		//FIXME: in case owner.name is NULL
 		
-		$nouser = array('userID' => '0', 'name'=>JText::_('CHARACTER NOT ASSIGNED'));
+		$nouser = array('userID' => '0', 'name'=>JText::_('COM_EVE_CHARACTER_NOT_ASSIGNED_TO_ACCOUNT'));
 		$nouser = array('0' => JArrayHelper::toObject($nouser));
 		$users = array_merge($nouser, $users);
 		
@@ -73,7 +73,7 @@ abstract class JHTMLEve {
 		$dbo->setQuery($query);
 		$alliances = $dbo->loadObjectList();
 		
-		$noalliance = array('corporationID' => '0', 'corporationName'=>JText::_('NOT MEMBER OF CORPORATION'));
+		$noalliance = array('corporationID' => '0', 'corporationName'=>JText::_('COM_EVE_CHARACTER_UNKNOWN_CORPORATION'));
 		$noalliance = array('0' => JArrayHelper::toObject($noalliance));
 		$alliances = array_merge($noalliance, $alliances);
 		

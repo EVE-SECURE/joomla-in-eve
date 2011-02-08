@@ -29,16 +29,16 @@ $userId	= $user->get('id');
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
 				</th>
 				<th>
-					<?php echo JHTML::_('grid.sort', JText::_('Name'), 'se.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', JText::_('COM_EVE_SECTION_NAME'), 'se.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 				<th>
-					<?php echo JHTML::_('grid.sort', JText::_('Title'), 'se.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', JText::_('COM_EVE_SECTION_TITLE'), 'se.title', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 				<th>
-					<?php echo JHTML::_('grid.sort', JText::_('Alias'), 'se.alias', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
+					<?php echo JHTML::_('grid.sort', JText::_('COM_EVE_SECTION_ALIAS'), 'se.alias', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?>
 				</th>
 				<th>
-					<?php echo JText::_('Access Level') ?>
+					<?php echo JText::_('COM_EVE_SECTION_ACCESS_LEVEL') ?>
 				</th>
 			</tr>
 		</thead>
@@ -85,7 +85,7 @@ $userId	= $user->get('id');
 					}
 					?>
 					<?php if ($item->entity == 'corporation'): ?>
-						<input type="button" class="" onclick="listItemTask('cb<?php echo $i; ?>', 'roles.editsection')" value="<?php echo JText::_('Edit Roles'); ?>"/>
+						<input type="button" class="" onclick="listItemTask('cb<?php echo $i; ?>', 'roles.editsection')" value="<?php echo JText::_('COM_EVE_EDIT_ROLES'); ?>"/>
 					<?php endif; ?>
 				</td>
 

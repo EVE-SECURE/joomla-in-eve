@@ -33,24 +33,24 @@ $pageClass = $this->params->get('pageclass_sfx');
 <?php endif; ?>
 
 <div>
-	<?php echo JText::_('CEO'); ?>: 
+	<?php echo JText::_('COM_EVE_CORPORATION_CEO'); ?>: 
 	<?php echo JHTML::_('evelink.character', array($this->corporation, 'ceo'), $this->corporation); ?>
 </div>
 
 <div>
-	<?php echo JText::_('Member Count'); ?>: <?php echo $this->corporation->memberCount; ?>
+	<?php echo JText::_('COM_EVE_CORPORATION_MEMBER_COUNT'); ?>: <?php echo $this->corporation->memberCount; ?>
 </div>
 
 <div>
-	<?php echo JText::_('Head Quarters Station'); ?>: <?php echo $this->corporation->stationName; ?>
+	<?php echo JText::_('COM_EVE_CORPORATION_HEADQUARTERS_STATION'); ?>: <?php echo $this->corporation->stationName; ?>
 </div>
 
 <div>
-	<?php echo JText::_('Tax Rate'); ?>: <?php echo $this->corporation->taxRate; ?>%
+	<?php echo JText::_('COM_EVE_CORPORATION_TAX_RATE'); ?>: <?php echo $this->corporation->taxRate; ?>%
 </div>
 
 <div>
-	<?php echo JText::_('Shares'); ?>: <?php echo $this->corporation->shares; ?>
+	<?php echo JText::_('COM_EVE_CORPORATION_SHARES'); ?>: <?php echo $this->corporation->shares; ?>
 </div>
 
 <div>
@@ -59,7 +59,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 
 <?php if ($this->components): ?>
 	<div class="eve-component-list">
-		<h2><?php echo JText::_('Com_Eve_Components');?></h2>
+		<h2><?php echo JText::_('COM_EVE_COMPONENTS');?></h2>
 		<?php foreach ($this->components as $component): ?>
 			<div>
 				<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>
@@ -75,7 +75,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 
 
 <div class="eve-item-list">
-	<h2><?php echo JText::_('Members'); ?></h2>
+	<h2><?php echo JText::_('COM_EVE_CORPORATION_MEMBERS'); ?></h2>
 	<?php foreach ($this->members as $member) : ?>
 		<?php echo JHTML::_('evelink.character', $member, $this->corporation); ?> <br />
 	<?php endforeach; ?>

@@ -11,14 +11,14 @@ defined('_JEXEC') or die();
 <div class="sectionaccess">
 	<form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="characterSectionaccessForm">
 		<fieldset>
-		<legend><?php echo JText::_('Com_Eve_Character_Section_Access'); ?></legend>
+		<legend><?php echo JText::_('COM_EVE_CHARACTER_SECTION_ACCESS'); ?></legend>
 		<table>
 			<tr>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Section_Access_Name'); ?>
+					<?php echo JText::_('COM_EVE_SECTION_ACCESS_NAME'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Section_Access_Level'); ?>
+					<?php echo JText::_('COM_EVE_SECTION_ACCESS_LEVEL'); ?>
 				</th>
 			</tr>
 			<?php foreach ($this->sectionaccess as $i => $item): ?>

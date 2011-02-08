@@ -135,7 +135,7 @@ class EveModelSchedule extends JModelList {
 		$q->addOrder('`call`');
 		$q->addQuery('`id`', 'CONCAT(`type`, \'/\', `call`) AS typeCall');
 		$apiCalls = $q->loadObjectList();
-		$empty = array('id'=>'0', 'typeCall'=>JText::_('Select API call'));
+		$empty = array('id'=>'0', 'typeCall'=>JText::_('COM_EVE_SELECT_API_CALL'));
 		//$empty = ;
 		array_unshift($apiCalls, JArrayHelper::toObject($empty));
 		return $apiCalls;
@@ -149,7 +149,7 @@ class EveModelSchedule extends JModelList {
 		$dbo = $this->getDBO();
 
 		if (empty($cid)) {
-			JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			JError::raiseWarning( 500, JText::_( 'COM_EVE_ERROR_NO_ITEM_SELECTED' ) );
 			return false;
 		}
 

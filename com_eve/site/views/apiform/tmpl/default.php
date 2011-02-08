@@ -18,7 +18,7 @@ defined('_JEXEC') or die();
 		<?php if ($this->require_credentials): ?>
 		<tr>
 			<td>
-				<label for="username"><?php echo JText::_('USER NAME'); ?></label>
+				<label for="username"><?php echo JText::_('COM_EVE_USER_NAME'); ?></label>
 			</td>
 			<td>
 				<input name="username" id="username" value="" />
@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 		</tr>
 		<tr>
 			<td>
-				<label for="passwd"><?php echo JText::_('PASSWORD'); ?></label>
+				<label for="passwd"><?php echo JText::_('COM_EVE_PASSWORD'); ?></label>
 			</td>
 			<td>
 				<input type="password" name="passwd" id="passwd" value="" />
@@ -36,7 +36,7 @@ defined('_JEXEC') or die();
 		<?php endif; ?>
 		<tr>
 			<td>
-				<label for="userID"><?php echo JText::_('API USER ID'); ?></label>
+				<label for="userID"><?php echo JText::_('COM_EVE_API_USERID'); ?></label>
 			</td>
 			<td>
 				<input name="userID" id="userID" value="" />
@@ -44,14 +44,14 @@ defined('_JEXEC') or die();
 		</tr>
 		<tr>
 			<td>
-				<label for="apiKey"><?php echo JText::_('API KEY'); ?></label>
+				<label for="apiKey"><?php echo JText::_('COM_EVE_APIKEY'); ?></label>
 			</td>
 			<td>
 				<input name="apiKey" value="" />
 			</td>
 		</tr>
 	</table>
-	<input type="submit" value="<?php echo JText::_('SUBMIT'); ?>" />
+	<input type="submit" value="<?php echo JText::_('COM_EVE_SUBMIT'); ?>" />
 	<?php echo JHTML::_('form.token'); ?>
 </form>
 </div>

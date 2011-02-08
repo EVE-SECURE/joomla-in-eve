@@ -177,7 +177,7 @@ class EveControllerAccount extends EveController {
 		// Save succeeded, check-in the account.
 		if (!$model->checkin()) {
 			// Check-in failed, go back to the account and display a notice.
-			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
+			$message = JText::sprintf('JError_Checkin_failed', $model->getError());
 			$this->setRedirect('index.php?option=com_eve&view=account&layout=edit', $message, 'error');
 			return false;
 		}

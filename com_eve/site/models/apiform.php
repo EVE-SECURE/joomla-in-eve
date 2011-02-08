@@ -42,7 +42,7 @@ class EveModelApiform  extends EveModel {
 				$authenticate = & JAuthentication::getInstance();
 				$response	  = $authenticate->authenticate($credentials, $options);
 				if ($response->status !== JAUTHENTICATE_STATUS_SUCCESS) {
-					JError::raiseWarning('SOME_ERROR_CODE', JText::_("AUTHENTICATION FAILED"));
+					JError::raiseWarning('SOME_ERROR_CODE', JText::_("JLIB_LOGIN_AUTHENTICATE"));
 					return false;
 				}
 				$user = JFactory::getUser($credentials['username']);
@@ -51,7 +51,7 @@ class EveModelApiform  extends EveModel {
 			$userID = JArrayHelper::getValue($hash, 'userID', '', 'int');
 			$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
 			if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
-				JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("COM_EVE_INVALID_API_KEY_FORMAT"));
 				return false;
 			}
 
@@ -81,19 +81,19 @@ class EveModelApiform  extends EveModel {
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
-				$app->enqueueMessage(JText::_('API key offers full access'));
+				$app->enqueueMessage(JText::_('COM_EVE_APIKEY_FULL_ACCESS'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
-						JError::raiseNotice(0, JText::_('API key offers limited access'));
+						JError::raiseNotice(0, JText::_('COM_EVE_APIKEY_LIMITED_ACCESS'));
 						break;
 					case 'Invalid':
-						JError::raiseWarning(0, JText::_('API key is invalid'));
+						JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INVALID'));
 						break;
 					case 'Inactive':
-						JError::raiseWarning(0, JText::_('Account is inactive'));
+						JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INACTIVE'));
 						break;
 				}
 			}
@@ -104,7 +104,7 @@ class EveModelApiform  extends EveModel {
 			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
 			
 			if ($account->owner > 0 && $account->owner != $user->id) {
-				JError::raiseWarning('SOME_ERROR_CODE', JText::_("ACCOUNT ALREADY ASSIGNED TO ANOTHER OWNER"));
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("COM_EVE_APIKEY_DUPLICATE"));
 				return false;
 			}
 			
@@ -116,7 +116,7 @@ class EveModelApiform  extends EveModel {
 			}
 			
 			if (!count($corps)) {
-				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF NO CORPORATION"));
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("COM_EVE_NO_OWNER_CORP"));
 			}
 	
 			$q = $this->getQuery();
@@ -127,7 +127,7 @@ class EveModelApiform  extends EveModel {
 			$q->addWhere('(co.owner OR al.owner)');
 			$ok = (int) $q->loadResult();
 			if (!$ok) {
-				JError::raiseWarning( "SOME_ERROR_CODE", JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION") );
+				JError::raiseWarning( "SOME_ERROR_CODE", JText::_("COM_EVE_NO_CHARACTER_IN_OWNER_CORP") );
 				return false;
 			}
 			$user->set('block', '0');
@@ -136,7 +136,7 @@ class EveModelApiform  extends EveModel {
 				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
 				return false;
 			}
-			$app->enqueueMessage(JText::_('Account unblocked'));
+			$app->enqueueMessage(JText::_('COM_EVE_JOOMLA_ACCOUNT_UNBLOCKED'));
 			return true;
 			
 		}
@@ -144,15 +144,15 @@ class EveModelApiform  extends EveModel {
 			EveHelper::updateApiStatus($account, $e->getCode());
 			switch ($account->apiStatus) {
 				case 'Limited':
-					JError::raiseNotice(0, JText::_('API key offers limited access'));
+					JError::raiseNotice(0, JText::_('COM_EVE_APIKEY_LIMITED_ACCESS'));
 					break;
 				case 'Invalid':
-					JError::raiseWarning(0, JText::_('API key is invalid'));
+					JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INVALID'));
 					break;
 				case 'Inactive':
-					JError::raiseWarning(0, JText::_('Account is inactive'));
+					JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INACTIVE'));
 					break;
-			}
+				}
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());

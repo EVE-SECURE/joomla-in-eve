@@ -55,9 +55,9 @@ class EveViewAccount extends JView {
 		JRequest::setVar('hidemainmenu', 1);
 
 		if ($this->item->userID > 0) {
-			$title = JText::_('EDIT ACCOUNT');
+			$title = JText::_('COM_EVE_ACCOUNT_EDIT');
 		} else {
-			$title = JText::_('NEW ACCOUNT');
+			$title = JText::_('COM_EVE_ACCOUNT_NEW');
 		}
 		JToolBarHelper::title($title, 'account');
 		

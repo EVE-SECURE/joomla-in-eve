@@ -13,8 +13,8 @@ defined('_JEXEC') or die();
 </div>
 <?php endif; ?>
 <div>
-<?php echo JText::_('ACCOUNT REGISTRATION FAILED'); ?> <br />
-<a href="<?php echo JRoute::_(''); ?>"><?php echo JText::_('RETURN HOME'); ?></a>
- <?php echo JText::_('OR'); ?> 
-<a href="<?php echo JRoute::_('index.php?option=com_eve&view=apiform'); ?>"><?php echo JText::_('REGISTER NEW ACCOUNT'); ?></a>
+<?php echo JText::_('COM_EVE_ACCOUNT_REGISTRATION_FAILED'); ?> <br />
+<a href="<?php echo JRoute::_(''); ?>"><?php echo JText::_('COM_EVE_RETURN_HOME'); ?></a>
+ <?php echo JText::_('COM_EVE_OR_REGISTER'); ?> 
+<a href="<?php echo JRoute::_('index.php?option=com_eve&view=apiform'); ?>"><?php echo JText::_('COM_EVE_REGISTER_NEW_ACCOUNT'); ?></a>
 </div>  

@@ -24,7 +24,7 @@ defined('_JEXEC') or die();
 
 /*
 if (!JFactory::getUser()->authorise('core.manage', 'com_cron')) {
-	return JError::raiseWarning(404, JText::_('ALERTNOTAUTH'));
+	return JError::raiseWarning(404, JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 }*/
 
 // Include dependancies

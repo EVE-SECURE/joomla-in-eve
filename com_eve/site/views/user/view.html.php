@@ -45,10 +45,10 @@ class EveViewUser extends JView
 				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
-				$params->set('page_title', JText::_('Your characters'));
+				$params->set('page_title', JText::_('COM_EVE_USER_CHARACTERS'));
 			}
 		} else {
-			$params->set('page_title', JText::_('Your characters'));
+			$params->set('page_title', JText::_('COM_EVE_USER_CHARACTERS'));
 		}
 		$document->setTitle($params->get('page_title'));
 		

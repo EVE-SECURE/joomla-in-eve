@@ -146,19 +146,19 @@ class EveModelAccount extends EveModel {
 						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
-				$app->enqueueMessage(JText::_('API key offers full access'));
+				$app->enqueueMessage(JText::_('COM_EVE_APIKEY_FULL_ACCESS'));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				EveHelper::updateApiStatus($account, $e->getCode());
 				switch ($account->apiStatus) {
 					case 'Limited':
-						JError::raiseNotice(0, JText::_('API key offers limited access'));
+						JError::raiseNotice(0, JText::_('COM_EVE_APIKEY_LIMITED_ACCESS'));
 						break;
 					case 'Invalid':
-						JError::raiseWarning(0, JText::_('API key is invalid'));
+						JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INVALID'));
 						break;
 					case 'Inactive':
-						JError::raiseWarning(0, JText::_('Account is inactive'));
+						JError::raiseWarning(0, JText::_('COM_EVE_APIKEY_INACTIVE'));
 						break;
 				}
 			}
@@ -347,7 +347,7 @@ class EveModelAccount extends EveModel {
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO ACCOUNTS SELECTED'));
+			JError::raiseWarning(500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED'));
 			return false;
 		}
 		JPluginHelper::importPlugin('eveapi');
@@ -377,10 +377,10 @@ class EveModelAccount extends EveModel {
 			
 		}
 		if ($count == 1) {
-			$app->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('COM_EVE_CHARACTERS_FROM_ACCOUNT_SUCCESSFULLY_IMPORTED'));
 		}
 		if ($count > 1) {
-			$app->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('COM_EVE_CHARACTERS_FROM_N_ACCOUNTS_SUCCESSFULLY_IMPORTED', $count));
 		}
 	}
 	

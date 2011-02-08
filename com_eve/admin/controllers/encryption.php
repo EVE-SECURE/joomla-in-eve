@@ -34,7 +34,7 @@ class EveControllerEncryption extends EveController {
 	{
 		$user = JFactory::getUser();
 		if (!$user->authorize('com_config', 'manage')) {
-			$this->setRedirect(JRoute::_('index.php'), JText::_('ALERTNOTAUTH'));
+			$this->setRedirect(JRoute::_('index.php'), JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 			return;
 		}
 		$document =& JFactory::getDocument();
@@ -59,7 +59,7 @@ class EveControllerEncryption extends EveController {
 			$model->encryptApiKeys();
 		}
 		if ($model->writeConfiguration()) {
-			$this->setRedirect(JRoute::_('index.php?option=com_eve'), JText::_('Config saved'));
+			$this->setRedirect(JRoute::_('index.php?option=com_eve'), JText::_('COM_EVE_ENCRYPTION_CONFIG_SAVED'));
 		} else {
 			$view->setLayout('config');
 			$view->display();

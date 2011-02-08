@@ -77,13 +77,13 @@ class EveControllerCharacter extends EveController {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$user = JFactory::getUser();
 		if (!$user->get('id')) {
-			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 		}
 		// Get/Create the character model
 		$characterModel = & $this->getModel('Character');
 		$character = $characterModel->getItem();
 		if ($character->ownerID != $user->get('id')) {
-			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 		}
 		
 		$apischeduleModel = & $this->getModel('Apischedule');
@@ -100,13 +100,13 @@ class EveControllerCharacter extends EveController {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$user = JFactory::getUser();
 		if (!$user->get('id')) {
-			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 		}
 		// Get/Create the character model
 		$characterModel = & $this->getModel('Character');
 		$character = $characterModel->getItem();
 		if ($character->ownerID != $user->get('id')) {
-			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
+			throw new Exception(JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'), 403);
 		}
 		
 		$sectionaccessModel = & $this->getModel('Sectionaccess');

@@ -23,7 +23,7 @@ foreach ($this->components as $component) {
 
 <?php if ($this->components): ?>
 	<div class="eve-component-list">
-		<h2><?php echo JText::_('Com_Eve_Components');?></h2>
+		<h2><?php echo JText::_('COM_EVE_COMPONENTS');?></h2>
 		<?php foreach ($this->components as $component): ?>
 			<div>
 				<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>
@@ -38,7 +38,7 @@ foreach ($this->components as $component) {
 <?php endif; ?>
 
 <div class="eve-item-list">
-	<h2><?php echo JText::_('Com_Eve_Characters');?></h2>
+	<h2><?php echo JText::_('COM_EVE_CHARACTERS');?></h2>
 	<?php foreach ($this->characters as $character) : ?>
 		<div>
 			<a href="<?php echo EveRoute::_('character', $character, $character, $character); ?>">

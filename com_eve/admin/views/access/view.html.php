@@ -63,7 +63,7 @@ class EveViewAccess extends JView {
 	protected function _setToolbar()
 	{
 		JRequest::setVar('hidemainmenu', 1);
-		$title = JText::_('Access Control');
+		$title = JText::_('COM_EVE_ACCESS_CONTROL');
 		JToolBarHelper::title($title, 'encryption');
 		JToolBarHelper::apply('access.apply');
 		JToolBarHelper::cancel('access.cancel');

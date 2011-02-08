@@ -30,16 +30,16 @@ abstract class JHTMLFilter {
 		if (is_null($id)) {
 			$id = $name;
 		}
-		return '<label for="'.$id.'">'.JText::_('Filter'). ': </label>'.
+		return '<label for="'.$id.'">'.JText::_('COM_EVE_FILTER_SEARCH'). ': </label>'.
 		'<input class="inputbox" type="text" name="'.$name.'" id="'.$id.'" value="'.$value.'" class="text_area" onchange="document.adminForm.submit();" /> '.
-		'<button class="button" onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button> '.
-		'<button class="button" onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button> ';
+		'<button class="button" onclick="document.adminForm.submit();">'.JText::_('COM_EVE_FILTER_SUBMIT').'</button> '.
+		'<button class="button" onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('COM_EVE_FILTER_RESET').'</button> ';
 	}
 	
 	
 	static function owner($active, $option) {
 		$options = array();
-		$options[]	= JHtml::_('select.option', '0', JText::_('Show all'));
+		$options[]	= JHtml::_('select.option', '0', JText::_('COM_EVE_FILTER_SHOW_ALL'));
 		$options[]	= JHtml::_('select.option', '1', JText::_($option));
 
 		$attribs = 'class="inputbox" size="1" onchange="document.adminForm.submit();"';
@@ -49,8 +49,8 @@ abstract class JHTMLFilter {
 	
 	static function membersof($active, $name = 'filter_membersof', $idtag = false) {
 		$options = array();
-		$options[] = JHtml::_('select.option', '', JText::_('Show all'));
-		$options[] = JHtml::_('select.option', '*', JText::_('Members'));
+		$options[] = JHtml::_('select.option', '', JText::_('COM_EVE_FILTER_SHOW_ALL'));
+		$options[] = JHtml::_('select.option', '*', JText::_('COM_EVE_FILTER_OWNER_MEMBERS'));
 		$q = EveFactory::getQuery();
 		$q->addTable('#__eve_alliances');
 		$q->addQuery('allianceID AS value', 'name AS text');
@@ -58,7 +58,7 @@ abstract class JHTMLFilter {
 		$q->addOrder('name');
 		$list = $q->loadObjectList();
 		if (!empty($list)) {
-			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'Member Alliances' ) );
+			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'COM_EVE_FILTER_OWNER_ALLIANCES_MEMBERS' ) );
 			foreach ($list as $item) {
 				$options[] = JHtml::_('select.option', 'a'.$item->value, $item->text);
 			}
@@ -73,7 +73,7 @@ abstract class JHTMLFilter {
 		$q->addOrder('corporationName');
 		$list = $q->loadObjectList();
 		if (!empty($list)) {
-			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'Member Corporations' ) );
+			$options[] = JHTML::_('select.option',  '<OPTGROUP>', JText::_( 'COM_EVE_FILTER_OWNER_CORPORATIONS_MEMBERS' ) );
 			foreach ($list as $item) {
 				$options[] = JHtml::_('select.option', 'c'.$item->value, $item->text);
 			}

@@ -125,7 +125,7 @@ class EveModelAlliance extends EveModel {
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['allianceID'])) {
-			$this->setError(JText::_('Invalid allianceID'));
+			$this->setError(JText::_('COM_EVE_ERROR_INVALID_ALLIANCEID'));
 			return false;
 		}
 		return $data;
@@ -297,7 +297,7 @@ class EveModelAlliance extends EveModel {
 		}
 
 		
-		$app->enqueueMessage(JText::_('ALLIANCE STORED'));
+		$app->enqueueMessage(JText::_('COM_EVE_ALLIANCE_STORED'));
 		
 	}
 	

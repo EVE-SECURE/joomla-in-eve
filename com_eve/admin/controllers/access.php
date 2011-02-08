@@ -74,27 +74,12 @@ class EveControllerAccess extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false));
 	}
 	
-	function publish() {
-		JRequest::checkToken() or jexit('Invalid Token');
-		$cid		= JRequest::getVar('cid', array(), 'post', 'array');
-		$task		= JRequest::getCmd('task');
-		$enable		= ($task == 'publish');
-		$model		= $this->getModel('Schedule');
-		$result 	= $model->setEnabled($cid, $enable);
-		if ($result) {
-			$n = count( $cid );
-			$this->setMessage( JText::sprintf( $enable ? 'Items enabled' : 'Items disabled', $n ) );
-		}
-		$url = 'index.php?option=com_eve&view=schedule';
-		$this->setRedirect(JRoute::_($url, false));
-	}
-	
 	function apply() {
 		JRequest::checkToken() or jexit('Invalid Token');
 
 		$user = JFactory::getUser();
 		if (!$user->authorize('com_config', 'manage')) {
-			$this->setRedirect(JRoute::_('index.php'), JText::_('ALERTNOTAUTH'));
+			$this->setRedirect(JRoute::_('index.php'), JText::_('JLIB_APPLICATION_ERROR_ACCESS_FORBIDDEN'));
 			return;
 		}
 		

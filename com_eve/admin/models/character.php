@@ -124,7 +124,7 @@ class EveModelCharacter extends EveModel {
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['characterID'])) {
-			$this->setError(JText::_('Invalid characterID'));
+			$this->setError(JText::_('COM_EVE_ERROR_INVALID_CHARACTERID'));
 			return false;
 		}
 		return $data;
@@ -289,7 +289,7 @@ class EveModelCharacter extends EveModel {
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO CHARACTER SELECTED'));
+			JError::raiseWarning(500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED'));
 			return false;
 		}
 		
@@ -323,10 +323,10 @@ class EveModelCharacter extends EveModel {
 			}
 		}
 		if ($count == 1) {
-			$app->enqueueMessage(JText::_('CHARACTER SHEET SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('COM_EVE_CHARACTER_SHEET_SUCCESSFULLY_IMPORTED'));
 		}
 		if ($count > 1) {
-			$app->enqueueMessage(JText::sprintf('%s CHARACTER SHEETS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('COM_EVE_N_CHARACTER_SHEETS_SUCCESSFULLY_IMPORTED', $count));
 		}
 	}
 	
@@ -335,7 +335,7 @@ class EveModelCharacter extends EveModel {
 		JArrayHelper::toInteger($cid);
 		
 		if (!count($cid)) {
-			JError::raiseWarning(500, JText::_('NO CHARACTER SELECTED'));
+			JError::raiseWarning(500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED'));
 			return false;
 		}
 		
@@ -371,10 +371,10 @@ class EveModelCharacter extends EveModel {
 			}
 		}
 		if ($count == 1) {
-			$app->enqueueMessage(JText::_('CORPORATION SHEET SUCCESSFULLY IMPORTED'));
+			$app->enqueueMessage(JText::_('COM_EVE_CORPORATION_SHEET_SUCCESSFULLY_IMPORTED'));
 		}
 		if ($count > 1) {
-			$app->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
+			$app->enqueueMessage(JText::sprintf('COM_EVE_N_CORPORATION_SHEETS_SUCCESSFULLY_IMPORTED', $count));
 		}
 	}
 		

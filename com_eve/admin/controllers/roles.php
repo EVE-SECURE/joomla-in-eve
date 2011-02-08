@@ -52,7 +52,7 @@ class EveControllerRoles extends EveController {
 		$app	= &JFactory::getApplication();
 		$modelName = $app->getUserState('com_eve.roles.model');
 		if (!$modelName) {
-			$msg = JText::_('Unknown role context');
+			$msg = JText::_('COM_EVE_ERROR_UNKNOWN_ROLE_CONTEXT');
 			$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false), $msg, 'error');
 			return false;
 		}

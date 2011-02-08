@@ -83,13 +83,7 @@ class plgCronEve extends JPlugin {
 					$params = array();
 				}
 				while (true) {
-					try {
-						$xml = $ale->$type->$call($params);
-					}
-					catch (AleExceptionEVE $e) {
-						$next = new DateTime($e->getCachedUntil(), $utc_tz);
-						break;
-					}
+					$xml = $ale->$type->$call($params);
 					$params['userID'] = $row->userID;
 					$params['characterID'] = $row->characterID;
 					$dispatcher->trigger($type.$call,  

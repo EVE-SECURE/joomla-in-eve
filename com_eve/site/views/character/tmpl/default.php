@@ -22,29 +22,29 @@ $pageClass = $this->params->get('pageclass_sfx');
 
 <div>
 	<?php echo JHTML::_('eve.image', 'character', $this->character, 128); ?>
-	<?php echo JText::_('Character Name'); ?>: <?php echo $this->character->name; ?> <br />
-	<?php echo JText::_('Race'); ?>: <?php echo $this->character->race; ?> <br />
-	<?php echo JText::_('Gender'); ?>: <?php echo $this->character->gender; ?> <br />
-	<?php echo JText::_('Blood Line'); ?>: <?php echo $this->character->bloodLine; ?> <br />
+	<?php echo JText::_('COM_EVE_CHARACTER_NAME'); ?>: <?php echo $this->character->name; ?> <br />
+	<?php echo JText::_('COM_EVE_CHARACTER_RACE'); ?>: <?php echo $this->character->race; ?> <br />
+	<?php echo JText::_('COM_EVE_CHARACTER_GENDER'); ?>: <?php echo $this->character->gender; ?> <br />
+	<?php echo JText::_('COM_EVE_CHARACTER_BLOOD_LINE'); ?>: <?php echo $this->character->bloodLine; ?> <br />
 </div>
 
 <div>
 	<?php echo JHTML::_('eve.image', 'corporation', $this->character, 64); ?>
-	<?php echo JText::_('Corporation'); ?>:
+	<?php echo JText::_('COM_EVE_CORPORATION'); ?>:
 		<?php echo JHTML::_('evelink.corporation', $this->character); ?>
 </div>
 
 <?php if ($this->character->allianceID) : ?>
 	<div>
 		<?php echo JHTML::_('eve.image', 'alliance', $this->character, 64); ?>
-		<?php echo JText::_('Alliance'); ?>:
+		<?php echo JText::_('COM_EVE_ALLIANCE'); ?>:
 			<?php echo JHTML::_('evelink.alliance', $this->character); ?>
 	</div>
 <?php endif; ?>
 
 <?php if ($this->components): ?>
 	<div class="eve-component-list">
-		<h2><?php echo JText::_('Com_Eve_Components');?></h2>
+		<h2><?php echo JText::_('COM_EVE_COMPONENTS');?></h2>
 		<?php foreach ($this->components as $component): ?>
 			<div>
 				<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>

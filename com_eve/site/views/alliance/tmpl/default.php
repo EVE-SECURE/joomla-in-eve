@@ -27,16 +27,16 @@ $pageClass = $this->params->get('pageclass_sfx');
 
 <div>
 	<?php echo JHTML::_('eve.image', 'corporation', array($this->alliance, 'executorCorp'), 64); ?>
-	<?php echo JText::_('Executor Corp'); ?>:
+	<?php echo JText::_('COM_EVE_EXECUTOR_CORPORATION'); ?>:
 		<?php echo JHTML::_('evelink.corporation', array($this->alliance, 'executorCorp')); ?>
 </div>
 <div>
-	<?php echo JText::_('Member Count'); ?>: <?php echo $this->alliance->memberCount; ?>
+	<?php echo JText::_('COM_EVE_CORPORATION_MEMBER_COUNT'); ?>: <?php echo $this->alliance->memberCount; ?>
 </div>
 
 <?php if ($this->components): ?>
 	<div class="eve-component-list">
-		<h2><?php echo JText::_('Com_Eve_Components');?></h2>
+		<h2><?php echo JText::_('COM_EVE_COMPONENTS');?></h2>
 		<?php foreach ($this->components as $component): ?>
 			<div>
 				<div class="icon-64-<?php echo $component->component; ?> component-icon"></div>
@@ -52,7 +52,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 
 
 <div class="eve-item-list">
-	<h2><?php echo JText::_('Com_Eve_Corporations');?></h2>
+	<h2><?php echo JText::_('COM_EVE_CORPORATIONS');?></h2>
 	<?php foreach ($this->members as $member) : ?>
 		<div>
 			<a href="<?php echo EveRoute::_('corporation', $this->alliance, $member); ?>">

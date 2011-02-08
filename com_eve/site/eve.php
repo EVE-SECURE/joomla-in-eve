@@ -24,8 +24,7 @@
 defined('_JEXEC') or die();
 
 if (!JPluginHelper::isEnabled('system', 'eve')) {
-	$app = JFactory::getApplication();
-	$app->enqueueMessage(JText::_('Please enable "System - EVE" plugin'), 'error');
+	JError::raiseError(500, JText::_('COM_EVE_ERROR_SYSTEM_PLUGIN_MISSING'));
 } else {
 	$task = JRequest::getVar('task', 'display');
 	$view = JRequest::getVar('view');

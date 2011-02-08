@@ -125,7 +125,7 @@ class EveModelCorporation extends EveModel {
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['corporationID'])) {
-			$this->setError(JText::_('Invalid corporationID'));
+			$this->setError(JText::_('COM_EVE_ERROR_INVALID_CORPORATIONID'));
 			return false;
 		}
 		return $data;
@@ -343,7 +343,7 @@ class EveModelCorporation extends EveModel {
 				$ceo = $this->getInstance('Character', $corporation->ceoID);
 				$account = $this->getInstance('Account', $ceo->userID);
 				if (!$account->isLoaded()) {
-					$this->setError(JText::_('COULD NOT LOAD CEO API CREDENTIALS', $corporation->corporationName, $corporation->corporationID));
+					$this->setError(JText::_('COM_EVE_ERROR_CORPORATION_NO_CEO_APIKEY', $corporation->corporationName, $corporation->corporationID));
 					continue;
 				}
 				
@@ -406,7 +406,7 @@ class EveModelCorporation extends EveModel {
 				continue;
 			} else {
 				if ($setOwner) {
-					$this->setError(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName));
+					$this->setError(JText::sprintf('COM_EVE_ERROR_CORPORATION_NO_CEO_APIKEY', $ceo->corporationName, $ceo->corporationID));
 				}
 			}
 		}

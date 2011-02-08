@@ -36,19 +36,19 @@ class EveModelEve extends JModel {
 	{
 		$user = JFactory::getUser();
 		$result = array();
-		$result[] = array('icon'=>'icon-48-character.png', 'view'=>'characters', 'caption'=>JText::_('Characters'));
-		$result[] = array('icon'=>'icon-48-corporation.png', 'view'=>'corporations', 'caption'=>JText::_('Corporations'));
-		$result[] = array('icon'=>'icon-48-alliance.png', 'view'=>'alliances', 'caption'=>JText::_('Alliances'));
-		$result[] = array('icon'=>'icon-48-account.png', 'view'=>'accounts', 'caption'=>JText::_('Accounts'));
-		$result[] = array('icon'=>'icon-48-schedule.png', 'view'=>'schedule', 'caption'=>JText::_('Schedule'));
+		$result[] = array('icon'=>'icon-48-character.png', 'view'=>'characters', 'caption'=>JText::_('COM_EVE_CHARACTERS'));
+		$result[] = array('icon'=>'icon-48-corporation.png', 'view'=>'corporations', 'caption'=>JText::_('COM_EVE_CORPORATIONS'));
+		$result[] = array('icon'=>'icon-48-alliance.png', 'view'=>'alliances', 'caption'=>JText::_('COM_EVE_ALLIANCES'));
+		$result[] = array('icon'=>'icon-48-account.png', 'view'=>'accounts', 'caption'=>JText::_('COM_EVE_ACCOUNTS'));
+		$result[] = array('icon'=>'icon-48-schedule.png', 'view'=>'schedule', 'caption'=>JText::_('COM_EVE_SCHEDULE'));
+		/*if ($user->authorize('com_config', 'manage')) {
+			$result[] = array('icon'=>'icon-48-diagnose.png', 'view'=>'diagnose', 'caption'=>JText::_('COM_EVE_DIAGNOSE'));
+		}*/
 		if ($user->authorize('com_config', 'manage')) {
-			$result[] = array('icon'=>'icon-48-diagnose.png', 'view'=>'diagnose', 'caption'=>JText::_('Diagnose'));
-		}
-		if ($user->authorize('com_config', 'manage')) {
-			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'access', 'caption'=>JText::_('Access Control'));
+			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'access', 'caption'=>JText::_('COM_EVE_ACCESS_CONTROL'));
 		}
 		if ($user->authorize('com_config', 'manage') && !file_exists(JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.'encryption.php')) {
-			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'encryption', 'caption'=>JText::_('API Key Encryption'));
+			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'encryption', 'caption'=>JText::_('COM_EVE_APIKEY_ENCRYPTION'));
 		}
 		return $result;
 		

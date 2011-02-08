@@ -361,9 +361,9 @@ class EveControllerCorporation extends EveController {
 		if ($result) {
 			$app = JFactory::getApplication();
 			if ($isOwner) {
-				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
+				$app->enqueueMessage(JText::sprintf('COM_EVE_N_CORPORATIONS_SET_AS_OWNER', $result));
 			} else {
-				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
+				$app->enqueueMessage(JText::sprintf('COM_EVE_N_CORPORATIONS_UNSET_AS_OWNER', $result));
 			}
 		}
 	}

@@ -10,14 +10,14 @@ defined('_JEXEC') or die();
 <div class="apischedule">
 	<form action="<?php echo JRoute::_('index.php'); ?>" method="post" name="characterApischeduleForm">
 		<fieldset>
-		<legend><?php echo JText::_('Com_Eve_Api_Calls'); ?></legend>
+		<legend><?php echo JText::_('COM_EVE_API_CALLS'); ?></legend>
 		<table>
 			<tr>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Api_Call_Name'); ?>
+					<?php echo JText::_('COM_EVE_API_CALL_NAME'); ?>
 				</th>
 				<th class="title">
-					<?php echo JText::_('Com_Eve_Api_Call_Published'); ?>
+					<?php echo JText::_('COM_EVE_API_CALL_PUBLISHED'); ?>
 				</th>
 			</tr>
 			<?php foreach ($this->apischedule as $i => $item): ?>

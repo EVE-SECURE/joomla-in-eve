@@ -124,7 +124,7 @@ class EveModelAccess extends JModelList {
 		$dbo = $this->getDBO();
 
 		if (empty($cid)) {
-			JError::raiseWarning( 500, JText::_( 'No items selected' ) );
+			JError::raiseWarning( 500, JText::_('COM_EVE_ERROR_NO_ITEM_SELECTED') );
 			return false;
 		}
 

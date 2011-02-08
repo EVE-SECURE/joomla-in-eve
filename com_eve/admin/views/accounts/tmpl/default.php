@@ -27,10 +27,10 @@ $userId	= $user->get('id');
 				<th width="10" class="title">
 					<input type="checkbox" name="toggle" value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
 				</th>
-				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'USER ID' ), 'u.userID', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'OWNER' ), 'userName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'API KEY STATUS' ), 'apiStatus', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
-				<th class="title"><?php echo JText::_('CHARACTERS'); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'COM_EVE_API_USERID' ), 'u.userID', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'COM_EVE_OWNER_USER' ), 'userName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'COM_EVE_APIKEY_STATUS' ), 'apiStatus', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
+				<th class="title"><?php echo JText::_('COM_EVE_CHARACTERS'); ?></th>
 			</tr>
 		</thead>
 		<tfoot>
@@ -49,7 +49,7 @@ $userId	= $user->get('id');
 					<?php if (JTable::isCheckedOut($userId, $item->checked_out)) : ?>
 						<?php echo $item->userID; ?>
 					<?php else : ?>
-					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->userID; ?>">
+					<span class="editlinktip hasTip" title="<?php echo JText::_('COM_EVE_ACCOUNT_EDIT');?>::<?php echo $item->userID; ?>">
 						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=account.edit&userID='.$item->userID); ?>">
 							<?php echo $item->userID; ?></a></span>
 					<?php endif; ?>

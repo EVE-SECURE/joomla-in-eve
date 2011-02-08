@@ -72,7 +72,7 @@ class EveModelCorporation extends JModelItem
 		}
 
 		if (empty($data)) {
-			throw new Exception(JText::_('Com_Eve_Error_Corporation_not_found'), 404);
+			throw new Exception(JText::_('COM_EVE_ERROR_CORPORATION_NOT_FOUND'), 404);
 		}
 
 		return $data;
