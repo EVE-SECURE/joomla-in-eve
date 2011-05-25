@@ -28,20 +28,6 @@ require_once JPATH_SITE.DS.'components'.DS.'com_eve'.DS.'models'.DS.'character.p
 class EvecharsheetModelCharacter extends EveModelCharacter {
 	protected $dbdump;
 	protected $skillGroups = array();
-	protected $skillToAttributes = array (
-		3377 	=> 1,
-		12387 	=> 3,
-		12385 	=> 4,
-		3376 	=> 2,
-		12386 	=> 5,
-		3378 	=> 4,
-		3375 	=> 5,
-		12376 	=> 1,
-		12383 	=> 2,
-		3379 	=> 3,
-	);
-	protected $learningGroupID = 267;
-	protected $learningTypeID = 3374;
 
 	public function __construct($config = array())
 	{
@@ -171,27 +157,6 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('ca.attributeName');
 		$attributes = $q->loadObjectList('attributeID');
-		
-		$skillGroups = $this->getSkillGroups($characterID);
-		$skillMultiplier = 1.0;
-		foreach ($attributes as $attribute) {
-			$attribute->skillValue = 0;
-		}
-		$learningSkills = JArrayHelper::getValue($skillGroups, $this->learningGroupID, array());
-		foreach ($learningSkills->skills as $learningSkill) {
-			if ($learningSkill->typeID == $this->learningTypeID) {
-				$skillMultiplier = 1.0 + $learningSkill->level / 50;
-			} else {
-				$attributeID = JArrayHelper::getValue($this->skillToAttributes, $learningSkill->typeID);
-				$attribute = JArrayHelper::getValue($attributes, $attributeID);
-				if ($attribute) {
-					$attribute->skillValue += $learningSkill->level;
-				}
-			}
-		}
-		foreach ($attributes as $attribute) {
-			$attribute->skillMultiplier = $skillMultiplier;
-		}
 		
 		return $attributes;
 	}
