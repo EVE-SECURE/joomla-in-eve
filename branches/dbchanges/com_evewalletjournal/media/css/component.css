@@ -1,0 +1,16 @@
+@CHARSET "UTF-8";
+div.com-evewalletjournal .number {text-align:right;}
+div.com-evewalletjournal .list {width: 100%}
+
+.icon-16-walletjournal {
+	 background-image: url(../../../administrator/components/com_evewalletjournal/assets/icon-16-wallet.png);
+}
+.icon-32-walletjournal {
+	 background-image: url(../../../administrator/components/com_evewalletjournal/assets/icon-32-wallet.png);
+}
+.icon-48-walletjournal {
+	 background-image: url(../../../administrator/components/com_evewalletjournal/assets/icon-48-wallet.png);
+}
+.icon-64-walletjournal {
+	 background-image: url(../../../administrator/components/com_evewalletjournal/assets/icon-64-wallet.png);
+}

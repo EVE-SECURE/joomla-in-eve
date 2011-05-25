@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install method="upgrade" type="component" version="1.5.0">
+	<name>EVECharTracking</name>
+	<creationDate></creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2009 - 2010 Pavol Kovalik. All rights reserved.</copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<version>0.6</version>
+	<description>Joomla! in EVE - Character Tracking</description>
+	
+	<installfile>install.php</installfile>
+	<uninstallfile>uninstall.php</uninstallfile>
+	<install>
+		<queries>
+			<query>INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '100', '4225');</query>
+			<query>INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
+		</queries>
+	</install>
+	<uninstall>
+		<queries>
+			<query>DELETE FROM `#__eve_sections` WHERE `component`='chartracking';</query>
+		</queries>
+	</uninstall>
+	<files folder="site">
+		<filename>evechartracking.php</filename>
+		<filename>controller.php</filename>
+		<filename>index.html</filename>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_evechartracking.ini</language>
+	</languages>
+
+	<media folder="media" destination="com_evechartracking">
+		<filename>css/component.css</filename>
+	</media>
+	
+	<administration>
+		<menu img="components/com_eve/assets/icon-16-corporation.png">EVE Character Tracking</menu>
+		<files folder="admin">
+			<filename>evechartracking.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+			<folder>models</folder>
+			<folder>views</folder>
+		</files>
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_evechartracking.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_evechartracking.menu.ini</language>
+		</languages>
+	</administration>
+</install>

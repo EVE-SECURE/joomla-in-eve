@@ -1,0 +1,13 @@
+1. Get fresh install of Joomla 1.5 here: http://www.joomla.org/download.html
+2. Unpack it to directory on your local test machine
+3. Install it and delete installation folder
+	(use default jos_ prefix, otherwise you'll have to change prefix in .sql commands)
+4. Get EVE MySQL db dump. Check eve-id.net wiki, or google it.
+5. Import it to joomla database (strongly recommend to use commandline)
+6. Set up your development enviroment, see: http://docs.joomla.org/Setting_up_your_workstation_for_extension_development
+7. Check-out joomla-in-eve from SVN into separate folder and use it as project root
+8. Create "joomla-in-eve.properties" file in project root (same directory as build.xml) containing
+	testdir=<your test joomla instlation>
+	components=<list of components you want to copy separated by comma, e.g.: com_eve,com_evecharsheet,com_evechartracking>
+9. Add the file to svn:ignore (so you wouldn't overwrite others people settings)
+10. Execute SQL commands to create database tables, insert menu items and include plugins

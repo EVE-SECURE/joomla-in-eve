@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install method="upgrade" version="1.5" type="plugin" group="system">
+	<name>System - EVE</name>
+	<version>0.6</version>
+	<description>Joomla! in EVE</description>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<author>Pavol Kovalik</author>
+	<creationDate></creationDate>
+	<authoremail>kovalikp@gmail.com</authoremail>
+	<authorurl>http://code-box.sk</authorurl>
+	<copyright>(C) 2008 - 2010 Pavol Kovalik. All rights reserved.</copyright>
+	<description>Initializes stuff when accessing site from EVE IGB</description>
+	<files>
+		<filename plugin="eve">eve.php</filename>
+		<folder>eve</folder>
+	</files>
+	<administration>
+		<languages>
+			<language tag="en-GB">en-GB.plg_system_eve.ini</language>
+		</languages>
+	</administration>
+	<params>
+	</params>
+</install>

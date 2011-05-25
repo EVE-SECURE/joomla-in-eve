@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+div.com-eveassetlist .number {text-align:right;}
+div.com-eveassetlist .list {width: 100%}
+
+.icon-16-assetlist {
+	 background-image: url(../../../administrator/components/com_eveassetlist/assets/icon-16-assets.png);
+}
+.icon-32-assetlist {
+	 background-image: url(../../../administrator/components/com_eveassetlist/assets/icon-32-assets.png);
+}
+.icon-48-assetlist {
+	 background-image: url(../../../administrator/components/com_eveassetlist/assets/icon-48-assets.png);
+}
+
+.icon-64-assetlist {
+	 background-image: url(../../../administrator/components/com_eveassetlist/assets/icon-64-assets.png);
+}

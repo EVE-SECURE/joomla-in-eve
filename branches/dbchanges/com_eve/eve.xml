@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE install SYSTEM "http://dev.joomla.org/xml/1.5/component-install.dtd">
+<install method="upgrade" type="component" version="1.5">
+	<name>EVE</name>
+	<creationDate></creationDate>
+	<author>Pavol Kovalik</author>
+	<authorEmail>kovalikp@gmail.com</authorEmail>
+	<authorUrl>http://code-box.sk</authorUrl>
+	<copyright>(C) 2008 - 2010 Pavol Kovalik </copyright>
+	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
+	<version>0.6</version>
+	<description>Joomla! in EVE - Core</description>
+	
+	<installfile>install.php</installfile>
+	<uninstallfile>uninstall.php</uninstallfile>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
+		</sql>
+	</uninstall>
+	
+	<files folder="site">
+		<filename>eve.php</filename>
+		<filename>index.html</filename>
+		<filename>router.php</filename>
+		<folder>controllers</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+	</files>
+	<languages folder="site/language">
+		<language tag="en-GB">en-GB/en-GB.com_eve.ini</language>
+	</languages>
+	<media folder="media" destination="com_eve">
+		<filename>css/autocompleter.css</filename>
+		<filename>css/component.css</filename>
+		<filename>css/contextmenu.css</filename>
+		<filename>images/icon07_04.png</filename>
+		<filename>images/icon09_01.png</filename>
+		<filename>images/icon18_01.png</filename>
+		<filename>images/icon38_111.png</filename>
+		<filename>images/icon38_89.png</filename>
+		<filename>images/icon64_10.png</filename>
+		<filename>images/icon74_14.png</filename>
+		<filename>js/autocompleter.js</filename>
+		<filename>js/ccpeve-mootools-1.1.2.js</filename>
+		<filename>js/contextmenu-1.1.2.js</filename>
+		<filename>js/observer.js</filename>
+	</media>
+	
+	<administration>
+		<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
+		<submenu>
+			<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">Overview</menu>
+			<menu view="characters" img="components/com_eve/assets/icon-16-character.png">Characters</menu>
+			<menu view="corporations" img="components/com_eve/assets/icon-16-corporation.png">Corporations</menu>
+			<menu view="alliances" img="components/com_eve/assets/icon-16-alliance.png">Alliances</menu>
+			<menu view="accounts" img="components/com_eve/assets/icon-16-account.png">Account</menu>
+			<menu view="schedule" img="components/com_eve/assets/icon-16-schedule.png">Schedule</menu>
+		</submenu>
+		<files folder="admin">
+			<filename>eve.php</filename>
+			<filename>config.xml</filename>
+			<filename>index.html</filename>
+			<folder>assets</folder>
+			<folder>configs</folder>
+			<folder>controllers</folder>
+			<folder>elements</folder>
+			<folder>helpers</folder>
+			<folder>models</folder>
+			<folder>sql</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+		</files>
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_eve.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_eve.menu.ini</language>
+		</languages>
+	</administration>
+</install>

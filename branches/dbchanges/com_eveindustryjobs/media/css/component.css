@@ -1,0 +1,16 @@
+@CHARSET "UTF-8";
+div.com-eveindustryjobs .number {text-align:right;}
+div.com-eveindustryjobs .list {width: 100%}
+
+.icon-16-industryjobs {
+	 background-image: url(../../../administrator/components/com_eveindustryjobs/assets/icon-16-industry.png);
+}
+.icon-32-industryjobs {
+	 background-image: url(../../../administrator/components/com_eveindustryjobs/assets/icon-32-industry.png);
+}
+.icon-48-industryjobs {
+	 background-image: url(../../../administrator/components/com_eveindustryjobs/assets/icon-48-industry.png);
+}
+.icon-64-industryjobs {
+	 background-image: url(../../../administrator/components/com_eveindustryjobs/assets/icon-64-industry.png);
+}
