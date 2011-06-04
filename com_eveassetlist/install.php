@@ -68,6 +68,12 @@ function com_install() {
 	switch ($version) {
 		case '0.5':
 		case '0.6':
+			$sql = "ALTER TABLE `#__eve_assets` CHANGE `containerID` `containerID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `itemID` `itemID` BIGINT( 20 ) NOT NULL ;";
+			$dbo->setQuery($sql);
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
+			}
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eveassetlist'";
