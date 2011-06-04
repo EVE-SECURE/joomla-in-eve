@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS `jos_eve_marketorders` (
   `volRemaining` int(11) NOT NULL,
   `minVolume` int(11) NOT NULL,
   `orderState` smallint(3) NOT NULL,
-  `typeID` mediumint(5) NOT NULL,
-  `range` mediumint(5) NOT NULL,
-  `accountKey` mediumint(5) NOT NULL default '1000',
-  `duration` mediumint(5) NOT NULL,
+  `typeID` smallint(5) NOT NULL,
+  `range` smallint(5) NOT NULL,
+  `accountKey` smallint(5) NOT NULL default '1000',
+  `duration` smallint(5) NOT NULL,
   `escrow` decimal(20,2) NOT NULL,
   `price` decimal(20,2) NOT NULL,
-  `bid` smallint(1) NOT NULL,
+  `bid` tinyint(1) NOT NULL,
   `issued` datetime NOT NULL, 
   PRIMARY KEY  (`entityID`,`orderID`,`issued`)
 );

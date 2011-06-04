@@ -68,6 +68,15 @@ function com_install() {
 	switch ($version) {
 		case '0.5':
 		case '0.6':
+			$sql = "ALTER TABLE `#__eve_industryjobs` CHANGE `jobID` `jobID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `containerID` `containerID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `installedItemID` `installedItemID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `installedItemLocationID` `installedItemLocationID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `outputLocationID` `outputLocationID` BIGINT( 20 ) NOT NULL ;";
+			$dbo->setQuery($sql);
+			if (!$dbo->query()) {
+				$app->enqueueMessage($dbo->getError(), 'error');
+			}
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eveindustryjobs'";
