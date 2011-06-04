@@ -89,6 +89,17 @@ function com_install() {
 				}
 			}
 		case '0.6':
+			$queries = array();
+			$queries[] = "ALTER TABLE `#__eve_apicalls` CHANGE `params` `params` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ;";
+			$queries[] = "ALTER TABLE `#__eve_apicalls` DROP INDEX `type_call` ;";
+			$queries[] = "ALTER TABLE `#__eve_apicalls` ADD UNIQUE `type_call_params` (`type` ,`call` ,`params`) ;";
+			foreach ($queries as $sql) {
+				$dbo->setQuery($sql);
+				$dbo->setQuery($sql);
+				if (!$dbo->query()) {
+					$app->enqueueMessage($dbo->getError(), 'error');
+				}
+			}
 			break;
 		default:
 			//fresh install
