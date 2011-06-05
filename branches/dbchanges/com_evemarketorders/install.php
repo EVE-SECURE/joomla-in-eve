@@ -65,14 +65,25 @@ function com_install() {
 	}
 	
 	$dbo = JFactory::getDBO();
+	$queries = array();
 	switch ($version) {
 		case '0.5':
 		case '0.6':
-			$sql = "ALTER TABLE `#__eve_marketorders` CHANGE `orderID` `orderID` BIGINT( 20 ) NOT NULL ,".
-			"CHANGE `typeID` `typeID` INT( 11 ) NOT NULL ;";
-			$dbo->setQuery($sql);
-			if (!$dbo->query()) {
-				$app->enqueueMessage($dbo->getError(), 'error');
+			$queries[] = "ALTER TABLE `#__eve_marketorders` CHANGE `orderID` `orderID` BIGINT( 20 ) NOT NULL ,".
+				"CHANGE `typeID` `typeID` INT( 11 ) NOT NULL ;";
+			$queries[] = "CREATE TEMPORARY TABLE `jos_eve_marketorders_tmp` LIKE `jos_eve_marketorders`;";
+			$queries[] = "INSERT IGNORE INTO `jos_eve_marketorders_tmp` SELECT * FROM `jos_eve_marketorders`;";
+			$queries[] = "TRUNCATE TABLE `jos_eve_marketorders`;";
+			$queries[] = "ALTER TABLE `jos_eve_marketorders` DROP PRIMARY KEY, ADD PRIMARY KEY(`entityID`, `orderID`);";
+			$queries[] = "INSERT IGNORE INTO `jos_eve_marketorders` SELECT * FROM `jos_eve_marketorders_tmp` ORDER BY issued DESC;";
+			$queries[] = "DROP TEMPORARY TABLE `jos_eve_marketorders_tmp`;";
+			
+			foreach ($queries as $sql) {
+				$dbo->setQuery($sql);
+				$dbo->setQuery($sql);
+				if (!$dbo->query()) {
+					$app->enqueueMessage($dbo->getError(), 'error');
+				}
 			}
 			break;
 		default:
