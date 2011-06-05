@@ -220,7 +220,7 @@
 				<foreach list="${components}" param="component.name" target="build_component" />
 			</then>
 			<else>
-				<echo message="Skipping build components" />
+				<foreach list="${components}" param="component.name" target="copy_component" />
 			</else>
 		</if>
 		
@@ -237,10 +237,6 @@
 				<echo message="Skipping Community Builder Plugin" />
 			</else>
 		</if>
-		
-		<foreach list="${components}" param="component.name" target="copy_component" />
-		
-		
 	</target>
 	
 </project>
