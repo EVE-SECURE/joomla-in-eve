@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS `jos_eve_assets` (
   `locationID` int(11) NOT NULL,
   `typeID` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `flag` mediumint(5) NOT NULL,
-  `singleton` smallint(1) NOT NULL,
+  `flag` smallint(5) NOT NULL,
+  `singleton` tinyint(1) NOT NULL,
   PRIMARY KEY  (`entityID`,`itemID`)
 );
 

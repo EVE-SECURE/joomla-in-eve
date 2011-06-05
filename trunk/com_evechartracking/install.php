@@ -68,6 +68,7 @@ function com_install() {
 		case '0.2':
 		case '0.5':
 		case '0.6':
+		case '0.7':
 			break;
 		default:
 			$dbo = JFactory::getDBO();
