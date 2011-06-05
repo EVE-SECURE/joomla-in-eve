@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_marketorders` (
   `price` decimal(20,2) NOT NULL,
   `bid` tinyint(1) NOT NULL,
   `issued` datetime NOT NULL, 
-  PRIMARY KEY  (`entityID`,`orderID`,`issued`)
+  PRIMARY KEY  (`entityID`,`orderID`)
 );
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 
