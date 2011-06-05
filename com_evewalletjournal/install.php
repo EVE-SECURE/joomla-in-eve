@@ -68,6 +68,22 @@ function com_install() {
 	switch ($version) {
 		case '0.5':
 		case '0.6':
+			$queries = array();
+			$queries[] = "INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1001}'), ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1002}'), ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1003}'), ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1004}'), ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1005}'), ".
+				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1006}');";
+		case '0.7':
+			foreach ($queries as $sql) {
+				$dbo->setQuery($sql);
+				$dbo->setQuery($sql);
+				if (!$dbo->query()) {
+					$app->enqueueMessage($dbo->getError(), 'error');
+				}
+			}
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evewalletjournal'";

@@ -67,6 +67,7 @@ function com_install() {
 	$dbo = JFactory::getDBO();
 	switch ($version) {
 		case '0.6':
+		case '0.7':
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'everesearch'";

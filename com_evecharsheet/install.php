@@ -71,6 +71,7 @@ function com_install() {
 				$app->enqueueMessage($dbo->getError(), 'error');
 			}
 		case '0.6':
+		case '0.7':
 			break;
 		default:
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'evecharsheet'";

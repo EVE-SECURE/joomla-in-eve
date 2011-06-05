@@ -123,9 +123,9 @@ CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `paginationParam` varchar(20) default NULL,
   `paginationPerPage` int(11) default NULL,
   `delay` int(11) NOT NULL default '0',
-  `params` varchar(255) NOT NULL,
+  `params` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `type_call` (`type`,`call`)
+  UNIQUE KEY `type_call_params` (`type`,`call`,`params`)
 ) DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------

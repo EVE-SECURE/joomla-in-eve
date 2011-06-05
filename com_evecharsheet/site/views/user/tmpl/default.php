@@ -21,7 +21,7 @@ $pageClass = $this->params->get('pageclass_sfx');
 	<?php foreach ($this->characters as $character) : ?>
 		<div>
 			<a href="<?php echo EveRoute::_('charsheet', $character, $character, $character); ?>">
-				<?php echo JHTML::_('image', 'http://img.eve.is/serv.asp?s=64&c='.$character->characterID, $character->name); ?>
+				<?php echo JHTML::_('image', 'http://image.eveonline.com/Character/'.$character->characterID.'_64.jpg', $character->name); ?>
 			</a>
 			<br />
 			<p>

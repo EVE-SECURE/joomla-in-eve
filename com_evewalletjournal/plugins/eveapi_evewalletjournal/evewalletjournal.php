@@ -59,7 +59,7 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 		$sql .= implode(',', array_map(array($dbo, 'nameQuote'), $this->_fields));
 		$sql .= ") VALUES ";
 		$values = array();
-		foreach ($xml->result->entries->toArray() as $entry) {
+		foreach ($xml->result->transactions->toArray() as $entry) {
 			$entry['accountKey'] = $accounKey;
 			$entry['entityID'] = $entityID;
 			$value = array();
