@@ -7,7 +7,7 @@
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<authorEmail>kovalikp@gmail.com</authorEmail>
 	<authorUrl>http://www.code-box.sk</authorUrl>
-	<version>0.6</version>
+	<version></version>
 	<description>ALLOWS SEARCHING OF CHARACTER</description>
 	<files>
 		<filename plugin="evecharsheet">evecharsheet.php</filename>

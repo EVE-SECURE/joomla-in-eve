@@ -89,7 +89,21 @@
 					<fileset dir="${project.basedir}/${component.name}/admin">
 						<exclude name="language/**" />
 						<exclude name="language" />
+						<exclude name="**/*.xml"/>
 						<include name="**"/>
+					</fileset>
+				</copy>
+
+				<!-- copy component manifest -->
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
+					<filterchain>
+						<replaceregexp>
+							<regexp pattern="&lt;creationDate&gt;.*&lt;/creationDate&gt;" replace="&lt;creationDate&gt;${build.date}&lt;/creationDate&gt;" ignoreCase="true"/>
+							<regexp pattern="&lt;version&gt;.*&lt;/version&gt;" replace="&lt;version&gt;${build.version}&lt;/version&gt;" ignoreCase="true"/>
+						</replaceregexp>
+					</filterchain>
+					<fileset dir="${project.basedir}/${component.name}">
+						<include name="**/*.xml"/>
 					</fileset>
 				</copy>
 				
@@ -123,11 +137,26 @@
 							</fileset>
 						</copy>
 		
+						<!-- manifest -->
+						<copy todir="${testdir}/plugins" overwrite="${overwrite}">
+							<filterchain>
+								<replaceregexp>
+									<regexp pattern="&lt;creationDate&gt;.*&lt;/creationDate&gt;" replace="&lt;creationDate&gt;${build.date}&lt;/creationDate&gt;" ignoreCase="true"/>
+									<regexp pattern="&lt;version&gt;.*&lt;/version&gt;" replace="&lt;version&gt;${build.version}&lt;/version&gt;" ignoreCase="true"/>
+								</replaceregexp>
+							</filterchain>
+							<mapper type="regexp" from="([a-z]+)_[a-z]+(.*)" to="\1\2"/>
+							<fileset dir="${project.basedir}/${component.name}/plugins/">
+								<include name="**/*.xml"/>
+							</fileset>
+						</copy>
+						
 						<!-- other files -->
 						<copy todir="${testdir}/plugins" overwrite="${overwrite}">
 							<mapper type="regexp" from="([a-z]+)_[a-z]+(.*)" to="\1\2"/>
 							<fileset dir="${project.basedir}/${component.name}/plugins/">
 								<exclude name="**/en-GB.*.ini"/>
+								<exclude name="**/*.xml"/>
 								<include name="**"/>
 							</fileset>
 						</copy>
