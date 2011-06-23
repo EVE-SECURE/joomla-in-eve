@@ -77,20 +77,11 @@
 		<if>
 			<equals arg1="${copy.admin}" arg2="yes" />
 			<then>
-				<!-- copy component manifest and install scripts -->
+				<!-- copy component install scripts -->
 				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
 					<fileset dir="${project.basedir}/${component.name}">
+						<exclude name="*.xml"/>
 						<include name="*"/>
-					</fileset>
-				</copy>
-				
-				<!-- copy component admin -->
-				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
-					<fileset dir="${project.basedir}/${component.name}/admin">
-						<exclude name="language/**" />
-						<exclude name="language" />
-						<exclude name="**/*.xml"/>
-						<include name="**"/>
 					</fileset>
 				</copy>
 
@@ -103,10 +94,19 @@
 						</replaceregexp>
 					</filterchain>
 					<fileset dir="${project.basedir}/${component.name}">
-						<include name="**/*.xml"/>
+						<include name="*.xml"/>
 					</fileset>
 				</copy>
 				
+				<!-- copy component admin -->
+				<copy todir="${testdir}/administrator/components/${component.name}" overwrite="${overwrite}">
+					<fileset dir="${project.basedir}/${component.name}/admin">
+						<exclude name="language/**" />
+						<exclude name="language" />
+						<include name="**"/>
+					</fileset>
+				</copy>
+
 				<!-- copy component site languages -->
 				<copy todir="${testdir}/administrator/language" overwrite="${overwrite}">
 					<fileset dir="${project.basedir}/${component.name}/admin/language">
