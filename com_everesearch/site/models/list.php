@@ -94,14 +94,13 @@ class EveresearchModelList extends JModelList {
 		$q->addQuery('re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60) AS currentPoints');
 		$q->addQuery('ev.itemName AS agentName');
 		$q->addQuery('inv.typeName AS skillTypeName');
-		$q->addQuery('agt.level, agt.quality');
-		$q->addQuery('agt.level, agt.quality');
+		$q->addQuery('agt.level');
 		$q->addQuery('sta.stationName');
 		$q->addQuery('re.pointsPerDay / rd.datacoreCost AS datacoresPerDay');
 		$q->addQuery('(re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60)) / rd.datacoreCost AS currentDatacores');
 		
 		$orderings = array('agentname', 'skilltypename', 'currentpoints', 're.pointsperday', 'currentdatacores', 'datacoresperday',
-			'agt.level', 'agt.quality', 'sta.stationname' );
+			'agt.level', 'sta.stationname' );
 		
 		if ($this->_entity == 'user') {
 			$orderings[] = 'charactername'; 

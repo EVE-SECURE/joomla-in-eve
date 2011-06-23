@@ -23,8 +23,6 @@ defined('_JEXEC') or die();
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<th class="number"><?php echo JHTML::_('grid.sort',  'Com_Everesearch_Agent_Level', 'agt.level', 
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
-			<th class="number"><?php echo JHTML::_('grid.sort',  'Com_Everesearch_Agent_Quality', 'agt.quality', 
-					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<th><?php echo JHTML::_('grid.sort',  'Com_Everesearch_Agent_Location', 'sta.stationName', 
 					$this->listState->get('list.direction'), $this->listState->get('list.ordering')); ?></th>
 			<?php if ($this->state->get('entity') == 'user'): ?>
@@ -43,7 +41,6 @@ defined('_JEXEC') or die();
 			<td class="number"><?php echo number_format($item->currentDatacores, 2); ?></td>
 			<td class="number"><?php echo number_format($item->datacoresPerDay, 2); ?></td>
 			<td class="number"><?php echo $item->level; ?></td>
-			<td class="number"><?php echo $item->quality; ?></td>
 			<td><?php echo $item->stationName; ?></td>
 
 			<?php if ($this->state->get('entity') == 'user'): 
