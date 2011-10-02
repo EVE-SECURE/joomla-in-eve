@@ -59,7 +59,7 @@
 			<menu view="characters" img="components/com_eve/assets/icon-16-character.png">Characters</menu>
 			<menu view="corporations" img="components/com_eve/assets/icon-16-corporation.png">Corporations</menu>
 			<menu view="alliances" img="components/com_eve/assets/icon-16-alliance.png">Alliances</menu>
-			<menu view="accounts" img="components/com_eve/assets/icon-16-account.png">Account</menu>
+			<menu view="apikeys" img="components/com_eve/assets/icon-16-account.png">API Keys</menu>
 			<menu view="schedule" img="components/com_eve/assets/icon-16-schedule.png">Schedule</menu>
 		</submenu>
 		<files folder="admin">

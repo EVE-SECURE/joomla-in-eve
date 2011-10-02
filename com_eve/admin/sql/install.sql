@@ -1,17 +1,30 @@
 -- 
--- Table structure for table `#__eve_accounts`
+-- Table structure for table `#__eve_apikeys`
 -- 
 
-CREATE TABLE IF NOT EXISTS `#__eve_accounts` (
-  `userID` int(10) unsigned NOT NULL default '0',
-  `owner` int(10) unsigned NOT NULL default '0',
-  `apiKey` varchar(255) NOT NULL default '',
-  `apiStatus` enum('Unknown','Inactive','Invalid','Limited','Full') NOT NULL default 'Unknown',
+CREATE TABLE `#__eve_apikeys` (
+  `keyID` INT NOT NULL PRIMARY KEY ,
+  `vCode` VARCHAR( 64 ) NULL ,
+  `user_id` INT NOT NULL ,
+  `type` VARCHAR( 15 ) NULL ,
+  `mask` BIGINT UNSIGNED NULL ,
+  `status` VARCHAR( 15 ) NOT NULL DEFAULT 'Unknown',
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY  (`userID`),
-  KEY `eve_accounts_fk_owner` (`owner`)
-) DEFAULT CHARSET=utf8;
+  KEY `eve_apikeys_fk_user_id` (`user_id`)
+)  DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table structure for table `#__eve_apikey_entities`
+-- 
+
+CREATE TABLE `#__eve_apikey_entities` (
+  `keyID` INT NOT NULL ,
+  `entityID` INT NOT NULL ,
+PRIMARY KEY ( `keyID` , `entityID` )
+)  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
