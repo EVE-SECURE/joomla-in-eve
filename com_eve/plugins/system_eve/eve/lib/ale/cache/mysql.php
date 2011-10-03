@@ -3,17 +3,17 @@
  * @version $Id: mysql.php 213 2009-12-15 21:27:13Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,7 +25,7 @@ require_once ALE_BASE.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'abstractd
 
 class AleCacheMySQL extends AleCacheAbstractDB {
 	protected $nameQuote = '`';
-	
+
 	public function __construct(array $config = array()) {
 		parent::__construct($config);
 		if (isset($config['db']) && is_resource($config['db'])) {
@@ -52,11 +52,11 @@ class AleCacheMySQL extends AleCacheAbstractDB {
 			}
 		}
 	}
-	
+
 	protected function escape($string) {
-		return mysql_real_escape_string($string);
+		return mysql_real_escape_string($string, $this->db);
 	}
-	
+
 	protected function &execute($query) {
 		$result = mysql_query($query, $this->db);
 		if ($result === false) {
@@ -64,14 +64,14 @@ class AleCacheMySQL extends AleCacheAbstractDB {
 		}
 		return $result;
 	}
-	
+
 	protected function &fetchRow(&$result) {
 		$row = mysql_fetch_assoc($result);
 		return $row;
 	}
-	
+
 	protected function freeResult(&$result) {
 		mysql_free_result($result);
 	}
-			
+
 }

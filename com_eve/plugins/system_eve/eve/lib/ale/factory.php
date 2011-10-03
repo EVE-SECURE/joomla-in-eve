@@ -1,19 +1,19 @@
 <?php
 /**
- * @version $Id: factory.php 204 2009-04-25 22:14:22Z kovalikp $
+ * @version $Id: factory.php 207 2009-07-18 23:21:48Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,7 +34,7 @@ class AleFactory {
 	 * @var array
 	 */
 	private static $instances = array();
-	
+
 	/**
 	 * Look for class within Ale directory
 	 *
@@ -49,7 +49,7 @@ class AleFactory {
 		}
 		$path = ALE_BASE.DIRECTORY_SEPARATOR;
 		if ($type) {
-			$path .= strtolower($type).DIRECTORY_SEPARATOR; 
+			$path .= strtolower($type).DIRECTORY_SEPARATOR;
 		}
 		$path .= strtolower($name).'.php';
 		if (!file_exists($path)) {
@@ -61,7 +61,7 @@ class AleFactory {
 		}
 		return $class;
 	}
-	
+
 	/**
 	 * Get value from array if exists, or return default
 	 *
@@ -70,10 +70,10 @@ class AleFactory {
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	private static function _default(&$array, $key, $default) {
+	private static function _default($array, $key, $default) {
 		return isset($array[$key]) ? $array[$key] : $default;
 	}
-	
+
 	/**
 	 * Initialise new instance of Ale class
 	 *
@@ -95,11 +95,11 @@ class AleFactory {
 		} else {
 			$tmp = array();
 		}
-		
+
 		$mainConfig 	= self::_default($tmp, 'main', array());
 		$cacheConfig 	= self::_default($tmp, 'cache', array());
 		$requestConfig 	= self::_default($tmp, 'request', array());
-		
+
 		foreach($config as $key => $value) {
 			$split = explode('.', $key, 2);
 			if (count($split) == 2) {
@@ -107,42 +107,40 @@ class AleFactory {
 					$key = $split[0];
 					$value = array($split[1] => $value);
 				}
-				if ($key == 'main' && is_array($value)) {
-					foreach ($value as $k => $v) {
-						$mainConfig[$k] = $v;
-					}
-				} elseif ($key == 'cache' && is_array($value)) {
-					foreach ($value as $k => $v) {
-						$cacheConfig[$k] = $v;
-					}
-				} elseif ($key == 'request' && is_array($value)) {
-					foreach ($value as $k => $v) {
-						$requestConfig[$k] = $v;
-					}
-				} else {
-					$mainConfig[$key] = $value;
+			}
+			if ($key == 'main' && is_array($value)) {
+				foreach ($value as $k => $v) {
+					$mainConfig[$k] = $v;
+				}
+			} elseif ($key == 'cache' && is_array($value)) {
+				foreach ($value as $k => $v) {
+					$cacheConfig[$k] = $v;
+				}
+			} elseif ($key == 'request' && is_array($value)) {
+				foreach ($value as $k => $v) {
+					$requestConfig[$k] = $v;
 				}
 			} else {
 				$mainConfig[$key] = $value;
 			}
 		}
-		
+
 		$mainName 		= self::_default($mainConfig, 'class', $name);
 		$cacheName 		= self::_default($cacheConfig, 'class', 'Dummy');
 		$requestName 	= self::_default($requestConfig, 'class', 'Curl');
-		
+
 		$mainClass 		= self::_class($mainName);
 		$cacheClass 	= self::_class($cacheName, 'cache');
 		$requestClass 	= self::_class($requestName, 'request');
-		
+
 		$request 		= new $requestClass($requestConfig);
-		$cache 			= new $cacheClass($cacheConfig); 
+		$cache 			= new $cacheClass($cacheConfig);
 		$main 			= new $mainClass($request, $cache, $mainConfig);
 
 		self::$instances[$_name] = $main;
-		
+
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of Ale class
 	 * If object already exists and no new config is provided,
@@ -159,7 +157,7 @@ class AleFactory {
 		}
 		return self::$instances[$_name];
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of AleBase class
 	 *
@@ -176,7 +174,7 @@ class AleFactory {
 		$newInstance = self::_default($params, 1, false);
 		return self::get($name, $config, $newInstance);
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of AleEVEOnline class
 	 *
@@ -186,7 +184,7 @@ class AleFactory {
 	public static function getEVEOnline(array $config = array(), $newInstance = false) {
 		return self::get('EVEOnline', $config, $newInstance);
 	}
-	
+
 	/**
 	 * Loads configuration file and returns instance of AleEVECentral class
 	 *
@@ -196,5 +194,5 @@ class AleFactory {
 	public static function getEVECentral(array $config = array(), $newInstance = false) {
 		return self::get('EVECentral', $config, $newInstance);
 	}
-	
+
 }

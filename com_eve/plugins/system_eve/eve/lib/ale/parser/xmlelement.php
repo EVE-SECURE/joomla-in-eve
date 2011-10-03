@@ -3,17 +3,17 @@
  * @version $Id: xmlelement.php 215 2010-05-14 20:27:33Z kovalikp $
  * @license GNU/LGPL, see COPYING and COPYING.LESSER
  * This file is part of Ale - PHP API Library for EVE.
- * 
+ *
  * Ale is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Ale is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with Ale.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,8 +27,8 @@
  * 	<li>Iteration through row nodes</li>
  * 	<li>Parsing to array structure</li>
  * </ul>
- * 
- * @example 
+ *
+ * @example
  * <?php
  * $data = $api->char->CharacterSheet(); //get character sheet
  * $xml = new AleParserXMLElement($data);
@@ -37,21 +37,22 @@
  * foreach ($xml->result->skills as $skill) {} //iteration
  * $skillCount = count($skills); //number of skills
  * $skillArray = $skills->toArray(); //convert node to array
- * $skills[3413]->skillpoints; //array-like access to rowset node, 'skillpoinsts' is attribute of row 
+ * $skills[3413]->skillpoints; //array-like access to rowset node, 'skillpoinsts' is attribute of row
  */
 class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  {
-	
+
 	private $name = null;
 	private $data = null;
 	private $children = null;
+	private $attributes = null;
 	private $rows = null;
-	
+
 	/**
 	 * Constuctor
 	 *
 	 * @param SimpleXMLElement|string $data
 	 */
-	public function __construct($data) {		
+	public function __construct($data) {
 		if (is_string($data)) {
 			$data = new SimpleXMLElement($data);
 		}
@@ -64,7 +65,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 			return;
 		}
 	}
-	
+
 	/**
 	 * Prepare child nodes. "rowset" modes will be accesed by their "name" attribute
 	 *
@@ -73,7 +74,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		if (isset($this->children)) {
 			return;
 		}
-		
+
 		$this->children = array();
 		$nodes =  $this->data->children();
 		foreach ($nodes as $node) {
@@ -86,43 +87,55 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 			}
 		}
 		
-		if ($this->name == 'row') {
-			$attribs = $this->data->attributes();
-			foreach ($attribs as $key => $value) {
-				$this->children[(string) $key] = (string) $value;
-			}
+		$this->attributes = array();
+		$attribs = $this->data->attributes();
+		foreach ($attribs as $key => $value) {
+			$this->attributes[(string) $key] = (string) $value;
 		}
 	}
-	
+
 	/**
 	 * Prepare rows array attribute for 'rowset' node
 	 *
 	 */
 	protected function prepareRows() {
 		if (isset($this->rows)) {
-			return; 
+			return;
 		}
-		
+
 		$this->rows = array();
 		if ($this->name == 'rowset') {
 			$attribs = $this->data->attributes();
-			$key = isset($attribs['key']) ? (string) $attribs['key'] : null;  
-			$rows = $this->data->children();
-			foreach ($rows as $row) {
-				if ($row->getName() != 'row') {
+			$key = isset($attribs['key']) ? (string) $attribs['key'] : null;
+			$keys = $key ? explode(',', $key) : array();
+			$children = $this->data->children();
+			foreach ($children as $child) {
+				if ($child->getName() != 'row') {
 					continue;
 				}
-				$row = $this->transformNode($row);
+				//echo (string)$child;
+				$child = $this->transformNode($child);
 				if ($key) {
-					$attribs = $row->attributes();
-					$this->rows[(string) $attribs[$key]] = $row;
+					$attribs = $child->attributes();
+					$rows = &$this->rows;
+					for ($i = 0; $i < count($keys); $i++) {
+						$keyVal = (string) $attribs[trim($keys[$i])];
+						if ($i == count($keys) - 1) {
+							$rows[$keyVal] = $child;
+						} else {
+							if (!isset($rows[$keyVal])){
+								$rows[$keyVal] = array();
+							}
+							$rows = &$rows[$keyVal];
+						}
+					}
 				} else {
-					 $this->rows[] = $row;
+					$this->rows[] = $child;
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Return instance of same class as "$this"
 	 *
@@ -133,7 +146,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		$classname = get_class($this);
 		return new $classname($node);
 	}
-	
+
 	/**
 	 * Walk through node tree and fills $result array
 	 *
@@ -145,7 +158,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		$name = (string) $node->getName();
 		$attributes = $node->attributes();
 		$children = $node->children();
-		
+
 		if (count($attributes) || count($children)) {
 			$result = array();
 			if (!count($children) && (string) $node) {
@@ -154,26 +167,43 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		} else {
 			$result = (string) $node;
 		}
-		
+
 		if ($name != 'rowset') {
 			foreach ($attributes as $aname => $avalue) {
 				$result[(string)$aname] = (string) $avalue;
 			}
 		}
-		
+
 		$i = 0;
 		foreach ($children as $name => $child) {
 			if (!is_array($result)) {
 				$result = array();
 			}
 			$attributes = $child->attributes();
-			
+
 			$_key = $key;
 			if ($name == 'rowset') {
 				$name = (string) $attributes['name'];
 				$_key = (string) $attributes['key'];
 			}
 			if ($name == 'row') {
+				//echo $key.'--';
+				$keys = $key ? explode(',', $key) : array();
+				//print_r($keys);
+				$tmp = &$result;
+				for ($ii = 0; $ii < count($keys); $ii++) {
+					$keyVal = (string) $attributes[trim($keys[$ii])];
+					if ($ii == count($keys) - 1) {
+						$this->nodeToArray($tmp[$keyVal], $child, $_key);
+						continue 2;
+					} else {
+						if (!isset($tmp[$keyVal])){
+							$tmp[$keyVal] = array();
+						}
+						$tmp =& $tmp[$keyVal];
+					}
+					
+				}
 				$name = (string) $attributes[$key];
 				if (!$name) {
 					$name = $i;
@@ -181,18 +211,18 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 			}
 			$this->nodeToArray($result[$name], $child, $_key);
 			$i += 1;
-		}		
+		}
 	}
-	
+
 	/**
-	 * Returns data as SimpleXMLElement 
+	 * Returns data as SimpleXMLElement
 	 *
 	 * @return SimpleXMLElement
 	 */
 	public function getSimpleXMLElement() {
 		return $this->data;
 	}
-	
+
 	/**
 	 * Finds children of given node
 	 *
@@ -206,7 +236,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Get node name
 	 *
@@ -215,7 +245,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	public function getName() {
 		return $this->name;
 	}
-	
+
 	/**
 	 * Return a well-formed XML string based on element
 	 *
@@ -224,16 +254,17 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	function asXML() {
 		return $this->data->asXML();
 	}
-	
+
 	/**
 	 * Identifies an element's attributes
 	 *
 	 * @return unknown
 	 */
 	public function attributes() {
-		return $this->data->attributes();
+		$this->prepareChildren();
+		return $this->attributes;
 	}
-	
+
 	/**
 	 * The xpath method searches the AleParserXMLElement node for children matching the XPath path.
 	 *
@@ -248,7 +279,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Node accessor
 	 *
@@ -260,9 +291,12 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		if (isset($this->children[$name])) {
 			return $this->children[$name];
 		}
+		if (isset($this->attributes[$name])) {
+			return $this->attributes[$name];
+		}
 		return null;
 	}
-	
+
 	/**
 	 * Node isset checker
 	 *
@@ -271,9 +305,9 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 */
 	public function __isset($name) {
 		$this->prepareChildren();
-		return isset($this->children[$name]);
+		return isset($this->children[$name]) || isset($this->attributes[$name]);
 	}
-	
+
 	/**
 	 * Implements ArrayAccess::offsetExists()
 	 *
@@ -284,7 +318,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		$this->prepareRows();
 		return isset($this->rows[$i]);
 	}
-	
+
 	/**
 	 * Implements ArrayAccess::offsetGet()
 	 *
@@ -295,7 +329,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		$this->prepareRows();
 		return $this->rows[$i];
 	}
-	
+
 	/**
 	 * Not implemented ArrayAccess::offsetSet()
 	 * Class is read-only
@@ -303,7 +337,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	public function offsetSet($i, $data) {
 		throw new BadMethodCallException('Not-Implemented');
 	}
-	
+
 	/**
 	 * Not implemented ArrayAccess::offsetUnset()
 	 * Class is read-only
@@ -311,7 +345,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	public function offsetUnset($i) {
 		throw new BadMethodCallException('Not-Implemented');
 	}
-	
+
 	/**
 	 * Implements Countable::count()
 	 * Return number of rows for rowsets
@@ -322,7 +356,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 		$this->prepareRows();
 		return count($this->rows);
 	}
-	
+
 	/**
 	 * Implements IteratorAggregate::getIterator()
 	 *
@@ -330,9 +364,9 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	 */
 	public function getIterator() {
 		$this->prepareRows();
-		return new ArrayIterator($this->rows);	
+		return new ArrayIterator($this->rows);
 	}
-	
+
 	/**
 	 * String representation of node
 	 *
@@ -341,7 +375,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 	public function __toString() {
 		return (string) $this->data;
 	}
-	
+
 	/**
 	 * Transform node tree to array structure
 	 *
