@@ -31,14 +31,14 @@ abstract class JModelItem extends JModel
 	 * @var		string
 	 */
 	protected $_option;
-	
+
 	/**
 	 * Model context string.
 	 *
 	 * @var		string
 	 */
 	protected $_context;
-	
+
 	protected $__state_set = false;
 
 	/**
@@ -53,24 +53,24 @@ abstract class JModelItem extends JModel
 		if (!empty($config['ignore_request'])) {
 			$this->__state_set = true;
 		}
-		
+
 		// Check for context in config
 		if (isset($config['context'])) {
 			$this->_context = $config['context'];
 		}
-		
+
 		if (empty($this->_option) || empty($this->_context)) {
 			$r = null;
 			if (!preg_match('/(.*)Model(.*)/i', get_class($this), $r)) {
 				return JError::raiseError(500, 'JModel_Error_Cannot_parse_name');
 			}
 		}
-		
+
 		// Guess the option as the prefix, eg: OptionControllerContext
 		if (empty($this->_option)) {
 			$this->_option = 'com_'.strtolower($r[1]);
 		}
-		
+
 		// Guess the context as the suffix, eg: OptionControllerContext
 		if (empty($this->_context)) {
 			$this->_context = strtolower($r[2]);
@@ -142,7 +142,7 @@ abstract class JModelItem extends JModel
 
 		return $property === null ? $this->_state : $this->_state->get($property, $default);
 	}
-		
+
 	protected function _loadItem($pk = null)
 	{
 		// Get a row instance.
@@ -154,22 +154,22 @@ abstract class JModelItem extends JModel
 		} else if ($error = $table->getError()) {
 			$this->setError($error);
 		}
-		
-		return $data;		
+
+		return $data;
 	}
-		
+
 	public function getTable($name = null, $prefix = null, $options = array())
 	{
 		if (is_null($name)) {
 			$name = ucfirst($this->_context);
 		}
 		if (is_null($prefix)) {
-			$prefix = ucfirst(substr($this->_option, 4)).'Table'; 
+			$prefix = ucfirst(substr($this->_option, 4)).'Table';
 		}
 		return parent::getTable($name, $prefix, $options);
 	}
-	
-	
+
+
 	/**
 	 * Method to get processed item data.
 	 *
@@ -182,15 +182,15 @@ abstract class JModelItem extends JModel
 		// Initialize variables.
 		$pk = (!empty($pk)) ? $pk : (int) $this->getState($this->_context.'.id');
 		$storeId = $this->_getStoreId($pk);
-		
+
 		if ($this->_item === null) {
 			$this->_item = array();
 		}
-		
+
 		if (!isset($this->_item[$storeId])) {
 			$this->_item[$storeId] = $this->_loadItem($pk);
 		}
-		
+
 		return $this->_item[$storeId];
 	}
 

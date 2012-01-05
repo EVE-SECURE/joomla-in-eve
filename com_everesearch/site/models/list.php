@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
 class EveresearchModelList extends JModelList {
-	
+
 	/**
 	 * Model context string.
 	 *
@@ -34,11 +34,11 @@ class EveresearchModelList extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_everesearch.list';
-	
+
 	protected $_entity = null;
-	
+
 	protected static $_datacore_table = false;
-	
+
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -46,13 +46,13 @@ class EveresearchModelList extends JModelList {
 		$this->_entity = $entity;
 		$eveparams = JComponentHelper::getParams('com_eve');
 		$dbdump_database = $eveparams->get('dbdump_database');
-		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :'';
 	}
-	
+
 	protected function _createDatacoreTable()
 	{
 		if (self::$_datacore_table) {
-			return;		
+			return;
 		}
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
@@ -62,7 +62,7 @@ class EveresearchModelList extends JModelList {
 		$q->addWhere('inv.groupID = 333');
 		$q->addQuery('inv.typeID, inv.typeName, dgm1.valueInt AS datacoreSkillID, dgm2.valueInt AS datacoreCost');
 		$query = $q->prepareSelect();
-		
+
 		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS `tmp_eve_research_datacores` (
 			`typeID` smallint(6) NOT NULL ,
 			`typeName` varchar(100) default NULL ,
@@ -74,7 +74,7 @@ class EveresearchModelList extends JModelList {
 		$dbo->query();
 		self::$_datacore_table = true;
 	}
-	
+
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
@@ -89,7 +89,7 @@ class EveresearchModelList extends JModelList {
 		$q->addJoin($this->dbdump.'agtAgents', 'agt', 'agt.agentID=re.agentID');
 		$q->addJoin($this->dbdump.'staStations', 'sta', 'sta.stationID=agt.locationID');
 		$q->addJoin('tmp_eve_research_datacores', 'rd', 'rd.datacoreSkillID=re.skillTypeID');
-		
+
 		$q->addQuery('re.*');
 		$q->addQuery('re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60) AS currentPoints');
 		$q->addQuery('ev.itemName AS agentName');
@@ -98,12 +98,12 @@ class EveresearchModelList extends JModelList {
 		$q->addQuery('sta.stationName');
 		$q->addQuery('re.pointsPerDay / rd.datacoreCost AS datacoresPerDay');
 		$q->addQuery('(re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60)) / rd.datacoreCost AS currentDatacores');
-		
+
 		$orderings = array('agentname', 'skilltypename', 'currentpoints', 're.pointsperday', 'currentdatacores', 'datacoresperday',
 			'agt.level', 'sta.stationname' );
-		
+
 		if ($this->_entity == 'user') {
-			$orderings[] = 'charactername'; 
+			$orderings[] = 'charactername';
 			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=re.characterID');
 			$q->addQuery('ch.name AS characterName');
 			$acl = EveFactory::getACL();
@@ -116,10 +116,10 @@ class EveresearchModelList extends JModelList {
 		} else {
 			$q->addWhere('re.characterID = %1$s', $characterID);
 		}
-		
+
 		if ($search) {
-			$q->addWhere(sprintf('(ev.itemName LIKE %1$s OR inv.typeName LIKE %1$s OR sta.stationName LIKE %1$s)', 
-				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
+			$q->addWhere(sprintf('(ev.itemName LIKE %1$s OR inv.typeName LIKE %1$s OR sta.stationName LIKE %1$s)',
+			$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
 		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'agentName'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'asc'));
@@ -129,7 +129,7 @@ class EveresearchModelList extends JModelList {
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
 			$direction = 'desc';
 		}
-		
+
 		$q->addOrder($ordering, $direction);
 		return $q;
 	}
@@ -154,10 +154,10 @@ class EveresearchModelList extends JModelList {
 		$id	.= ':'.$this->getState('list.ordering');
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
-		
+
 		return md5($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -174,7 +174,7 @@ class EveresearchModelList extends JModelList {
 		$app		= &JFactory::getApplication('administrator');
 		$params		= JComponentHelper::getParams('com_eve');
 		$context	= $this->_context.'.';
-		
+
 		if ($this->_entity == 'user') {
 			$user = JFactory::getUser();
 			$characterID = $user->id;
@@ -182,20 +182,20 @@ class EveresearchModelList extends JModelList {
 			$characterID = JRequest::getInt($this->_entity.'ID');
 		}
 		$this->setState('list.characterID', $characterID);
-		
+
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($context.'filter.search', 'filter_search', '');
 		$this->setState('filter.search', $search);
 
 		parent::_populateState('agentName', 'desc');
 
-		$limitstart = JRequest::getInt('limitstart'); 
+		$limitstart = JRequest::getInt('limitstart');
 		$this->setState('list.start', $limitstart);
-		
+
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
-	
+
 	public function getSummary()
 	{
 		$this->_createDatacoreTable();
@@ -204,14 +204,14 @@ class EveresearchModelList extends JModelList {
 		$q->addTable('#__eve_research', 're');
 		$q->addJoin($this->dbdump.'invTypes', 'inv', 'inv.typeID=re.skillTypeID');
 		$q->addJoin('tmp_eve_research_datacores', 'rd', 'rd.datacoreSkillID=re.skillTypeID');
-		
+
 		$q->addQuery('inv.typeName AS skillTypeName');
 		$q->addQuery('SUM(re.pointsPerDay) AS pointsPerDay');
 		$q->addQuery('SUM(re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60)) AS currentPoints');
 		$q->addQuery('SUM(re.pointsPerDay / rd.datacoreCost) AS datacoresPerDay');
 		$q->addQuery('SUM((re.remainderPoints + (re.pointsPerDay * TIMESTAMPDIFF(SECOND, re.researchStartDate, NOW())/24/60/60)) / rd.datacoreCost) AS currentDatacores');
 		$q->addGroup('re.skillTypeID');
-		
+
 		if ($this->_entity == 'user') {
 			$acl = EveFactory::getACL();
 			$chacracterIDs = $acl->getUserCharacterIDs();

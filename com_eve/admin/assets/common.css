@@ -27,54 +27,55 @@
 }
 
 .icon-32-eve {
-	 background-image: url(icon-32-eve.png);
+	background-image: url(icon-32-eve.png);
 }
 
 .icon-32-account {
-	 background-image: url(icon-32-account.png);
+	background-image: url(icon-32-account.png);
 }
 
 .icon-32-run {
-	 background-image: url(icon-32-run.png);
+	background-image: url(icon-32-run.png);
 }
 
 .icon-32-alliance {
-	 background-image: url(icon-32-alliance.png);
+	background-image: url(icon-32-alliance.png);
 }
 
 .icon-32-corporation {
-	 background-image: url(icon-32-corporation.png);
+	background-image: url(icon-32-corporation.png);
 }
 
 .icon-32-character {
-	 background-image: url(icon-32-character.png);
+	background-image: url(icon-32-character.png);
 }
 
 .icon-32-default {
-	 background-image: url(icon-32-default.png);
+	background-image: url(icon-32-default.png);
 }
 
 .icon-32-default-cancel {
-	 background-image: url(icon-32-default-cancel.png);
+	background-image: url(icon-32-default-cancel.png);
 }
 
 .icon-32-schedule {
-	 background-image: url(icon-32-schedule.png);
+	background-image: url(icon-32-schedule.png);
 }
 
 .icon-16-star-yellow {
-	 background-image: url(icon-star-yellow-16.png);
+	background-image: url(icon-star-yellow-16.png);
 }
 
 .icon-16-star-blue {
-	 background-image: url(icon-star-blue-16.png);
+	background-image: url(icon-star-blue-16.png);
 }
 
 .apiStatus {
-	background-position: 0 50%; 
+	background-position: 0 50%;
 	background-repeat: no-repeat;
 	padding-left: 16px;
 }
+
 .apiStatus-Invalid {
 	background-image: url(status-red.png);
 }
@@ -96,21 +97,22 @@
 }
 
 #eveoverview {
-	float: right; 
-	width: 45%;	
+	float: right;
+	width: 45%;
 }
+
 #cpanel {
 	width: 55%;
 }
 
 #cpanel div {
-	float:left;
+	float: left;
 }
 
 .fltlft {
-	float:left;
+	float: left;
 }
 
 .fltrt {
-	float:right;
+	float: right;
 }

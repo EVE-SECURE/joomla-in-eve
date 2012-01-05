@@ -10,7 +10,6 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Industry Jobs</description>
-	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -39,7 +38,7 @@
 	<media folder="media" destination="com_eveindustryjobs">
 		<filename>css/component.css</filename>
 	</media>
-	
+
 	<administration>
 		<menu img="components/com_eveindustryjobs/assets/icon-16-industry.png">EVE Industry Jobs</menu>
 		<languages folder="admin/language">

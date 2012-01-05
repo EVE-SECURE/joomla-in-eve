@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,18 +24,18 @@
 defined('_JEXEC') or die();
 
 class EveControllerAlliance extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
 		$this->registerTask('get_alliance_list', 'getAllianceList');
 		$this->registerTask('get_alliance_members', 'getAllianceMembers');
 		$this->registerTask('unsetOwner', 'setOwner');
 	}
-	
+
 	/**
 	 * Dummy method to redirect back to standard controller
 	 *
@@ -45,7 +45,7 @@ class EveControllerAlliance extends EveController {
 	{
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 	}
-	
+
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -56,12 +56,12 @@ class EveControllerAlliance extends EveController {
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliance&layout=edit', false));
 	}
-	
+
 	function edit() {
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Alliance', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$previousId		= (int) $app->getUserState('com_eve.edit.alliance.allianceID');
 		$allianceID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('allianceID'));
 		// If alliance ids do not match, checkin previous alliance.
@@ -73,7 +73,7 @@ class EveControllerAlliance extends EveController {
 				return false;
 			}
 		}
-		
+
 		// Attempt to check-out the new alliance for editing and redirect.
 		if (!$model->checkout($allianceID)) {
 			// Check-out failed, go back to the list and display a notice.
@@ -87,7 +87,7 @@ class EveControllerAlliance extends EveController {
 			$app->setUserState('com_eve.edit.alliance.data', null);
 			$this->setRedirect('index.php?option=com_eve&view=alliance&layout=edit');
 			return true;
-		}		
+		}
 	}
 
 	/**
@@ -142,7 +142,7 @@ class EveControllerAlliance extends EveController {
 
 		// Validate the posted data.
 		$data	= $model->validate($data);
-		
+
 		// Check for validation errors.
 		if ($data === false)
 		{
@@ -213,7 +213,7 @@ class EveControllerAlliance extends EveController {
 				break;
 		}
 	}
-		
+
 	function delete() {
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
@@ -239,7 +239,7 @@ class EveControllerAlliance extends EveController {
 			return true;
 		}
 	}
-	
+
 	function getAllianceList() {
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
@@ -247,18 +247,18 @@ class EveControllerAlliance extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 		// Get application
 		$app = JFactory::getApplication();
-		
+
 		$model = $this->getModel('Alliance', 'EveModel');
 		$result = $model->apiGetAllianceList();
-		
+
 		foreach ($model->getErrors() as $error) {
 			$app->enqueueMessage($error, 'error');
 		}
 		if ($result) {
-			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED')); 
+			$app->enqueueMessage(JText::_('ALLIANCES SUCCESSFULLY IMPORTED'));
 		}
 	}
-	
+
 	function getAllianceMembers() {
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
@@ -274,18 +274,18 @@ class EveControllerAlliance extends EveController {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
-		
+
 		//@todo: message, error output
 		$model = $this->getModel('Alliance', 'EveModel');
 		$model->apiGetAllianceMembers($cid);
-		
+
 		foreach ($model->getErrors() as $error) {
 			$app->enqueueMessage($error, 'error');
 		}
 		$app->enqueueMessage(JText::sprintf('%s CORPORATION SUCCESSFULLY IMPORTED', $count));
-		
+
 	}
-	
+
 	public function setOwner()
 	{
 		// Check for request forgeries.
@@ -294,7 +294,7 @@ class EveControllerAlliance extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=alliances', false));
 		// Get application
 		$app = JFactory::getApplication();
-		
+
 		$isOwner = strtolower($this->_task) == 'setowner';
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
@@ -303,7 +303,7 @@ class EveControllerAlliance extends EveController {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
-				
+
 		$model = $this->getModel('Alliance', 'EveModel');
 		if ($isOwner) {
 			$model->apiGetAllianceMembers($cid);
@@ -312,7 +312,7 @@ class EveControllerAlliance extends EveController {
 		foreach ($model->getErrors() as $error) {
 			$app->enqueueMessage($error, 'error');
 		}
-		
+
 		$corporationIDs = $model->getAllianceMemberIDs($cid);
 		//print_r($corporationIDs);die;
 		if ($corporationIDs) {
@@ -330,9 +330,9 @@ class EveControllerAlliance extends EveController {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public function search()
 	{
 		$model = $this->getModel('Alliances', 'EveModel', array('ignore_request' => true));

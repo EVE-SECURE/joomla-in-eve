@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 jimport('joomla.plugin.plugin');
@@ -34,7 +34,7 @@ jimport('joomla.plugin.plugin');
  */
 class plgUserEVE extends JPlugin
 {
-	
+
 	/**
 	 * Constructor
 	 *
@@ -66,11 +66,11 @@ class plgUserEVE extends JPlugin
 		}
 
 		$db =& JFactory::getDBO();
-		$db->setQuery('UPDATE #__eve_characters SET userID = 0 WHERE userID = '.$db->Quote($user['id'])); 
+		$db->setQuery('UPDATE #__eve_characters SET userID = 0 WHERE userID = '.$db->Quote($user['id']));
 		$db->Query();
 		return true;
 	}
-		
+
 	/**
 	 * Example store user method
 	 *
@@ -84,19 +84,19 @@ class plgUserEVE extends JPlugin
 	function onAfterStoreUser($user, $isnew, $succes, $msg)
 	{
 		$app = JFactory::getApplication();
-		
+
 		if( $app->isAdmin()) {
-		 	return false;
+			return false;
 		}
-		
+
 		if ($isnew) {
 			$dbo = JFactory::getDBO();
 			$sql = 'UPDATE #__users SET block=1 WHERE id='.intval($user['id']);
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
-		
-		
+
+
 	}
 
 }

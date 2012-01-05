@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,16 +24,16 @@
 defined('_JEXEC') or die();
 
 class EveControllerAccount extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
 		$this->registerTask('get_characters', 'getCharacters');
 	}
-	
+
 	/**
 	 * Dummy method to redirect back to standard controller
 	 *
@@ -43,7 +43,7 @@ class EveControllerAccount extends EveController {
 	{
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
 	}
-	
+
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -54,12 +54,12 @@ class EveControllerAccount extends EveController {
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=account&layout=edit', false));
 	}
-	
+
 	function edit() {
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Account', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$previousId		= (int) $app->getUserState('com_eve.edit.account.userID');
 		$userID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('userID'));
 		// If account ids do not match, checkin previous account.
@@ -71,7 +71,7 @@ class EveControllerAccount extends EveController {
 				return false;
 			}
 		}
-		
+
 		// Attempt to check-out the new account for editing and redirect.
 		if (!$model->checkout($userID)) {
 			// Check-out failed, go back to the list and display a notice.
@@ -85,7 +85,7 @@ class EveControllerAccount extends EveController {
 			$app->setUserState('com_eve.edit.account.data', null);
 			$this->setRedirect('index.php?option=com_eve&view=account&layout=edit');
 			return true;
-		}		
+		}
 	}
 
 	/**
@@ -210,8 +210,8 @@ class EveControllerAccount extends EveController {
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
 				break;
 		}
-	}	
-	
+	}
+
 	function delete() {
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
@@ -237,17 +237,17 @@ class EveControllerAccount extends EveController {
 			return true;
 		}
 	}
-	
+
 	function getCharacters() {
 		$model = & $this->getModel('Account');
 		$cid = JRequest::getVar('cid', array(), '', 'array');
-		
+
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
-		
+
 		//@todo: message, error output
 		$model->apiGetCharacters($cid);
-		
+
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=accounts', false));
 	}
 

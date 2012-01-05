@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -28,12 +28,12 @@ jimport('joomla.application.component.model');
 class EveModel extends JModel {
 	//missing from 1.6 JModel
 	protected $__state_set	= null;
-	
+
 	function __construct($config = array()) {
 		$config['table_path'] = JPATH_ADMINISTRATOR.DS.'components'.DS.'com_eve'.DS.'tables';
 		parent::__construct($config);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -46,7 +46,7 @@ class EveModel extends JModel {
 	protected function _populateState()
 	{
 	}
-	
+
 	/**
 	 * Method to get model state variables
 	 * 1.6 JModel override
@@ -66,8 +66,8 @@ class EveModel extends JModel {
 		}
 
 		return $property === null ? $this->_state : $this->_state->get($property, $default);
-	}	
-	
+	}
+
 	/**
 	 * Get instance of JQuery
 	 *
@@ -77,7 +77,7 @@ class EveModel extends JModel {
 		$dbo = $this->getDBO();
 		return EveFactory::getQuery($dbo);
 	}
-	
+
 	/**
 	 * Get possible options of enum type fields
 	 *
@@ -90,9 +90,9 @@ class EveModel extends JModel {
 		$sql = "SHOW COLUMNS FROM `".$table."` LIKE '".$field."'";
 		$dbo->Execute($sql);
 		$desc = $dbo->loadRow();
-	    preg_match_all('/\'(.*?)\'/', $desc[1], $enum_array);
+		preg_match_all('/\'(.*?)\'/', $desc[1], $enum_array);
 		$result = array();
-		
+
 		if(!empty($enum_array[1])) {
 			foreach($enum_array[1] as $mkey => $value)  {
 				$obj = new stdClass();
@@ -102,7 +102,7 @@ class EveModel extends JModel {
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * Return instance of AleEVEOnline class (api adapter)
 	 *
@@ -111,18 +111,18 @@ class EveModel extends JModel {
 	function getAleEVEOnline() {
 		return EveFactory::getAleEVEOnline($this->getDBO());
 	}
-	
+
 	function getInstance($table, $id = null) {
 		$config = array('dbo'=>$this->getDBO());
 		return EveFactory::getInstance($table, $id, $config);
 	}
-	
+
 	function getOwnerCorporations() {
 		$user = JFactory::getUser();
 		if (!$user->id) {
 			return array();
 		}
-		
+
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
@@ -132,9 +132,9 @@ class EveModel extends JModel {
 		if (empty($corps)) {
 			return array();
 		}
-		
+
 		$corps = implode(', ', $corps);
-		
+
 		$q = $this->getQuery();
 		$q->addTable('#__eve_corporations', 'co');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
@@ -142,15 +142,15 @@ class EveModel extends JModel {
 		$q->addWhere('co.corporationID IN (%s)', $corps);
 		$q->addQuery('co.*');
 		$q->addOrder('co.corporationName');
-		return $q->loadObjectList('corporationID');		
+		return $q->loadObjectList('corporationID');
 	}
-	
+
 	function getCharacters($owner) {
 		$user = JFactory::getUser();
 		if ($owner == 0) {
 			$owner = $user->id;
 		}
-		
+
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
 		if (!$owner != $user->id) {
@@ -171,7 +171,7 @@ class EveModel extends JModel {
 		$q->addQuery('ch.*');
 		$q->addWhere('ch.owner=%s', intval($owner));
 		return $q->loadObjectList('characterID');
-		
+
 	}
-	
+
 }

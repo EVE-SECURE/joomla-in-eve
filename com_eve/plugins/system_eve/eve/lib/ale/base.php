@@ -20,6 +20,10 @@
 
 defined('ALE_BASE') or define('ALE_BASE', dirname(__FILE__));
 
+if (!defined('ALE_CONFIG_DIR')) {
+	define('ALE_CONFIG_DIR', ALE_BASE . DIRECTORY_SEPARATOR . 'config');
+}
+
 require_once ALE_BASE.DIRECTORY_SEPARATOR.'util'.DIRECTORY_SEPARATOR.'context.php';
 
 

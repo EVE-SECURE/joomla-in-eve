@@ -10,18 +10,24 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Character Tracking</description>
-	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<queries>
-			<query>INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '100', '4225');</query>
-			<query>INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES ('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
+			<query>INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` ,
+				`alias` , `entity` , `component` , `view` , `layout` , `ordering` ,
+				`published`, `access`, `roles` ) VALUES ('chartracking', 'Member
+				Tracking', 'member-tracking', 'corporation', 'chartracking',
+				'corporation', '', '0', '1', '100', '4225');</query>
+			<query>INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`,
+				`authentication`, `authorization`, `delay`, `params`) VALUES
+				('corp', 'MemberTracking', 'Character', 'Full', 0, '');</query>
 		</queries>
 	</install>
 	<uninstall>
 		<queries>
-			<query>DELETE FROM `#__eve_sections` WHERE `component`='chartracking';</query>
+			<query>DELETE FROM `#__eve_sections` WHERE
+				`component`='chartracking';</query>
 		</queries>
 	</uninstall>
 	<files folder="site">
@@ -38,7 +44,6 @@
 	<media folder="media" destination="com_evechartracking">
 		<filename>css/component.css</filename>
 	</media>
-	
 	<administration>
 		<menu img="components/com_eve/assets/icon-16-corporation.png">EVE Character Tracking</menu>
 		<files folder="admin">

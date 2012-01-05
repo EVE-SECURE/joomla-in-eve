@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 jimport('joomla.plugin.plugin');
@@ -28,18 +28,18 @@ jimport('joomla.plugin.plugin');
  * Joomla! in EVE Api core plugin
  *
  * @author		Pavol Kovalik  <kovalikp@gmail.com>
- * @package		Joomla! in EVE		
+ * @package		Joomla! in EVE
  * @subpackage	Core
  */
 class plgCronEve extends JPlugin {
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
-	
+
 	function onCronTick() {
 		//
 		$now = JFactory::getDate();
-		
+
 		$dbo = JFactory::getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_schedule', 'sc');
@@ -48,15 +48,15 @@ class plgCronEve extends JPlugin {
 		$q->addWhere('published');
 		$q->addQuery('ap.*', 'sc.*');
 		$list = $q->loadObjectList();
-		
+
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
 		//$ale = new AleEVEOnline();
 		$ale = EveFactory::getAleEVEOnline($dbo);
-		
+
 		$utc_tz = new DateTimeZone('UTC');
 		//JDate::toMySQL()
-		
+
 		foreach ($list as $row) {
 			try {
 				if ($row->authentication != 'None') {
@@ -76,7 +76,7 @@ class plgCronEve extends JPlugin {
 				}
 				$next = null;
 				$type = $row->type;
-				$call = $row->call;
+				$name = $row->name;
 				if ($row->params) {
 					$params = json_decode($row->params, true);
 				} else {
@@ -84,7 +84,7 @@ class plgCronEve extends JPlugin {
 				}
 				while (true) {
 					try {
-						$xml = $ale->$type->$call($params);
+						$xml = $ale->$type->$name($params);
 					}
 					catch (AleExceptionEVE $e) {
 						$next = new DateTime($e->getCachedUntil(), $utc_tz);
@@ -92,8 +92,8 @@ class plgCronEve extends JPlugin {
 					}
 					$params['userID'] = $row->userID;
 					$params['characterID'] = $row->characterID;
-					$dispatcher->trigger($type.$call,  
-						array($xml, $ale->isFromCache(), $params));
+					$dispatcher->trigger($type.$name,
+					array($xml, $ale->isFromCache(), $params));
 					$next = new DateTime((string) $xml->cachedUntil, $utc_tz);
 					if (!$row->paginationAttrib) {
 						break;
@@ -107,7 +107,7 @@ class plgCronEve extends JPlugin {
 					$beforeParam = (string)reset($xml->xpath($xpathStr));
 					$params[$row->paginationParam] = $beforeParam;
 				}
-				
+
 			}
 			//TODO: update cacheUntil on error
 			catch (AleExceptionEVEAuthentication $e) {

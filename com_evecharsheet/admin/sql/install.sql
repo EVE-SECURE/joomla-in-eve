@@ -103,7 +103,7 @@ PRIMARY KEY ( `characterID` )
 ) CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
 INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access`, `roles` ) VALUES 

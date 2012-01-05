@@ -15,7 +15,7 @@
 			<option value="1">Yes</option>
 		</param>
 		<param name="show_clone" type="radio" default="1"
-			label="Com_Evecharsheet_Show_Clone_Label" description="Com_Evecharsheet_Show_Clone_Desc" >
+			label="Com_Evecharsheet_Show_Clone_Label" description="Com_Evecharsheet_Show_Clone_Desc">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
@@ -25,7 +25,7 @@
 			<option value="1">Yes</option>
 		</param>
 		<param name="show_skills" type="radio" default="1"
-			label="Com_Evecharsheet_Show_Skills_Label" description="Com_Evecharsheet_Show_Skills_Desc" >
+			label="Com_Evecharsheet_Show_Skills_Label" description="Com_Evecharsheet_Show_Skills_Desc">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
@@ -50,29 +50,37 @@
 			<option value="1">Yes</option>
 		</param>
 
-		<param name="access_balance" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Balance_Label" description="Com_Evecharsheet_Access_Balance_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_clone" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Clone_Label" description="Com_Evecharsheet_Access_Clone_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_attributes" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Attributes_Label" description="Com_Evecharsheet_Access_Attributes_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_skills" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Skills_Label" description="Com_Evecharsheet_Access_Skills_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_certificates" type="sql" default="0" 
+		<param name="access_balance" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Balance_Label" description="Com_Evecharsheet_Access_Balance_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_clone" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Clone_Label" description="Com_Evecharsheet_Access_Clone_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_attributes" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Attributes_Label" description="Com_Evecharsheet_Access_Attributes_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_skills" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Skills_Label" description="Com_Evecharsheet_Access_Skills_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_certificates" type="sql" default="0"
 			label="Com_Evecharsheet_Access_Certificates_Label" description="Com_Evecharsheet_Access_Certificates_Desc"
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_roles" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Roles_Label" description="Com_Evecharsheet_Access_Roles_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_titles" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Titles_Label" description="Com_Evecharsheet_Access_Titles_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_skillqueue" type="sql" default="0" 
-			label="Com_Evecharsheet_Access_Skill_Queue_Label" description="Com_Evecharsheet_Access_Skill_Queue_Desc" 
-			key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_roles" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Roles_Label" description="Com_Evecharsheet_Access_Roles_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_titles" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Titles_Label" description="Com_Evecharsheet_Access_Titles_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_skillqueue" type="sql" default="0"
+			label="Com_Evecharsheet_Access_Skill_Queue_Label" description="Com_Evecharsheet_Access_Skill_Queue_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
 	</params>
 </config>

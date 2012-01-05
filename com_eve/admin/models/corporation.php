@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelCorporation extends EveModel {
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -73,7 +73,7 @@ class EveModelCorporation extends EveModel {
 
 		// Attempt to load the row.
 		$return = $this->getCorporation($corporationID);
-		
+
 		// Check for a table object error.
 		if ($return === false && $table->getError()) {
 			$this->setError($table->getError());
@@ -92,7 +92,7 @@ class EveModelCorporation extends EveModel {
 
 		// Get a corporation row instance.
 		$table = &$this->getItem($corporationID);
-		
+
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
@@ -121,7 +121,7 @@ class EveModelCorporation extends EveModel {
 	{
 
 	}
-	
+
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['corporationID'])) {
@@ -130,7 +130,7 @@ class EveModelCorporation extends EveModel {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Method to checkin a row.
 	 *
@@ -205,7 +205,7 @@ class EveModelCorporation extends EveModel {
 
 		return true;
 	}
-	
+
 	/**
 	 * Tests if corporation is checked out
 	 *
@@ -238,7 +238,7 @@ class EveModelCorporation extends EveModel {
 
 		return $table->isCheckedOut($juserId);
 	}
-	
+
 
 	/**
 	 * Method to delete corporations from the database.
@@ -251,7 +251,7 @@ class EveModelCorporation extends EveModel {
 		$i = 0;
 		// Get a corporation row instance
 		$table = $this->getInstance('Corporation');
-		
+
 		foreach ($cid as $id) {
 			// Load the row.
 			$return = $table->load($id);
@@ -274,7 +274,7 @@ class EveModelCorporation extends EveModel {
 		}
 		return $i;
 	}
-	
+
 	/**
 	 * Enter description here...
 	 *
@@ -284,12 +284,12 @@ class EveModelCorporation extends EveModel {
 	function getCorporation($corporationID = null) {
 		return $this->getInstance('Corporation', $corporationID);
 	}
-	
+
 	protected function corporationSheet($corporation, $useCeoApi = true)
 	{
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
-		
+
 		$ale = $this->getAleEVEOnline();
 		$xml = null;
 		$options = array();
@@ -312,7 +312,7 @@ class EveModelCorporation extends EveModel {
 		}
 		$dispatcher->trigger('corpCorporationSheet', array($xml, $ale->isFromCache(), $options));
 	}
-	
+
 	public function apiGetCorporationSheet($cid) {
 		$count = 0;
 		foreach ($cid as $corporationID) {
@@ -330,11 +330,11 @@ class EveModelCorporation extends EveModel {
 		}
 		return $count;
 	}
-	
+
 	function apiGetMemberTracking($cid) {
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
-		
+
 		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $corporationID) {
@@ -346,12 +346,12 @@ class EveModelCorporation extends EveModel {
 					$this->setError(JText::_('COULD NOT LOAD CEO API CREDENTIALS', $corporation->corporationName, $corporation->corporationID));
 					continue;
 				}
-				
+
 				$ale->setCredentials($account->userID, $account->apiKey, $ceo->characterID);
 				$xml = $ale->corp->MemberTracking();
-	
-				$dispatcher->trigger('corpMemberTracking', 
-					array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID, 'corporationID' => $ceo->corporationID)));
+
+				$dispatcher->trigger('corpMemberTracking',
+				array($xml, $ale->isFromCache(), array('characterID' => $ceo->characterID, 'corporationID' => $ceo->corporationID)));
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
@@ -367,7 +367,7 @@ class EveModelCorporation extends EveModel {
 		}
 		return $count;
 	}
-	
+
 	public function setOwner($cid, $isOwner, $store = true)
 	{
 		$q = $this->getQuery();
@@ -379,7 +379,7 @@ class EveModelCorporation extends EveModel {
 		$q->addQuery('ch.characterID', 'ch.userID');
 		$q->addQuery('co.owner', 'al.owner AS derived_owner');
 		$ceos = $q->loadObjectList();
-		
+
 		$result = 0;
 		JPluginHelper::importPlugin('eveapi');
 		foreach ($ceos as $ceo) {
@@ -393,13 +393,13 @@ class EveModelCorporation extends EveModel {
 			if (!$store && $ceo->owner && !$isOwner) {
 				//unseting alliance, but corporation is set as owner
 				continue;
-			} 
+			}
 			if ($store && $ceo->derived_owner && !$isOwner) {
 				//unsetting corporatation, but alliance is owner
 				continue;
 			}
 			$result += 1;
-			
+				
 			if ($ceo->userID && $ceo->characterID) {
 				$dispatcher =& JDispatcher::getInstance();
 				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $setOwner));
@@ -410,10 +410,10 @@ class EveModelCorporation extends EveModel {
 				}
 			}
 		}
-		
+
 		return $result;
-		
+
 	}
-	
-	
+
+
 }

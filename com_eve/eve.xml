@@ -10,7 +10,7 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Core</description>
-	
+
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -23,7 +23,7 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
 		</sql>
 	</uninstall>
-	
+
 	<files folder="site">
 		<filename>eve.php</filename>
 		<filename>index.html</filename>
@@ -51,7 +51,6 @@
 		<filename>js/contextmenu-1.1.2.js</filename>
 		<filename>js/observer.js</filename>
 	</media>
-	
 	<administration>
 		<menu view="eve" img="components/com_eve/assets/icon-16-eve.png">EVE</menu>
 		<submenu>

@@ -27,7 +27,7 @@ INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `
 ('userwalletjournal', 'Wallet Journal', 'wallet-journal', 'user', 'walletjournal', 'user', '', '0', '1', '1', '0'),
 ('corpwalletjournal', 'Wallet Journal', 'wallet-journal', 'corporation', 'walletjournal', 'corporation', '', '0', '1', '100', '4505798516408577');
 
-INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES 
 ('char', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, ''),
 ('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{"accountKey":1000}'),
 ('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{"accountKey":1001}'),

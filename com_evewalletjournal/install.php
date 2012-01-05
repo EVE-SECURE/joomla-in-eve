@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,15 +28,15 @@ $app = JFactory::getApplication();
 $plugins = array('eveapi_evewalletjournal');
 foreach ($plugins as $plugin) {
 	$p_dir = $this->parent->getPath('source').DS.'plugins'.DS.$plugin;
-	
+
 	$package = array();
 	$package['packagefile'] = null;
 	$package['extractdir'] = null;
 	$package['dir'] = $p_dir;
 	$package['type'] = JInstallerHelper::detectType($p_dir);
-	
+
 	$installer = new JInstaller();
-	
+
 	// Install the package
 	if (!$installer->install($package['dir'])) {
 		// There was an error installing the package
@@ -61,15 +61,15 @@ function com_install() {
 		$manifest = new SimpleXMLElement($manifestContent);
 		$version = (string) $manifest->version;
 		$versionNumbers = explode('.', $version);
-		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
+		$version = $versionNumbers[0].'.'.$versionNumbers[1];
 	}
-	
+
 	$dbo = JFactory::getDBO();
 	switch ($version) {
 		case '0.5':
 		case '0.6':
 			$queries = array();
-			$queries[] = "INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES ".
+			$queries[] = "INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `paginationRowsetName`, `paginationAttrib`, `paginationParam`, `paginationPerPage`, `delay`, `params`) VALUES ".
 				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1001}'), ".
 				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1002}'), ".
 				"('corp', 'WalletJournal', 'Character', 'Full', 'entries', 'refID', 'beforeRefID', 1000, 0, '{\"accountKey\":1003}'), ".

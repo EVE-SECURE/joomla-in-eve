@@ -18,6 +18,6 @@ INSERT IGNORE INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , 
 ('charassetlist', 'Asset List', 'asset-list', 'character', 'assetlist', 'character', '', '0', '1', '2'),
 ('corpassetlist', 'Asset List', 'asset-list', 'corporation', 'assetlist', 'corporation', '', '0', '1', '2');
 
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT INTO `jos_eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'AssetList', 'Character', 'Full', 0, ''),
 ('corp', 'AssetList', 'Character', 'Full', 0, '');

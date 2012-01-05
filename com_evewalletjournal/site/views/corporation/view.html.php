@@ -10,34 +10,34 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EvewalletjournalViewCorporation extends EvewalletjournalView 
+class EvewalletjournalViewCorporation extends EvewalletjournalView
 {
 	public $corporation;
 
-	protected function _setEntity($corporation, $params) 
+	protected function _setEntity($corporation, $params)
 	{
 		$document = JFactory::getDocument();
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
-				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evewalletjournal'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'corporation'  
-				&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
+		&& JArrayHelper::getValue($menu->query, 'option') == 'com_evewalletjournal'
+		&& JArrayHelper::getValue($menu->query, 'view') == 'corporation'
+		&& JArrayHelper::getValue($menu->query, 'corporationID') == $corporation->corporationID) {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
 				$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Wallet Journal'));
@@ -46,11 +46,11 @@ class EvewalletjournalViewCorporation extends EvewalletjournalView
 			$params->set('page_title',	$corporation->corporationName.' - '.JText::_('Wallet Journal'));
 		}
 		$document->setTitle($params->get('page_title'));
-		
+
 		$this->assignRef('corporation', $corporation);
-		
+
 	}
-	
+
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
@@ -63,21 +63,21 @@ class EvewalletjournalViewCorporation extends EvewalletjournalView
 		} else {
 			$view = null;
 		}
-		
+
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
 		switch ($view) {
 			case null:
 				if ($this->corporation->allianceID) {
-					$pathway->addItem($this->corporation->allianceName, 
-						EveRoute::_('alliance', $this->corporation));
+					$pathway->addItem($this->corporation->allianceName,
+					EveRoute::_('alliance', $this->corporation));
 				}
 			case 'alliance':
-				$pathway->addItem($this->corporation->corporationName, 
-					EveRoute::_('corporation', $this->corporation, $this->corporation));
+				$pathway->addItem($this->corporation->corporationName,
+				EveRoute::_('corporation', $this->corporation, $this->corporation));
 			case 'corporation':
-				$pathway->addItem(JText::_('Wallet Journal'), 
-					EveRoute::_('corpwalletjournal', $this->corporation, $this->corporation));
+				$pathway->addItem(JText::_('Wallet Journal'),
+				EveRoute::_('corpwalletjournal', $this->corporation, $this->corporation));
 		}
 	}
 }

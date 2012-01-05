@@ -145,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_corporations` (
 CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `id` int(11) NOT NULL auto_increment,
   `type` varchar(15) NOT NULL,
-  `call` varchar(25) NOT NULL,
+  `name` varchar(25) NOT NULL,
   `authentication` enum('None','User','Character') NOT NULL default 'None',
   `authorization` enum('None','Limited','Full') NOT NULL default 'None',
   `paginationRowsetName` varchar(20) default NULL,
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_apicalls` (
   `delay` int(11) NOT NULL default '0',
   `params` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `type_call_params` (`type`,`call`,`params`)
+  UNIQUE KEY `type_call_params` (`type`,`name`,`params`)
 ) DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
 -- Data for table `#__eve_apicalls`
 -- 
 
-INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('account', 'Characters', 'User', 'Limited', 0, ''),
 ('char', 'CharacterSheet', 'Character', 'Limited', 0, ''),
 ('corp', 'CorporationSheet', 'Character', 'Limited', 0, ''),

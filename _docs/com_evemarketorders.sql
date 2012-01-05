@@ -28,7 +28,7 @@ INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `compon
 ('charmarketorders', 'Market Orders', 'market-orders', 'character', 'marketorders', 'character', '', '0', '1', '2'),
 ('corpmarketorders', 'Market Orders', 'market-orders', 'corporation', 'marketorders', 'corporation', '', '0', '1', '2');
 
-DELETE FROM `jos_eve_apicalls` WHERE `call`='MarketOrders';
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+DELETE FROM `jos_eve_apicalls` WHERE `name`='MarketOrders';
+INSERT INTO `jos_eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'MarketOrders', 'Character', 'Full', 0, ''),
 ('corp', 'MarketOrders', 'Character', 'Full', 0, '');

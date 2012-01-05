@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
 class EvewalletjournalModelList extends JModelList {
-	
+
 	/**
 	 * Model context string.
 	 *
@@ -34,16 +34,16 @@ class EvewalletjournalModelList extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_evewalletjournal.list';
-	
+
 	protected $_entity = null;
-	
+
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
 		$entity = JArrayHelper::getValue($config, 'entity', JRequest::getCmd('view'));
 		$this->_entity = $entity;
 	}
-	
+
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
@@ -57,13 +57,13 @@ class EvewalletjournalModelList extends JModelList {
 		$q->addJoin('#__eve_reftypes', 'rt', 'rt.refTypeID=wj.refTypeID');
 		$q->addQuery('wj.*');
 		$q->addQuery('rt.refTypeName');
-		
+
 		$q->addWhere('accountKey = %1$s', $accountKey);
-		
-		$orderings = array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1', 
+
+		$orderings = array('wj.refid', 'rt.reftypename', 'wj.date', 'wj.ownername1',
 				'wj.ownername2', 'wj.argname1', 'wj.amount', 'wj.balance', 'wj.reason');
 		if ($this->_entity == 'user') {
-			$orderings[] = 'ch.name'; 
+			$orderings[] = 'ch.name';
 			$q->addJoin('#__eve_characters', 'ch', 'ch.characterID=wj.entityID');
 			$q->addQuery('ch.name AS characterName');
 			$acl = EveFactory::getACL();
@@ -79,10 +79,10 @@ class EvewalletjournalModelList extends JModelList {
 		if ($refTypeID >= 0) {
 			$q->addWhere('wj.refTypeID='.$refTypeID);
 		}
-		
+
 		if ($search) {
-			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)', 
-				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
+			$q->addWhere(sprintf('(wj.ownerName1 LIKE %1$s OR wj.ownerName2 LIKE %1$s OR wj.argName1 LIKE %1$s OR wj.reason LIKE %1$s)',
+			$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false )));
 		}
 		$ordering = $q->getEscaped($this->getState('list.ordering', 'wj.refID'));
 		$direction = $q->getEscaped($this->getState('list.direction', 'desc'));
@@ -92,7 +92,7 @@ class EvewalletjournalModelList extends JModelList {
 		if (strtolower($direction) != 'asc' && strtolower($direction) != 'desc') {
 			$direction = 'desc';
 		}
-		
+
 		$q->addOrder($ordering, $direction);
 		return $q;
 	}
@@ -119,10 +119,10 @@ class EvewalletjournalModelList extends JModelList {
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.refTypeID');
 		$id	.= ':'.$this->getState('filter.accountKey');
-		
+
 		return md5($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -139,7 +139,7 @@ class EvewalletjournalModelList extends JModelList {
 		$app		= &JFactory::getApplication('administrator');
 		$params		= JComponentHelper::getParams('com_eve');
 		$context	= $this->_context.'.';
-		
+
 		if ($this->_entity == 'user') {
 			$user = JFactory::getUser();
 			$entityID = $user->id;
@@ -147,25 +147,25 @@ class EvewalletjournalModelList extends JModelList {
 			$entityID = JRequest::getInt($this->_entity.'ID');
 		}
 		$this->setState('list.entityID', $entityID);
-		
+
 		// Load the filter state.
 		$search = $app->getUserStateFromRequest($context.'filter.search', 'filter_search', '');
 		$this->setState('filter.search', $search);
 
 		$refTypeID = $app->getUserStateFromRequest($context.'filter.refTypeID', 'refTypeID', -1, 'int');
 		$this->setState('filter.refTypeID', $refTypeID);
-		
+
 		$accountKey = 1000;
 		if ($this->_entity == 'corporation') {
 			$accountKey = $app->getUserStateFromRequest($context.'filter.accountKey', 'accountKey', $accountKey);
 		}
 		$this->setState('filter.accountKey', $accountKey);
-		
+
 		parent::_populateState('wj.refID', 'desc');
 
-		$limitstart = JRequest::getInt('limitstart'); 
+		$limitstart = JRequest::getInt('limitstart');
 		$this->setState('list.start', $limitstart);
-		
+
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
@@ -179,7 +179,7 @@ class EvewalletjournalModelList extends JModelList {
 		}
 		return $options;
 	}
-	
+
 	public function getRefTypes()
 	{
 		$dbo = $this->getDBO();

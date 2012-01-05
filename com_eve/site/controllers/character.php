@@ -10,28 +10,28 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.controller');
 
 class EveControllerCharacter extends EveController {
-	
-	public function __construct($config = array()) 
+
+	public function __construct($config = array())
 	{
 		parent::__construct($config);
 	}
-	
+
 	public function display($cachable = false)
 	{
 		$document =& JFactory::getDocument();
@@ -53,7 +53,7 @@ class EveControllerCharacter extends EveController {
 			$apischeduleModel = & $this->getModel('Apischedule');
 			// Push the model into the view
 			$view->setModel($apischeduleModel);
-			
+				
 			$sectionaccessModel = & $this->getModel('Sectionaccess');
 			// Push the model into the view
 			$view->setModel($sectionaccessModel);
@@ -71,7 +71,7 @@ class EveControllerCharacter extends EveController {
 			$view->display();
 		}
 	}
-	
+
 	public function apischedule()
 	{
 		JRequest::checkToken() or jexit('Invalid Token');
@@ -85,16 +85,16 @@ class EveControllerCharacter extends EveController {
 		if ($character->ownerID != $user->get('id')) {
 			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
-		
+
 		$apischeduleModel = & $this->getModel('Apischedule');
 		$data = JRequest::getVar('apischedule', array(), 'post', 'array');
 		$apischeduleModel->setCharacterList($data, $character);
 		$msg = JText::_('Com_Eve_Api_Calls_Stored');
 		//TODO: check/display errors
 		$this->setRedirect(EveRoute::character($character, null, null, false), $msg);
-		
+
 	}
-	
+
 	public function sectionaccess()
 	{
 		JRequest::checkToken() or jexit('Invalid Token');
@@ -108,14 +108,14 @@ class EveControllerCharacter extends EveController {
 		if ($character->ownerID != $user->get('id')) {
 			throw new Exception(JText::_('ALERTNOTAUTH'), 403);
 		}
-		
+
 		$sectionaccessModel = & $this->getModel('Sectionaccess');
 		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
 		$sectionaccessModel->setCharacterList($data, $character);
 		$msg = JText::_('Com_Eve_Character_Section_Access_Stored');
 		//TODO: check/display errors
 		$this->setRedirect(EveRoute::character($character, null, null, false), $msg);
-		
+
 	}
-	
+
 }

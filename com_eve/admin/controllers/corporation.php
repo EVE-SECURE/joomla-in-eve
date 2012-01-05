@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,18 +24,18 @@
 defined('_JEXEC') or die();
 
 class EveControllerCorporation extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
 		$this->registerTask('getCorporationSheet', 'getCorporationSheet');
 		$this->registerTask('getMemberTracking', 'getMemberTracking');
 		$this->registerTask('unsetOwner', 'setOwner');
 	}
-	
+
 	/**
 	 * Display method
 	 *
@@ -53,8 +53,8 @@ class EveControllerCorporation extends EveController {
 
 		// Get/Create the character model
 		$corporationModel = & $this->getModel('Corporation');
-		$view->setModel($corporationModel, true); 
-		
+		$view->setModel($corporationModel, true);
+
 		$sectionaccessModel = & $this->getModel('Sectionaccess');
 		// Push the model into the view
 		$view->setModel($sectionaccessModel);
@@ -71,7 +71,7 @@ class EveControllerCorporation extends EveController {
 			$view->display();
 		}
 	}
-		
+
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -82,12 +82,12 @@ class EveControllerCorporation extends EveController {
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporation&layout=edit', false));
 	}
-	
+
 	function edit() {
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Corporation', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$previousId		= (int) $app->getUserState('com_eve.edit.corporation.corporationID');
 		$corporationID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('corporationID'));
 		// If corporation ids do not match, checkin previous corporation.
@@ -99,7 +99,7 @@ class EveControllerCorporation extends EveController {
 				return false;
 			}
 		}
-		
+
 		// Attempt to check-out the new corporation for editing and redirect.
 		if (!$model->checkout($corporationID)) {
 			// Check-out failed, go back to the list and display a notice.
@@ -113,7 +113,7 @@ class EveControllerCorporation extends EveController {
 			$app->setUserState('com_eve.edit.corporation.data', null);
 			$this->setRedirect('index.php?option=com_eve&view=corporation&layout=edit');
 			return true;
-		}		
+		}
 	}
 
 	/**
@@ -168,7 +168,7 @@ class EveControllerCorporation extends EveController {
 
 		// Validate the posted data.
 		$data	= $model->validate($data);
-		
+
 		// Check for validation errors.
 		if ($data === false)
 		{
@@ -206,7 +206,7 @@ class EveControllerCorporation extends EveController {
 		$sectionaccessModel = & $this->getModel('Sectionaccess');
 		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
 		$sectionaccessModel->setCorporationList($data, $corporation);
-		
+
 		// Save succeeded, check-in the corporation.
 		if (!$model->checkin()) {
 			// Check-in failed, go back to the corporation and display a notice.
@@ -244,7 +244,7 @@ class EveControllerCorporation extends EveController {
 				break;
 		}
 	}
-	
+
 	function delete() {
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
@@ -269,7 +269,7 @@ class EveControllerCorporation extends EveController {
 			return true;
 		}
 	}
-	
+
 	function getCorporationSheet() {
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
@@ -277,7 +277,7 @@ class EveControllerCorporation extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 		// Get application
 		$app = JFactory::getApplication();
-				
+
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
@@ -285,7 +285,7 @@ class EveControllerCorporation extends EveController {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
-		
+
 		$model = $this->getModel('Corporation', 'EveModel');
 		$result = $model->apiGetCorporationSheet($cid);
 
@@ -297,10 +297,10 @@ class EveControllerCorporation extends EveController {
 		} elseif ($count > 1) {
 			$app->enqueueMessage(JText::sprintf('%s CORPORATION SHEETS SUCCESSFULLY IMPORTED', $count));
 		}
-		
+
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 	}
-	
+
 	function getMemberTracking() {
 		// Check for request forgeries.
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
@@ -308,7 +308,7 @@ class EveControllerCorporation extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 		// Get application
 		$app = JFactory::getApplication();
-				
+
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
@@ -316,10 +316,10 @@ class EveControllerCorporation extends EveController {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
-		
+
 		$model = $this->getModel('Corporation', 'EveModel');
 		$result = $model->apiGetMemberTracking($cid);
-		
+
 		foreach ($model->getErrors() as $error) {
 			$app->enqueueMessage($error, 'error');
 		}
@@ -329,7 +329,7 @@ class EveControllerCorporation extends EveController {
 			$app->enqueueMessage(JText::sprintf('MEMBERS FROM %s CORPORATIONS SUCCESSFULLY IMPORTED', $result));
 		}
 	}
-	
+
 	public function setOwner()
 	{
 		// Check for request forgeries.
@@ -338,17 +338,17 @@ class EveControllerCorporation extends EveController {
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporations', false));
 		// Get application
 		$app = JFactory::getApplication();
-		
+
 		$isOwner = strtolower($this->_task) == 'setowner';
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
-		
+
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('Com_Eve_Error_No_Item_Selected'));
 			return false;
 		}
-		
+
 		$model = $this->getModel('Corporation', 'EveModel');
 		if ($isOwner) {
 			$model->apiGetCorporationSheet($cid);
@@ -367,7 +367,7 @@ class EveControllerCorporation extends EveController {
 			}
 		}
 	}
-	
+
 	public function search()
 	{
 		$model = $this->getModel('Corporations', 'EveModel', array('ignore_request' => true));
@@ -378,5 +378,5 @@ class EveControllerCorporation extends EveController {
 		$list = $model->getItems();
 		echo json_encode($list);
 	}
-		
+
 }

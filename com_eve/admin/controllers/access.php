@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,15 +24,15 @@
 defined('_JEXEC') or die();
 
 class EveControllerAccess extends EveController {
-	
+
 	function __construct($config = array())
 	{
 		//$config['name'] = 'char';
 		parent::__construct( $config );
-		
+
 		$this->registerTask('unpublish', 'publish');
 	}
-	
+
 	/**
 	 * Display method
 	 *
@@ -68,12 +68,12 @@ class EveControllerAccess extends EveController {
 			$view->display();
 		}
 	}
-	
+
 	public function cancel()
 	{
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=eve', false));
 	}
-	
+
 	function publish() {
 		JRequest::checkToken() or jexit('Invalid Token');
 		$cid		= JRequest::getVar('cid', array(), 'post', 'array');
@@ -88,7 +88,7 @@ class EveControllerAccess extends EveController {
 		$url = 'index.php?option=com_eve&view=schedule';
 		$this->setRedirect(JRoute::_($url, false));
 	}
-	
+
 	function apply() {
 		JRequest::checkToken() or jexit('Invalid Token');
 
@@ -97,7 +97,7 @@ class EveControllerAccess extends EveController {
 			$this->setRedirect(JRoute::_('index.php'), JText::_('ALERTNOTAUTH'));
 			return;
 		}
-		
+
 		$app	= &JFactory::getApplication();
 		$cid = JRequest::getVar('cid', array(), 'post', 'array');
 		$access = JRequest::getVar('access', array(), 'post', 'array');
@@ -105,7 +105,7 @@ class EveControllerAccess extends EveController {
 		foreach ($access as $data) {
 			$model->save($data);
 		}
-		
+
 		$errors	= $model->getErrors();
 		// Push up to three validation messages out to the user.
 		for ($i = 0, $n = count($errors); $i < $n && $i < 3; $i++) {
@@ -115,8 +115,8 @@ class EveControllerAccess extends EveController {
 				$app->enqueueMessage($errors[$i], 'notice');
 			}
 		}
-		
+
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
 	}
-	
+
 }

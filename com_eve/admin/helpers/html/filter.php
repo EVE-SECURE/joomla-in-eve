@@ -10,22 +10,22 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 
 abstract class JHTMLFilter {
-	
+
 	static function search($value, $name = 'filter_search', $id = null) {
 		if (is_null($id)) {
 			$id = $name;
@@ -35,8 +35,8 @@ abstract class JHTMLFilter {
 		'<button class="button" onclick="document.adminForm.submit();">'.JText::_( 'Go' ).'</button> '.
 		'<button class="button" onclick="$(\''.$name.'\').value=\'\';this.form.submit();">'.JText::_('Reset').'</button> ';
 	}
-	
-	
+
+
 	static function owner($active, $option) {
 		$options = array();
 		$options[]	= JHtml::_('select.option', '0', JText::_('Show all'));
@@ -46,7 +46,7 @@ abstract class JHTMLFilter {
 		$html = JHtml::_('select.genericlist', $options, 'filter_owner', $attribs, 'value', 'text', $active);
 		echo $html;
 	}
-	
+
 	static function membersof($active, $name = 'filter_membersof', $idtag = false) {
 		$options = array();
 		$options[] = JHtml::_('select.option', '', JText::_('Show all'));

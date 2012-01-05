@@ -164,7 +164,7 @@ class CronModelJob extends JModelItem {
 		return $this->_item[$jobID];
 	}
 
-	
+
 
 	public function save($data)
 	{
@@ -182,7 +182,7 @@ class CronModelJob extends JModelItem {
 			$table->load($jobID);
 			$isNew = false;
 		}
-		
+
 		$params = JArrayHelper::getValue($data, 'params', null, 'array');
 		if (is_array($params)) {
 			$txt = array ();
@@ -200,7 +200,7 @@ class CronModelJob extends JModelItem {
 
 		// Prepare the row for saving
 		$this->_prepareTable($table);
-		
+
 		$this->_setCrontabBits($table);
 
 		// Check the data
@@ -208,7 +208,7 @@ class CronModelJob extends JModelItem {
 			$this->setError($table->getError());
 			return false;
 		}
-		
+
 
 		// Store the data
 		if (!$table->store()) {
@@ -218,7 +218,7 @@ class CronModelJob extends JModelItem {
 
 		// Trigger the onAfterContentSave event.
 		//$dispatcher->trigger('onAfterContentSave', array(&$table, $isNew));
-		
+
 		return $table->id;
 	}
 
@@ -237,7 +237,7 @@ class CronModelJob extends JModelItem {
 				$table->ordering = $max+1;
 			}
 		} else {
-			
+				
 		}
 	}
 
@@ -351,7 +351,7 @@ class CronModelJob extends JModelItem {
 	public function getParams() {
 		return $this->getState('params');
 	}
-	
+
 	/**
 	 * Sets bits to table;
 	 *
@@ -373,8 +373,8 @@ class CronModelJob extends JModelItem {
 			$result = false;
 		}
 		return $result;
-		
+
 	}
 
-		
+
 }

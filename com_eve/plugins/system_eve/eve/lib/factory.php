@@ -9,18 +9,19 @@ class EveFactory {
 	static $namedInstances = array();
 	static $aleconfig = array(
 		'config'			=> false,
-		
+
 		'main.class' 		=> 'EVEOnline',
-		'main.host' 		=> "http://api.eve-online.com/",
+		'main.host' 		=> "https://api.eveonline.com/",
 		'main.suffix' 		=> ".xml.aspx",
 		'main.parserClass'	=> "AleParserXMLElement",
 		'main.requestError' => "throwException",
 		'main.serverError' 	=> "throwException",
-	
+
 		'cache.class' 		=> 'Joomla',
 		'cache.table' 		=> '#__eve_alecache',
-		
+
 		'request.class' 	=> null,
+		'request.certificate'=> 'eveonline.crt',
 		'request.timeout'	=> 30,
 	);
 
@@ -37,7 +38,7 @@ class EveFactory {
 		$q = new JQuery($dbo);
 		return $q;
 	}
-	
+
 	static function getAleEVEOnline($dbo = null) {
 		static $instance;
 		if (empty($dbo)) {
@@ -46,7 +47,7 @@ class EveFactory {
 		if (!isset($instance)) {
 			jimport( 'joomla.application.component.helper');
 			$params = &JComponentHelper::getParams('com_eve');
-			
+				
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'ale'.DS.'factory.php';
 			self::$aleconfig['request.class'] = $params->get('ale_requestclass', 'Curl');
 			self::$aleconfig['cache.maxDataSize'] = intval($params->get('ale_maxdatasize', 0));
@@ -54,92 +55,92 @@ class EveFactory {
 		}
 		return $instance;
 	}
-	
+
 	static function getInstance($table, $id = null, $config = array()) {
 		if (!array_key_exists('dbo', $config))  {
 			$config['dbo'] =& JFactory::getDBO();
 		}
-		
+
 		if (!$id) {
 			$instance =& JTable::getInstance($table, 'EveTable', $config);
 			return $instance;
 		}
-		
+
 		$_table = strtolower($table);
-		 
+			
 		if (!isset(self::$instances[$_table])) {
 			self::$instances[$_table] = array();
 		}
-		
+
 		if (!isset(self::$instances[$_table][$id])) {
 			$instance =& JTable::getInstance($table, 'EveTable', $config);
 			$instance->load($id);
 			self::$instances[$_table][$id] = $instance;
 		}
-		
+
 		return self::$instances[$_table][$id];
 	}
-	
+
 	static function getInstanceByName($table, $key, $name, $config) {
 		if (!array_key_exists('dbo', $config))  {
 			$dbo = $config['dbo'] =& JFactory::getDBO();
 		}
 		$_table = strtolower($table);
-		 
+			
 		if (!isset(self::$namedInstances[$_table])) {
 			self::$namedInstances[$_table] = array();
 		}
-		
+
 		if (!isset(self::$namedInstances[$_table][$name])) {
 			$instance =& JTable::getInstance($table, 'EveTable', $config);
 			$k = $this->_tbl_key;
-			
+				
 			$instance->reset();
-	
+
 			$db =& $this->getDBO();
-	
+
 			$query = 'SELECT *'
 			. ' FROM '.$instance->_tbl
 			. ' WHERE '.$instance->$key.' = '.$db->Quote($name);
 			$db->setQuery( $query );
-	
+
 			if (!($result = $db->loadAssoc( ))) {
 				//$this->setError($db->getErrorMsg());
 				return false;
 			}
 			$this->bind($result);
 
-			self::$namedInstances[$_table][$name] = $instance->$k; 
+			self::$namedInstances[$_table][$name] = $instance->$k;
 			self::$instances[$_table][$instance->$k] = $instance;
 		}
 		$id = self::$namedInstances[$_table][$name];
 		if ($id == null) {
 			return false;
 		}
-		return self::getInstance($table, $id, $config); 
-		
+		return self::getInstance($table, $id, $config);
+
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * Return ACL object
 	 * @return EveACL
 	 */
 	static public function getACL() {
 		static $instance;
-		
+
 		if (!isset($instance)) {
 			require_once JPATH_PLUGINS.DS.'system'.DS.'eve'.DS.'lib'.DS.'acl.php';
 			$instance = new EveACL();
 		}
 		return $instance;
 	}
-	
+
 	public function getConfig()
 	{
 		static $instance;
-		
+
 		if (!isset($instance)) {
 			jimport('joomla.registry.registry');
 			$instance = new JRegistry('eve');
@@ -161,7 +162,7 @@ class EveFactory {
 		}
 		return $instance;
 	}
-	
+
 	public function getRouter()
 	{
 		static $instance;
@@ -171,5 +172,5 @@ class EveFactory {
 		}
 		return $instance;
 	}
-	
+
 }

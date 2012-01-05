@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelCharacters extends JModelList {
-	
+
 	/**
 	 * Model context string.
 	 *
@@ -34,11 +34,11 @@ class EveModelCharacters extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_eve.characters';
-	
+
 	protected function _getListQuery()
 	{
-		$list_query = $this->getState('list.query', 'c.*, co.corporationName, co.ticker, al.name AS allianceName, al.shortName, editor.name AS editor, u.name AS userName, us.apiStatus'); 
-		
+		$list_query = $this->getState('list.query', 'c.*, co.corporationName, co.ticker, al.name AS allianceName, al.shortName, editor.name AS editor, u.name AS userName, ak.status');
+
 		$search = $this->getState('filter.search');
 		$membersof = $this->getState('filter.membersof');
 		$membersofpref = substr($membersof, 0, 1);
@@ -49,10 +49,11 @@ class EveModelCharacters extends JModelList {
 		$q->addTable('#__eve_characters', 'c');
 		$q->addJoin('#__eve_corporations', 'co', 'c.corporationID=co.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
-		$q->addJoin('#__eve_accounts', 'us', 'us.userID=c.userID');
-		$q->addJoin('#__users', 'u', 'us.owner=u.id');
+		$q->addJoin('#__eve_apikey_entities', 'ae', 'ae.entityID=c.characterID');
+		$q->addJoin('#__eve_apikeys', 'ak', 'ak.keyID=ae.keyID');
+		$q->addJoin('#__users', 'u', 'ak.user_id=u.id');
 		$q->addJoin('#__users', 'editor', 'c.checked_out=editor.id');
-		
+
 		$q->addQuery($list_query);
 		if ($search) {
 			$searchParts = explode(':', $search, 2);
@@ -73,8 +74,8 @@ class EveModelCharacters extends JModelList {
 		} elseif ($membersofpref == 'a') {
 			$q->addWhere('al.allianceID = %s', $membersofnum);
 		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'c.name')), 
-			$q->getEscaped($this->getState('list.direction', 'ASC')));
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'c.name')),
+		$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
 	}
 
@@ -94,10 +95,10 @@ class EveModelCharacters extends JModelList {
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.membersof');
-		
+
 		return parent::_getStoreId($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -115,13 +116,13 @@ class EveModelCharacters extends JModelList {
 		$context	= $this->_context.'.';
 
 		// Load the filter state.
-		$this->setState('filter.fullsearch', 1); 
+		$this->setState('filter.fullsearch', 1);
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.membersof', $app->getUserStateFromRequest($context.'filter.membersof', 'filter_membersof', ''));
-		
+
 		// Load the parameters.
 		$this->setState('params', $params);
-		
+
 		return parent::_populateState('c.name');
 	}
 

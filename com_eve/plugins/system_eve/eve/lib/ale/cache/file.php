@@ -69,7 +69,7 @@ class AleCacheFile implements AleInterfaceCache {
 		$this->paramsRaw = $params;
 		$this->params = sha1(http_build_query($params, '', '&'));
 		$this->dir = $this->config['rootdir'] . DIRECTORY_SEPARATOR .
-			preg_replace(array('#[^a-zA-Z0-9_\\/]#', '#\\/#'), array('', DIRECTORY_SEPARATOR), $path);
+		preg_replace(array('#[^a-zA-Z0-9_\\/]#', '#\\/#'), array('', DIRECTORY_SEPARATOR), $path);
 			
 		if (!is_dir($this->dir)) {
 			if (!mkdir($this->dir, $this->config['permissions'], true)) {

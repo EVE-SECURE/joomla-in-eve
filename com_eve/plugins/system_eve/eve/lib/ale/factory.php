@@ -23,7 +23,7 @@ if (!defined('ALE_BASE')) {
 }
 
 if (!defined('ALE_CONFIG_DIR')) {
-	define('ALE_CONFIG_DIR', ALE_BASE);
+	define('ALE_CONFIG_DIR', ALE_BASE . DIRECTORY_SEPARATOR . 'config');
 }
 
 

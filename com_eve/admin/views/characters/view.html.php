@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -30,7 +30,7 @@ class EveViewCharacters extends JView {
 	public $items;
 	public $pagination;
 
-	
+
 	function display($tpl = null) {
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
@@ -45,12 +45,12 @@ class EveViewCharacters extends JView {
 		$this->assignRef('state',			$state);
 		$this->assignRef('items',			$items);
 		$this->assignRef('pagination',		$pagination);
-		
+
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
 
-	
+
 	/**
 	 * Setup the Toolbar
 	 */
@@ -58,7 +58,6 @@ class EveViewCharacters extends JView {
 	{
 		$title = JText::_('EVE CHARACTER MANAGER');
 		JToolBarHelper::title($title, 'character');
-		JToolBarHelper::custom('character.getCorporationSheet', 'corporation', 'corporation', 'Corporation Sheet', true);
 		JToolBarHelper::custom('character.getCharacterSheet', 'character', 'character', 'Character Sheet', true);
 		JToolBarHelper::addNew('character.add');
 		JToolBarHelper::editList('character.edit');

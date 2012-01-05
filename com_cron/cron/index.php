@@ -1,14 +1,14 @@
 <?php
 /**
-* @version		$Id$
-* @package		Joomla
-* @subpackage	Cron
-* @copyright	Copyright (C) 2005 - 2009 Open Source Matters. All rights reserved.
-* @license		GNU/GPL, see LICENSE.php
-* Joomla! is free software and parts of it may contain or be derived from the
-* GNU General Public License or other free or open source software licenses.
-* See COPYRIGHT.php for copyright notices and details.
-*/
+ * @version		$Id$
+ * @package		Joomla
+ * @subpackage	Cron
+ * @copyright	Copyright (C) 2005 - 2009 Open Source Matters. All rights reserved.
+ * @license		GNU/GPL, see LICENSE.php
+ * Joomla! is free software and parts of it may contain or be derived from the
+ * GNU General Public License or other free or open source software licenses.
+ * See COPYRIGHT.php for copyright notices and details.
+ */
 
 // Set flag that this is a parent file
 define('_JEXEC', 1);
@@ -48,7 +48,7 @@ JDEBUG ? $_PROFILER->mark( 'afterRunJobs' ) : null;
 /**
  * RENDER THE APPLICATION
  *
- * NOTE : 
+ * NOTE :
  */
 $mainframe->render();
 

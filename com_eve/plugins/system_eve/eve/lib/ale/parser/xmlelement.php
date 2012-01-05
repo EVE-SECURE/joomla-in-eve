@@ -86,7 +86,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 				$this->children[$name] = $this->transformNode($node);
 			}
 		}
-		
+
 		$this->attributes = array();
 		$attribs = $this->data->attributes();
 		foreach ($attribs as $key => $value) {
@@ -202,7 +202,7 @@ class AleParserXMLElement implements Countable, ArrayAccess, IteratorAggregate  
 						}
 						$tmp =& $tmp[$keyVal];
 					}
-					
+						
 				}
 				$name = (string) $attributes[$key];
 				if (!$name) {

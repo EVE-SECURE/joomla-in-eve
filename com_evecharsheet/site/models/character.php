@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -34,10 +34,10 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		parent::__construct($config);
 		$eveparams = JComponentHelper::getParams('com_eve');
 		$dbdump_database = $eveparams->get('dbdump_database');
-		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :''; 
-		
+		$this->dbdump = $dbdump_database ? $dbdump_database.'.' :'';
+
 	}
-	
+
 	protected function _populateState()
 	{
 		parent::_populateState();
@@ -45,13 +45,13 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$params = JComponentHelper::getParams('com_evecharsheet');
 		$this->setState('params', $params);
 	}
-	
+
 	public function getQuery()
 	{
 		$dbo = $this->getDBO();
 		return EveFactory::getQuery($dbo);
 	}
-	
+
 	function getClone($characterID = null)
 	{
 		$character = $this->getItem($characterID);
@@ -64,8 +64,8 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$clone = $q->loadObject();
 		return $clone;
 	}
-	
-	function getQueue($characterID = null) 
+
+	function getQueue($characterID = null)
 	{
 		$character = $this->getItem($characterID);
 		$q = $this->getQuery();
@@ -74,14 +74,14 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('queuePosition', 'ASC');
 		$queue =  $q->loadObjectList();
-		
+
 		return $queue;
 	}
-	
-	function getSkillGroups($characterID = null) 
+
+	function getSkillGroups($characterID = null)
 	{
 		$character = $this->getItem($characterID);
-		
+
 		if (!isset($this->skillGroups[$character->characterID])) {
 			$q = $this->getQuery();
 			$q->addTable('#__eve_charskills', 'cs');
@@ -89,21 +89,21 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 			$q->addWhere("characterID='%s'", $character->characterID);
 			$q->addOrder('typeName', 'ASC');
 			$skills =  $q->loadObjectList();
-			
+				
 			$q = $this->getQuery();
 			$q->addTable($this->dbdump.'invGroups');
 			$q->addWhere('`categoryID` = 16');
 			$q->addWhere('published = 1');
 			$q->addOrder('groupName', 'ASC');
 			$groups = $q->loadObjectList('groupID');
-			
+				
 			foreach ($groups as &$group) {
 				$group->skills = array();
 				$group->skillCount = 0;
 				$group->skillpoints = 0;
 				$group->skillPrice = 0;
 			}
-			
+				
 			foreach ($skills as $skill) {
 				$groups[$skill->groupID]->skills[] = $skill;
 				$groups[$skill->groupID]->skillCount += 1;
@@ -112,10 +112,10 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 			}
 			$this->skillGroups[$character->characterID] = $groups;
 		}
-		
+
 		return $this->skillGroups[$character->characterID];
 	}
-	
+
 	function getCertificateCategories($characterID = null)
 	{
 		$character = $this->getItem($characterID);
@@ -133,17 +133,17 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addTable($this->dbdump.'crtCategories', 'ct');
 		$q->addOrder('categoryName', 'ASC');
 		$categories = $q->loadObjectList('categoryID');
-		
+
 		foreach ($categories as $category) {
 			$category->certificates = array();
 		}
-		
+
 		foreach ($certificates as $certificate) {
-			$categories[$certificate->categoryID]->certificates[] = $certificate; 
+			$categories[$certificate->categoryID]->certificates[] = $certificate;
 		}
 		return $categories;
 	}
-	
+
 	function getAttributes($characterID = null)
 	{
 		$character = $this->getItem($characterID);
@@ -157,10 +157,10 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addWhere("characterID='%s'", $character->characterID);
 		$q->addOrder('ca.attributeName');
 		$attributes = $q->loadObjectList('attributeID');
-		
+
 		return $attributes;
 	}
-	
+
 	function getRoles($characterID = null)
 	{
 		$character = $this->getItem($characterID);
@@ -177,13 +177,13 @@ class EvecharsheetModelCharacter extends EveModelCharacter {
 		$q->addOrder('cr.roleID');
 		return $q->loadObjectList();
 	}
-	
-	
+
+
 	function getRoleLocations()
 	{
 		return array('corporationRoles', 'corporationRolesAtHQ', 'corporationRolesAtBase', 'corporationRolesAtOther');
 	}
-	
+
 	function getTitles($characterID = null)
 	{
 		$character = $this->getItem($characterID);

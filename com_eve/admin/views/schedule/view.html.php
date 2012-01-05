@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -31,13 +31,13 @@ class EveViewSchedule extends JView {
 	public $pagination;
 	public $apiCalls;
 
-	
+
 	function display($tpl = null) {
 		$state		= $this->get('State');
 		$items		= $this->get('Items');
 		$pagination	= $this->get('Pagination');
 		$apiCalls	= $this->get('ApiCalls');
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -48,12 +48,12 @@ class EveViewSchedule extends JView {
 		$this->assignRef('items',			$items);
 		$this->assignRef('pagination',		$pagination);
 		$this->assignRef('apiCalls',		$apiCalls);
-		
+
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
 
-	
+
 	/**
 	 * Setup the Toolbar
 	 */
@@ -61,11 +61,11 @@ class EveViewSchedule extends JView {
 	{
 		$title = JText::_('API SCHEDULE');
 		JToolBarHelper::title($title, 'schedule');
-		
+
 		JToolBarHelper::custom('schedule.run', 'run', 'run', 'Run now', false);
-		
+
 		JToolBarHelper::publishList('schedule.publish', 'Enable');
 		JToolBarHelper::unpublishList('schedule.unpublish', 'Disable');
 	}
-	
+
 }

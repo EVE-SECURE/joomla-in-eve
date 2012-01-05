@@ -10,7 +10,6 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Character Sheets</description>
-	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -23,7 +22,7 @@
 			<file driver="mysql" charset="utf8">sql/uninstall.sql</file>
 		</sql>
 	</uninstall>
-	
+
 	<files folder="site">
 		<filename>evecharsheet.php</filename>
 		<filename>controller.php</filename>
@@ -34,7 +33,7 @@
 	<languages folder="site/language">
 		<language tag="en-GB">en-GB/en-GB.com_evecharsheet.ini</language>
 	</languages>
-	
+
 	<media folder="media" destination="com_evecharsheet">
 		<filename>css/component.css</filename>
 		<filename>images/collapse.png</filename>
@@ -52,7 +51,6 @@
 		<filename>images/level5.gif</filename>
 		<filename>js/collapsibles.js</filename>
 	</media>
-
 	<administration>
 		<menu img="components/com_eve/assets/icon-16-character.png">EVE Character Sheet</menu>
 		<languages folder="admin/language">

@@ -10,7 +10,6 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Research</description>
-	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -39,7 +38,7 @@
 	<media folder="media" destination="com_everesearch">
 		<filename>css/component.css</filename>
 	</media>
-	
+
 	<administration>
 		<menu img="components/com_everesearch/assets/icon-16-research.png">EVE Research</menu>
 		<languages folder="admin/language">

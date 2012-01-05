@@ -11,12 +11,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -41,15 +41,15 @@ class getEvecharsheetTab extends cbTabHandler
 	protected $_layout = 'default';
 	protected $_name = 'character';
 	protected $_option = 'com_evecharsheet';
-	
+
 	protected $_escape = 'htmlspecialchars';
 	protected $_charset = 'UTF-8';
-	
+
 	protected $_path = array(
 		'template' => array(),
 		'helper' => array()
 	);
-	
+
 	protected $_output = null;
 	/**
 	 * Layout extension
@@ -58,29 +58,29 @@ class getEvecharsheetTab extends cbTabHandler
 	 * @access 	protected
 	 */
 	protected $_layoutExt = 'php';
-	
+
 	//Construnctor
 	public function __construct()
 	{
 		$lang = JFactory::getLanguage();
 		$lang->load('com_evecharsheet');
-		
+
 		$this->cbTabHandler();
-		
+
 		$this->_basePath = JPATH_BASE.DS.'components'.DS.$this->_option;
-		
+
 		$this->_setPath('template', $this->_basePath.DS.'views'.DS.$this->_name.DS.'tmpl');
 	}
-	
+
 	/**
-	* Generates the HTML to display the user profile tab
-	* @param object tab reflecting the tab database entry
-	* @param object mosUser reflecting the user being displayed
-	* @param int 1 for front-end, 2 for back-end
-	* @returns mixed : either string HTML for tab content, or false if ErrorMSG generated
+	 * Generates the HTML to display the user profile tab
+	 * @param object tab reflecting the tab database entry
+	 * @param object mosUser reflecting the user being displayed
+	 * @param int 1 for front-end, 2 for back-end
+	 * @returns mixed : either string HTML for tab content, or false if ErrorMSG generated
 
 
-	*/
+	 */
 	public function getDisplayTab($tab, $user, $ui)
 	{
 		JComponentHelper::isEnabled('com_eve', true);
@@ -94,7 +94,7 @@ class getEvecharsheetTab extends cbTabHandler
 		}
 		$characters = $this->getCharacters($user);
 		//return 'hello';
-		
+
 		$result = '';
 		switch (count($characters)) {
 			case 0:
@@ -117,12 +117,12 @@ class getEvecharsheetTab extends cbTabHandler
 		}
 		return $result;
 	}
-	
+
 	private function show($section)
 	{
 		return intval($this->params->get('show'.$section, 0));
 	}
-	
+
 	private function getCharacters($user)
 	{
 		$owner = $user->user_id;
@@ -133,7 +133,7 @@ class getEvecharsheetTab extends cbTabHandler
 		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 		$q->addJoin('#__users', 'us', 'ac.owner=us.id');
-		
+
 		$q->addQuery('ch.*');
 		$q->addQuery('co.corporationID', 'co.corporationName', 'co.ticker');
 		$q->addQuery('al.allianceID', 'al.name AS allianceName', 'al.shortName');
@@ -149,16 +149,16 @@ class getEvecharsheetTab extends cbTabHandler
 			}
 		}
 		return $q->loadObjectList();
-		
+
 		$pane = JPane::getInstance();
 	}
-	
+
 	/**
-	* Adds to the search path for templates and resources.
-	*
-	* @access protected
-	* @param string|array $path The directory or stream to search.
-	*/
+	 * Adds to the search path for templates and resources.
+	 *
+	 * @access protected
+	 * @param string|array $path The directory or stream to search.
+	 */
 	function _addPath($type, $path)
 	{
 		// just force to array
@@ -182,13 +182,13 @@ class getEvecharsheetTab extends cbTabHandler
 	}
 
 	/**
-	* Sets an entire array of search paths for templates or resources.
-	*
-	* @access protected
-	* @param string $type The type of path to set, typically 'template'.
-	* @param string|array $path The new set of search paths.  If null or
-	* false, resets to the current directory only.
-	*/
+	 * Sets an entire array of search paths for templates or resources.
+	 *
+	 * @access protected
+	 * @param string $type The type of path to set, typically 'template'.
+	 * @param string|array $path The new set of search paths.  If null or
+	 * false, resets to the current directory only.
+	 */
 	protected function _setPath($type, $path)
 	{
 		$app = JFactory::getApplication();
@@ -203,18 +203,18 @@ class getEvecharsheetTab extends cbTabHandler
 		switch (strtolower($type))
 		{
 			case 'template':
-			{
-				// set the alternative template search dir
-				if (isset($app))
 				{
-					$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $this->_option);
-					$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->_name;
-					$this->_addPath('template', $fallback);
-				}
-			}	break;
+					// set the alternative template search dir
+					if (isset($app))
+					{
+						$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $this->_option);
+						$fallback = JPATH_BASE.DS.'templates'.DS.$app->getTemplate().DS.'html'.DS.$option.DS.$this->_name;
+						$this->_addPath('template', $fallback);
+					}
+				}	break;
 		}
 	}
-	
+
 	/**
 	 * Create the filename for a resource
 	 *
@@ -240,35 +240,35 @@ class getEvecharsheetTab extends cbTabHandler
 		}
 		return $filename;
 	}
-	
-	 /**
-     * Sets the _escape() callback.
-     *
-     * @param mixed $spec The callback for _escape() to use.
-     */
-    function setEscape($spec)
-    {
-        $this->_escape = $spec;
-    }
-	
-	/**
-     * Escapes a value for output in a view script.
-     *
-     * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
-     * {@link $_encoding} setting.
-     *
-     * @param  mixed $var The output to escape.
-     * @return mixed The escaped value.
-     */
-    function escape($var)
-    {
-        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
-            return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_charset);
-        }
 
-        return call_user_func($this->_escape, $var);
-    }
-    
+	/**
+	 * Sets the _escape() callback.
+	 *
+	 * @param mixed $spec The callback for _escape() to use.
+	 */
+	function setEscape($spec)
+	{
+		$this->_escape = $spec;
+	}
+
+	/**
+	 * Escapes a value for output in a view script.
+	 *
+	 * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
+	 * {@link $_encoding} setting.
+	 *
+	 * @param  mixed $var The output to escape.
+	 * @return mixed The escaped value.
+	 */
+	function escape($var)
+	{
+		if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
+			return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_charset);
+		}
+
+		return call_user_func($this->_escape, $var);
+	}
+
 	/**
 	 * Load a template file -- first look in the templates folder for an override
 	 *
@@ -322,7 +322,7 @@ class getEvecharsheetTab extends cbTabHandler
 		}
 	}
 
-	
+
 	private function displayCharacter($character)
 	{
 		$this->character = $character;
@@ -335,7 +335,7 @@ class getEvecharsheetTab extends cbTabHandler
 		$this->roles = $this->model->getRoles();
 		$this->roleLocations = $this->model->getRoleLocations();
 		$this->titles = $this->model->getTitles();
-		
+
 		return $this->loadTemplate();
 	}
-} 
+}

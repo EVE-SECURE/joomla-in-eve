@@ -23,7 +23,7 @@ INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `
 ('usermarketorders', 'Market Orders', 'market-orders', 'user', 'marketorders', 'user', '', '0', '1', '1', '0'),
 ('corpmarketorders', 'Market Orders', 'market-orders', 'corporation', 'marketorders', 'corporation', '', '0', '1', '100', '22517998136852737');
 
-INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'MarketOrders', 'Character', 'Full', 0, ''),
 ('corp', 'MarketOrders', 'Character', 'Full', 0, '');
 

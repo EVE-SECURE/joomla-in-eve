@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelAlliance extends EveModel {
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -73,7 +73,7 @@ class EveModelAlliance extends EveModel {
 
 		// Attempt to load the row.
 		$return = $this->getAlliance($allianceID);
-		
+
 		// Check for a table object error.
 		if ($return === false && $table->getError()) {
 			$this->setError($table->getError());
@@ -92,7 +92,7 @@ class EveModelAlliance extends EveModel {
 
 		// Get a alliance row instance.
 		$table = &$this->getItem($allianceID);
-		
+
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
@@ -113,7 +113,7 @@ class EveModelAlliance extends EveModel {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		return $table->allianceID;
 	}
 
@@ -121,7 +121,7 @@ class EveModelAlliance extends EveModel {
 	{
 
 	}
-	
+
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['allianceID'])) {
@@ -130,7 +130,7 @@ class EveModelAlliance extends EveModel {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Method to checkin a row.
 	 *
@@ -205,7 +205,7 @@ class EveModelAlliance extends EveModel {
 
 		return true;
 	}
-	
+
 	/**
 	 * Tests if alliance is checked out
 	 *
@@ -238,7 +238,7 @@ class EveModelAlliance extends EveModel {
 
 		return $table->isCheckedOut($juserId);
 	}
-	
+
 	/**
 	 * Method to delete alliances from the database.
 	 *
@@ -250,7 +250,7 @@ class EveModelAlliance extends EveModel {
 		$i = 0;
 		// Get a alliance row instance
 		$table = $this->getInstance('Alliance');
-		
+
 		foreach ($cid as $id) {
 			// Load the row.
 			$return = $table->load($id);
@@ -273,44 +273,44 @@ class EveModelAlliance extends EveModel {
 		}
 		return $i;
 	}
-	
+
 	function getAlliance($id = null) {
 		return $this->getInstance('Alliance', $id);
 	}
-	
+
 	function store() {
 		$app = JFactory::getApplication();
 		$alliance = $this->getAlliance(JRequest::getInt('allianceID'));
 		$post = JRequest::get('post');
 		$ownerPast = $alliance->owner;
-		
+
 		if (!$alliance->bind( $post )) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
-		
+
 		if (!$alliance->check()) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
-		
+
 		if (!$alliance->store()) {
 			return JError::raiseWarning( 500, $alliance->getError() );
 		}
 
-		
+
 		$app->enqueueMessage(JText::_('ALLIANCE STORED'));
-		
+
 	}
-	
+
 	function apiGetAllianceList() {
 		try {
 			$ale = $this->getAleEVEOnline();
 			$xml = $ale->eve->AllianceList();
-			
+				
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =JDispatcher::getInstance();
-			
+				
 			$dispatcher->trigger('eveAllianceList', array($xml, $ale->isFromCache(), array()));
-			
+				
 			return true;
 		}
 		catch (RuntimeException $e) {
@@ -321,32 +321,32 @@ class EveModelAlliance extends EveModel {
 		}
 		return false;
 	}
-	
+
 	function apiGetAllianceMembers($cid) {
 		try {
 			$ale = $this->getAleEVEOnline();
 			$xml = $ale->eve->AllianceList();
-			
+				
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
-			$dispatcher->trigger('eveAllianceList', 
-				array($xml, $ale->isFromCache(), array()));
-			
+			$dispatcher->trigger('eveAllianceList',
+			array($xml, $ale->isFromCache(), array()));
+				
 			$conditions = array();
 			foreach ($cid as $allianceID) {
 				$conditions[] = "@allianceID='$allianceID'";
 			}
 			$_condition = implode(' or ', $conditions);
 			$corps = $xml->xpath('/eveapi/result/rowset/row['.$_condition.']/rowset/row');
-			
+				
 			$count = 0;
 			foreach ($corps as $corp) {
 				try {
 					$corporationID = (int) $corp->corporationID;
 					$corporation = $this->getInstance('Corporation', $corporationID);
 					$xml = $ale->corp->CorporationSheet(array('corporationID' => $corporationID), ALE_AUTH_NONE);
-					$dispatcher->trigger('corpCorporationSheet', 
-						array($xml, $ale->isFromCache(), array()));
+					$dispatcher->trigger('corpCorporationSheet',
+					array($xml, $ale->isFromCache(), array()));
 					$count += 1;
 				}
 				catch (RuntimeException $e) {
@@ -376,7 +376,7 @@ class EveModelAlliance extends EveModel {
 		return $result;
 	}
 
-	
+
 	public function setOwner($cid, $isOwner)
 	{
 		$count = 0;
@@ -385,9 +385,9 @@ class EveModelAlliance extends EveModel {
 			$alliance->owner = $isOwner ? 1 : null;
 			$alliance->store(true);
 			$count += 1;
-			
+				
 		}
 		return $count;
 	}
-	
+
 }

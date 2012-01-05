@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -30,27 +30,27 @@ class EveTableSchedule extends JTable {
 	var $characterID = null;
 	var $next = null;
 	var $published = null;
-	
+
 	/**
-	* @param database A database connector object
-	*/
+	 * @param database A database connector object
+	 */
 	function __construct( &$dbo )
 	{
 		parent::__construct( '#__eve_schedule', 'id', $dbo );
 	}
-	
-	function setApicall($type, $call, $params = null) {
+
+	function setApicall($type, $name, $params = null) {
 		$q = EveFactory::getQuery();
 		$q->addTable('#__eve_apicalls', 'ap', 'sc.apicall=ap.id');
 		$q->addQuery('ap.id');
-		$q->addWhere("ap.type='%s' AND ap.call='%s'", $type, $call);
+		$q->addWhere("ap.type='%s' AND ap.name='%s'", $type, $name);
 		if ($params) {
 			$q->addWhere("ap.params='%s'", $params);
 		}
 		$this->apicall = $q->loadResult();
 	}
-	
-	function loadExtra($type, $call, $userID = null, $characterID = null, $params = null) {
+
+	function loadExtra($type, $name, $userID = null, $characterID = null, $params = null) {
 		if (is_array($params)) {
 			$params = json_encode($params);
 		}
@@ -58,7 +58,7 @@ class EveTableSchedule extends JTable {
 		$q->addTable('#__eve_schedule', 'sc');
 		$q->addJoin('#__eve_apicalls', 'ap', 'sc.apicall=ap.id');
 		$q->addQuery('sc.*', 'ap.id AS apicall');
-		$q->addWhere("ap.type='%s' AND ap.call='%s'", $type, $call);
+		$q->addWhere("ap.type='%s' AND ap.name='%s'", $type, $name);
 		if ($userID) {
 			$q->addWhere("sc.userID='%s'", $userID);
 		}
@@ -74,7 +74,7 @@ class EveTableSchedule extends JTable {
 		}
 		$this->userID = $userID;
 		$this->characterID = $characterID;
-		$this->setApicall($type, $call, $params);
+		$this->setApicall($type, $name, $params);
 		return true;
 	}
 }

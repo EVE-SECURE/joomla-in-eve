@@ -83,7 +83,7 @@ DELETE FROM `jos_eve_sections` WHERE `component`='charsheet';
 INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('charsheet', 'Character Sheet', 'character-sheet', 'character', 'charsheet', 'character', '', '0', '1', '1');
 
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT INTO `jos_eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('corp', 'Titles', 'Character', 'Full', 0, '');
 
 INSERT INTO jos_eve_roles (`roleID`, `roleName`) VALUES

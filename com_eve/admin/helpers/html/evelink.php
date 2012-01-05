@@ -10,22 +10,22 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 
 abstract class JHTMLevelink {
-	
+
 	static public function character($character, $corporation = null, $alliance = null)
 	{
 		if (is_array($character)) {
@@ -39,7 +39,7 @@ abstract class JHTMLevelink {
 		}
 		$class = 'ccpeve character-'.$characterObj->$characterID;
 		$html = '<a class="'.$class.'" href="'.EveRoute::character($character, $corporation, $alliance).'">'.
-					$characterObj->$characterName.
+		$characterObj->$characterName.
 				'</a>';
 		return $html;
 	}
@@ -59,7 +59,7 @@ abstract class JHTMLevelink {
 		}
 		$class = 'ccpeve corporation-'.$corporationObj->$corporationID;
 		$html = '<a class="'.$class.'" href="'.EveRoute::corporation($corporation, $alliance).'">'.
-					$corporationObj->$corporationName.' ['.$corporationObj->$corporationTicker.']'.
+		$corporationObj->$corporationName.' ['.$corporationObj->$corporationTicker.']'.
 				'</a>';
 		return $html;
 	}
@@ -79,26 +79,26 @@ abstract class JHTMLevelink {
 		}
 		$class = 'ccpeve alliance-'.$allianceObj->$allianceID;
 		$html = '<a class="'.$class.'" href="'.EveRoute::alliance($alliance).'">'.
-					$allianceObj->$allianceName.' ['.$allianceObj->$allianceShortName.']'.
+		$allianceObj->$allianceName.' ['.$allianceObj->$allianceShortName.']'.
 				'</a>';
 		return $html;
 	}
-	
+
 	static public function ship($ship, $href = '#')
 	{
 		return self::type($ship, $href, 'ship');
 	}
-	
+
 	static public function station($station, $href = '#')
 	{
 		return self::type($station, $href, 'station');
 	}
-	
+
 	static public function solarSystem($solarSystem, $href = '#')
 	{
 		return self::type($solarSystem, $href, 'solarSystem');
 	}
-	
+
 	static public function type($item, $href = '#', $type = 'type')
 	{
 		if (is_array($item)) {
@@ -112,10 +112,10 @@ abstract class JHTMLevelink {
 		}
 		$class = 'ccpeve '.$type.'-'.$itemObj->$itemID;
 		$html = '<a class="'.$class.'" href="'.$href.'">'.
-					$itemObj->$itemName.
+		$itemObj->$itemName.
 				'</a>';
 		return $html;
 	}
-	
-	
+
+
 }

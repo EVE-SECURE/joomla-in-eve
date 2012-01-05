@@ -11,12 +11,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,13 +26,13 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class EvecharsheetViewUser extends JView 
+class EvecharsheetViewUser extends JView
 {
 	public function display($tpl = null)
 	{
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
-		
+
 		$params = $this->get('Params');
 		$user = $this->get('Item');
 		$characters = $this->get('Characters');
@@ -40,8 +40,8 @@ class EvecharsheetViewUser extends JView
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
-				&& JArrayHelper::getValue($menu->query, 'option') == 'com_evecharsheet'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
+		&& JArrayHelper::getValue($menu->query, 'option') == 'com_evecharsheet'
+		&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
 				$params->set('page_title', JText::_('Com_Evecharsheet_User_Character_Sheets_Title'));
@@ -50,15 +50,15 @@ class EvecharsheetViewUser extends JView
 			$params->set('page_title', JText::_('Com_Evecharsheet_User_Character_Sheets_Title'));
 		}
 		$document->setTitle($params->get('page_title'));
-		
+
 		$this->assignRef('user', $user);
 		$this->assignRef('params', $params);
 		$this->assignRef('characters', $characters);
-		
+
 		parent::display();
 		$this->_setPathway();
 	}
-	
+
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
@@ -66,10 +66,10 @@ class EvecharsheetViewUser extends JView
 		if ($menu && $menu->component == 'com_evecharsheet') {
 			return;
 		}
-		
+
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$pathway->addItem(JText::_('Character Sheets'), 
-			EveRoute::_('usercharsheet'));
+		$pathway->addItem(JText::_('Character Sheets'),
+		EveRoute::_('usercharsheet'));
 	}
 }

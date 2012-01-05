@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
  * Joomla! in EVE Api core plugin
  *
  * @author		Pavol Kovalik  <kovalikp@gmail.com>
- * @package		Joomla! in EVE		
+ * @package		Joomla! in EVE
  * @subpackage	Core
  */
 class plgEveapiEveMarketOrders extends EveApiPlugin {
@@ -53,13 +53,13 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 		  'issued',
 		);
 	}
-	
+
 	private function _onDuplicateUpdate($field)
 	{
 		$dbo = JFactory::getDBO();
 		return $dbo->nameQuote($field).'=VALUES('.$dbo->nameQuote($field).')';
 	}
-	
+
 	private function _storeMarketOrders($xml, $entityID)
 	{
 		$dbo = JFactory::getDBO();
@@ -71,7 +71,7 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 			$entry['entityID'] = $entityID;
 			$value = array();
 			foreach ($this->_fields as $field) {
-				$value[] = $dbo->quote($entry[$field]); 
+				$value[] = $dbo->quote($entry[$field]);
 			}
 			$values[] = '('.implode(',', $value).')';
 		}
@@ -83,18 +83,18 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 			$dbo->query();
 		}
 	}
-	
-	
-	public function onSetOwnerCorporation($userID, $characterID, $owner) 
+
+
+	public function onSetOwnerCorporation($userID, $characterID, $owner)
 	{
 		$this->_setOwnerCorporation('corp', 'MarketOrders', $owner, $userID, $characterID);
 	}
-	
+
 	public function charMarketOrders($xml, $fromCache, $options = array()) {
 		$this->_storeMarketOrders($xml, $options['characterID']);
 	}
-	
-	public function corpMarketOrders($xml, $fromCache, $options = array()) 
+
+	public function corpMarketOrders($xml, $fromCache, $options = array())
 	{
 		if (!isset($options['corporationID'])) {
 			$characterID = JArrayHelper::getValue($options, 'characterID');
@@ -109,5 +109,5 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 		}
 		$this->_storeMarketOrders($xml, $entityID);
 	}
-	
+
 }

@@ -39,9 +39,17 @@ class AleRequestCurl implements AleInterfaceRequest  {
 		}
 		$this->config['timeout'] 		= isset($config['timeout']) ? (int) $config['timeout'] : 30;
 		$this->config['flattenParams'] 	= isset($config['flattenParams']) ? (bool) $config['flattenParams'] : false;
+		$this->config['certificate']	= isset($config['certificate']) ? $config['certificate'] : false;
 		$this->config['proxy'] 			= isset($config['proxy']) ? $config['proxy'] : false;
 		$this->config['proxyUser'] 		= isset($config['proxyLogin']) ? $config['proxyUser'] : null;
 		$this->config['proxyPwd'] 		= isset($config['proxyPwd']) ? $config['proxyPwd'] : null;
+
+		if ($this->config['certificate']) {
+			if ((strpos($this->config['certificate'], '/') === false)
+			&& (strpos($this->config['certificate'], '\\') === false)) {
+				$this->config['certificate'] = ALE_CONFIG_DIR.DIRECTORY_SEPARATOR.$this->config['certificate'];
+			}
+		}
 	}
 
 	/**
@@ -75,8 +83,14 @@ class AleRequestCurl implements AleInterfaceRequest  {
 		//curl magic
 		$ch = curl_init();
 
+		if ($this->config['certificate']) {
+			curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, true);
+			curl_setopt ($ch, CURLOPT_CAINFO, $this->config['certificate']);
+		}
+
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_TIMEOUT, $this->config['timeout']);
+		curl_setopt($ch, CURLOPT_TIMEOUT, $this->config['certificate']);
 		if ($params) {
 			if ($this->config['flattenParams']) {
 				//this will allow to add multiple parameters with same key
@@ -97,14 +111,14 @@ class AleRequestCurl implements AleInterfaceRequest  {
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
 			}
 		}
-		
+
 		if ($this->config['proxy']) {
 			curl_setopt($ch, CURLOPT_PROXY, $this->config['proxy']);
 			if ($this->config['proxyUser']) {
 				curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->config['proxyUser'].':'.$proxy['proxyUser']);
-			} 			
+			}
 		}
-		
+
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, 'readHeader'));
 		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);

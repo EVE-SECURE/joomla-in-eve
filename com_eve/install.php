@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -28,15 +28,15 @@ $app = JFactory::getApplication();
 $plugins = array('eveapi_eve', 'system_eve', 'search_eve', 'user_eve', 'cron_eve');
 foreach ($plugins as $plugin) {
 	$p_dir = $this->parent->getPath('source').DS.'plugins'.DS.$plugin;
-	
+
 	$package = array();
 	$package['packagefile'] = null;
 	$package['extractdir'] = null;
 	$package['dir'] = $p_dir;
 	$package['type'] = JInstallerHelper::detectType($p_dir);
-	
+
 	$installer = new JInstaller();
-	
+
 	// Install the package
 	if (!$installer->install($package['dir'])) {
 		// There was an error installing the package
@@ -49,7 +49,7 @@ foreach ($plugins as $plugin) {
 		$app->enqueueMessage($msg);
 		$result = true;
 	}
-	
+
 }
 
 function com_install() {
@@ -62,15 +62,16 @@ function com_install() {
 		$manifest = new SimpleXMLElement($manifestContent);
 		$version = (string) $manifest->version;
 		$versionNumbers = explode('.', $version);
-		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
+		$version = $versionNumbers[0].'.'.$versionNumbers[1];
 	}
-	
+
 	$dbo = JFactory::getDBO();
 	$queries = array();
+	$delete = array();
 	switch ($version) {
 		case '0.2':
 		case '0.5':
-			$sql = "ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);";
+			$sql = "ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `name`);";
 			$dbo->setQuery($sql);
 			if (!$dbo->query()) {
 				$app->enqueueMessage($dbo->getError(), 'error');
@@ -92,8 +93,23 @@ function com_install() {
 		case '0.6':
 			$queries[] = "ALTER TABLE `#__eve_apicalls` CHANGE `params` `params` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ;";
 			$queries[] = "ALTER TABLE `#__eve_apicalls` DROP INDEX `type_call` ;";
-			$queries[] = "ALTER TABLE `#__eve_apicalls` ADD UNIQUE `type_call_params` (`type` ,`call` ,`params`) ;";
+			$queries[] = "ALTER TABLE `#__eve_apicalls` ADD UNIQUE `type_call_params` (`type` ,`name` ,`params`) ;";
 		case '0.7':
+			$queries[] = "TRUNCATE TABLE `#__eve_schedule`";
+			$queries[] = "ALTER TABLE `#__eve_schedule` CHANGE `userID` `keyID` INT( 11 ) NULL DEFAULT NULL ";
+			$queries[] = "DROP TABLE `#__eve_accounts`";
+			$queries[] = "UPDATE `#__components` SET `name` = 'API Keys', `admin_menu_link` = 'option=com_eve&view=apikeys' WHERE `admin_menu_link` = 'option=com_eve&view=accounts'";
+			$queries[] = "ALTER TABLE `jos_eve_apicalls` CHANGE `call` `name` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ";
+			$queries[] = "ALTER TABLE `jos_eve_apicalls` DROP `authentication`, DROP `authorization`;";
+			$queries[] = "ALTER TABLE `jos_eve_apicalls` ADD `accessMask` INT NULL DEFAULT NULL AFTER `name` ";
+			$delete[] = 'administrator/com_eve/tables/account.php';
+			$delete[] = 'administrator/com_eve/controllers/account.php';
+			$delete[] = 'administrator/com_eve/models/account.php';
+			$delete[] = 'administrator/com_eve/models/accounts.php';
+			$delete[] = 'administrator/com_eve/views/account';
+			$delete[] = 'administrator/com_eve/views/accounts';
+			$delete[] = 'administrator/com_eve/views/character/tmpl/edit_apischedule.php';
+			case '0.8':
 			foreach ($queries as $sql) {
 				$dbo->setQuery($sql);
 				$dbo->setQuery($sql);
@@ -104,18 +120,18 @@ function com_install() {
 			break;
 		default:
 			//fresh install
-			$sql = "SELECT id FROM `#__eve_apicalls` WHERE `call` = 'AllianceList'";
+			$sql = "SELECT id FROM `#__eve_apicalls` WHERE `name` = 'AllianceList'";
 			$dbo->setQuery($sql);
 			$id = $dbo->loadResult();
 			if ($id) {
-				$sql = "INSERT INTO `#__eve_schedule` (`apicall`, `userID`, `characterID`, `next`, `published`) VALUES ". 
+				$sql = "INSERT INTO `#__eve_schedule` (`apicall`, `keyID`, `characterID`, `next`, `published`) VALUES ".
 					"(".$id.", NULL, NULL, '0000-00-00 00:00:00', 1);";
 				$dbo->setQuery($sql);
 				if (!$dbo->query()) {
 					$app->enqueueMessage($error = $dbo->getError(), 'error');
 				}
 			}
-			
+				
 			$sql = "UPDATE #__plugins SET published = 1 WHERE element = 'eve'";
 			$dbo->setQuery($sql);
 			if (!$dbo->query()) {
@@ -125,13 +141,13 @@ function com_install() {
 				$app->enqueueMessage($msg);
 			}
 	}
-	
+
 	$cron = JComponentHelper::getComponent('com_cron', true);
 	if ($cron->enabled) {
 		$sql = "SELECT id FROM #__cron_jobs WHERE event LIKE 'onCronTick'";
 		$dbo->setQuery($sql);
 		if (!$dbo->loadResult()) {
-			$sql = "INSERT INTO `#__cron_jobs` (`id`, `pattern`, `type`, `plugin`, `event`, `next`, `runs`, `minutes`, `hours`, `days`, `months`, `weekdays`, `state`, `params`, `ordering`, `checked_out`, `checked_out_time`) VALUES 
+			$sql = "INSERT INTO `#__cron_jobs` (`id`, `pattern`, `type`, `plugin`, `event`, `next`, `runs`, `minutes`, `hours`, `days`, `months`, `weekdays`, `state`, `params`, `ordering`, `checked_out`, `checked_out_time`) VALUES
 			(1, '* * * * *', 'cron', '', 'onCronTick', '0000-00-00 00:00:00', 0, '.0.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.32.33.34.35.36.37.38.39.40.41.42.43.44.45.46.47.48.49.50.51.52.53.54.55.56.57.58.59.', '.0.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.', '.1.2.3.4.5.6.7.8.9.10.11.12.13.14.15.16.17.18.19.20.21.22.23.24.25.26.27.28.29.30.31.', '.1.2.3.4.5.6.7.8.9.10.11.12.', '.0.1.2.3.4.5.6.7.', 1, '', 1, 0, '0000-00-00 00:00:00');";
 			$dbo->setQuery($sql);
 			if ($dbo->query()) {
@@ -146,33 +162,23 @@ function com_install() {
 		$msg = JText::sprintf('Cron component not found');
 		$app->enqueueMessage($msg, 'warning');
 	}
-	
+
 	?>
-	<p>
-		I should propably put some nice intro here.
-	</p>
-	<p>
-		Before you start using this component, make sure to:
-		<ol>
-			<li>
-				<a href="<?php echo JRoute::_('index.php?option=com_config'); ?>" target="_blank">
-					<?php echo JText::_('Turn off "New User Account Activation"'); ?> if you want to use API account activation
-				</a>
-			</li>
-			<li>
-				Find &quot;language/en-GB/en-GB.com_user.ini&quot; file.
-				Replace &quot;REG_COMPLETE=You may now log in.&quot; with &quot;REG_COMPLETE=Register your EVE API key to log in.&quot;
-			</li>
-			<li>
-				<a href="<?php echo JRoute::_('index.php?option=com_eve'); ?>">
-					<?php echo JText::_('Go and play'); ?>
-				</a>
-			</li>
-		</ol>
-	</p>
-	<p>
-		Feel free to throw some ISK at <a href="#">Lumy</a> to support this project.
-	</p>
+<p>I should propably put some nice intro here.</p>
+<p>Before you start using this component, make sure to:
+<ol>
+	<li><a href="<?php echo JRoute::_('index.php?option=com_config'); ?>"
+		target="_blank"> <?php echo JText::_('Turn off "New User Account Activation"'); ?>
+	if you want to use API account activation </a></li>
+	<li>Find &quot;language/en-GB/en-GB.com_user.ini&quot; file. Replace
+	&quot;REG_COMPLETE=You may now log in.&quot; with
+	&quot;REG_COMPLETE=Register your EVE API key to log in.&quot;</li>
+	<li><a href="<?php echo JRoute::_('index.php?option=com_eve'); ?>"> <?php echo JText::_('Go and play'); ?>
+	</a></li>
+</ol>
+</p>
+<p>Feel free to throw some ISK at <a href="#">Lumy</a> to support this
+project.</p>
 	<?php
 	return true;
 }

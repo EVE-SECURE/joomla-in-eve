@@ -25,5 +25,5 @@ class JHTMLJobs
 		$attribs = array('onclick'=>"return listItemTask('cb".$id."','".$task."')", 'title'=>$alt);
 		return JHTML::link($link, $picture, $attribs);
 	}
-	
+
 }

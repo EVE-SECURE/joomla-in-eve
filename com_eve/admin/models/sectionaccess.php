@@ -11,12 +11,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +26,7 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
-class EveModelSectionaccess extends EveModel 
+class EveModelSectionaccess extends EveModel
 {
 	protected function _populateState()
 	{
@@ -44,7 +44,7 @@ class EveModelSectionaccess extends EveModel
 		$nullOption = JRequest::getWord('view') != 'access';
 		$this->setState('nullOption', $nullOption);
 	}
-	
+
 	public function getCharacterList()
 	{
 		$dbo = $this->getDBO();
@@ -58,22 +58,22 @@ class EveModelSectionaccess extends EveModel
 		$list = $q->loadObjectList('section');
 		return $list;
 	}
-	
+
 	public function setCharacterID($id)
 	{
 		if (!$this->__state_set) {
 			// Private method to auto-populate the model state.
 			$this->_populateState();
-			
+				
 			$this->setState('character.characterID', $id);
 			// Set the model state set flat to true.
-			
+				
 			$this->__state_set = true;
 		} else {
 			$this->setState('character.characterID', $id);
 		}
 	}
-	
+
 	public function setCharacterList($data, $character)
 	{
 		$characterID = $this->getState('character.characterID');
@@ -91,12 +91,12 @@ class EveModelSectionaccess extends EveModel
 			$access = is_numeric($access) ? (int) $access : 'NULL';
 			$sql = sprintf('INSERT INTO #__eve_section_character_access (section, characterID, access) VALUES (%1$s, %2$s, %3$s) '.
 				'ON DUPLICATE KEY UPDATE access = %3$s',
-				$item->section, $characterID, $access);
+			$item->section, $characterID, $access);
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
 	}
-	
+
 	public function getCharacterGroups()
 	{
 		$dbo = $this->getDBO();
@@ -114,24 +114,24 @@ class EveModelSectionaccess extends EveModel
 		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_IN_OWNER_CORPORATION, 'Com_Eve_Access_Option_Corporation');
 		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_OWNED_BY_USER, 'Com_Eve_Access_Option_Personal');
 		$groups[] = JHTML::_('select.option', EveACL::CHARACTER_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
-		
+
 		return $groups;
 	}
-	
+
 	public function setCorporationID($id)
 	{
 		if (!$this->__state_set) {
 			// Private method to auto-populate the model state.
 			$this->_populateState();
-			
+				
 			$this->setState('corporation.corporationID', $id);
 			// Set the model state set flat to true.
-			
+				
 			$this->__state_set = true;
 		} else {
 			$this->setState('corporation.corporationID', $id);
 		}
-	}	
+	}
 	public function getCorporationList()
 	{
 		$dbo = $this->getDBO();
@@ -145,7 +145,7 @@ class EveModelSectionaccess extends EveModel
 		$list = $q->loadObjectList('section');
 		return $list;
 	}
-	
+
 	public function setCorporationList($data, $corporation)
 	{
 		$corporationID = $this->getState('corporation.corporationID');
@@ -161,15 +161,15 @@ class EveModelSectionaccess extends EveModel
 			}
 			$access = JArrayHelper::getValue($itemData, 'access');
 			$access = is_numeric($access) ? (int) $access : 'NULL';
-			$rolesUpdate = $access == 'NULL' ? ', roles = NULL' : '';  
+			$rolesUpdate = $access == 'NULL' ? ', roles = NULL' : '';
 			$sql = sprintf('INSERT INTO #__eve_section_corporation_access (section, corporationID, access, roles) VALUES (%1$s, %2$s, %3$s, NULL) '.
 				'ON DUPLICATE KEY UPDATE access = %3$s'.$rolesUpdate,
-				$item->section, $corporationID, $access);
+			$item->section, $corporationID, $access);
 			$dbo->setQuery($sql);
 			$dbo->query();
 		}
-	}	
-	
+	}
+
 	public function getCorporationGroups()
 	{
 		$dbo = $this->getDBO();
@@ -187,8 +187,8 @@ class EveModelSectionaccess extends EveModel
 		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_MEMBERS, 'Com_Eve_Access_Option_Members');
 		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_MEMBER_ROLES, 'Com_Eve_Access_Option_Roles');
 		$groups[] = JHTML::_('select.option', EveACL::CORPORATION_SECTION_DISABLED, 'Com_Eve_Access_Option_Disabled');
-		
+
 		return $groups;
 	}
-	
+
 }

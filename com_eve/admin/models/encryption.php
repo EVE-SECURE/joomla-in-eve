@@ -10,27 +10,27 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelEncryption extends JModel {
-	
+
 	public function getAlgorithms()
 	{
 		$result = array();
-		
+
 		$result[] = JHTML::_('select.option', '', '- '.JText::_('None').' -');
 		if (function_exists('mcrypt_encrypt')) {
 			$algorithms = mcrypt_list_algorithms();
@@ -40,11 +40,11 @@ class EveModelEncryption extends JModel {
 		}
 		return $result;
 	}
-	
-	public function getModes() 
+
+	public function getModes()
 	{
 		$result = array();
-		
+
 		$result[] = JHTML::_('select.option', '', '- '.JText::_('None').' -');
 		if (function_exists('mcrypt_encrypt')) {
 			$modes = mcrypt_list_modes();
@@ -54,7 +54,7 @@ class EveModelEncryption extends JModel {
 		}
 		return $result;
 	}
-	
+
 	public function getConfigContent()
 	{
 		$cipher = $this->getState('cipher');
@@ -62,29 +62,29 @@ class EveModelEncryption extends JModel {
 		$showapikey = $this->getState('showapikey');
 		$key = $this->getState('key');
 		$iv = $this->getState('iv');
-		
+
 		$config = new JRegistry('config');
 		$config_array = array();
 		$config_array['cipher'] = $cipher;
 		$config_array['mode'] = $mode;
 		$config_array['showapikey'] = $showapikey;
 		$config_array['key'] = $key;
-		$config_array['iv'] = base64_encode($iv); 
+		$config_array['iv'] = base64_encode($iv);
 		$config->loadArray($config_array);
-		
+
 		return $config->toString('PHP', 'config', array('class' => 'EveConfigEncryption'));
-		
+
 	}
-	
+
 	public function writeConfiguration()
 	{
 		$fname = $this->getPath();
 		$app = JFactory::getApplication();
-		
+
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.path');
-		if (!$app->getCfg('ftp_enable') && JFile::exists($fname) && 
-				JPath::isOwner($fname) && !JPath::setPermissions($fname, '0644')) {
+		if (!$app->getCfg('ftp_enable') && JFile::exists($fname) &&
+		JPath::isOwner($fname) && !JPath::setPermissions($fname, '0644')) {
 			JError::raiseNotice('SOME_ERROR_CODE', JText::sprintf('Could not make %s writable', $fname));
 			return false;
 		}
@@ -94,7 +94,7 @@ class EveModelEncryption extends JModel {
 		}
 		return $result;
 	}
-	
+
 	public function setConfiguration($data)
 	{
 		$cipher = JArrayHelper::getValue($data, 'cipher', '');
@@ -113,7 +113,7 @@ class EveModelEncryption extends JModel {
 				return false;
 			}
 			$iv_size = mcrypt_get_iv_size($cipher, $mode);
-			$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);			
+			$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
 		} else {
 			if (strlen($cipher) > 0) {
 				JError::raiseNotice(0, JText::_('Encryption not supported'));
@@ -123,21 +123,21 @@ class EveModelEncryption extends JModel {
 			$key = '';
 			$iv = '';
 		}
-		
+
 		$this->setState('cipher', $cipher);
 		$this->setState('mode', $mode);
 		$this->setState('key', $key);
 		$this->setState('iv', $iv);
 		$this->setState('showapikey', $show);
-		
+
 		return true;
 	}
-	
+
 	public function getPath()
 	{
 		return JPATH_COMPONENT_ADMINISTRATOR.DS.'configs'.DS.'encryption.php';
 	}
-	
+
 	public function encryptApiKeys()
 	{
 		$dbo = $this->getDBO();
@@ -148,12 +148,12 @@ class EveModelEncryption extends JModel {
 		foreach ($accounts as $accountID) {
 			$account = EveFactory::getInstance('Account', $accountID);
 			if ($account->apiKey) {
-				$account->apiKey = base64_encode(mcrypt_encrypt($this->getState('cipher'), $this->getState('key'), 
-						$account->apiKey, $this->getState('mode'), $this->getState('iv')));
+				$account->apiKey = base64_encode(mcrypt_encrypt($this->getState('cipher'), $this->getState('key'),
+				$account->apiKey, $this->getState('mode'), $this->getState('iv')));
 				$account->store();
 			}
 		}
-		
+
 	}
-	
+
 }

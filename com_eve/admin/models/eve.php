@@ -10,29 +10,29 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelEve extends JModel {
-	
+
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
 	}
-	
-	public function getIcons() 
+
+	public function getIcons()
 	{
 		$user = JFactory::getUser();
 		$result = array();
@@ -43,7 +43,7 @@ class EveModelEve extends JModel {
 		$result[] = array('icon'=>'icon-48-schedule.png', 'view'=>'schedule', 'caption'=>JText::_('Schedule'));
 		/*if ($user->authorize('com_config', 'manage')) {
 			$result[] = array('icon'=>'icon-48-diagnose.png', 'view'=>'diagnose', 'caption'=>JText::_('Diagnose'));
-		}*/
+			}*/
 		if ($user->authorize('com_config', 'manage')) {
 			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'access', 'caption'=>JText::_('Access Control'));
 		}
@@ -51,9 +51,9 @@ class EveModelEve extends JModel {
 			$result[] = array('icon'=>'icon-48-encryption.png', 'view'=>'encryption', 'caption'=>JText::_('API Key Encryption'));
 		}
 		return $result;
-		
+
 	}
-	
+
 	public function getOwnerCorporations()
 	{
 		$dbo = $this->getDBO();
@@ -66,9 +66,9 @@ class EveModelEve extends JModel {
 		$q->addWhere('(co.owner = 1 OR al.owner = 1)');
 		$list = $q->loadObjectList();
 		return $list;
-		
+
 	}
-	
+
 	public function getCCPDbDumpTables()
 	{
 		$result = array(
@@ -149,7 +149,7 @@ class EveModelEve extends JModel {
 			$app = JFactory::getApplication();
 			$dbdump_database = $app->getCfg('db');
 		}
-		
+
 		$dbo = $this->getDBO();
 		$sql = 'SHOW TABLES FROM '.$dbo->nameQuote($dbdump_database);
 		$dbo->setQuery($sql);
@@ -161,7 +161,7 @@ class EveModelEve extends JModel {
 		foreach ($result as $table => $empty) {
 			$result[$table] = isset($tmp[strtolower($table)]);
 		}
-		
+
 		return $result;
 	}
 }

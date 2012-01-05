@@ -1,6 +1,12 @@
 @CHARSET "UTF-8";
-div.evecharsheet-skills td.skill-label {width: 40em;}
-div.evecharsheet-certificates td.certificate-label {width: 40em;}
+
+div.evecharsheet-skills td.skill-label {
+	width: 40em;
+}
+
+div.evecharsheet-certificates td.certificate-label {
+	width: 40em;
+}
 
 div.heading-expanded {
 	background: url(../images/collapse.png) no-repeat;
@@ -19,12 +25,12 @@ div.evecharsheet-portrait {
 	float: left;
 }
 
-div.evecharsheet-heading  {
+div.evecharsheet-heading {
 	float: left;
 	width: 50%;
 }
 
-div.evecharsheet-portrait + div {
+div.evecharsheet-portrait+div {
 	clear: left;
 }
 
@@ -34,36 +40,42 @@ div.evecharsheet-heading span {
 	float: left;
 }
 
-	
 div.evecharsheet-list div {
 	float: left;
-	margin: 10px 
+	margin: 10px
 }
 
 div.evecharsheet-list div img {
 	display: block;
-    margin-left: auto;
-    margin-right: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 div.evecharsheet-list div p {
 	display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 }
 
 .icon-16-charsheet {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-16-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-16-character.png);
 }
+
 .icon-32-charsheet {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-32-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-32-character.png);
 }
+
 .icon-48-charsheet {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-48-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-48-character.png);
 }
+
 .icon-64-charsheet {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-64-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-64-character.png);
 }
 
 div.evecharsheet-skills {

@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -28,15 +28,15 @@ $app = JFactory::getApplication();
 $plugins = array('eveapi_evechartracking');
 foreach ($plugins as $plugin) {
 	$p_dir = $this->parent->getPath('source').DS.'plugins'.DS.$plugin;
-	
+
 	$package = array();
 	$package['packagefile'] = null;
 	$package['extractdir'] = null;
 	$package['dir'] = $p_dir;
 	$package['type'] = JInstallerHelper::detectType($p_dir);
-	
+
 	$installer = new JInstaller();
-	
+
 	// Install the package
 	if (!$installer->install($package['dir'])) {
 		// There was an error installing the package
@@ -49,7 +49,7 @@ foreach ($plugins as $plugin) {
 		$app->enqueueMessage($msg);
 		$result = true;
 	}
-	
+
 }
 
 function com_install() {
@@ -62,7 +62,7 @@ function com_install() {
 		$manifest = new SimpleXMLElement($manifestContent);
 		$version = (string) $manifest->version;
 		$versionNumbers = explode('.', $version);
-		$version = $versionNumbers[0].'.'.$versionNumbers[1]; 
+		$version = $versionNumbers[0].'.'.$versionNumbers[1];
 	}
 	switch ($version) {
 		case '0.2':
@@ -80,6 +80,6 @@ function com_install() {
 			}
 			EveHelper::scheduleApiCalls('evechartracking', true);
 	}
-	
+
 	return true;
 }

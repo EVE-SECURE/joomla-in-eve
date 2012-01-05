@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -30,7 +30,7 @@ class EveViewEncryption extends JView {
 	protected $modes = null;
 	protected $config = null;
 	protected $path = null;
-	
+
 	public function display($tpl = null) {
 		$values = array();
 		$layout = $this->getLayout();
@@ -41,13 +41,13 @@ class EveViewEncryption extends JView {
 			$values['algorithms'] = $this->get('Algorithms');
 			$values['modes'] = $this->get('Modes');
 		}
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-		
+
 		$this->assign($values);
 		parent::display($tpl);
 		$this->_setToolbar();
@@ -59,7 +59,7 @@ class EveViewEncryption extends JView {
 		$title = JText::_('API Key Encryption');
 		JToolBarHelper::title($title, 'encryption');
 		$layout = $this->getLayout();
-		
+
 		if ($layout == 'config') {
 			JToolBarHelper::cancel('encryption.cancel', JText::_('Close'));
 		} else {
@@ -67,5 +67,5 @@ class EveViewEncryption extends JView {
 			JToolBarHelper::cancel('encryption.cancel');
 		}
 	}
-	
+
 }

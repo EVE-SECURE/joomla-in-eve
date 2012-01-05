@@ -10,30 +10,30 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 class EveRouter {
 	private static $instance;
 	private static $_sections;
-	
+
 	private $user = array();
 	private $character = array();
 	private $corporation = array();
 	private $alliance = array();
-	
+
 	private $ownedChars = array();
-	
+
 	public function __construct()
 	{
 		$menu = JSite::getMenu();
@@ -54,7 +54,7 @@ class EveRouter {
 		$acl = EveFactory::getACL();
 		$this->ownedChars = $acl->getUserCharacterIDs();
 	}
-	
+
 	public function getSection($name)
 	{
 		if (!isset(self::$_sections)) {
@@ -62,10 +62,10 @@ class EveRouter {
 			$q->addTable('#__eve_sections');
 			self::$_sections = $q->loadObjectList('name');
 		}
-		return JArrayHelper::getValue(self::$_sections, $name, null); 
+		return JArrayHelper::getValue(self::$_sections, $name, null);
 	}
-	
-	
+
+
 	public function getItem(&$query)
 	{
 		//for now, we can only find menu items of core component
@@ -76,7 +76,7 @@ class EveRouter {
 				return reset($this->user);
 			}
 		}
-		
+
 		//check user sections
 		$sectionName = JArrayHelper::getValue($query, 'section');
 		$section = $this->getSection($sectionName);
@@ -86,9 +86,9 @@ class EveRouter {
 				return reset($this->user);
 			}
 		}
-		
+
 		$entities = array('character', 'corporation', 'alliance');
-		
+
 		foreach ($entities as $entity) {
 			$entityID = $entity.'ID';
 			if (isset($query[$entityID])) {
@@ -104,7 +104,7 @@ class EveRouter {
 		}
 		return null;
 	}
-	
+
 	public function getSegments(&$query, $item = null)
 	{
 		$segments = array();
@@ -115,7 +115,7 @@ class EveRouter {
 			$entities = array('character');
 		} elseif (!isset($query['allianceID'])) {
 			//corporation does not have to be in alliance
-			$entities = array('corporation', 'character'); 
+			$entities = array('corporation', 'character');
 		} else {
 			$entities = array('alliance', 'corporation', 'character');
 		}
@@ -133,7 +133,7 @@ class EveRouter {
 			$segments[] = $query[$entityID];
 			unset($query[$entityID]);
 		}
-		
+
 		//handle section...
 		$sectionName = JArrayHelper::getValue($query, 'section');
 		$section = $this->getSection($sectionName);
@@ -145,7 +145,7 @@ class EveRouter {
 		}
 		return $segments;
 	}
-	
+
 	public static function getInstance()
 	{
 		if (!isset(self::$instance)) {
@@ -153,5 +153,5 @@ class EveRouter {
 		}
 		return self::$instance;
 	}
-	
+
 }

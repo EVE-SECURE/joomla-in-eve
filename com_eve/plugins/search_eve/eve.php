@@ -11,18 +11,18 @@ jimport('joomla.plugin.plugin');
  * @since 		1.5
  */
 class plgSearchEve extends JPlugin {
-	
+
 	function onSearchAreas() {
 		$areas = array();
 		foreach (array('character', 'corporation', 'alliance') as $entity) {
 			$entities = $entity.'s';
 			if ($this->params->get('search_'.$entities, 1)) {
-				$areas['eve_'.$entities] = JText::_(ucfirst($entities));				
+				$areas['eve_'.$entities] = JText::_(ucfirst($entities));
 			}
 		}
 		return $areas;
 	}
-	
+
 	function _prepareQuery($entity, $text, $phrase = '', $ordering = '')
 	{
 		$dbo = JFactory::getDBO();
@@ -68,7 +68,7 @@ class plgSearchEve extends JPlugin {
 				$wheres2[] 	= $field2.' LIKE '.$text;
 				$where 		= '(' . implode( ') OR (', $wheres2 ) . ')';
 				break;
-	
+
 			case 'all':
 			case 'any':
 			default:
@@ -87,31 +87,31 @@ class plgSearchEve extends JPlugin {
 		$q->addWhere($where);
 		$q->addQuery('NULL AS created');
 		//TODO: ordering
-		
+
 		return $q;
-		
+
 	}
-	
+
 	function onSearch($text, $phrase = '', $ordering = '', $areas = null) {
-		
+
 		if (is_array( $areas )) {
 			if (!array_intersect($areas, array_keys( $this->onSearchAreas()))) {
 				return array();
 			}
 		}
-		
+
 		$limit = $this->params->def('search_limit', 50);
-		
+
 		$text = trim( $text );
 		if ($text == '') {
 			return array();
 		}
-		
+
 		$results = array();
 		foreach (array('character', 'corporation', 'alliance') as $entity) {
 			$entities = $entity.'s';
 			if (!$this->params->get('search_'.$entities, 1)) {
-				continue;				
+				continue;
 			}
 			$q = $this->_prepareQuery($entity, $text, $phrase, $ordering);
 			$q->setLimit($limit);
@@ -125,6 +125,6 @@ class plgSearchEve extends JPlugin {
 		}
 		return $results;
 	}
-	
+
 }
 //href, title (name), section (corp name, ticker?), text (gender, race), created

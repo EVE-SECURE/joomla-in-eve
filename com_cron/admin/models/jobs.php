@@ -8,10 +8,10 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.modellist');
 
-class CronModelJobs extends JModelList 
+class CronModelJobs extends JModelList
 {
 	protected $_context = 'com_cron.entities';
-	
+
 	function __construct($config = array()) {
 		parent::__construct($config);
 	}
@@ -31,27 +31,27 @@ class CronModelJobs extends JModelList
 		$q->addTable('#__cron_jobs', 'jobs');
 		$q->addJoin('#__users', 'editor', 'editor.id=jobs.checked_out');
 		//$q->addJoin('#__users', 'user', 'user.id=jobs.created_by');
-		
-		$q->addOrder($q->getEscaped($this->getState('list.filter_order', 'jobs.ordering')), 
-			$q->getEscaped($this->getState('list.filter_order_Dir', 'ASC')));
+
+		$q->addOrder($q->getEscaped($this->getState('list.filter_order', 'jobs.ordering')),
+		$q->getEscaped($this->getState('list.filter_order_Dir', 'ASC')));
 		/*
-		if (!empty($search)) {
+		 if (!empty($search)) {
 			$search = $q->Quote('%'.$q->getEscaped($search, true).'%', false);
 			$q->addWhere('(jobs.title LIKE '.$search.')');
-		}
-		if ($created_by > 0) {
+			}
+			if ($created_by > 0) {
 			$q->addWhere('jobs.created_by = %s', $created_by);
-		}
-		if (is_numeric($state)) {
+			}
+			if (is_numeric($state)) {
 			$q->addWhere('jobs.state = %s',(int) $state);
-		}*/
-		
+			}*/
+
 		$q->addQuery('jobs.*');
 		$q->addQuery('editor.name AS editor');
 		//$q->addQuery('user.name AS userName');
 		return $q;
 	}
-	
+
 
 	/**
 	 * Method to get a store id based on model configuration state.
@@ -74,10 +74,10 @@ class CronModelJobs extends JModelList
 		$id	.= ':'.$this->getState('check.state');
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.created_by');
-		
+
 		return md5($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -100,7 +100,7 @@ class CronModelJobs extends JModelList
 		$this->setState('filter.catid', $app->getUserStateFromRequest($context.'filter.catid', 'filter_catid', 0, 'int'));
 		$this->setState('filter.created_by', $app->getUserStateFromRequest($context.'filter.created_by', 'filter_created_by', 0, 'int'));
 		$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', '*'));
-		
+
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
@@ -115,16 +115,16 @@ class CronModelJobs extends JModelList
 		}
 
 		// Load the parameters.
-		$this->setState('params', $params);	
+		$this->setState('params', $params);
 	}
 
-	
+
 	public function setPublished($cid, $state = 0)
 	{
 		$user = &JFactory::getUser();
 
 		// Get a weblinks row instance.
-		$table = $this->getTable('Job', 'CronTable'); 
+		$table = $this->getTable('Job', 'CronTable');
 
 		// Update the state for each row
 		foreach ($cid as $id) {
@@ -151,12 +151,12 @@ class CronModelJobs extends JModelList
 		}
 		return true;
 	}
-	
+
 	public function saveorder($cid, $order)
 	{
 		// Get a adsTablead instance.
 		$table = $this->getTable('Job', 'CronTable');
-		
+
 		foreach ($cid as $i => $id) {
 			// Load the row.
 			$table->load($id);
@@ -166,7 +166,7 @@ class CronModelJobs extends JModelList
 				$this->setError(JText::sprintf('Cron_Job_Checked_Out', $id));
 				return false;
 			}
-			
+				
 			if (!isset($order[$i])) {
 				continue;
 			}
