@@ -6,5 +6,5 @@ DELETE FROM `jos_eve_sections` WHERE `component`='chartracking';
 INSERT INTO `jos_eve_sections` ( `name` , `title` , `alias` , `entity` , `component` , `view` , `layout` , `ordering` , `published`, `access` ) VALUES 
 ('chartracking', 'Member Tracking', 'member-tracking', 'corporation', 'chartracking', 'corporation', '', '0', '1', '2');
 
-INSERT INTO `jos_eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT INTO `jos_eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('corp', 'MemberTracking', 'Character', 'Full', 0, '');

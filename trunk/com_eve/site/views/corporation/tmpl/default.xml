@@ -9,7 +9,8 @@
 		<name>Corporation View Layout</name>
 		<description>DESC HERE</description>
 		<url addpath="/administrator/components/com_eve/elements">
-			<param name="corporationID" type="corporation" label="Corporation ID" description="Corporation ID to display" size="50"/>
+			<param name="corporationID" type="corporation" label="Corporation ID"
+				description="Corporation ID to display" size="50" />
 		</url>
 	</state>
 </metadata>

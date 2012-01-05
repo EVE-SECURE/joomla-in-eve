@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -28,29 +28,29 @@ jimport( 'joomla.application.component.view');
 class EveViewAccount extends JView {
 	public $apiStates = null;
 	public $item = null;
-	
-	
+
+
 	function display($tpl = null) {
 		$item = $this->get('Item');
 		$apiStates = $this->get('ApiStates');;
-		
+
 		$config = EveFactory::getConfig();
 		if (!intval($config->getValue('encryption.showapikey'))) {
 			$item->apiKey = '';
 		}
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-		
+
 		$this->assignRef('apiStates', $apiStates);
 		$this->assignRef('item', $item);
 		parent::display($tpl);
 		$this->_setToolbar();
 	}
-	
+
 	protected function _setToolbar() {
 		JRequest::setVar('hidemainmenu', 1);
 
@@ -60,7 +60,7 @@ class EveViewAccount extends JView {
 			$title = JText::_('NEW ACCOUNT');
 		}
 		JToolBarHelper::title($title, 'account');
-		
+
 		JToolBarHelper::apply('account.apply');
 		JToolBarHelper::save('account.save');
 		JToolBarHelper::addNew('account.save2new', 'Save and new');
@@ -70,5 +70,5 @@ class EveViewAccount extends JView {
 			JToolBarHelper::cancel('account.cancel', 'Close');
 		}
 	}
-	
+
 }

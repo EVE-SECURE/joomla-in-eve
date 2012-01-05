@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<params>
-		<param type="list" name="ale_requestclass" default="Curl" label="API REQUEST METHOD" description="API REQUEST METHOD">
+		<param type="list" name="ale_requestclass" default="Curl"
+			label="API REQUEST METHOD" description="API REQUEST METHOD">
 			<option value="Curl">Curl</option>
 			<option value="Fsock">Fsock</option>
 		</param>
-		<param type="text" name="ale_maxdatasize" default="" label="CACHE MAX DATA SIZE" description="USE 'select @@global.max_allowed_packet;' to get max value" />
-		<param type="text" name="dbdump_database" default="" label="STATIC DATA DUMP DATABASE" description="" />
+		<param type="text" name="ale_maxdatasize" default=""
+			label="CACHE MAX DATA SIZE" description="USE 'select @@global.max_allowed_packet;' to get max value" />
+		<param type="text" name="dbdump_database" default=""
+			label="STATIC DATA DUMP DATABASE" description="" />
 	</params>
 </config>

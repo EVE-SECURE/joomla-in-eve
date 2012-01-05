@@ -10,35 +10,35 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 function com_uninstall() {
 	$plugins = array(
-		array('user', 'eve'),
-		array('cron', 'eve'),
-		array('eveapi', 'eve'),
-		array('search', 'eve'),
-		array('system', 'eve'),
+	array('user', 'eve'),
+	array('cron', 'eve'),
+	array('eveapi', 'eve'),
+	array('search', 'eve'),
+	array('system', 'eve'),
 	);
-	
+
 	$where = array();
 	foreach ($plugins as $plugin) {
 		$where[] = vsprintf("(folder='%s' AND element='%s')", $plugin);
 	}
-	
+
 	$query = 'SELECT id FROM #__plugins WHERE '.implode(' OR ', $where);
-	
+
 	$dbo = JFactory::getDBO();
 	$dbo->setQuery($query);
 	$tmp = $dbo->loadResultArray();
@@ -46,7 +46,7 @@ function com_uninstall() {
 	foreach ($tmp as $plugin) {
 		$plugins[$plugin] = 0;
 	}
-	
+
 	$model = JModel::getInstance('Plugins', 'InstallerModel');
 	$model->remove($plugins);
 	return true;

@@ -22,7 +22,7 @@ class JModelList extends JModel
 {
 	//missing from 1.6 JModel
 	protected $__state_set	= null;
-	
+
 	/**
 	 * Internal memory based cache array of data.
 	 *
@@ -203,7 +203,7 @@ class JModelList extends JModel
 		}
 	}
 
-	
+
 	/**
 	 * Method to get model state variables
 	 * 1.6 JModel override
@@ -224,6 +224,6 @@ class JModelList extends JModel
 
 		return $property === null ? $this->_state : $this->_state->get($property, $default);
 	}
-	
+
 
 }

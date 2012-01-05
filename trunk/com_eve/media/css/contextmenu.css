@@ -1,17 +1,78 @@
-.contextmenu-ccpeve	{ border:1px solid #999; padding:0; background:#eee; width:200px; list-style-type:none; display:none; }
-.contextmenu-ccpeve .separator	{ border-top:1px solid #999; }
-.contextmenu-ccpeve li	{ margin:0; padding:0; }
-.contextmenu-ccpeve li a { display:block; padding:5px 10px 5px 35px; width:155px; font-size:12px; text-decoration:none; font-family:tahoma,arial,sans-serif; color:#000; background-position:8px 4px; background-repeat:no-repeat; }
-.contextmenu-ccpeve li a:hover	{ background-color:#ddd; }
-.contextmenu-ccpeve li a.disabled { color:#ccc; font-style:italic; }
-.contextmenu-ccpeve li a.disabled:hover { background-color:#eee; }
+.contextmenu-ccpeve {
+	border: 1px solid #999;
+	padding: 0;
+	background: #eee;
+	width: 200px;
+	list-style-type: none;
+	display: none;
+}
 
-.contextmenu-ccpeve li a[href="#showInfo"]	{ background-image:url(../images/icon74_14.png); }
-.contextmenu-ccpeve li a[href="#close"]	{ background-image:url(../images/icon38_111.png); }
-.contextmenu-ccpeve li a[href="#showPreview"]	{ background-image:url(../images/icon38_89.png); }
-.contextmenu-ccpeve li a[href="#showContract"]	{ background-image:url(../images/icon64_10.png); }
-.contextmenu-ccpeve li a[href="#showMarketDetails"]	{ background-image:url(../images/icon18_01.png); }
-.contextmenu-ccpeve li a[href="#showMap"]	{ background-image:url(../images/icon07_04.png); }
-.contextmenu-ccpeve li a[href="#showRouteTo"]	{ background-image:url(../images/icon07_04.png); }
-.contextmenu-ccpeve li a[href="#setDestination"]	{ background-image:url(../images/icon09_01.png); }
-.contextmenu-ccpeve li a[href="#addWaypoint"]	{ background-image:url(../images/icon09_01.png); }
+.contextmenu-ccpeve .separator {
+	border-top: 1px solid #999;
+}
+
+.contextmenu-ccpeve li {
+	margin: 0;
+	padding: 0;
+}
+
+.contextmenu-ccpeve li a {
+	display: block;
+	padding: 5px 10px 5px 35px;
+	width: 155px;
+	font-size: 12px;
+	text-decoration: none;
+	font-family: tahoma, arial, sans-serif;
+	color: #000;
+	background-position: 8px 4px;
+	background-repeat: no-repeat;
+}
+
+.contextmenu-ccpeve li a:hover {
+	background-color: #ddd;
+}
+
+.contextmenu-ccpeve li a.disabled {
+	color: #ccc;
+	font-style: italic;
+}
+
+.contextmenu-ccpeve li a.disabled:hover {
+	background-color: #eee;
+}
+
+.contextmenu-ccpeve li a[href="#showInfo"] {
+	background-image: url(../images/icon74_14.png);
+}
+
+.contextmenu-ccpeve li a[href="#close"] {
+	background-image: url(../images/icon38_111.png);
+}
+
+.contextmenu-ccpeve li a[href="#showPreview"] {
+	background-image: url(../images/icon38_89.png);
+}
+
+.contextmenu-ccpeve li a[href="#showContract"] {
+	background-image: url(../images/icon64_10.png);
+}
+
+.contextmenu-ccpeve li a[href="#showMarketDetails"] {
+	background-image: url(../images/icon18_01.png);
+}
+
+.contextmenu-ccpeve li a[href="#showMap"] {
+	background-image: url(../images/icon07_04.png);
+}
+
+.contextmenu-ccpeve li a[href="#showRouteTo"] {
+	background-image: url(../images/icon07_04.png);
+}
+
+.contextmenu-ccpeve li a[href="#setDestination"] {
+	background-image: url(../images/icon09_01.png);
+}
+
+.contextmenu-ccpeve li a[href="#addWaypoint"] {
+	background-image: url(../images/icon09_01.png);
+}

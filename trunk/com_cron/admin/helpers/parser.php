@@ -7,7 +7,7 @@ class CronHelperParser
 	private $bitranges 	= array('0-59', '0-23', '1-31', '1-12', '0-7');
 	private $monthdays = array(31,29,31,30,31,30,31,31,30,31,30,31);
 
-	private function expand($bit, $biti) 
+	private function expand($bit, $biti)
 	{
 		$result = array();
 		$ranges = explode(',', $bit);
@@ -16,20 +16,20 @@ class CronHelperParser
 			if (!preg_match('#(\\d+)(-(\\d+))?(/(\\d+))?#', $range, $matches)) {
 				throw new Exception('Invalid bit for '.$this->bitnames[$biti]);
 			}
-			
+				
 			$from = $matches[1];
 			$to = isset($matches[3]) && $matches[3] != 0 ? $matches[3] : $matches[1];
 			$step = isset($matches[5]) ? $matches[5] : 1;
-			
+				
 			for ($i = $from; $i <= $to; $i += $step) {
 				$result[$i] = intval($i);
-			} 
-			
+			}
+				
 		}
 		asort($result);
 		return $result;
 	}
-	
+
 	public function parse($string)
 	{
 		$this->bits = array();
@@ -43,7 +43,7 @@ class CronHelperParser
 		}
 		return $bits;
 	}
-	
+
 	public function __toString()
 	{
 		$result = '';
@@ -55,16 +55,16 @@ class CronHelperParser
 		}
 		echo $result;
 	}
-	
+
 	/**
-	 * @param DateTime $time 
-	 */	
+	 * @param DateTime $time
+	 */
 	public function getNext($time)
 	{
 		$time->format('i H d m');
-		
+
 		$time = clone $time;
-		
+
 		$nextday = false;
 		$minute = next($this->bits[0]);
 		$hour = current($this->bits[0]);
@@ -80,9 +80,9 @@ class CronHelperParser
 		if ($nextday) {
 			$this->nextDay($time);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Set bits of last call
 	 *
@@ -90,45 +90,45 @@ class CronHelperParser
 	 */
 	private function setBits($time)
 	{
-		//TODO: 
+		//TODO:
 		$bits = $time->format('i H d m');
 		foreach ($bits as $i => $bit) {
 			reset($this->bits[$i]);
 			while (true) {
-				
+
 			}
 		}
 	}
-	
+
 	public function getMinutes()
 	{
 		return $this->bits[0];
 	}
-	
+
 	public function getHours()
 	{
 		return $this->bits[1];
 	}
-	
+
 	public function getDays()
 	{
 		return $this->bits[2];
 	}
-	
+
 	public function getMonths()
 	{
 		return $this->bits[3];
 	}
-	
+
 	public function getWeekdays()
 	{
 		return $this->bits[4];
 	}
-	
+
 	/**
-	 * @param DateTime $time 
-	 */	
-	private function nextDay($time) 
+	 * @param DateTime $time
+	 */
+	private function nextDay($time)
 	{
 		$year = $time->format('Y');
 		while (true) {
@@ -151,5 +151,5 @@ class CronHelperParser
 			}
 		}
 	}
-	
+
 }

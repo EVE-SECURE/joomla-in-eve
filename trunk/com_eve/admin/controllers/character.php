@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,15 +24,15 @@
 defined('_JEXEC') or die();
 
 class EveControllerCharacter extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
 	}
-	
+
 	/**
 	 * Display method
 	 *
@@ -52,11 +52,6 @@ class EveControllerCharacter extends EveController {
 		$characterModel = & $this->getModel('Character');
 		$view->setModel($characterModel, true);
 
-		// Get/Create the schedule model
-		$apischeduleModel = & $this->getModel('Apischedule');
-		// Push the model into the view
-		$view->setModel($apischeduleModel);
-		
 		$sectionaccessModel = & $this->getModel('Sectionaccess');
 		// Push the model into the view
 		$view->setModel($sectionaccessModel);
@@ -73,7 +68,7 @@ class EveControllerCharacter extends EveController {
 			$view->display();
 		}
 	}
-	
+
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -84,13 +79,13 @@ class EveControllerCharacter extends EveController {
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=character&layout=edit', false));
 	}
-	
-	function edit() 
+
+	function edit()
 	{
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Character', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$previousId		= (int) $app->getUserState('com_eve.edit.character.characterID');
 		$characterID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('characterID'));
 		// If character ids do not match, checkin previous character.
@@ -102,7 +97,7 @@ class EveControllerCharacter extends EveController {
 				return false;
 			}
 		}
-		
+
 		// Attempt to check-out the new character for editing and redirect.
 		if (!$model->checkout($characterID)) {
 			// Check-out failed, go back to the list and display a notice.
@@ -116,7 +111,7 @@ class EveControllerCharacter extends EveController {
 			$app->setUserState('com_eve.edit.character.data', null);
 			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit');
 			return true;
-		}		
+		}
 	}
 
 	/**
@@ -171,7 +166,7 @@ class EveControllerCharacter extends EveController {
 
 		// Validate the posted data.
 		$data	= $model->validate($data);
-		
+
 		// Check for validation errors.
 		if ($data === false)
 		{
@@ -204,17 +199,14 @@ class EveControllerCharacter extends EveController {
 			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
 			return false;
 		}
-		
-		
+
+
 		$character = $model->getItem($return);
-		$apischeduleModel = & $this->getModel('Apischedule');
-		$data = JRequest::getVar('apischedule', array(), 'post', 'array');
-		$apischeduleModel->setCharacterList($data, $character);
-		
+
 		$sectionaccessModel = & $this->getModel('Sectionaccess');
 		$data = JRequest::getVar('sectionaccess', array(), 'post', 'array');
 		$sectionaccessModel->setCharacterList($data, $character);
-		
+
 		// Save succeeded, check-in the character.
 		if (!$model->checkin()) {
 			// Check-in failed, go back to the character and display a notice.
@@ -251,8 +243,8 @@ class EveControllerCharacter extends EveController {
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false));
 				break;
 		}
-	}	
-	
+	}
+
 	function delete() {
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
@@ -278,37 +270,23 @@ class EveControllerCharacter extends EveController {
 			return true;
 		}
 	}
-	
-	
+
+
 	function getCharacterSheet() {
 		$model = & $this->getModel('Character', 'EveModel');
 		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
+
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
-		
+
 		$msg = null;
 		if ($model->apiGetCharacterSheet($cid)) {
 			$msg = JText::_('CHARACTERS SUCCESSFULLY IMPORTED');
 		}
-		
+
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
 	}
-	
-	function getCorporationSheet() {
-		$model = & $this->getModel('Character', 'EveModel');
-		$cid = JRequest::getVar( 'cid', array(), '', 'array' );
-		
-		// Sanitize the input.
-		JArrayHelper::toInteger($cid);
-		
-		if ($model->apiGetCorporationSheet($cid)) {
-			$msg = JText::_('CORPORATIONS SUCCESSFULLY IMPORTED');
-		}
-		
-		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=characters', false), $msg);
-	}
-	
+
 	public function search()
 	{
 		$model = $this->getModel('Characters', 'EveModel', array('ignore_request' => true));
@@ -319,5 +297,5 @@ class EveControllerCharacter extends EveController {
 		$list = $model->getItems();
 		echo json_encode($list);
 	}
-		
+
 }

@@ -10,34 +10,34 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 require_once JPATH_COMPONENT_SITE.DS.'view.php';
 
-class EveresearchViewUser extends EveresearchView 
+class EveresearchViewUser extends EveresearchView
 {
 	public $user;
 	public $characters;
 
-	protected function _setEntity($user, $params) 
+	protected function _setEntity($user, $params)
 	{
 		$document = JFactory::getDocument();
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
-				&& JArrayHelper::getValue($menu->query, 'option') == 'com_everesearch'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
+		&& JArrayHelper::getValue($menu->query, 'option') == 'com_everesearch'
+		&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
 				$params->set('page_title',	JText::_('Research'));
@@ -47,11 +47,11 @@ class EveresearchViewUser extends EveresearchView
 		}
 		$document->setTitle($params->get('page_title'));
 		$this->assignRef('user', 	$user);
-		
+
 		$characters = $this->get('Characters');
 		$this->assignRef('characters', $characters);
 	}
-	
+
 	protected function _setPathway()
 	{
 		$menus = &JSite::getMenu();
@@ -59,11 +59,11 @@ class EveresearchViewUser extends EveresearchView
 		if ($menu && $menu->component == 'com_everesearch') {
 			return;
 		}
-		
+
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		$pathway->addItem(JText::_('Research'), 
-			EveRoute::_('userresearch'));
+		$pathway->addItem(JText::_('Research'),
+		EveRoute::_('userresearch'));
 	}
-	
+
 }

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
   PRIMARY KEY  (`section`,`corporationID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `call`);
+ALTER IGNORE TABLE `#__eve_apicalls` ADD UNIQUE `type_call` (`type`, `name`);
 
 ALTER TABLE `#__eve_sections` ADD `roles` BIGINT( 20 ) UNSIGNED NOT NULL DEFAULT '0' AFTER `access` ;
 

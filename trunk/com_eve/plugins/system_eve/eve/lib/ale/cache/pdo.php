@@ -104,7 +104,7 @@ class AleCachePdo implements AleInterfaceCache {
 				$query->bindValue(":".$key, $value);
 			}
 			$query->execute();
-			
+				
 		} else {
 			$this->row = new stdClass();
 			$this->row->content = $content;

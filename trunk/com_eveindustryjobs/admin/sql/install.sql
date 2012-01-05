@@ -41,7 +41,7 @@ INSERT IGNORE INTO `#__eve_sections` ( `name` , `title` , `alias` , `entity` , `
 ('userindustryjobs', 'Industry Jobs', 'industry-jobs', 'user', 'industryjobs', 'user', '', '0', '1', '1', '0'),
 ('corpindustryjobs', 'Industry Jobs', 'industry-jobs', 'corporation', 'industryjobs', 'corporation', '', '0', '1', '100', '3377699720527873');
 
-INSERT IGNORE INTO `#__eve_apicalls` (`type`, `call`, `authentication`, `authorization`, `delay`, `params`) VALUES 
+INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
 ('char', 'IndustryJobs', 'Character', 'Full', 0, ''),
 ('corp', 'IndustryJobs', 'Character', 'Full', 0, '');
 

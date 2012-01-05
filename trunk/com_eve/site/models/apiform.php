@@ -10,33 +10,33 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelApiform  extends EveModel {
-	
+
 	public function processForm($hash) {
 		$app = JFactory::getApplication();
 		try {
 			$user = JFactory::getUser();
-			
+				
 			if (!$user->id) {
 				$credentials = array();
 				$credentials['username'] = JRequest::getVar('username', '', 'method', 'username');
 				$credentials['password'] = JRequest::getString('passwd', '', 'post', JREQUEST_ALLOWRAW);
-				
+
 				$options = array();
 				jimport( 'joomla.user.authentication');
 				$authenticate = & JAuthentication::getInstance();
@@ -47,7 +47,7 @@ class EveModelApiform  extends EveModel {
 				}
 				$user = JFactory::getUser($credentials['username']);
 			}
-	
+
 			$userID = JArrayHelper::getValue($hash, 'userID', '', 'int');
 			$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
 			if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
@@ -56,29 +56,29 @@ class EveModelApiform  extends EveModel {
 			}
 
 			$account = $this->getInstance('Account', $userID);
-			
+				
 			$ale = $this->getAleEVEOnline();
 			$ale->setCredentials($userID, $apiKey);
 			$xml = $ale->account->Characters();
-			
+				
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
-			
-			$dispatcher->trigger('accountCharacters', 
-				array($xml, $ale->isFromCache(), array('userID' => $userID)));
-			
+				
+			$dispatcher->trigger('accountCharacters',
+			array($xml, $ale->isFromCache(), array('userID' => $userID)));
+				
 			$corps = array();
 			foreach ($xml->result->characters as $characterID => $character) {
 				$corps[] = (string) $character->corporationID;;
 			}
-			
+				
 			try {
 				$charRow = reset($xml->result->characters->getIterator());
 				if ($charRow !== false) {
 					$ale->setCharacterID($charRow->characterID);
 					$xml = $ale->char->AccountBalance();
-					$dispatcher->trigger('charAccountBalance', 
-						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
+					$dispatcher->trigger('charAccountBalance',
+					array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
 				$app->enqueueMessage(JText::_('API key offers full access'));
@@ -97,28 +97,28 @@ class EveModelApiform  extends EveModel {
 						break;
 				}
 			}
-				
+
 			$account->apiKey = $apiKey;
 			$account->store();
-			
+				
 			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
-			
+				
 			if ($account->owner > 0 && $account->owner != $user->id) {
 				JError::raiseWarning('SOME_ERROR_CODE', JText::_("ACCOUNT ALREADY ASSIGNED TO ANOTHER OWNER"));
 				return false;
 			}
-			
+				
 			$account->owner = $user->id;
 			$account->store();
-			
+				
 			if (!$user->block) {
 				return true;
 			}
-			
+				
 			if (!count($corps)) {
 				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF NO CORPORATION"));
 			}
-	
+
 			$q = $this->getQuery();
 			$q->addTable('#__eve_corporations', 'co');
 			$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
@@ -138,7 +138,7 @@ class EveModelApiform  extends EveModel {
 			}
 			$app->enqueueMessage(JText::_('Account unblocked'));
 			return true;
-			
+				
 		}
 		catch (AleExceptionEVEAuthentication $e) {
 			EveHelper::updateApiStatus($account, $e->getCode());
@@ -159,10 +159,10 @@ class EveModelApiform  extends EveModel {
 		}
 		catch (Exception $e) {
 			JError::raiseError($e->getCode(), $e->getMessage());
-		}	
-	
+		}
+
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -179,8 +179,8 @@ class EveModelApiform  extends EveModel {
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
-	
-	
+
+
 	public function getParams() {
 		return $this->getState('params');
 	}

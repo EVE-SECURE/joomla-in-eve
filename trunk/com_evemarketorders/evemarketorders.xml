@@ -10,7 +10,6 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version></version>
 	<description>Joomla! in EVE - Market Orders</description>
-	
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
@@ -39,7 +38,7 @@
 	<media folder="media" destination="com_evemarketorders">
 		<filename>css/component.css</filename>
 	</media>
-	
+
 	<administration>
 		<menu img="components/com_evemarketorders/assets/icon-16-market.png">EVE Market Orders</menu>
 		<languages folder="admin/language">

@@ -1,105 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<params>
-		<param name="show_owner" type="radio" default="1" 
-				label="Com_Evechartracking_Show_Owner_Label" description="Com_Evechartracking_Show_Owner_Desc">
+		<param name="show_owner" type="radio" default="1"
+			label="Com_Evechartracking_Show_Owner_Label" description="Com_Evechartracking_Show_Owner_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_race" type="radio" default="1" 
-				label="Com_Evechartracking_Show_Race_Label" description="Com_Evechartracking_Show_Race_Desc">
+		<param name="show_race" type="radio" default="1"
+			label="Com_Evechartracking_Show_Race_Label" description="Com_Evechartracking_Show_Race_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_gender" type="radio" default="1" 
-				label="Com_Evechartracking_Show_Gender_Label" description="Com_Evechartracking_Show_Gender_Desc">
+		<param name="show_gender" type="radio" default="1"
+			label="Com_Evechartracking_Show_Gender_Label" description="Com_Evechartracking_Show_Gender_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_bloodLine" type="radio" default="1" 
-				label="Com_Evechartracking_Show_Blood_Line_Label" description="Com_Evechartracking_Show_Blood_Line_Desc">
+		<param name="show_bloodLine" type="radio" default="1"
+			label="Com_Evechartracking_Show_Blood_Line_Label" description="Com_Evechartracking_Show_Blood_Line_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_balance" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Balance_Label" description="Com_Evechartracking_Show_Balance_Desc">
+		<param name="show_balance" type="radio" default="2"
+			label="Com_Evechartracking_Show_Balance_Label" description="Com_Evechartracking_Show_Balance_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_startDateTime" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Start_Date_Time_Label" description="Com_Evechartracking_Show_Start_Date_Time_Desc">
+		<param name="show_startDateTime" type="radio" default="2"
+			label="Com_Evechartracking_Show_Start_Date_Time_Label" description="Com_Evechartracking_Show_Start_Date_Time_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_title" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Title_Label" description="Com_Evechartracking_Show_Title_Desc">
+		<param name="show_title" type="radio" default="2"
+			label="Com_Evechartracking_Show_Title_Label" description="Com_Evechartracking_Show_Title_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_baseName" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Base_Name_Label" description="Com_Evechartracking_Show_Base_Name_Desc">
+		<param name="show_baseName" type="radio" default="2"
+			label="Com_Evechartracking_Show_Base_Name_Label" description="Com_Evechartracking_Show_Base_Name_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_logonDateTime" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Logon_Date_Time_Label" description="Com_Evechartracking_Show_Logon_Date_Time_Desc">
+		<param name="show_logonDateTime" type="radio" default="2"
+			label="Com_Evechartracking_Show_Logon_Date_Time_Label" description="Com_Evechartracking_Show_Logon_Date_Time_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_logoffDateTime" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Logoff_Date_Time_Label" description="Com_Evechartracking_Show_Logoff_Date_Time_Desc">
+		<param name="show_logoffDateTime" type="radio" default="2"
+			label="Com_Evechartracking_Show_Logoff_Date_Time_Label" description="Com_Evechartracking_Show_Logoff_Date_Time_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_locationName" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Location_Name_Label" description="Com_Evechartracking_Show_Location_Name_Desc">
+		<param name="show_locationName" type="radio" default="2"
+			label="Com_Evechartracking_Show_Location_Name_Label" description="Com_Evechartracking_Show_Location_Name_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="show_shipTypeName" type="radio" default="2" 
-				label="Com_Evechartracking_Show_Ship_Type_Name_Label" description="Com_Evechartracking_Show_Ship_Type_Name_Desc">
+		<param name="show_shipTypeName" type="radio" default="2"
+			label="Com_Evechartracking_Show_Ship_Type_Name_Label" description="Com_Evechartracking_Show_Ship_Type_Name_Desc">
 			<option value="0">Disable</option>
 			<option value="1">Hide</option>
 			<option value="2">Show</option>
 		</param>
-		<param name="@spacer" type="spacer" default="" label="_Label" description="_Desc" />
-		<param name="access_owner" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Owner_Label" description="Com_Evechartracking_Access_Owner_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_balance" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Balance_Label" description="Com_Evechartracking_Access_Balance_Desc"  
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_startDateTime" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Start_Date_Time_Label" description="Com_Evechartracking_Access_Start_Date_Time_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_title" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Title_Label" description="Com_Evechartracking_Access_Title_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_baseName" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Base_Name_Label" description="Com_Evechartracking_Access_Base_Name_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_logonDateTime" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Logon_Date_Time_Label" description="Com_Evechartracking_Access_Logon_Date_Time_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_logoffDateTime" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Logoff_Date_Time_Label" description="Com_Evechartracking_Access_Logoff_Date_Time_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_locationName" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Location_Name_Label" description="Com_Evechartracking_Access_Location_Name_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
-		<param name="access_shipTypeName" type="sql" default="0" 
-				label="Com_Evechartracking_Access_Ship_Type_Name_Label" description="Com_Evechartracking_Access_Ship_Type_Name_Desc" 
-				key_field="id" value_field="name" query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="@spacer" type="spacer" default="" label="_Label"
+			description="_Desc" />
+		<param name="access_owner" type="sql" default="0"
+			label="Com_Evechartracking_Access_Owner_Label" description="Com_Evechartracking_Access_Owner_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_balance" type="sql" default="0"
+			label="Com_Evechartracking_Access_Balance_Label" description="Com_Evechartracking_Access_Balance_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_startDateTime" type="sql" default="0"
+			label="Com_Evechartracking_Access_Start_Date_Time_Label" description="Com_Evechartracking_Access_Start_Date_Time_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_title" type="sql" default="0"
+			label="Com_Evechartracking_Access_Title_Label" description="Com_Evechartracking_Access_Title_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_baseName" type="sql" default="0"
+			label="Com_Evechartracking_Access_Base_Name_Label" description="Com_Evechartracking_Access_Base_Name_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_logonDateTime" type="sql" default="0"
+			label="Com_Evechartracking_Access_Logon_Date_Time_Label" description="Com_Evechartracking_Access_Logon_Date_Time_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_logoffDateTime" type="sql" default="0"
+			label="Com_Evechartracking_Access_Logoff_Date_Time_Label"
+			description="Com_Evechartracking_Access_Logoff_Date_Time_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_locationName" type="sql" default="0"
+			label="Com_Evechartracking_Access_Location_Name_Label" description="Com_Evechartracking_Access_Location_Name_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
+		<param name="access_shipTypeName" type="sql" default="0"
+			label="Com_Evechartracking_Access_Ship_Type_Name_Label" description="Com_Evechartracking_Access_Ship_Type_Name_Desc"
+			key_field="id" value_field="name"
+			query="SELECT id, name FROM #__groups ORDER BY id" />
 	</params>
 </config>

@@ -11,31 +11,31 @@ jimport('joomla.plugin.plugin');
  * @since 		1.5
  */
 class plgSearchEvecharsheet extends JPlugin {
-	
+
 	function onSearchAreas() {
 		static $areas = array(
 			'evecharshet' => 'Character Sheets'
-		);
-		return $areas;
+			);
+			return $areas;
 	}
-	
+
 	function onSearch($text, $phrase='', $ordering='', $areas=null) {
-		
+
 		if (is_array( $areas )) {
 			if (!array_intersect($areas, array_keys( $this->onSearchAreas()))) {
 				return array();
 			}
 		}
-		
+
 		$limit = $this->params->def('search_limit', 50);
-	 			
+	 	
 			
 		$text = trim( $text );
 		if ($text == '') {
 			return array();
 		}
 		$dbo = JFactory::getDBO();
-		
+
 		$q = EveFactory::getQuery($dbo);
 		$field1 = 'ch.name';
 		$q->addQuery("ch.name AS title, CONCAT_WS(' ', ch.gender, ch. race, ch.bloodLine, ch.title) AS text");
@@ -45,7 +45,7 @@ class plgSearchEvecharsheet extends JPlugin {
 		$q->addTable('#__eve_characters', 'ch');
 		$q->addJoin('#__eve_corporations', 'co', 'co.corporationID=ch.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-		
+
 		$wheres = array();
 		switch ($phrase) {
 			case 'exact':
@@ -54,7 +54,7 @@ class plgSearchEvecharsheet extends JPlugin {
 				$wheres2[] 	= $field1.' LIKE '.$text;
 				$where 		= '(' . implode( ') OR (', $wheres2 ) . ')';
 				break;
-	
+
 			case 'all':
 			case 'any':
 			default:
@@ -73,11 +73,11 @@ class plgSearchEvecharsheet extends JPlugin {
 		$q->addQuery('NULL AS created');
 		$acl = EveFactory::getACL();
 		$acl->setCharacterQuery($q, 'charsheet', 'ch.');
-		
+
 		//gender known = called /char/CharacterSheet.xml.aspx
 		$q->addWhere("ch.gender <> 'Unknown'");
 		$q->setLimit($limit);
-		
+
 
 		switch ($ordering) {
 			case 'oldest':
@@ -93,8 +93,8 @@ class plgSearchEvecharsheet extends JPlugin {
 				$q->addOrder('title', 'ASC');
 				break;
 		}
-		
-		
+
+
 		$results = array();
 		$result = $q->loadObjectList();
 		foreach ($result as $row) {
@@ -104,10 +104,10 @@ class plgSearchEvecharsheet extends JPlugin {
 			$results[] = $row;
 		}
 		return $results;
-		
-		
-		
+
+
+
 	}
-	
+
 }
 //href, title (name), section (corp name, ticker?), text (gender, race), created

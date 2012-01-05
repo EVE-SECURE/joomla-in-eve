@@ -6,9 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class CronControllerJobs extends JController 
+class CronControllerJobs extends JController
 {
-	function __construct($config = array()) 
+	function __construct($config = array())
 	{
 		parent::__construct($config);
 		$this->registerTask('disable',		'enable');
@@ -16,7 +16,7 @@ class CronControllerJobs extends JController
 		$this->registerTask('orderdown',	'reorder');
 	}
 
-	
+
 	/**
 	 * Method to delete item(s) from the database.
 	 *
@@ -152,8 +152,8 @@ class CronControllerJobs extends JController
 		$message = JText::_('JSuccess_Ordering_saved');
 		$this->setRedirect('index.php?option=com_cron&view=jobs', $message);
 	}
-	
 
-	
+
+
 
 }

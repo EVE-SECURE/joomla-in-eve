@@ -10,25 +10,25 @@
 	<license>GNU/GPL, see http://www.gnu.org/licenses/gpl.html</license>
 	<version>1.0</version>
 	<description>Cron</description>
-	
+
 	<installfile>install.php</installfile>
 	<uninstallfile>uninstall.php</uninstallfile>
 	<install>
 		<queries>
 			<query>
 				CREATE TABLE `#__cron_jobs` (
-					`id` INT NOT NULL AUTO_INCREMENT ,
-					`pattern` VARCHAR( 255 ) NOT NULL DEFAULT '',
-					`type` VARCHAR( 25 ) NOT NULL DEFAULT '',
-					`plugin` VARCHAR( 25 ) NOT NULL DEFAULT '',
-					`event` VARCHAR( 25 ) NOT NULL DEFAULT '',
-					`next` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-					`state` TINYINT NOT NULL DEFAULT '0',
-					`params` TEXT NOT NULL ,
-					`ordering` INT NOT NULL DEFAULT '0',
-					`checked_out` INT NOT NULL DEFAULT '0',
-					`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-					PRIMARY KEY ( `id` )
+				`id` INT NOT NULL AUTO_INCREMENT ,
+				`pattern` VARCHAR( 255 ) NOT NULL DEFAULT '',
+				`type` VARCHAR( 25 ) NOT NULL DEFAULT '',
+				`plugin` VARCHAR( 25 ) NOT NULL DEFAULT '',
+				`event` VARCHAR( 25 ) NOT NULL DEFAULT '',
+				`next` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				`state` TINYINT NOT NULL DEFAULT '0',
+				`params` TEXT NOT NULL ,
+				`ordering` INT NOT NULL DEFAULT '0',
+				`checked_out` INT NOT NULL DEFAULT '0',
+				`checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				PRIMARY KEY ( `id` )
 				);
 			</query>
 		</queries>
@@ -39,7 +39,6 @@
 		</queries>
 
 	</uninstall>
-	
 	<media folder="media" destination="com_cron">
 		<filename>administrator.css</filename>
 		<filename>icon-16-cron.png</filename>

@@ -7,7 +7,9 @@
 		<name>Com_Evewalletjournal_Corporation_Layout_State_Name</name>
 		<description>Com_Evewalletjournal_Corporation_Layout_State_Desc</description>
 		<url addpath="/administrator/components/com_eve/elements">
-			<param name="corporationID" type="corporation" label="Com_Evewalletjournal_Corporation_Id_Label" description="Com_Evewalletjournal_Corporation_Id_Desc" size="50"/>
+			<param name="corporationID" type="corporation"
+				label="Com_Evewalletjournal_Corporation_Id_Label" description="Com_Evewalletjournal_Corporation_Id_Desc"
+				size="50" />
 		</url>
 	</state>
 </metadata>

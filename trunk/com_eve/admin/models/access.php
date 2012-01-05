@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -34,7 +34,7 @@ class EveModelAccess extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_eve.access';
-	
+
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
@@ -46,8 +46,8 @@ class EveModelAccess extends JModelList {
 		$q->addTable('#__eve_sections', 'se');
 		$q->addQuery('*');
 		if ($search) {
-			$searchString = sprintf('se.title LIKE %1$s OR se.alias LIKE %1$s', 
-				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$searchString = sprintf('se.title LIKE %1$s OR se.alias LIKE %1$s',
+			$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 			$q->addWhere($searchString);
 		}
 		if ($state == 'P') {
@@ -56,8 +56,8 @@ class EveModelAccess extends JModelList {
 		if ($state == 'U') {
 			$q->addWhere('se.published = 0');
 		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'se.title')), 
-			$q->getEscaped($this->getState('list.direction', 'ASC')));
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'se.title')),
+		$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
 	}
 
@@ -81,10 +81,10 @@ class EveModelAccess extends JModelList {
 		$id	.= ':'.$this->getState('list.direction');
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.state');
-		
+
 		return md5($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -105,7 +105,7 @@ class EveModelAccess extends JModelList {
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', ''));
 		$this->setState('filter.apicall', $app->getUserStateFromRequest($context.'filter.apicall', 'filter_apicall', ''));
-		
+
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
@@ -115,8 +115,8 @@ class EveModelAccess extends JModelList {
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
-	
-	public function setEnabled($cid, $enabled) 
+
+	public function setEnabled($cid, $enabled)
 	{
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
@@ -141,19 +141,19 @@ class EveModelAccess extends JModelList {
 		}
 		return true;
 	}
-	
-	
+
+
 	public function save($data)
 	{
 		// Get a account row instance.
 		$id = JArrayHelper::getValue($data, 'id', null, 'int');
 		$table = EveFactory::getInstance('section', $id);
-		
+
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
 			return false;
 		}
-		
+
 
 		// Check the data
 		if (!$table->check()) {
@@ -166,10 +166,10 @@ class EveModelAccess extends JModelList {
 			$this->setError($this->_db->getErrorMsg());
 			return false;
 		}
-		
+
 		return $table->id;
 	}
-	
+
 	public function getGroups()
 	{
 		$dbo = $this->getDBO();
@@ -181,7 +181,7 @@ class EveModelAccess extends JModelList {
 		$dbo->setQuery( $query );
 		$groups = $dbo->loadObjectList();
 		return $groups;
-		
+
 	}
-		
+
 }

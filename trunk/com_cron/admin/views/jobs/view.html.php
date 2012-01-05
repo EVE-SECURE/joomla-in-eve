@@ -52,14 +52,14 @@ class CronViewJobs extends JView
 	protected function _setToolbar()
 	{
 		JToolBarHelper::title('Cron', 'cron');
-		
-		
+
+
 		JToolBarHelper::addNew('job.add');
 		JToolBarHelper::editList('job.edit');
 		JToolBarHelper::deleteList('', 'jobs.delete');
-		
+
 		JToolBarHelper::divider();
-		
+
 		JToolBarHelper::custom('run', 'run', 'run', 'Run now', false);
 			
 

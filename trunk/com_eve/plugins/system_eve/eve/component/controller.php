@@ -5,7 +5,7 @@ defined('_JEXEC') or die();
 jimport( 'joomla.application.component.controller' );
 
 class EveController extends JController {
-	
+
 	/**
 	 * Method to get a singleton controller instance.
 	 *
@@ -75,8 +75,8 @@ class EveController extends JController {
 		}
 
 		return $instance;
-	}	
-	
+	}
+
 	/**
 	 * Create the filename for a resource.
 	 *
@@ -106,16 +106,16 @@ class EveController extends JController {
 				}
 
 				$filename = strtolower($parts['name']).DS.'view'.$parts['type'].'.php';
-			break;
+				break;
 		}
 		return $filename;
 	}
-	
+
 	public function execute($task)
 	{
 		try {
 			$this->_task = $task;
-	
+
 			$task = strtolower( $task );
 			if (isset( $this->_taskMap[$task] )) {
 				$doTask = $this->_taskMap[$task];
@@ -124,10 +124,10 @@ class EveController extends JController {
 			} else {
 				throw new Exception(JText::_('Task ['.$task.'] not found'), 404);
 			}
-	
+
 			// Record the actual task being fired
 			$this->_doTask = $doTask;
-	
+
 			// Make sure we have access
 			if ($this->authorize($doTask)) {
 				$retval = $this->$doTask();
@@ -145,11 +145,11 @@ class EveController extends JController {
 				$this->setRedirect($url, $e->getMessage());
 				return;
 			}
-			
+				
 			return JError::raiseError($e->getCode(), $e->getMessage());
 		}
 	}
-	
+
 	public function authorize($task)
 	{
 		$result = parent::authorize($task);
@@ -163,11 +163,11 @@ class EveController extends JController {
 			if (!$acl->authorize($section, $entityID)) {
 				$result = false;
 			}
-		
+
 		}
 		return $result;
 	}
-	
+
 	public function getSection()
 	{
 		global $option;

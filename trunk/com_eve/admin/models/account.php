@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelAccount extends EveModel {
-	
+
 
 	/**
 	 * Method to auto-populate the model state.
@@ -74,7 +74,7 @@ class EveModelAccount extends EveModel {
 
 		// Attempt to load the row.
 		$return = $this->getAccount($userID);
-		
+
 		// Check for a table object error.
 		if ($return === false && $table->getError()) {
 			$this->setError($table->getError());
@@ -93,20 +93,20 @@ class EveModelAccount extends EveModel {
 
 		// Get a account row instance.
 		$table = &$this->getItem($userID);
-		
+
 		$apiKeyPast = $table->apiKey;
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
 			return false;
 		}
-		
+
 		//compare apiKey with one stored in database
 		$apiKeyNow = $table->apiKey;
 		if ($apiKeyPast != $apiKeyNow) {
 			$table->apiStatus = 'Unknown';
 		}
-		
+
 		// Prepare the row for saving
 		$this->_prepareTable($table);
 
@@ -135,15 +135,15 @@ class EveModelAccount extends EveModel {
 			try {
 				$ale->setCredentials($account->userID, $account->apiKey);
 				$xml = $ale->account->Characters();
-				$dispatcher->trigger('accountCharacters', 
-					array($xml, $ale->isFromCache(), array('userID' => $account->userID)));
-				
+				$dispatcher->trigger('accountCharacters',
+				array($xml, $ale->isFromCache(), array('userID' => $account->userID)));
+
 				$charRow = reset($xml->result->characters->getIterator());
 				if ($charRow !== false) {
 					$ale->setCharacterID($charRow->characterID);
 					$xml = $ale->char->AccountBalance();
-					$dispatcher->trigger('charAccountBalance', 
-						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
+					$dispatcher->trigger('charAccountBalance',
+					array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
 				}
 				$account->apiStatus = 'Full';
 				$app->enqueueMessage(JText::_('API key offers full access'));
@@ -169,10 +169,10 @@ class EveModelAccount extends EveModel {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
 			$dispatcher->trigger('onRegisterAccount', array($account->userID, $account->apiStatus));
-			
-		}	
+				
+		}
 	}
-	
+
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['userID'])) {
@@ -184,7 +184,7 @@ class EveModelAccount extends EveModel {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Method to checkin a row.
 	 *
@@ -259,7 +259,7 @@ class EveModelAccount extends EveModel {
 
 		return true;
 	}
-	
+
 	/**
 	 * Tests if account is checked out
 	 *
@@ -292,7 +292,7 @@ class EveModelAccount extends EveModel {
 
 		return $table->isCheckedOut($juserId);
 	}
-	
+
 	/**
 	 * Method to delete accounts from the database.
 	 *
@@ -304,7 +304,7 @@ class EveModelAccount extends EveModel {
 		$i = 0;
 		// Get a account row instance
 		$table = $this->getInstance('Account');
-		
+
 		foreach ($cid as $id) {
 			// Load the row.
 			$return = $table->load($id);
@@ -337,22 +337,22 @@ class EveModelAccount extends EveModel {
 	function getAccount($userID = null) {
 		return $this->getInstance('Account', $userID);
 	}
-	
+
 	function getApiStates() {
 		return $this->getEnumOptions('#__eve_accounts', 'apiStatus');
 	}
-	
+
 	function apiGetCharacters($cid) {
 		$app = JFactory::getApplication();
 		JArrayHelper::toInteger($cid);
-		
+
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('NO ACCOUNTS SELECTED'));
 			return false;
 		}
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
-		
+
 		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $userID) {
@@ -360,8 +360,8 @@ class EveModelAccount extends EveModel {
 				$account = $this->getAccount($userID);
 				$ale->setCredentials($account->userID, $account->apiKey);
 				$xml = $ale->account->Characters();
-				$dispatcher->trigger('accountCharacters', 
-					array($xml, $ale->isFromCache(), array('userID' => $userID)));
+				$dispatcher->trigger('accountCharacters',
+				array($xml, $ale->isFromCache(), array('userID' => $userID)));
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
@@ -374,7 +374,7 @@ class EveModelAccount extends EveModel {
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
-			
+				
 		}
 		if ($count == 1) {
 			$app->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
@@ -383,5 +383,5 @@ class EveModelAccount extends EveModel {
 			$app->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
-	
+
 }

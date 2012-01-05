@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelAlliances extends JModelList {
-	
+
 	/**
 	 * Model context string.
 	 *
@@ -34,11 +34,11 @@ class EveModelAlliances extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_eve.alliances';
-	
+
 	protected function _getListQuery()
 	{
 		$list_query = $this->getState('list.query', 'al.*, editor.name AS editor');
-		
+
 		$search = $this->getState('filter.search');
 		$owner = $this->getState('filter.owner');
 		// Create a new query object.
@@ -62,8 +62,8 @@ class EveModelAlliances extends JModelList {
 		if ($owner) {
 			$q->addWhere('al.owner');
 		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'al.name')), 
-			$q->getEscaped($this->getState('list.direction', 'ASC')));
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'al.name')),
+		$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
 	}
 
@@ -83,10 +83,10 @@ class EveModelAlliances extends JModelList {
 		// Compile the store id.
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.membersof');
-		
+
 		return parent::_getStoreId($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -104,13 +104,13 @@ class EveModelAlliances extends JModelList {
 		$context	= $this->_context.'.';
 
 		// Load the filter state.
-		$this->setState('filter.fullsearch', 1); 
+		$this->setState('filter.fullsearch', 1);
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.owner', $app->getUserStateFromRequest($context.'filter.owner', 'filter_owner', 0, 'int'));
-		
+
 		// Load the list state.
 		$this->setState('params', $params);
-		
+
 		return parent::_populateState('al.name');
 	}
 

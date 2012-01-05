@@ -13,17 +13,22 @@
 		<filename plugin="eve">eve.php</filename>
 	</files>
 	<params>
-		<param name="search_limit" type="text" size="5" default="50" label="Search Limit" description="Number of Search items to return"/>
-		<param name="@spacer" type="spacer" default="" label="" description="" />
-		<param name="search_characters" type="radio" default="1" label="Search Characters" description="">
+		<param name="search_limit" type="text" size="5" default="50"
+			label="Search Limit" description="Number of Search items to return" />
+		<param name="@spacer" type="spacer" default="" label=""
+			description="" />
+		<param name="search_characters" type="radio" default="1"
+			label="Search Characters" description="">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="search_corporations" type="radio" default="1" label="Search Characters" description="">
+		<param name="search_corporations" type="radio" default="1"
+			label="Search Characters" description="">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>
-		<param name="search_alliances" type="radio" default="1" label="Search Alliances" description="">
+		<param name="search_alliances" type="radio" default="1"
+			label="Search Alliances" description="">
 			<option value="0">No</option>
 			<option value="1">Yes</option>
 		</param>

@@ -6,14 +6,14 @@ class EveACL extends JObject {
 	protected $_ownedCharacters;
 	protected $ownerCorporationIDs = null;
 	protected $userCorporationIDs = null;
-	
+
 	const CHARACTER_IN_OWNER_CORPORATION = 10;
 	const CHARACTER_OWNED_BY_USER = 100;
 	const CHARACTER_SECTION_DISABLED = -1;
 	const CORPORATION_SECTION_DISABLED = -1;
 	const CORPORATION_MEMBERS = 10;
 	const CORPORATION_MEMBER_ROLES = 100;
-	
+
 	public function authorize($section, $entityID = null)
 	{
 		//TODO: character_section_access
@@ -22,8 +22,8 @@ class EveACL extends JObject {
 		$result = false;
 		if (!is_object($section)) {
 			$section = $this->_getSectionByName($section);
-		} 
-		
+		}
+
 		if (!$section) {
 			return false;
 		}
@@ -39,10 +39,10 @@ class EveACL extends JObject {
 		if ($access > $user->get('aid', 0)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	protected function authorizeCharacter($section, $characterID = null)
 	{
 		$dbo = JFactory::getDBO();
@@ -57,11 +57,11 @@ class EveACL extends JObject {
 		if (!is_numeric($result)) {
 			$result = $section->access;
 		}
-		
+
 		if ($result == self::CHARACTER_SECTION_DISABLED) {
 			return false;
 		}
-		
+
 		//get user's characters and check if the character is among them
 		$ids = $this->getUserCharacterIDs();
 		if (isset($ids[$characterID])) {
@@ -70,20 +70,20 @@ class EveACL extends JObject {
 		/* if ($result == self::CHARACTER_OWNED_BY_USER) {
 			$ids = $this->getUserCharacterIDs();
 			return isset($ids[$characterID]);
-		}*/
-		
-		//get user's corporations and check if the character's corp is among them 
+			}*/
+
+		//get user's corporations and check if the character's corp is among them
 		if ($result == self::CHARACTER_IN_OWNER_CORPORATION) {
 			$character = EveFactory::getInstance('character', $characterID);
 			$ids = $this->getUserCorporationIDs();
-			return isset($ids[$character->corporationID]); 
+			return isset($ids[$character->corporationID]);
 		}
-		
+
 		$user = JFactory::getUser();
 		return $result <= $user->get('aid', 0);
-		
+
 	}
-	
+
 	protected function authorizeCorporation($section, $corporationID = null)
 	{
 		$dbo = JFactory::getDBO();
@@ -104,28 +104,28 @@ class EveACL extends JObject {
 		if (!isset($result->roles)) {
 			$result->roles = $section->roles;
 		}
-		
+
 		if ($result->access == self::CORPORATION_SECTION_DISABLED) {
 			return false;
 		}
-		
+
 		if ($result->access == self::CORPORATION_MEMBERS) {
 			$ids = $this->getUserCorporationIDs();
-			return isset($ids[$corporationID]); 
+			return isset($ids[$corporationID]);
 		}
-		
+
 		if ($result->access == self::CORPORATION_MEMBER_ROLES) {
 			$roles = $this->getUserCorporationRoles();
 			$role = JArrayHelper::getValue($roles, $corporationID, 0);
 			return $this->hasRole($role, $result->roles);
 		}
-		
+
 		$user = JFactory::getUser();
 		return $result->access <= $user->get('aid', 0);
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * Enter description here ...
 	 * @param JQuery $query
 	 * @param string|EveTableSection $section Section object or name or table prefix
@@ -134,7 +134,7 @@ class EveACL extends JObject {
 	public function setCharacterQuery($query, $section, $character)
 	{
 		if (is_string($section) && substr($section, -1, 1) == '.') {
-			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section.'access)'; 
+			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section.'access)';
 			$sectionID =  $section.'id';
 		} else {
 			if (!is_object($section)) {
@@ -143,10 +143,10 @@ class EveACL extends JObject {
 			if (!$section) {
 				throw new RuntimeException('Invalid section name', 0);
 			}
-			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')'; 
+			$coalesced = 'COALESCE(#__eve_section_character_access.access, '.$section->access.')';
 			$sectionID = $section->id;
 		}
-		
+
 		if (is_string($character) && substr($character, -1, 1) == '.') {
 			$corporationID = $character.'corporationID';
 			$characterID = $character.'characterID';
@@ -155,17 +155,17 @@ class EveACL extends JObject {
 			$characterID = $character->characterID;
 		} else {
 		}
-		
-		
-		$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access', 
+
+
+		$query->addJoin('#__eve_section_character_access', '#__eve_section_character_access',
 			' #__eve_section_character_access.characterID = '.$characterID.
 			' AND #__eve_section_character_access.section = '.$sectionID);
-		
+
 		$sql  = '(';
 		$user = JFactory::getUser();
 		$sql .= ('('.$coalesced.' NOT IN ('.self::CHARACTER_IN_OWNER_CORPORATION.','.self::CHARACTER_OWNED_BY_USER.','.self::CHARACTER_SECTION_DISABLED.')'.
 			' AND '.$coalesced. ' <= '. $user->get('aid', 0).')');
-		
+
 		$ids = $this->getUserCharacterIDs();
 		if (!empty($ids)) {
 			$sql .= ' OR ';
@@ -173,7 +173,7 @@ class EveACL extends JObject {
 			/*$sql .= ('('.$coalesced.' = '.self::CHARACTER_OWNED_BY_USER.
 				' AND '.$table.'characterID IN ('. implode(',', $ids).'))'); */
 		}
-		
+
 		$ids = $this->getUserCorporationIDs();
 		if (!empty($ids)) {
 			$sql .= ' OR ';
@@ -181,13 +181,13 @@ class EveACL extends JObject {
 				' AND '.$corporationID.' IN ('. implode(',', $ids).'))');
 		}
 		$sql .= ')';
-		
+
 		$query->addWhere($sql);
 		$query->addWhere('('.$coalesced.' <> '. self::CHARACTER_SECTION_DISABLED.')');
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Enter description here ...
 	 * @param JQuery $query
 	 * @param string|EveTableSection $section Section object or name or table prefix
@@ -196,8 +196,8 @@ class EveACL extends JObject {
 	public function setCorporationQuery($query, $section, $corporation)
 	{
 		if (is_string($section) && substr($section, -1, 1) == '.') {
-			$coalesced = 'COALESCE(#__eve_section_corporation_access.access, '.$section.'access)'; 
-			$coalescedRoles = 'COALESCE(#__eve_section_corporation_access.roles, '.$section.'roles)'; 
+			$coalesced = 'COALESCE(#__eve_section_corporation_access.access, '.$section.'access)';
+			$coalescedRoles = 'COALESCE(#__eve_section_corporation_access.roles, '.$section.'roles)';
 			$sectionID =  $section.'id';
 		} else {
 			if (!is_object($section)) {
@@ -210,24 +210,24 @@ class EveACL extends JObject {
 			$coalescedRoles = 'COALESCE(#__eve_section_corporation_access.roles, '.$section->roles.')';
 			$sectionID = $section->id;
 		}
-		
+
 		if (is_string($corporation) && substr($corporation, -1, 1) == '.') {
 			$corporationID = $corporation.'corporationID';
 		} else if (is_object($corporation)) {
 			$corporationID = $corporation->corporationID;
 		} else {
 		}
-		
+
 		$user = JFactory::getUser();
-		
-		$query->addJoin('#__eve_section_corporation_access', '#__eve_section_corporation_access', 
+
+		$query->addJoin('#__eve_section_corporation_access', '#__eve_section_corporation_access',
 			' #__eve_section_corporation_access.corporationID = '.$corporationID.
 			' AND #__eve_section_corporation_access.section = '.$sectionID);
-		
+
 		$sql  = '(';
 		$sql .= ('('.$coalesced.' NOT IN ('.self::CORPORATION_MEMBERS.','.self::CORPORATION_MEMBER_ROLES.','.self::CORPORATION_SECTION_DISABLED.')'.
 			' AND '.$coalesced. ' <= '. $user->get('aid', 0).')');
-		
+
 		$ids = $this->getUserCorporationIDs();
 		if (!empty($ids)) {
 			$sql .= ' OR ';
@@ -237,7 +237,7 @@ class EveACL extends JObject {
 
 		$roles = $this->getUserCorporationRoles();
 		if (!empty($roles)) {
-			$query->addJoin('tmp_eve_user_corporation_roles', 'tmp_eve_user_corporation_roles', 
+			$query->addJoin('tmp_eve_user_corporation_roles', 'tmp_eve_user_corporation_roles',
 				' tmp_eve_user_corporation_roles.corporationID = '.$corporationID.
 				' AND tmp_eve_user_corporation_roles.userid='.$user->id);
 			$sql .= ' OR ';
@@ -245,11 +245,11 @@ class EveACL extends JObject {
 				' AND ('.$coalescedRoles.' & tmp_eve_user_corporation_roles.roles))');
 		}
 		$sql .= ')';
-		
+
 		$query->addWhere($sql);
 		$query->addWhere('('.$coalesced.' <> '. self::CORPORATION_SECTION_DISABLED.')');
-	}	
-	
+	}
+
 	protected function _getSectionByName($name)
 	{
 		if (!isset($this->_sections[$name])) {
@@ -266,7 +266,7 @@ class EveACL extends JObject {
 		}
 		return $this->_sections[$name];
 	}
-	
+
 	protected function _loadUserEntityIDs()
 	{
 		$this->_userCharacters = array();
@@ -288,9 +288,9 @@ class EveACL extends JObject {
 				$this->_userAccounts[$item->userID] = $item->userID;
 			}
 		}
-		
+
 	}
-	
+
 	protected function _loadUserCorporationRoles()
 	{
 		$sql = "CREATE TEMPORARY TABLE IF NOT EXISTS `tmp_eve_user_corporation_roles` (
@@ -317,7 +317,7 @@ class EveACL extends JObject {
 			$this->_userCorporationRoles[$item->corporationID] = $item->roles;
 		}
 	}
-	
+
 	public function getUserCharacterIDs()
 	{
 		if (!isset($this->_userCharacters)) {
@@ -325,7 +325,7 @@ class EveACL extends JObject {
 		}
 		return $this->_userCharacters;
 	}
-	
+
 	public function getUserCorporationIDs()
 	{
 		if (!isset($this->_userCorporations)) {
@@ -333,7 +333,7 @@ class EveACL extends JObject {
 		}
 		return $this->_userCorporations;
 	}
-	
+
 	public function getUserAccountIDs()
 	{
 		if (!isset($this->_userAccounts)) {
@@ -341,17 +341,17 @@ class EveACL extends JObject {
 		}
 		return $this->_userAccounts;
 	}
-	
+
 	public function getUserCorporationRoles()
 	{
 		if (!isset($this->_userCorporationRoles)) {
 			$this->_loadUserCorporationRoles();
 		}
 		return $this->_userCorporationRoles;
-		
+
 	}
-	
-	public function getOwnerCorporationIDs() 
+
+	public function getOwnerCorporationIDs()
 	{
 		if (is_null($this->ownerCorporationIDs)) {
 			$dbo = JFactory::getDBO();
@@ -364,7 +364,7 @@ class EveACL extends JObject {
 		}
 		return $this->ownerCorporationIDs;
 	}
-	
+
 	static protected $roles = array(
 		'Director' => '1',
 		'PersonnelManager' => '128',
@@ -420,21 +420,21 @@ class EveACL extends JObject {
 		'InfrastructureTacticalOfficer' => '144115188075855872',
 		'StarbaseCaretaker' => '288230376151711744',
 		'FittingManager' => '576460752303423488');
-	
-	static protected $generalRoles = array('Director', 'PersonnelManager', 'Accountant', 
+
+	static protected $generalRoles = array('Director', 'PersonnelManager', 'Accountant',
 		'SecurityOfficer', 'FactoryManager', 'StationManager', 'Auditor', 
 		'EquipmentConfig',
 		'CanRentOffice', 'CanRentFactorySlot', 'CanRentResearchSlot', 'JuniorAccountant', 'StarbaseConfig', 
 		'Trader', 'ChatManager', 'ContractManager', 'InfrastructureTacticalOfficer', 'StarbaseCaretaker',
 		'FittingManager');
-	
+
 	public function getRoles($name = null)
 	{
 		$result = array();
 		switch (strtolower($name)) {
 			case 'general':
 				foreach (self::$generalRoles as $key) {
-					$result[$key] = self::$roles[$key]; 
+					$result[$key] = self::$roles[$key];
 				}
 				break;
 			case 'hangar':
@@ -456,11 +456,11 @@ class EveACL extends JObject {
 				break;
 			default:
 				$result = self::$roles;
-				
+
 		}
 		return $result;
 	}
-	
+
 	public function hasRole($role, $roles)
 	{
 		if (is_null($roles)) {
@@ -478,7 +478,7 @@ class EveACL extends JObject {
 			return false;
 		}
 	}
-	
+
 	public function sumRoles($roles)
 	{
 		if (!is_array($roles)) {
@@ -495,5 +495,5 @@ class EveACL extends JObject {
 			return '0';
 		}
 	}
-	
+
 }

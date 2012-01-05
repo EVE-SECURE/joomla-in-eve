@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -27,7 +27,7 @@ jimport('joomla.application.component.model');
 
 class EveModelSectionCorporationRoles extends JModelItem {
 	protected $_context = 'sectionCorporation';
-	
+
 	public function validate(&$data)
 	{
 		$data['corporationID'] = JArrayHelper::getValue($data, 'corporationID', 0, 'int');
@@ -38,11 +38,11 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		$data['access'] = EveACL::CORPORATION_MEMBER_ROLES;
 		return $data;
 	}
-	
+
 	protected function _populateState()
 	{
 		$app = &JFactory::getApplication();
-		
+
 		$this->setState('context', $this->_context);
 
 		// Load state from the request.
@@ -65,7 +65,7 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		}
 		$this->setState('params', $params);
 	}
-	
+
 	protected function _loadItem()
 	{
 		$dbo = $this->getDBO();
@@ -81,14 +81,14 @@ class EveModelSectionCorporationRoles extends JModelItem {
 		$result = $q->loadObject();
 		return $result;
 	}
-		
+
 	public function save($data)
 	{
 		$corporationID = JArrayHelper::getValue($data, 'corporationID', 0, 'int');
 		$section = JArrayHelper::getValue($data, 'section', 0, 'int');
 		$roles = JArrayHelper::getValue($data, 'roles');
 		$access = JArrayHelper::getValue($data, 'access');
-	
+
 		$dbo = $this->getDBO();
 		$sql = sprintf('INSERT INTO #__eve_section_corporation_access (section, corporationID, access, roles) VALUES (%1$s, %2$s, %3$s, %4$s) '.
 			'ON DUPLICATE KEY UPDATE access = %3$s, roles=%4$s', $section, $corporationID, $access, $roles);
@@ -98,8 +98,8 @@ class EveModelSectionCorporationRoles extends JModelItem {
 			$this->setError($error);
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 }

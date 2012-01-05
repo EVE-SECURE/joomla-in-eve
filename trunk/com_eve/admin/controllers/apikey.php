@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,16 +24,16 @@
 defined('_JEXEC') or die();
 
 class EveControllerApikey extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('save2new', 'save');
 		$this->registerTask('apply', 'save');
 		$this->registerTask('get_characters', 'getCharacters');
 	}
-	
+
 	/**
 	 * Dummy method to redirect back to standard controller
 	 *
@@ -43,7 +43,7 @@ class EveControllerApikey extends EveController {
 	{
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apikeys', false));
 	}
-	
+
 	function add() {
 		$app = &JFactory::getApplication();
 
@@ -54,12 +54,12 @@ class EveControllerApikey extends EveController {
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apikey&layout=edit', false));
 	}
-	
+
 	function edit() {
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Apikey', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$previousId		= (int) $app->getUserState('com_eve.edit.apikey.keyID');
 		$keyID		= (int) (count($cid) ? $cid[0] : JRequest::getInt('keyID'));
 		// If apikey ids do not match, checkin previous apikey.
@@ -71,7 +71,7 @@ class EveControllerApikey extends EveController {
 				return false;
 			}
 		}
-		
+
 		// Attempt to check-out the new apikey for editing and redirect.
 		if (!$model->checkout($keyID)) {
 			// Check-out failed, go back to the list and display a notice.
@@ -85,7 +85,7 @@ class EveControllerApikey extends EveController {
 			$app->setUserState('com_eve.edit.apikey.data', null);
 			$this->setRedirect('index.php?option=com_eve&view=apikey&layout=edit');
 			return true;
-		}		
+		}
 	}
 
 	/**
@@ -210,8 +210,8 @@ class EveControllerApikey extends EveController {
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apikeys', false));
 				break;
 		}
-	}	
-	
+	}
+
 	function delete() {
 		JRequest::checkToken() or jexit(JText::_('JInvalid_Token'));
 
@@ -237,17 +237,17 @@ class EveControllerApikey extends EveController {
 			return true;
 		}
 	}
-	
+
 	function checkKey() {
 		$model = & $this->getModel('Apikey');
 		$cid = JRequest::getVar('cid', array(), '', 'array');
-		
+
 		// Sanitize the input.
 		JArrayHelper::toInteger($cid);
-		
+
 		//@todo: message, error output
 		$model->apiGetCharacters($cid);
-		
+
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=apikeys', false));
 	}
 

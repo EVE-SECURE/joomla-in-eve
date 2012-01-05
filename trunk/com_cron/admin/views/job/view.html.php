@@ -30,7 +30,7 @@ class CronViewJob extends JView
 		$app	= JFactory::getApplication();
 		$state	= $this->get('State');
 		$item	= $this->get('Item');
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -50,7 +50,7 @@ class CronViewJob extends JView
 	protected function _setToolbar()
 	{
 		JRequest::setVar('hidemainmenu', 1);
-		
+
 		JToolBarHelper::title('Cron', 'cron');
 		JToolBarHelper::addNew('job.save2new', 'Save and new');
 		JToolBarHelper::save('job.save');
@@ -59,7 +59,7 @@ class CronViewJob extends JView
 			JToolBarHelper::cancel('job.cancel');
 		} else {
 			JToolBarHelper::cancel('job.cancel', 'Close');
-		}		
+		}
 		JToolBarHelper::divider();
 		JToolBarHelper::help('screen.cron');
 	}

@@ -10,22 +10,22 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport( 'joomla.application.component.view');
 
-abstract class EvewalletjournalView extends JView 
+abstract class EvewalletjournalView extends JView
 {
 	public $params;
 	public $state;
@@ -34,7 +34,7 @@ abstract class EvewalletjournalView extends JView
 
 	function display($tpl = null) {
 		$app = JFactory::getApplication();
-		
+
 		$state		= $this->get('State');
 		$params		= $this->get('Params');
 		$item		= $this->get('Item');
@@ -43,7 +43,7 @@ abstract class EvewalletjournalView extends JView
 		$pagination	= $this->get('Pagination', 'list');
 		$accountKeys = $this->get('AccountKeys', 'list');
 		$refTypes	= $this->get('RefTypes', 'list');
-		
+
 		// Check for errors.
 		if (count($errors = $this->get('Errors'))) {
 			JError::raiseError(500, implode("\n", $errors));
@@ -53,9 +53,9 @@ abstract class EvewalletjournalView extends JView
 			JError::raiseError(500, implode("\n", $errors));
 			return false;
 		}
-		
+
 		$this->_setEntity($item, $params);
-		
+
 		$refTypeOption = JHTML::_('select.option', '-1', JText::_('Com_Evewalletjournal_REF_TYPE_0_OPTION'), 'refTypeID', 'refTypeName');
 		array_unshift($refTypes, $refTypeOption);
 
@@ -66,14 +66,14 @@ abstract class EvewalletjournalView extends JView
 		$this->assignRef('pagination',	$pagination);
 		$this->assignRef('accountKeys',	$accountKeys);
 		$this->assignRef('refTypes',	$refTypes);
-		
+
 		parent::display();
 		$this->_setPathway();
 	}
-	
-	protected function _setEntity($item, $params) 
+
+	protected function _setEntity($item, $params)
 	{
-		
+
 	}
 
 	protected function _setPathway()
@@ -83,28 +83,28 @@ abstract class EvewalletjournalView extends JView
 		if (!$menu || $menu->component == 'com_evewalletjournal') {
 			return;
 		}
-		
+
 		$app = JFactory::getApplication();
 		$pathway = $app->getPathway();
-		
+
 		$view = JArrayHelper::getValue($menu->query, 'view');
 		switch ($view) {
 			case null:
-				$pathway->addItem($this->character->allianceName, 
-					EveRoute::_('alliance', $this->character));
+				$pathway->addItem($this->character->allianceName,
+				EveRoute::_('alliance', $this->character));
 			case 'alliance':
-				$pathway->addItem($this->character->corporationName, 
-					EveRoute::_('corporation', $this->character, $this->character));
+				$pathway->addItem($this->character->corporationName,
+				EveRoute::_('corporation', $this->character, $this->character));
 			case 'corporation':
 			case 'user':
-				$pathway->addItem($this->character->name, 
-					EveRoute::_('character', $this->character, $this->character, $this->character));
+				$pathway->addItem($this->character->name,
+				EveRoute::_('character', $this->character, $this->character, $this->character));
 			case 'character':
-				$pathway->addItem(JText::_('Wallet Journal'), 
-					EveRoute::_('charwalletjournal', $this->character, $this->character, $this->character));
+				$pathway->addItem(JText::_('Wallet Journal'),
+				EveRoute::_('charwalletjournal', $this->character, $this->character, $this->character));
 		}
 	}
-	
+
 	public function getArgument($item)
 	{
 		switch ($item->refTypeID) {
@@ -130,14 +130,14 @@ abstract class EvewalletjournalView extends JView
 				return $item->argName1;
 		}
 	}
-	
+
 	public function getReason($item)
 	{
 		switch ($item->refTypeID) {
 			case 85:
-				//For each type of NPC killed, its typeID is followed by a colon and the quantity killed. 
-				//These pairs are seperated by commas, and if there are too many (more than about 60 characters' worth) 
-				//the list is ended with a literal ",..." to indicate that more have been left off the list. 
+				//For each type of NPC killed, its typeID is followed by a colon and the quantity killed.
+				//These pairs are seperated by commas, and if there are too many (more than about 60 characters' worth)
+				//the list is ended with a literal ",..." to indicate that more have been left off the list.
 				return $this->escape($item->reason);
 				break;
 			default:
@@ -156,15 +156,15 @@ abstract class EvewalletjournalView extends JView
 		}
 		return $result;
 	}
-	
+
 	/**
-	* Sets an entire array of search paths for templates or resources.
-	*
-	* @access protected
-	* @param string $type The type of path to set, typically 'template'.
-	* @param string|array $path The new set of search paths.  If null or
-	* false, resets to the current directory only.
-	*/
+	 * Sets an entire array of search paths for templates or resources.
+	 *
+	 * @access protected
+	 * @param string $type The type of path to set, typically 'template'.
+	 * @param string|array $path The new set of search paths.  If null or
+	 * false, resets to the current directory only.
+	 */
 	function _setPath($type, $path)
 	{
 		global $option;
@@ -178,7 +178,7 @@ abstract class EvewalletjournalView extends JView
 			case 'template':
 				$app = JFactory::getApplication();
 				$option = preg_replace('/[^A-Z0-9_\.-]/i', '', $option);
-				
+
 				//common not overriden template sould be last
 				$this->_addPath('template', $this->_basePath.DS.'views'.DS.'_common'.DS.'tmpl');
 				// set the alternative template search dir

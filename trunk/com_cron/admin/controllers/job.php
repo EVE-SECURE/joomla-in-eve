@@ -6,9 +6,9 @@
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
-class CronControllerJob extends JController 
+class CronControllerJob extends JController
 {
-	function __construct($config = array()) 
+	function __construct($config = array())
 	{
 		parent::__construct($config);
 		$this->registerTask('apply',	'save');
@@ -16,7 +16,7 @@ class CronControllerJob extends JController
 		$this->registerTask('save2view','save');
 	}
 
-	
+
 	/**
 	 * Dummy method to redirect back to standard controller
 	 *
@@ -44,7 +44,7 @@ class CronControllerJob extends JController
 		// Redirect to the edit screen.
 		$this->setRedirect(JRoute::_('index.php?option=com_cron&view=job&layout=edit', false));
 	}
-	
+
 	public function view()
 	{
 		// Initialize variables.
@@ -147,7 +147,7 @@ class CronControllerJob extends JController
 		$model	= $this->getModel('job');
 		$data	= JRequest::getVar('jform', array(), 'post', 'array');
 		$data['content'] = JRequest::getVar('content', '', 'post', 'none', JREQUEST_ALLOWHTML);
-		
+
 		$data = $model->validate($data);
 
 		// Check for validation errors.
@@ -215,7 +215,7 @@ class CronControllerJob extends JController
 				// Redirect back to the edit screen.
 				$this->setRedirect(JRoute::_('index.php?option=com_cron&view=job&id='.$return, false));
 				break;
-				
+
 			default:
 				// Clear the member id and data from the session.
 				$app->setUserState('com_cron.edit.job.id', null);
@@ -226,5 +226,5 @@ class CronControllerJob extends JController
 				break;
 		}
 	}
-	
+
 }

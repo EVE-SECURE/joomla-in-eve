@@ -1,14 +1,21 @@
 @CHARSET "UTF-8";
 
 .icon-16-chartracking {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-16-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-16-character.png);
 }
+
 .icon-32-chartracking {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-32-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-32-character.png);
 }
+
 .icon-48-chartracking {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-48-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-48-character.png);
 }
+
 .icon-64-chartracking {
-	 background-image: url(../../../administrator/components/com_eve/assets/icon-64-character.png);
+	background-image:
+		url(../../../administrator/components/com_eve/assets/icon-64-character.png);
 }

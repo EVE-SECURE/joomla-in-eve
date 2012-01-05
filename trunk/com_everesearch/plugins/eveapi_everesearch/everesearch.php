@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -27,7 +27,7 @@ defined('_JEXEC') or die();
  * Joomla! in EVE Api core plugin
  *
  * @author		Pavol Kovalik  <kovalikp@gmail.com>
- * @package		Joomla! in EVE		
+ * @package		Joomla! in EVE
  * @subpackage	Core
  */
 class plgEveapiEveresearch extends EveApiPlugin {
@@ -41,9 +41,9 @@ class plgEveapiEveresearch extends EveApiPlugin {
 		  'researchStartDate',
 		  'pointsPerDay',
 		  'remainderPoints',
- 		);
+		);
 	}
-	
+
 	private function _storeResearch($xml, $characterID)
 	{
 		$dbo = JFactory::getDBO();
@@ -55,7 +55,7 @@ class plgEveapiEveresearch extends EveApiPlugin {
 			$entry['characterID'] = $characterID;
 			$value = array();
 			foreach ($this->_fields as $field) {
-				$value[] = $dbo->quote($entry[$field]); 
+				$value[] = $dbo->quote($entry[$field]);
 			}
 			$values[] = '('.implode(',', $value).')';
 		}
@@ -67,11 +67,11 @@ class plgEveapiEveresearch extends EveApiPlugin {
 			$dbo->query();
 		}
 	}
-	
-	
+
+
 	public function charResearch($xml, $fromCache, $options = array()) {
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_everesearch'.DS.'tables');
 		$this->_storeresearch($xml, $options['characterID']);
 	}
-	
+
 }

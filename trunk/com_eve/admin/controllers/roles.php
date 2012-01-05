@@ -10,12 +10,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,16 +24,16 @@
 defined('_JEXEC') or die();
 
 class EveControllerRoles extends EveController {
-	
+
 	function __construct( $config = array() )
 	{
 		parent::__construct( $config );
-		
+
 		$this->registerTask('applysection', 'savesection');
 		$this->registerTask('applysectioncorporation', 'savesectioncorporation');
-		
+
 	}
-	
+
 	/**
 	 * Display method
 	 *
@@ -71,38 +71,38 @@ class EveControllerRoles extends EveController {
 			$view->display();
 		}
 	}
-	
+
 	function editSection()
 	{
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Sectionroles', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$id		= (int) (count($cid) ? $cid[0] : JRequest::getInt('id'));
-		
+
 		$app->setUserState('com_eve.roles.model', 'sectionRoles');
 		$app->setUserState('com_eve.section.id', $id);
 		$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit');
 		return true;
 	}
-	
+
 	function editSectionCorporation()
 	{
 		$app	= &JFactory::getApplication();
 		$model	= &$this->getModel('Roles', 'EveModel');
 		$cid	= JRequest::getVar('cid', array(), 'post', 'array');
-		
+
 		$section = (int) (count($cid) ? $cid[0] : JRequest::getInt('section'));
 		$data	= JRequest::getVar('jform', array(), 'post', 'array');
 		$corporationID = JArrayHelper::getValue($data, 'corporationID', null, 'int');
-		
+
 		$app->setUserState('com_eve.roles.model', 'sectionCorporationRoles');
 		$app->setUserState('com_eve.sectionCorporation.corporationID', $corporationID);
 		$app->setUserState('com_eve.sectionCorporation.section', $section);
 		$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit');
 		return true;
 	}
-	
+
 	/**
 	 * Method to cancel an edit
 	 *
@@ -121,7 +121,7 @@ class EveControllerRoles extends EveController {
 		$app->setUserState('com_eve.roles.model', null);
 		$app->setUserState('com_eve.sectionCorporation.corporationID', null);
 		$app->setUserState('com_eve.sectionCorporation.section', null);
-				
+
 		$model	= &$this->getModel($modelName, 'EveModel');
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
 	}
@@ -143,11 +143,11 @@ class EveControllerRoles extends EveController {
 		$modelName = $app->getUserState('com_eve.roles.model');
 		$app->setUserState('com_eve.roles.model', null);
 		$app->setUserState('com_eve.section.id', null);
-		
+
 		$model	= &$this->getModel($modelName, 'EveModel');
 		$this->setRedirect(JRoute::_('index.php?option=com_eve&view=corporation&layout=edit', false));
 	}
-	
+
 	/**
 	 * Method to save a Section.
 	 *
@@ -167,7 +167,7 @@ class EveControllerRoles extends EveController {
 
 		// Validate the posted data.
 		$data	= $model->validate($data);
-		
+
 		// Check for validation errors.
 		if ($data === false)
 		{
@@ -197,16 +197,16 @@ class EveControllerRoles extends EveController {
 			$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit', $message, 'error');
 			return false;
 		}
-		
+
 		/*
-		// Save succeeded, check-in the character.
-		if (!$model->checkin()) {
+		 // Save succeeded, check-in the character.
+		 if (!$model->checkin()) {
 			// Check-in failed, go back to the character and display a notice.
 			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
 			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
 			return false;
-		}
-		*/
+			}
+			*/
 
 		$this->setMessage(JText::_('JController_Save_success'));
 
@@ -228,8 +228,8 @@ class EveControllerRoles extends EveController {
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&view=access', false));
 				break;
 		}
-	}	
-	
+	}
+
 	/**
 	 * Method to save a Section.
 	 *
@@ -249,7 +249,7 @@ class EveControllerRoles extends EveController {
 
 		// Validate the posted data.
 		$data	= $model->validate($data);
-		
+
 		// Check for validation errors.
 		if ($data === false)
 		{
@@ -279,16 +279,16 @@ class EveControllerRoles extends EveController {
 			$this->setRedirect('index.php?option=com_eve&view=roles&layout=edit', $message, 'error');
 			return false;
 		}
-		
+
 		/*
-		// Save succeeded, check-in the character.
-		if (!$model->checkin()) {
+		 // Save succeeded, check-in the character.
+		 if (!$model->checkin()) {
 			// Check-in failed, go back to the character and display a notice.
 			$message = JText::sprintf('JError_Checkin_saved', $model->getError());
 			$this->setRedirect('index.php?option=com_eve&view=character&layout=edit', $message, 'error');
 			return false;
-		}
-		*/
+			}
+			*/
 
 		$this->setMessage(JText::_('JController_Save_success'));
 
@@ -311,6 +311,6 @@ class EveControllerRoles extends EveController {
 				$this->setRedirect(JRoute::_('index.php?option=com_eve&task=corporation.edit&corporationID='.$data['corporationID'], false));
 				break;
 		}
-	}	
-	
+	}
+
 }

@@ -10,16 +10,16 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
@@ -34,7 +34,7 @@ class EveModelSchedule extends JModelList {
 	 * @var		string
 	 */
 	protected $_context = 'com_eve.schedule';
-	
+
 	protected function _getListQuery()
 	{
 		$search = $this->getState('filter.search');
@@ -45,16 +45,16 @@ class EveModelSchedule extends JModelList {
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_schedule', 'sc');
 		$q->addJoin('#__eve_apicalls', 'ap', 'ap.id=sc.apicall');
-		$q->addJoin('#__eve_accounts', 'a', 'sc.userID=a.userID');
-		$q->addJoin('#__users', 'u', 'a.owner=u.id');
+		$q->addJoin('#__eve_apikeys', 'ak', 'sc.keyID=ak.keyID');
+		$q->addJoin('#__users', 'u', 'ak.user_id=u.id');
 		$q->addJoin('#__eve_characters', 'c', 'sc.characterID=c.characterID');
 		$q->addQuery('ap.*', 'sc.*');
-		$q->addQuery('CONCAT(`type`, \'/\',`call`) AS typeCall');
+		$q->addQuery('CONCAT(ap.`type`, \'/\',ap.`name`) AS typeCall');
 		$q->addQuery('u.name AS userName');
 		$q->addQuery('c.name AS characterName');
 		if ($search) {
-			$searchString = sprintf('u.name LIKE %1$s OR c.name LIKE %1$s', 
-				$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
+			$searchString = sprintf('u.name LIKE %1$s OR c.name LIKE %1$s',
+			$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));
 			$q->addWhere($searchString);
 		}
 		if ($apicall) {
@@ -66,8 +66,8 @@ class EveModelSchedule extends JModelList {
 		if ($state == 'U') {
 			$q->addWhere('sc.published = 0');
 		}
-		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'typeCall')), 
-			$q->getEscaped($this->getState('list.direction', 'ASC')));
+		$q->addOrder($q->getEscaped($this->getState('list.ordering', 'typeCall')),
+		$q->getEscaped($this->getState('list.direction', 'ASC')));
 		return $q;
 	}
 
@@ -92,10 +92,10 @@ class EveModelSchedule extends JModelList {
 		$id	.= ':'.$this->getState('filter.search');
 		$id	.= ':'.$this->getState('filter.state');
 		$id	.= ':'.$this->getState('filter.apicall');
-		
+
 		return md5($id);
 	}
-	
+
 	/**
 	 * Method to auto-populate the model state.
 	 *
@@ -116,7 +116,7 @@ class EveModelSchedule extends JModelList {
 		$this->setState('filter.search', $app->getUserStateFromRequest($context.'filter.search', 'filter_search', ''));
 		$this->setState('filter.state', $app->getUserStateFromRequest($context.'filter.state', 'filter_state', ''));
 		$this->setState('filter.apicall', $app->getUserStateFromRequest($context.'filter.apicall', 'filter_apicall', ''));
-		
+
 		// Load the list state.
 		$this->setState('list.start', $app->getUserStateFromRequest($context.'list.start', 'limitstart', 0, 'int'));
 		$this->setState('list.limit', $app->getUserStateFromRequest($context.'list.limit', 'limit', $app->getCfg('list_limit', 25), 'int'));
@@ -126,22 +126,22 @@ class EveModelSchedule extends JModelList {
 		// Load the parameters.
 		$this->setState('params', $params);
 	}
-	
+
 	public function &getApiCalls() {
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_apicalls');
 		$q->addOrder('`type`');
-		$q->addOrder('`call`');
-		$q->addQuery('`id`', 'CONCAT(`type`, \'/\', `call`) AS typeCall');
+		$q->addOrder('`name`');
+		$q->addQuery('`id`', 'CONCAT(`type`, \'/\', `name`) AS typeCall');
 		$apiCalls = $q->loadObjectList();
 		$empty = array('id'=>'0', 'typeCall'=>JText::_('Select API call'));
 		//$empty = ;
 		array_unshift($apiCalls, JArrayHelper::toObject($empty));
 		return $apiCalls;
-		
+
 	}
-	
+
 	public function setEnabled($cid, $enabled) {
 		JRequest::checkToken() or jexit( 'Invalid Token' );
 
@@ -166,12 +166,12 @@ class EveModelSchedule extends JModelList {
 		}
 		return true;
 	}
-	
+
 	public function run() {
 		JPluginHelper::importPlugin('cron', 'eve');
 		$dispatcher	=& JDispatcher::getInstance();
 		$results	= $dispatcher->trigger('onCronTick', array());
 	}
-	
-		
+
+
 }

@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 class EveRoute
 {
 	private static $_components;
-	
+
 	protected function _getComponent($name)
 	{
 		if (!isset(self::$_components)) {
@@ -34,9 +34,9 @@ class EveRoute
 			$q->addTable('#__eve_sections');
 			self::$_components = $q->loadObjectList('name');
 		}
-		return self::$_components[$name]; 
+		return self::$_components[$name];
 	}
-	
+
 	static public function _($name, $alliance = null, $corporation = null, $character = null, $xhtml = true)
 	{
 		$app = JFactory::getApplication();
@@ -49,10 +49,10 @@ class EveRoute
 		} else {
 			$url = 'index.php?option=com_eve'.$component->component;
 			if ($component->view) {
-				$url .= '&view='.$component->view; 
+				$url .= '&view='.$component->view;
 			}
 			if ($component->layout) {
-				$url .= '&layout='.$component->layout; 
+				$url .= '&layout='.$component->layout;
 			}
 			$entities = array($component->entity);
 		}
@@ -67,7 +67,7 @@ class EveRoute
 					$id = $array[1].'ID';
 					$name = $array[1].'Name';
 				} else {
-					$obj = $$entity; 
+					$obj = $$entity;
 					$id = $entity.'ID';
 					$name = $entity.'Name';
 					$name = isset($obj->$name) ? $name : 'name';
@@ -88,7 +88,7 @@ class EveRoute
 		}
 		return JRoute::_($url, $xhtml);
 	}
-	
+
 	static public function character($character, $corporation = null, $alliance = null, $xhtml = true)
 	{
 		if (is_null($corporation)) {
@@ -112,13 +112,13 @@ class EveRoute
 	{
 		return self::_('alliance', $alliance, $xhtml);
 	}
-		
+
 	static public function link($name, $attribs = null, $alliance = null, $corporation = null, $character = null)
 	{
 		$component = EveFactory::getInstanceByName('section', 'name', $name);
 		$href = self::_($component, $alliance, $corporation, $character);
 		return JHTML::_('link', $url, $component->title, $attribs);
 	}
-	
-	
+
+
 }

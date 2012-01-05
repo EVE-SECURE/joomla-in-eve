@@ -10,23 +10,23 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 // Check to ensure this file is included in Joomla!
 defined('_JEXEC') or die();
 
 jimport('joomla.application.component.model');
 
 class EveModelApikey extends EveModel {
-	
+
 
 	/**
 	 * Method to auto-populate the model state.
@@ -74,7 +74,7 @@ class EveModelApikey extends EveModel {
 
 		// Attempt to load the row.
 		$return = $this->getApikey($keyID);
-		
+
 		// Check for a table object error.
 		if ($return === false && $table->getError()) {
 			$this->setError($table->getError());
@@ -93,22 +93,27 @@ class EveModelApikey extends EveModel {
 
 		// Get a apikey row instance.
 		$table = &$this->getItem($keyID);
-		
+
 		$vCodePast = $table->vCode;
+		$maskPast = $table->mask;
+		$typePast = $table->type;
 		// Bind the data
 		if (!$table->bind($data)) {
 			$this->setError(JText::sprintf('JTable_Error_Bind_failed', $table->getError()));
 			return false;
 		}
-		
+
 		//compare vCode with one stored in database
 		$vCodeNow = $table->vCode;
 		if ($vCodePast != $vCodeNow) {
 			$table->status = 'Unknown';
 		}
-		
+
 		// Prepare the row for saving
-		$this->_prepareTable($table);
+		$entities = array();
+		//$this->_prepareTable($table, $entities);
+		$ale = $this->getAleEVEOnline();
+		$xml = $this->getAccountAPIKeyInfo($table, $ale);
 
 		// Check the data
 		if (!$table->check()) {
@@ -122,10 +127,68 @@ class EveModelApikey extends EveModel {
 			return false;
 		}
 
+		$query = $this->getQuery();
+		$query->addTable('#__eve_apikey_entities');
+		$query->addQuery('entityID');
+		$query->addWhere('keyID = '.intval($table->keyID));
+		$entitiesPast = $query->loadResultArray();
+
+		if ($table->status == 'Active') {
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			$options = array('keyID' => $table->keyID);
+			$dispatcher->trigger('accountAPIKeyInfo', array($apikey, $xml, $ale->isFromCache(), $options));
+		}
+
 		return $table->keyID;
 	}
 
-	protected function _prepareTable(&$apikey)
+	/**
+	 * @param EveTableApikey $apikey
+	 */
+	public function getAccountAPIKeyInfo($apikey)
+	{
+			
+		$apikey->status == "Unknown";;
+		$apikey->type = "Unknown";;
+
+		try {
+			//print_r($apikey); die();
+			$ale = $this->getAleEVEOnline();
+			$ale->setKey($apikey->keyID, $apikey->vCode);
+			$xml = $ale->account->APIKeyInfo();
+			$apikey->mask = $xml->result->key->mask;
+			$apikey->type = $xml->result->key->type;
+			$apikey->status = 'Active';
+			return $xml;
+		}
+		catch (AleExceptionEVEAuthentication $e) {
+			EveHelper::updateApiStatus($apikey, $e->getCode());
+			switch ($apikey->status) {
+				case 'Limited':
+					JError::raiseNotice(0, JText::_('API key offers limited access'));
+					break;
+				case 'Invalid':
+					JError::raiseWarning(0, JText::_('API key is invalid'));
+					break;
+				case 'Inactive':
+					JError::raiseWarning(0, JText::_('Apikey is inactive'));
+					break;
+			}
+		}
+		catch (RuntimeException $e) {
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+		}
+		catch (Exception $e) {
+			JError::raiseError($e->getCode(), $e->getMessage());
+		}
+		return null;
+	}
+
+	/**
+	 * @param EveTableApikey $apikey
+	 */
+	protected function _prepareTable($apikey, &$entities)
 	{
 		$app = JFactory::getApplication();
 		if ($apikey->status == 'Unknown') {
@@ -133,20 +196,21 @@ class EveModelApikey extends EveModel {
 			$dispatcher =& JDispatcher::getInstance();
 			$ale = $this->getAleEVEOnline();
 			try {
-				$ale->setCredentials($apikey->keyID, $apikey->vCode);
-				$xml = $ale->apikey->Characters();
-				$dispatcher->trigger('apikeyCharacters', 
-					array($xml, $ale->isFromCache(), array('keyID' => $apikey->keyID)));
-				
-				$charRow = reset($xml->result->characters->getIterator());
-				if ($charRow !== false) {
-					$ale->setCharacterID($charRow->characterID);
-					$xml = $ale->char->ApikeyBalance();
-					$dispatcher->trigger('charApikeyBalance', 
-						array($xml, $ale->isFromCache(), array('characterID' => $charRow->characterID)));
+				$ale->setKey($apikey->keyID, $apikey->vCode);
+				$xml = $ale->account->APIKeyInfo();
+				$apikey->mask = $xml->result->key->mask;
+				$apikey->type = $xml->result->key->type;
+				//$apikey->expires = $xml->result->key->expires;
+
+				foreach ($xml->result->key->characters as $character) {
+					if ($apikey->type == 'Corporation') {
+						$entities[] = $character->corporationID;
+					} else {
+						$entities[] = $character->characterID;
+					}
 				}
-				$apikey->status = 'Full';
-				$app->enqueueMessage(JText::_('API key offers full access'));
+				$apikey->status = 'Active';
+				$app->enqueueMessage(JText::sprintf('Com_Eve_Api_Key_Type', $apikey->type));
 			}
 			catch (AleExceptionEVEAuthentication $e) {
 				EveHelper::updateApiStatus($apikey, $e->getCode());
@@ -169,10 +233,10 @@ class EveModelApikey extends EveModel {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
 			$dispatcher->trigger('onRegisterApikey', array($apikey->keyID, $apikey->status));
-			
-		}	
+				
+		}
 	}
-	
+
 	public function validate($data = null)
 	{
 		if (!is_numeric($data['keyID'])) {
@@ -184,7 +248,7 @@ class EveModelApikey extends EveModel {
 		}
 		return $data;
 	}
-	
+
 	/**
 	 * Method to checkin a row.
 	 *
@@ -259,7 +323,7 @@ class EveModelApikey extends EveModel {
 
 		return true;
 	}
-	
+
 	/**
 	 * Tests if apikey is checked out
 	 *
@@ -292,7 +356,7 @@ class EveModelApikey extends EveModel {
 
 		return $table->isCheckedOut($juserId);
 	}
-	
+
 	/**
 	 * Method to delete apikeys from the database.
 	 *
@@ -304,7 +368,7 @@ class EveModelApikey extends EveModel {
 		$i = 0;
 		// Get a apikey row instance
 		$table = $this->getInstance('Apikey');
-		
+
 		foreach ($cid as $id) {
 			// Load the row.
 			$return = $table->load($id);
@@ -337,24 +401,24 @@ class EveModelApikey extends EveModel {
 	function getApikey($keyID = null) {
 		return $this->getInstance('Apikey', $keyID);
 	}
-	
+
 	function getApiStates() {
 		return array();
 		return $this->getEnumOptions('#__eve_apikeys', 'status');
 	}
-	
+
 	function apiGetCharacters($cid) {
 		return;
 		$app = JFactory::getApplication();
 		JArrayHelper::toInteger($cid);
-		
+
 		if (!count($cid)) {
 			JError::raiseWarning(500, JText::_('Com_Eve_No_Api_Key_Selected'));
 			return false;
 		}
 		JPluginHelper::importPlugin('eveapi');
 		$dispatcher =& JDispatcher::getInstance();
-		
+
 		$count = 0;
 		$ale = $this->getAleEVEOnline();
 		foreach ($cid as $keyID) {
@@ -362,8 +426,8 @@ class EveModelApikey extends EveModel {
 				$apikey = $this->getApikey($keyID);
 				$ale->setCredentials($apikey->keyID, $apikey->vCode);
 				$xml = $ale->apikey->Characters();
-				$dispatcher->trigger('apikeyCharacters', 
-					array($xml, $ale->isFromCache(), array('keyID' => $keyID)));
+				$dispatcher->trigger('apikeyCharacters',
+				array($xml, $ale->isFromCache(), array('keyID' => $keyID)));
 				$count += 1;
 			}
 			catch (AleExceptionEVEAuthentication $e) {
@@ -376,7 +440,7 @@ class EveModelApikey extends EveModel {
 			catch (Exception $e) {
 				JError::raiseError($e->getCode(), $e->getMessage());
 			}
-			
+				
 		}
 		if ($count == 1) {
 			$app->enqueueMessage(JText::_('CHARACTERS FROM ACCOUNT SUCCESSFULLY IMPORTED'));
@@ -385,5 +449,5 @@ class EveModelApikey extends EveModel {
 			$app->enqueueMessage(JText::sprintf('CHARACTERS FROM %s ACCOUNTS SUCCESSFULLY IMPORTED', $count));
 		}
 	}
-	
+
 }

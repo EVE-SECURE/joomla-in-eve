@@ -11,12 +11,12 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,13 +26,13 @@ defined('_JEXEC') or die();
 
 jimport('joomla.application.component.view');
 
-class EveViewUser extends JView 
+class EveViewUser extends JView
 {
 	public function display($tpl = null)
 	{
 		$app = JFactory::getApplication();
 		$document = JFactory::getDocument();
-		
+
 		$params = $this->get('Params');
 		$user = $this->get('Item');
 		$characters = $this->get('Characters');
@@ -41,8 +41,8 @@ class EveViewUser extends JView
 		$menus = &JSite::getMenu();
 		$menu  = $menus->getActive();
 		if (is_object($menu)
-				&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
-				&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
+		&& JArrayHelper::getValue($menu->query, 'option') == 'com_eve'
+		&& JArrayHelper::getValue($menu->query, 'view') == 'user') {
 			$menu_params = new JParameter($menu->params);
 			if (!$menu_params->get('page_title')) {
 				$params->set('page_title', JText::_('Your characters'));
@@ -51,16 +51,16 @@ class EveViewUser extends JView
 			$params->set('page_title', JText::_('Your characters'));
 		}
 		$document->setTitle($params->get('page_title'));
-		
+
 		$this->assignRef('components', $components);
 		$this->assignRef('user', $user);
 		$this->assignRef('params', $params);
 		$this->assignRef('characters', $characters);
-		
+
 		parent::display();
 		$this->_setPathway();
 	}
-	
+
 	protected function _setPathway()
 	{
 	}
