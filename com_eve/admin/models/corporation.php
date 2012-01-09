@@ -370,44 +370,13 @@ class EveModelCorporation extends EveModel {
 
 	public function setOwner($cid, $isOwner, $store = true)
 	{
-		$q = $this->getQuery();
-		$q->addTable('#__eve_corporations', 'co');
-		$q->addJoin('#__eve_characters', 'ch', 'co.ceoID=ch.characterID');
-		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
-		$q->addWhere('co.corporationID IN ('. implode(',', $cid).')');
-		$q->addQuery('co.corporationID', 'co.corporationName');
-		$q->addQuery('ch.characterID', 'ch.userID');
-		$q->addQuery('co.owner', 'al.owner AS derived_owner');
-		$ceos = $q->loadObjectList();
-
 		$result = 0;
-		JPluginHelper::importPlugin('eveapi');
-		foreach ($ceos as $ceo) {
-			$corporation = EveFactory::getInstance('Corporation', $ceo->corporationID);
+		foreach ($cid as $corporationID) {
+			$corporation = EveFactory::getInstance('Corporation', $corporationID);
 			if ($store) {
 				$corporation->owner = $isOwner ? 1 : null;
 				$corporation->store(true);
-			}
-
-			$setOwner = $ceo->derived_owner || $corporation->owner;
-			if (!$store && $ceo->owner && !$isOwner) {
-				//unseting alliance, but corporation is set as owner
-				continue;
-			}
-			if ($store && $ceo->derived_owner && !$isOwner) {
-				//unsetting corporatation, but alliance is owner
-				continue;
-			}
-			$result += 1;
-				
-			if ($ceo->userID && $ceo->characterID) {
-				$dispatcher =& JDispatcher::getInstance();
-				$dispatcher->trigger('onSetOwnerCorporation', array($ceo->userID, $ceo->characterID, $setOwner));
-				continue;
-			} else {
-				if ($setOwner) {
-					$this->setError(JText::sprintf('Com_Eve_Error_No_Ceo_Api_Key', $ceo->corporationName));
-				}
+				$result += 1;
 			}
 		}
 

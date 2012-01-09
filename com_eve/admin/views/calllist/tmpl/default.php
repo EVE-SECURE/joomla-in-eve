@@ -24,9 +24,10 @@ $userId	= $user->get('id');
 	<thead>
 		<tr>
 			<th class="title" width="10px"><?php echo JText::_( 'NUM' ); ?></th>
-			<th width="10" class="title"><input type="checkbox" name="toggle"
+			
+			<?php /*<th width="10" class="title"><input type="checkbox" name="toggle"
 				value="" onclick="checkAll(<?php echo count($this->items); ?>);" />
-			</th>
+			</th>*/?>
 			<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'Com_Eve_Call_Type' ), 'typeName', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 			<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'Com_Eve_Call_Name' ), 'cl.name', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
 			<th class="title"><?php echo JHTML::_('grid.sort', JText::_( 'Com_Eve_Access_Mask' ), 'cl.accessMask', $this->state->get('list.direction'), $this->state->get('list.ordering')); ?></th>
@@ -41,7 +42,7 @@ $userId	= $user->get('id');
 	<?php foreach ($this->items as $i => $item) : ?>
 		<tr class="row<?php echo $i % 2; ?>">
 			<td><?php echo $this->pagination->getRowOffset($i); ?></td>
-			<td><?php echo JHtml::_('grid.checkedout', $item, $i, 'id'); ?></td>
+			<?php /*<td><?php echo JHtml::_('grid.checkedout', $item, $i, 'id'); ?></td>*/ ?>
 			<td><?php echo $this->escape($item->type); ?></td>
 			<td><?php echo $this->escape($item->name); ?></td>
 			<td><?php echo $this->escape($item->accessMask); ?></td>

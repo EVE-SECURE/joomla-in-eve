@@ -95,7 +95,7 @@ class EveModelApikey extends EveModel {
 		$table = &$this->getItem($keyID);
 
 		$vCodePast = $table->vCode;
-		$maskPast = $table->mask;
+		$maskPast = $table->accessMask;
 		$typePast = $table->type;
 		// Bind the data
 		if (!$table->bind($data)) {
@@ -136,29 +136,31 @@ class EveModelApikey extends EveModel {
 		if ($table->status == 'Active') {
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
-			$options = array('keyID' => $table->keyID);
-			$dispatcher->trigger('accountAPIKeyInfo', array($apikey, $xml, $ale->isFromCache(), $options));
+			$options = array();
+			$dispatcher->trigger('accountAPIKeyInfo', array($table, $xml, $ale->isFromCache(), $options));
 		}
-
+		
 		return $table->keyID;
 	}
 
 	/**
 	 * @param EveTableApikey $apikey
 	 */
-	public function getAccountAPIKeyInfo($apikey)
+	public function getAccountAPIKeyInfo($apikey, &$changed)
 	{
-			
-		$apikey->status == "Unknown";;
-		$apikey->type = "Unknown";;
-
+		
+		$apikey->status == "Unknown";
+		//$apikey->type = "Unknown";
+		//$changed = false;
+		//$changed = ($apikey->mask != $xml->result->key->mask);
+		//$changed = ($apikey->type != $xml->result->key->type);
+		
+		
 		try {
 			//print_r($apikey); die();
 			$ale = $this->getAleEVEOnline();
 			$ale->setKey($apikey->keyID, $apikey->vCode);
 			$xml = $ale->account->APIKeyInfo();
-			$apikey->mask = $xml->result->key->mask;
-			$apikey->type = $xml->result->key->type;
 			$apikey->status = 'Active';
 			return $xml;
 		}
@@ -198,7 +200,7 @@ class EveModelApikey extends EveModel {
 			try {
 				$ale->setKey($apikey->keyID, $apikey->vCode);
 				$xml = $ale->account->APIKeyInfo();
-				$apikey->mask = $xml->result->key->mask;
+				$apikey->accessMask = $xml->result->key->accessMask;
 				$apikey->type = $xml->result->key->type;
 				//$apikey->expires = $xml->result->key->expires;
 

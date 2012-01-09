@@ -49,8 +49,10 @@ class EveTableSchedule extends JTable {
 		}
 		$this->apicall = $q->loadResult();
 	}
+	
+	
 
-	function loadExtra($type, $name, $userID = null, $characterID = null, $params = null) {
+	function loadExtra($type, $name, $keyID = null, $characterID = null, $params = null) {
 		if (is_array($params)) {
 			$params = json_encode($params);
 		}
@@ -60,7 +62,7 @@ class EveTableSchedule extends JTable {
 		$q->addQuery('sc.*', 'ap.id AS apicall');
 		$q->addWhere("ap.type='%s' AND ap.name='%s'", $type, $name);
 		if ($userID) {
-			$q->addWhere("sc.userID='%s'", $userID);
+			$q->addWhere("sc.keyID='%s'", $keyID);
 		}
 		if ($characterID) {
 			$q->addWhere("sc.characterID='%s'", $characterID);

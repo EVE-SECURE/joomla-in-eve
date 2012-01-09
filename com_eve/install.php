@@ -102,6 +102,7 @@ function com_install() {
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` CHANGE `call` `name` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ";
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` DROP `authentication`, DROP `authorization`;";
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` ADD `accessMask` INT NULL DEFAULT NULL AFTER `name` ";
+			$queries[] = "UPDATE `jos_eve_apicalls` SET `name` = 'APIKeyInfo' WHERE `type` = 'account' AND `name` = 'Characters';";
 			$delete[] = 'administrator/com_eve/tables/account.php';
 			$delete[] = 'administrator/com_eve/controllers/account.php';
 			$delete[] = 'administrator/com_eve/models/account.php';

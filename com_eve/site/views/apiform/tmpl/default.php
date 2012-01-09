@@ -36,18 +36,18 @@ defined('_JEXEC') or die();
 		<?php endif; ?>
 		<tr>
 			<td>
-				<label for="userID"><?php echo JText::_('API USER ID'); ?></label>
+				<label for="keyID"><?php echo JText::_('Com_Eve_Key_Id'); ?></label>
 			</td>
 			<td>
-				<input name="userID" id="userID" value="" />
+				<input name="keyID" id="keyID" value="" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<label for="apiKey"><?php echo JText::_('API KEY'); ?></label>
+				<label for="vCode"><?php echo JText::_('Com_Eve_Verification_Code'); ?></label>
 			</td>
 			<td>
-				<input name="apiKey" value="" />
+				<input name="vCode" id="vCode" value="" />
 			</td>
 		</tr>
 	</table>
