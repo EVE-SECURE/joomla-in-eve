@@ -350,9 +350,6 @@ class EveControllerCorporation extends EveController {
 		}
 
 		$model = $this->getModel('Corporation', 'EveModel');
-		if ($isOwner) {
-			$model->apiGetCorporationSheet($cid);
-		}
 		$result = $model->setOwner($cid, $isOwner);
 
 		foreach ($model->getErrors() as $error) {

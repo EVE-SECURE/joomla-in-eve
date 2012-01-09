@@ -35,6 +35,78 @@ class plgEveapiEve extends EveApiPlugin {
 	function __construct($subject, $config = array()) {
 		parent::__construct($subject, $config);
 	}
+	
+	private static $apicalls = null;
+	
+	private function getApiCallList()
+	{
+		if (!isset(self::$apicalls)) {
+			$dbo = JFactory::getDBO();
+			$query = EveFactory::getQuery($dbo);
+			$query->addQuery('*');
+			$query->addTable('#__eve_apicalls');
+			//$query->addWhere('published = 1');
+			self::$apicalls = $query->loadObjectList();
+		}
+		return self::$apicalls;
+	}
+	
+	private function canSchedule($apikey, $apiCall)
+	{
+		if (($apiCall->type == 'account') && ($apiCall->name == 'APIKeyInfo')) {
+			return true;
+		}
+		switch ($apikey->type) {
+			case 'Corporation':
+				if ($apiCall->type != 'corp') {
+					return false;
+				}
+				break;
+			case 'Character':
+			case 'Account':
+				if ($apiCall->type != 'char') {
+					return false;
+				}
+				break;
+			default:
+				return false;
+		}
+		//check access mask
+		if (!(intval($apiCall->accessMask) & intval($apikey->accessMask))) {
+			return false;
+		}
+		return true;
+		
+	}
+	
+	public function onScheduleForApiKey($apikey, $entities)
+	{
+		$dbo = JFactory::getDBO();
+		$query = 'DELETE FROM #__eve_schedule WHERE keyID = '.intval($apikey->keyID);
+		$dbo->Execute($query);
+		$next = new DateTime();
+		$apiCallList = $this->getApiCallList();
+		foreach ($apiCallList as $apiCall) {
+			if (!$this->canSchedule($apikey, $apiCall)) {
+				continue;
+			}
+			if (($apiCall->type == 'char') && ($apikey->type == 'Account')) {
+				$tmpEntities = $entities;
+			} else {
+				$tmpEntities = array(null);
+			}
+			foreach ($tmpEntities as $entityID)
+			{
+				$schedule = JTable::getInstance('Schedule', 'EveTable');
+				$schedule->apicall = $apiCall->id;
+				$schedule->keyID = $apikey->keyID;
+				$schedule->characterID = $entityID;
+				$schedule->next = $next->format('Y-m-d H:i:s');
+				$schedule->published = 0;
+				$schedule->store(true);
+			}
+		}
+	}
 
 	public function onRegisterAccount($userID, $apiStatus) {
 		$schedule = JTable::getInstance('Schedule', 'EveTable');
@@ -75,22 +147,55 @@ class plgEveapiEve extends EveApiPlugin {
 
 	public function accountAPIKeyInfo($apikey, $xml, $fromCache, $options = array()) {
 		$dbo = JFactory::getDBO();
-		$keyID = JArrayHelper::getValue($options, 'keyID');
-		if (!$keyID) {
-			return;
+		$changed = false;
+		//check changes in mask or type
+		$changed = $changed || ($apikey->accessMask != $xml->result->key->accessMask);
+		$changed = $changed || ($apikey->type != $xml->result->key->type);
+
+		//update mask and type if necessary
+		if ($changed) {
+			$apikey->accessMask = $xml->result->key->accessMask;
+			$apikey->type = $xml->result->key->type;
+			$apikey->store();
 		}
 		
-		$query = 'DELETE FROM #__eve_apikey_entities WHERE keyID = '.intval($keyID);
-		$dbo->Execute($query);
+		//get entity IDs from xml
+		$entities = array();
 		foreach ($xml->result->key->characters as $character) {
 			if ($apikey->type == 'Corporation') {
 				$entityID = $character->corporationID;
 			} else {
 				$entityID = $character->characterID;
 			}
-			$query = 'INSERT INTO #__eve_apikey_entities (keyID, entityID) VALUES ('
-			.intval($keyID). ', '.intval($entityID).');';
+			$entities[] = intval($entityID);
+		}
+		//check changes in entities
+		if (!$changed) {
+			$query = EveFactory::getQuery($dbo);
+			$query->addQuery('COUNT(*)');
+			$query->addTable('#__eve_apikey_entities');
+			$query->addWhere('keyID = '.$dbo->Quote($apikey->keyID));
+			$changed = $changed || (count($entities) != $query->loadResult());
+			if (count($entities) > 0) {
+				$query->addWhere('entityID IN ('.implode(', ', $entities).')'); 
+				$changed = $changed || (count($entities) != $query->loadResult());
+			}
+		}
+		
+		//update entities if necessary
+		if ($changed) {
+			$query = 'DELETE FROM #__eve_apikey_entities WHERE keyID = '.intval($apikey->keyID);
 			$dbo->Execute($query);
+			foreach ($entities as $entityID) {
+				$query = 'INSERT INTO #__eve_apikey_entities (keyID, entityID) VALUES ('
+					.intval($apikey->keyID). ', '.intval($entityID).');';
+				$dbo->Execute($query);
+			}
+		}
+		
+		//reset schedule
+		if ($changed) {
+			$this->onScheduleForApiKey($apikey, $entities);
 		}
 	}
 

@@ -313,21 +313,12 @@ class EveControllerAlliance extends EveController {
 			$app->enqueueMessage($error, 'error');
 		}
 
-		$corporationIDs = $model->getAllianceMemberIDs($cid);
-		//print_r($corporationIDs);die;
-		if ($corporationIDs) {
-			$model = $this->getModel('Corporation', 'EveModel');
-			$result = $model->setOwner($corporationIDs, $isOwner, false);
-			foreach ($model->getErrors() as $error) {
-				$app->enqueueMessage($error, 'error');
-			}
-			if ($result) {
-				$app = JFactory::getApplication();
-				if ($isOwner) {
-					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Set_As_Owner', $result));
-				} else {
-					$app->enqueueMessage(JText::sprintf('Com_Eve_N_Corporations_Unset_As_Owner', $result));
-				}
+		if ($result) {
+			$app = JFactory::getApplication();
+			if ($isOwner) {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Alliances_Set_As_Owner', $result));
+			} else {
+				$app->enqueueMessage(JText::sprintf('Com_Eve_N_Alliances_Unset_As_Owner', $result));
 			}
 		}
 

@@ -50,7 +50,7 @@ $userId	= $user->get('id');
 						<?php echo $item->keyID; ?>
 					<?php else : ?>
 					<span class="editlinktip hasTip" title="<?php echo JText::_('Edit item');?>::<?php echo $item->keyID; ?>">
-						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=account.edit&keyID='.$item->keyID); ?>">
+						<a href="<?php echo JRoute::_('index.php?option=com_eve&task=apikey.edit&keyID='.$item->keyID); ?>">
 							<?php echo $item->keyID; ?></a></span>
 					<?php endif; ?>
 				</td>

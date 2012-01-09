@@ -24,7 +24,7 @@ CREATE TABLE `#__eve_apikeys` (
   `vCode` VARCHAR( 64 ) NULL ,
   `user_id` INT NOT NULL ,
   `type` VARCHAR( 15 ) NULL ,
-  `mask` BIGINT UNSIGNED NULL ,
+  `accessMask` BIGINT UNSIGNED NULL ,
   `status` VARCHAR( 15 ) NOT NULL DEFAULT 'Unknown',
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
   `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_section_corporation_access` (
 -- 
 
 INSERT IGNORE INTO `#__eve_apicalls` (`type`, `name`, `authentication`, `authorization`, `delay`, `params`) VALUES 
-('account', 'Characters', 'User', 'Limited', 0, ''),
+('account', 'APIKeyInfo', 'User', 'Limited', 0, ''),
 ('char', 'CharacterSheet', 'Character', 'Limited', 0, ''),
 ('corp', 'CorporationSheet', 'Character', 'Limited', 0, ''),
 ('eve', 'AllianceList', 'None', 'None', 0, '');

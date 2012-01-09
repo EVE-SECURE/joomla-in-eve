@@ -48,18 +48,75 @@ class EveModelApiform  extends EveModel {
 				$user = JFactory::getUser($credentials['username']);
 			}
 
-			$userID = JArrayHelper::getValue($hash, 'userID', '', 'int');
-			$apiKey = JArrayHelper::getValue($hash, 'apiKey', '', 'string');
+			$keyID = JArrayHelper::getValue($hash, 'keyID', '', 'int');
+			$vCode = JArrayHelper::getValue($hash, 'vCode', '', 'string');
 			if (!preg_match('/[a-zA-Z0-9]{64}/', $apiKey)) {
 				JError::raiseWarning('SOME_ERROR_CODE', JText::_("INVALID API KEY FORMAT"));
 				return false;
 			}
-
+			$ale = $this->getAleEVEOnline();
+			$ale->setKey($keyID, $vCode);
+			$xml = $ale->account->APIKeyInfo();
+			
+			if ((string) $xml->result->key->type == 'Corporation') {
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("Com_Eve_Corporation_Key_Type_Not_Allowed"));
+				return false;
+			}
+			
+			if (count($xml->result->key->characters) == 0) {
+				JError::raiseWarning('SOME_ERROR_CODE', JText::_("Com_Eve_No_Character_Assigned_To_Key"));
+				return false;
+			}
+			
+			$characters = array();
+			$corporations = array();
+			foreach ($xml->result->key->characters as $character) {
+				$characters[] = $character->characterID;
+				$corporations[] = $character->corporationID;
+			}
+			
+			$q = $this->getQuery();
+			$q->addTable('#__eve_corporations', 'co');
+			$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
+			$q->addQuery('co.corporationID');
+			$q->addWhere('co.corporationID IN ('.implode(',', $corporations).')');
+			$q->addWhere('(co.owner OR al.owner)');
+			$ok = (int) $q->loadResult();
+			if (!$ok) {
+				JError::raiseWarning( "SOME_ERROR_CODE", JText::_("Com_Eve_No_Character_Is_Member_Of_Owner_Corporation") );
+				return false;
+			}
+			
+			$q = $this->getQuery();
+			$q->addTable("#__eve_characters");
+			$q->addWhere('characterID IN ('.implode(',', $characters).')');
+			$characterList = $q->loadObjectList();
+			foreach ($characterList as $character) {
+				if (($character->user_id > 0) && ($character->user_id != $user->id)) {
+					JError::raiseWarning( "SOME_ERROR_CODE", JText::_("Com_Eve_Some_Of_Characters_Is_Already_Assigned_To_Another_User") );
+					return false;
+				}
+			}
+			
+			$apikey = $this->getInstance('Apikey', $keyID);
+			$apikey->vCode = $vCode;
+			$apikey->user_id = $user->id;
+			
+			JPluginHelper::importPlugin('eveapi');
+			$dispatcher =& JDispatcher::getInstance();
+			$options = array();
+			$dispatcher->trigger('accountAPIKeyInfo', array($table, $xml, $ale->isFromCache(), $options));
+			
+			$user->set('block', '0');
+			$user->set('activation', '');
+			if (!$user->save()) {
+				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
+				return false;
+			}
+			
+			/*
 			$account = $this->getInstance('Account', $userID);
 				
-			$ale = $this->getAleEVEOnline();
-			$ale->setCredentials($userID, $apiKey);
-			$xml = $ale->account->Characters();
 				
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();
@@ -119,46 +176,22 @@ class EveModelApiform  extends EveModel {
 				JError::raiseWarning('SOME_ERROR_CODE', JText::_("NO CHARACTER IS MEMBER OF NO CORPORATION"));
 			}
 
-			$q = $this->getQuery();
-			$q->addTable('#__eve_corporations', 'co');
-			$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
-			$q->addQuery('co.corporationID');
-			$q->addWhere('co.corporationID IN ('.implode(',', $corps).')');
-			$q->addWhere('(co.owner OR al.owner)');
-			$ok = (int) $q->loadResult();
-			if (!$ok) {
-				JError::raiseWarning( "SOME_ERROR_CODE", JText::_("NO CHARACTER IS MEMBER OF OWNER CORPORATION") );
-				return false;
-			}
-			$user->set('block', '0');
-			$user->set('activation', '');
-			if (!$user->save()) {
-				JError::raiseWarning( "SOME_ERROR_CODE", $user->getError() );
-				return false;
-			}
+			*/
 			$app->enqueueMessage(JText::_('Account unblocked'));
 			return true;
 				
 		}
 		catch (AleExceptionEVEAuthentication $e) {
-			EveHelper::updateApiStatus($account, $e->getCode());
-			switch ($account->apiStatus) {
-				case 'Limited':
-					JError::raiseNotice(0, JText::_('API key offers limited access'));
-					break;
-				case 'Invalid':
-					JError::raiseWarning(0, JText::_('API key is invalid'));
-					break;
-				case 'Inactive':
-					JError::raiseWarning(0, JText::_('Account is inactive'));
-					break;
-			}
+			JError::raiseWarning($e->getCode(), $e->getMessage());
+			return false;
 		}
 		catch (RuntimeException $e) {
 			JError::raiseWarning($e->getCode(), $e->getMessage());
+			return false;
 		}
 		catch (Exception $e) {
 			JError::raiseError($e->getCode(), $e->getMessage());
+			return false;
 		}
 
 	}

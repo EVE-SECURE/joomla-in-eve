@@ -12,7 +12,7 @@ class EveTableApikey extends EveTable {
 	/** @var string */
 	var $type = null;
 	/** @var int */
-	var $mask = null;
+	var $accessMask = null;
 	/** @var string */
 	var $status 	= null;
 	/* checkout values */
