@@ -100,7 +100,6 @@ class EveModelApiform  extends EveModel {
 			
 			$apikey = $this->getInstance('Apikey', $keyID);
 			$apikey->vCode = $vCode;
-			$apikey->user_id = $user->id;
 			
 			JPluginHelper::importPlugin('eveapi');
 			$dispatcher =& JDispatcher::getInstance();

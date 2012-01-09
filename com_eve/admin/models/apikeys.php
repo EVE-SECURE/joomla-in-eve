@@ -42,15 +42,16 @@ class EveModelApikeys extends JModelList {
 		$dbo = $this->getDBO();
 		$q = new JQuery($dbo);
 		$q->addTable('#__eve_apikeys', 'a');
-		$q->addJoin('#__users', 'user', 'a.user_id=user.id');
 		$q->addJoin('#__users', 'editor', 'a.checked_out=editor.id');
 		$q->addJoin('#__eve_apikey_entities', 'ae', 'a.keyID=ae.keyID');
 		$q->addJoin('#__eve_characters', 'chr', 'chr.characterID=ae.entityID');
+		$q->addJoin('#__users', 'user', 'chr.user_id=user.id');
 		$q->addJoin('#__eve_corporations', 'corp', 'corp.corporationID=ae.entityID');
 		$q->addQuery('a.*');
 		$q->addQuery('user.name AS userName');
 		$q->addQuery('editor.name AS editor');
 		$q->addQuery("GROUP_CONCAT(chr.name SEPARATOR ', ') AS characters");
+		$q->addQuery("GROUP_CONCAT(DISTINCT user.name SEPARATOR ', ') AS userNames");
 		$q->addGroup('a.keyID');
 		if ($search) {
 			$q->addWhere('user.name LIKE '.$q->Quote( '%'.$q->getEscaped( $search, true ).'%', false ));

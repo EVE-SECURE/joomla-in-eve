@@ -125,8 +125,7 @@ class EveModel extends JModel {
 
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
-		$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
-		$q->addWhere('ac.owner = %s', $user->id);
+		$q->addWhere('ch.user_id = %s', $user->id);
 		$q->addQuery('DISTINCT corporationID');
 		$corps = $q->loadResultArray();
 		if (empty($corps)) {
@@ -156,8 +155,7 @@ class EveModel extends JModel {
 		if (!$owner != $user->id) {
 			$q = $this->getQuery();
 			$q->addTable('#__eve_characters', 'ch');
-			$q->addJoin('#__eve_accounts', 'ac', 'ac.userID=ch.userID');
-			$q->addWhere('ac.owner = %s', $user->id);
+			$q->addWhere('ch.user_id = %s', $user->id);
 			$q->addQuery('DISTINCT corporationID');
 			$corps = $q->loadResultArray();
 			if (empty($corps)) {

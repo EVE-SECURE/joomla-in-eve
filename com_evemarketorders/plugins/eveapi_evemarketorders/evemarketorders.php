@@ -84,13 +84,8 @@ class plgEveapiEveMarketOrders extends EveApiPlugin {
 		}
 	}
 
-
-	public function onSetOwnerCorporation($userID, $characterID, $owner)
+	public function charMarketOrders($xml, $fromCache, $options = array()) 
 	{
-		$this->_setOwnerCorporation('corp', 'MarketOrders', $owner, $userID, $characterID);
-	}
-
-	public function charMarketOrders($xml, $fromCache, $options = array()) {
 		$this->_storeMarketOrders($xml, $options['characterID']);
 	}
 

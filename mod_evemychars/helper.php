@@ -8,8 +8,7 @@ class eveMyCharsHelper {
 
 		$db = &JFactory::getDBO();
 		$query = 'SELECT characterID, name FROM #__eve_characters AS ch'.
-	    			' LEFT JOIN #__eve_accounts AS ac ON ch.userID=ac.userID'.
-	    			' WHERE ac.owner = '.intval($user->get('id')). 
+	    			' WHERE ch.user_id = '.intval($user->get('id')). 
 	    			' ORDER BY name ASC';
 
 		$db->setQuery($query);

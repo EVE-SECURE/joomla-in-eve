@@ -46,8 +46,8 @@ class EveModelSchedule extends JModelList {
 		$q->addTable('#__eve_schedule', 'sc');
 		$q->addJoin('#__eve_apicalls', 'ap', 'ap.id=sc.apicall');
 		$q->addJoin('#__eve_apikeys', 'ak', 'sc.keyID=ak.keyID');
-		$q->addJoin('#__users', 'u', 'ak.user_id=u.id');
 		$q->addJoin('#__eve_characters', 'c', 'sc.characterID=c.characterID');
+		$q->addJoin('#__users', 'u', 'c.user_id=u.id');
 		$q->addQuery('ap.*', 'sc.*');
 		$q->addQuery('CONCAT(ap.`type`, \'/\',ap.`name`) AS typeCall');
 		$q->addQuery('u.name AS userName');

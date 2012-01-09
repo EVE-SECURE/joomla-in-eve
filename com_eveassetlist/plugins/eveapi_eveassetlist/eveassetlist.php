@@ -30,9 +30,12 @@ defined('_JEXEC') or die();
  * @package		Joomla! in EVE
  * @subpackage	Core
  */
-class plgEveapiEveAssetList extends EveApiPlugin {
+class plgEveapiEveAssetList extends EveApiPlugin
+{
 	private $_fields;
-	function __construct($subject, $config = array()) {
+	
+	function __construct($subject, $config = array())
+	{
 		parent::__construct($subject, $config);
 		$this->_fields = array(
 		  'entityID',
@@ -98,13 +101,8 @@ class plgEveapiEveAssetList extends EveApiPlugin {
 		}
 	}
 
-
-	public function onSetOwnerCorporation($userID, $characterID, $owner)
+	public function charAssetList($xml, $fromCache, $options = array()) 
 	{
-		$this->_setOwnerCorporation('corp', 'AssetList', $owner, $userID, $characterID);
-	}
-
-	public function charAssetList($xml, $fromCache, $options = array()) {
 		$this->_storeAssetList($xml, $options['characterID']);
 	}
 

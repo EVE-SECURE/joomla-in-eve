@@ -1,3 +1,7 @@
+.icon-48-calllist {
+	background: url(icon-48-calllist.png) no-repeat;
+}
+
 .icon-48-character {
 	background: url(icon-48-character.png) no-repeat;
 }
@@ -24,6 +28,10 @@
 
 .icon-48-encryption {
 	background: url(icon-48-encryption.png) no-repeat;
+}
+
+.icon-32-calllist {
+	background: url(icon-32-calllist.png) no-repeat;
 }
 
 .icon-32-eve {

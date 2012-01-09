@@ -41,6 +41,7 @@ class EveModelEve extends JModel {
 		$result[] = array('icon'=>'icon-48-alliance.png', 'view'=>'alliances', 'caption'=>JText::_('Alliances'));
 		$result[] = array('icon'=>'icon-48-account.png', 'view'=>'accounts', 'caption'=>JText::_('Accounts'));
 		$result[] = array('icon'=>'icon-48-schedule.png', 'view'=>'schedule', 'caption'=>JText::_('Schedule'));
+		$result[] = array('icon'=>'icon-48-calllist.png', 'view'=>'calllist', 'caption'=>JText::_('Com_Eve_Api_Call_List'));
 		/*if ($user->authorize('com_config', 'manage')) {
 			$result[] = array('icon'=>'icon-48-diagnose.png', 'view'=>'diagnose', 'caption'=>JText::_('Diagnose'));
 			}*/
@@ -61,8 +62,9 @@ class EveModelEve extends JModel {
 		$q->addTable('#__eve_corporations', 'co');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 		$q->addJoin('#__eve_characters', 'ceo', 'ceo.characterID=co.ceoID');
-		$q->addJoin('#__eve_accounts', 'ac', 'ceo.userID=ac.userID');
-		$q->addQuery('co.*, al.name AS allianceName, al.shortName, ceo.name AS ceoName, ac.apiStatus');
+		$q->addJoin('#__eve_apikey_entities', 'ae', 'ae.entityID=co.corporationID');
+		$q->addJoin('#__eve_apikeys', 'ak', 'ak.keyID=ae.keyID');
+		$q->addQuery('co.*, al.name AS allianceName, al.shortName, ceo.name AS ceoName, ak.status');
 		$q->addWhere('(co.owner = 1 OR al.owner = 1)');
 		$list = $q->loadObjectList();
 		return $list;

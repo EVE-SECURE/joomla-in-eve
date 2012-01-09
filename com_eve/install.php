@@ -97,12 +97,15 @@ function com_install() {
 		case '0.7':
 			$queries[] = "TRUNCATE TABLE `#__eve_schedule`";
 			$queries[] = "ALTER TABLE `#__eve_schedule` CHANGE `userID` `keyID` INT( 11 ) NULL DEFAULT NULL ";
-			$queries[] = "DROP TABLE `#__eve_accounts`";
 			$queries[] = "UPDATE `#__components` SET `name` = 'API Keys', `admin_menu_link` = 'option=com_eve&view=apikeys' WHERE `admin_menu_link` = 'option=com_eve&view=accounts'";
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` CHANGE `call` `name` VARCHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ";
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` DROP `authentication`, DROP `authorization`;";
 			$queries[] = "ALTER TABLE `jos_eve_apicalls` ADD `accessMask` INT NULL DEFAULT NULL AFTER `name` ";
 			$queries[] = "UPDATE `jos_eve_apicalls` SET `name` = 'APIKeyInfo' WHERE `type` = 'account' AND `name` = 'Characters';";
+			$queries[] = "ALTER TABLE `jos_eve_characters` CHANGE `userID` `user_id` INT( 10 ) UNSIGNED NOT NULL DEFAULT '0'";
+			$queries[] = "UPDATE `jos_eve_characters` JOIN `#__eve_accounts` ON `user_id` = `userID` SET `user_id` = `owner`";
+
+			$queries[] = "DROP TABLE `#__eve_accounts`";
 			$delete[] = 'administrator/com_eve/tables/account.php';
 			$delete[] = 'administrator/com_eve/controllers/account.php';
 			$delete[] = 'administrator/com_eve/models/account.php';

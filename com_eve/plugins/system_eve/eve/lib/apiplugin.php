@@ -27,29 +27,5 @@ jimport('joomla.plugin.plugin');
 
 class EveApiPlugin extends JPlugin
 {
-	protected function  _registerCharacter($type, $name, $userID = null, $characterID = null, $params = null)
-	{
-		$schedule = EveFactory::getInstance('Schedule');
-		$schedule->loadExtra($type, $name, $userID, $characterID, $params);
-		if (!$schedule->id && $schedule->apicall) {
-			$next = JFactory::getDate();
-			$schedule->next = $next->toMySQL();
-			$schedule->store();
-		}
-	}
-
-	protected function  _setOwnerCorporation($type, $name, $owner, $userID = null, $characterID = null, $params = null)
-	{
-		$schedule = EveFactory::getInstance('Schedule');
-		$schedule->loadExtra($type, $name, $userID, $characterID, $params);
-		if ($owner && !$schedule->id && $schedule->apicall) {
-			$next = JFactory::getDate();
-			$schedule->next = $next->toMySQL();
-			$schedule->store();
-		}
-		if (!$owner && $schedule->id) {
-			$schedule->delete();
-		}
-	}
 
 }
