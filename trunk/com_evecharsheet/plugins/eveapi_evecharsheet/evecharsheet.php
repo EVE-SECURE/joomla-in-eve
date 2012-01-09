@@ -31,13 +31,15 @@ defined('_JEXEC') or die();
  * @subpackage	Character Sheet
  * @since 		1.5
  */
-class plgEveapiEvecharsheet extends EveApiPlugin {
+class plgEveapiEvecharsheet extends EveApiPlugin 
+{
 	static private $attributes;
 	static private $enhancers;
 	static private $clones;
 	private $dbdump;
 
-	function __construct($subject, $config = array()) {
+	function __construct($subject, $config = array()) 
+	{
 		parent::__construct($subject, $config);
 		$eveparams = JComponentHelper::getParams('com_eve');
 		$dbdump_database = $eveparams->get('dbdump_database');
@@ -65,11 +67,8 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		}
 	}
 
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		$this->_setOwnerCorporation('corp', 'Titles', $owner, $userID, $characterID);
-	}
-
-	public function charCharacterSheet($xml, $fromCache, $options = array()) {
+	public function charCharacterSheet($xml, $fromCache, $options = array())
+	{
 		//TODO: update(starTime) and delete(endTime) skills in skillquee queue
 		$characterID = JArrayHelper::getValue($options, 'characterID', 0, 'int');
 
@@ -88,7 +87,8 @@ class plgEveapiEvecharsheet extends EveApiPlugin {
 		$this->loadSkillQueue($characterID);
 	}
 
-	public function charSkillQueue($xml, $fromCache, $options = array()) {
+	public function charSkillQueue($xml, $fromCache, $options = array())
+	{
 		//TODO: update skills
 		$dbo = JFactory::getDBO();
 

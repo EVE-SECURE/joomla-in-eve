@@ -47,7 +47,6 @@ class EveModelCorporations extends JModelList {
 		$q->addJoin('#__eve_characters', 'c', 'c.characterID=co.ceoID');
 		$q->addJoin('#__eve_apikey_entities', 'ae', 'ae.entityID=co.corporationID');
 		$q->addJoin('#__eve_apikeys', 'ak', 'ak.keyID=ae.keyID');
-		//$q->addJoin('#__eve_accounts', 'us', 'us.userID=c.userID');
 		$q->addJoin('#__eve_alliances', 'al', 'al.allianceID=co.allianceID');
 		$q->addJoin('#__users', 'editor', 'co.checked_out=editor.id');
 		$q->addQuery($list_query);

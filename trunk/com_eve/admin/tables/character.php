@@ -25,7 +25,7 @@ defined('_JEXEC') or die();
 
 class EveTableCharacter extends EveTable {
 	/** @var int */
-	var $userID			= null;
+	var $user_id		= null;
 
 	//character sheet
 	/** @var int */

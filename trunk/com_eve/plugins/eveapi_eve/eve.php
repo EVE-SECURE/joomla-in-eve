@@ -102,7 +102,7 @@ class plgEveapiEve extends EveApiPlugin {
 				$schedule->keyID = $apikey->keyID;
 				$schedule->characterID = $entityID;
 				$schedule->next = $next->format('Y-m-d H:i:s');
-				$schedule->published = 0;
+				$schedule->published = 1;
 				$schedule->store(true);
 			}
 		}
@@ -135,14 +135,6 @@ class plgEveapiEve extends EveApiPlugin {
 		if ($query) {
 			$dbo->Execute($query);
 		}
-	}
-
-	public function onRegisterCharacter($userID, $characterID) {
-		$this->_registerCharacter('char', 'CharacterSheet', $userID, $characterID);
-	}
-
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		$this->_setOwnerCorporation('corp', 'CorporationSheet', $owner, $userID, $characterID);
 	}
 
 	public function accountAPIKeyInfo($apikey, $xml, $fromCache, $options = array()) {
@@ -199,40 +191,22 @@ class plgEveapiEve extends EveApiPlugin {
 		}
 	}
 
-	public function accountCharacters($xml, $fromCache, $options = array()) {
-		//JPluginHelper::importPlugin('eveapi');
-		$dispatcher =& JDispatcher::getInstance();
-		$dbo = JFactory::getDBO();
-		$userID = JArrayHelper::getValue($options, 'userID', null, 'int');
-		$sql = 'UPDATE #__eve_characters SET userID=0 WHERE userID='.$userID;
-		$dbo->Execute($sql);
-		foreach ($xml->result->characters->toArray() as $characterID => $array) {
-			$character = EveFactory::getInstance('Character', $characterID);
-			$character->userID = $userID;
-			$character->save($array);
-				
-			$dispatcher->trigger('onRegisterCharacter', array($userID, $characterID));
-				
-			$corporation = EveFactory::getInstance('Corporation', $array['corporationID']);
-			if (!$corporation->isLoaded()) {
-				$corporation->save($array);
-			}
-		}
-	}
-
-	public function charCharacterSheet($xml, $fromCache, $options = array()) {
+	public function charCharacterSheet($xml, $fromCache, $options = array())
+	 {
 		$character = EveFactory::getInstance('Character', (string) $xml->result->characterID);
 		$sheet = $xml->result->toArray();
 		$character->save($sheet);
 	}
 
-	public function corpCorporationSheet($xml, $fromCache, $options = array()) {
+	public function corpCorporationSheet($xml, $fromCache, $options = array()) 
+	{
 		$corporation = EveFactory::getInstance('Corporation', (string) $xml->result->corporationID);
 		$sheet = $xml->result->toArray();
 		$corporation->save($sheet);
 	}
 
-	public function eveAllianceList($xml, $fromCache, $options = array()) {
+	public function eveAllianceList($xml, $fromCache, $options = array()) 
+	{
 		if ($fromCache) {
 			return;
 		}

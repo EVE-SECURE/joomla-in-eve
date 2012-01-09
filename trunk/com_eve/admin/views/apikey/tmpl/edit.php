@@ -45,7 +45,7 @@ JHTML::stylesheet('common.css', 'administrator/components/com_eve/assets/');
 				</tr>
 				<tr>
 					<td class="key">
-						<label for="jformowner"><?php echo JText::_('Com_Eve_User'); ?></label>
+						<label for="jformuser_id"><?php echo JText::_('Com_Eve_User'); ?></label>
 					</td>
 					<td>
 						<?php echo JHTML::_('list.users', 'jform[user_id]', $this->item->user_id, 1, null, 'name', false); ?>

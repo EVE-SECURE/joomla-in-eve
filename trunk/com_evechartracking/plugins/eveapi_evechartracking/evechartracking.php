@@ -30,17 +30,15 @@ defined('_JEXEC') or die();
  * @package		Joomla! in EVE
  * @subpackage	Core
  */
-class plgEveapiEvechartracking extends EveApiPlugin {
-	function __construct($subject, $config = array()) {
+class plgEveapiEvechartracking extends EveApiPlugin 
+{
+	function __construct($subject, $config = array()) 
+	{
 		parent::__construct($subject, $config);
 	}
 
-
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		$this->_setOwnerCorporation('corp', 'MemberTracking', $owner, $userID, $characterID);
-	}
-
-	public function corpMemberTracking($xml, $fromCache, $options = array()) {
+	public function corpMemberTracking($xml, $fromCache, $options = array()) 
+	{
 		if (!isset($options['corporationID'])) {
 			$characterID = JArrayHelper::getValue($options, 'characterID');
 			$character = EveFactory::getInstance('Character', $characterID);

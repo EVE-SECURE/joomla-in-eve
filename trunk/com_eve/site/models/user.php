@@ -81,13 +81,12 @@ class EveModelUser extends JModelItem
 		$dbo = $this->getDBO();
 		$q = EveFactory::getQuery($dbo);
 		$q->addTable('#__eve_characters', 'c');
-		$q->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
 		$q->addJoin('#__eve_corporations', 'co', 'c.corporationID=co.corporationID');
 		$q->addJoin('#__eve_alliances', 'al', 'co.allianceID=al.allianceID');
 		$q->addQuery('c.*');
 		$q->addQuery('co.corporationName');
 		$q->addQuery('al.allianceID, al.name AS allianceName');
-		$q->addWhere('a.owner=%s', $id);
+		$q->addWhere('c.user_id=%s', $id);
 		$q->addOrder('name');
 		return $q->loadObjectList('characterID');
 

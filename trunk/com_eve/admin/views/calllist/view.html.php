@@ -55,8 +55,8 @@ class EveViewCalllist extends JView {
 	 */
 	protected function _setToolbar() {
 		$title = JText::_('Com_Eve_Api_Call_List');
-		JToolBarHelper::title($title, '');
-		JToolBarHelper::custom('api.apiCallList', 'account', 'account', 'Com_Eve_Check_Api_Calls', false);
+		JToolBarHelper::title($title, 'calllist');
+		JToolBarHelper::custom('api.apiCallList', 'calllist', 'calllist', 'Com_Eve_Check_Api_Calls', false);
 	}
 
 }

@@ -76,19 +76,14 @@ class plgEveapiEveWalletJournal extends EveApiPlugin {
 	}
 
 
-	public function onSetOwnerCorporation($userID, $characterID, $owner) {
-		for ($accountKey = 1000; $accountKey <= 1006; $accountKey +=1) {
-			$params = array('accountKey' => $accountKey);
-			$this->_setOwnerCorporation('corp', 'WalletJournal', $owner, $userID, $characterID, $params);
-		}
-	}
-
-	public function charWalletJournal($xml, $fromCache, $options = array()) {
+	public function charWalletJournal($xml, $fromCache, $options = array()) 
+	{
 		JTable::addIncludePath(JPATH_ADMINISTRATOR.DS.'components'.DS.'com_evewalletjournal'.DS.'tables');
 		$this->_storeWalletJournal($xml, $options['characterID']);
 	}
 
-	public function corpWalletJournal($xml, $fromCache, $options = array()) {
+	public function corpWalletJournal($xml, $fromCache, $options = array()) 
+	{
 		if (!isset($options['corporationID'])) {
 			$characterID = JArrayHelper::getValue($options, 'characterID');
 			$character = EveFactory::getInstance('Character', $characterID);

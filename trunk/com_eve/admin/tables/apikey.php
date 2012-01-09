@@ -7,8 +7,6 @@ class EveTableApikey extends EveTable {
 	var $keyID 	= null;
 	/** @var string */
 	var $vCode 	= null;
-	/** @var int */
-	var $user_id 		= null;
 	/** @var string */
 	var $type = null;
 	/** @var int */

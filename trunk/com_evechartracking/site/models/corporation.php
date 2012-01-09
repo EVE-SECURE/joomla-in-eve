@@ -59,17 +59,16 @@ class EvechartrackingModelCorporation extends EveModelCorporation {
 		$corporation = $this->getItem();
 		$q = $this->getQuery();
 		$q->addTable('#__eve_characters', 'ch');
-		$q->addJoin('#__eve_accounts', 'ac', 'ch.userID=ac.userID');
 		$q->addJoin($this->dbdump.'mapDenormalize', 'md', 'ch.locationID=md.itemID');
 		$q->addJoin($this->dbdump.'staStations', 'st', 'ch.locationID=st.stationID');
 		$q->addJoin($this->dbdump.'invTypes', 'iv', 'ch.shipTypeID=iv.typeID');
 		$q->addQuery('ch.*');
-		$q->addQuery('ac.owner');
+		$q->addQuery('ch.user_id AS owner');
 		$q->addQuery('md.itemName AS locationName, md.typeID AS locationTypeID');
 		$q->addQuery('st.stationName AS baseName, stationTypeID AS baseTypeID');
 		$q->addQuery('iv.typeName AS shipTypeName');
 		$q->addOrder('ch.name', 'ASC');
-		$q->addJoin('#__users', 'owner', 'ac.owner=owner.id');
+		$q->addJoin('#__users', 'owner', 'ch.user_id=owner.id');
 		$q->addQuery('owner.name AS ownerName');
 		$q->addWhere('ch.corporationID = %s', $corporation->corporationID);
 		/*if ($limit > 0) {

@@ -32,7 +32,8 @@ defined('_JEXEC') or die();
  */
 class plgEveapiEveIndustryJobs extends EveApiPlugin {
 	private $_fields;
-	function __construct($subject, $config = array()) {
+	function __construct($subject, $config = array()) 
+	{
 		parent::__construct($subject, $config);
 		$this->_fields = array(
 			'entityID', 'jobID', 'assemblyLineID', 'containerID', 
@@ -84,13 +85,8 @@ class plgEveapiEveIndustryJobs extends EveApiPlugin {
 		}
 	}
 
-
-	public function onSetOwnerCorporation($userID, $characterID, $owner)
+	public function charIndustryJobs($xml, $fromCache, $options = array()) 
 	{
-		$this->_setOwnerCorporation('corp', 'IndustryJobs', $owner, $userID, $characterID);
-	}
-
-	public function charIndustryJobs($xml, $fromCache, $options = array()) {
 		$this->_storeIndustryJobs($xml, $options['characterID']);
 	}
 

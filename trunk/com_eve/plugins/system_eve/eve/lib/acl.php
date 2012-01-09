@@ -271,21 +271,18 @@ class EveACL extends JObject {
 	{
 		$this->_userCharacters = array();
 		$this->_userCorporations = array();
-		$this->_userAccounts = array();
 		$user = JFactory::getUser();
 		$id = intval($user->id);
 		if ($id) {
 			$dbo = JFactory::getDBO();
 			$query = EveFactory::getQuery($dbo);
 			$query->addTable('#__eve_characters', 'c');
-			$query->addJoin('#__eve_accounts', 'a', 'c.userID=a.userID');
-			$query->addWhere('a.owner=%s', $id);
-			$query->addQuery('characterID, corporationID, c.userID');
+			$query->addWhere('c.user_id=%s', $id);
+			$query->addQuery('characterID, corporationID');
 			$list = $query->loadObjectList();
 			foreach ($list as $item) {
 				$this->_userCharacters[$item->characterID] = $item->characterID;
 				$this->_userCorporations[$item->corporationID] = $item->corporationID;
-				$this->_userAccounts[$item->userID] = $item->userID;
 			}
 		}
 
@@ -299,11 +296,10 @@ class EveACL extends JObject {
 			`roles` BIGINT( 20 ) NULL ,
 		PRIMARY KEY ( `userid` , `corporationID` )
 		) ENGINE = MEMORY 
-		SELECT ac.owner AS userid, ch.corporationID, BIT_OR(ch.roles) as roles
-			FROM #__eve_accounts AS ac
-			JOIN #__eve_characters AS ch ON ac.userID=ch.userID
-			WHERE ac.owner > 0
-			GROUP BY ac.owner, ch.corporationID;";
+		SELECT ch.user_id AS userid, ch.corporationID, BIT_OR(ch.roles) as roles
+			FROM #__eve_characters AS ch 
+			WHERE ch.user_id > 0
+			GROUP BY ch.user_id, ch.corporationID;";
 		$dbo = JFactory::getDBO();
 		$dbo->setQuery($sql);
 		$dbo->query();
@@ -332,14 +328,6 @@ class EveACL extends JObject {
 			$this->_loadUserEntityIDs();
 		}
 		return $this->_userCorporations;
-	}
-
-	public function getUserAccountIDs()
-	{
-		if (!isset($this->_userAccounts)) {
-			$this->_loadUserEntityIDs();
-		}
-		return $this->_userAccounts;
 	}
 
 	public function getUserCorporationRoles()

@@ -22,13 +22,11 @@ CREATE TABLE IF NOT EXISTS `#__eve_accounts` (
 CREATE TABLE `#__eve_apikeys` (
   `keyID` INT NOT NULL PRIMARY KEY ,
   `vCode` VARCHAR( 64 ) NULL ,
-  `user_id` INT NOT NULL ,
   `type` VARCHAR( 15 ) NULL ,
   `accessMask` BIGINT UNSIGNED NULL ,
   `status` VARCHAR( 15 ) NOT NULL DEFAULT 'Unknown',
   `checked_out` INTEGER UNSIGNED NOT NULL DEFAULT 0,
-  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  KEY `eve_apikeys_fk_user_id` (`user_id`)
+  `checked_out_time` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'
 )  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -86,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `#__eve_alliances` (
 
 CREATE TABLE IF NOT EXISTS `#__eve_characters` (
   `characterID` int(10) unsigned NOT NULL default '0',
-  `userID` int(10) unsigned NOT NULL default '0',
+  `user_id` int(10) unsigned NOT NULL default '0',
   `name` varchar(50) NOT NULL default '',
   `race` varchar(20) NOT NULL default '',
   `gender` enum('Unknown','Male','Female') NOT NULL default 'Unknown',
