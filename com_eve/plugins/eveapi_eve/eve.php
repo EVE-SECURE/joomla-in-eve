@@ -138,6 +138,7 @@ class plgEveapiEve extends EveApiPlugin {
 	}
 
 	public function accountAPIKeyInfo($apikey, $xml, $fromCache, $options = array()) {
+		$user_id = JArrayHelper::getValue($options, 'user_id', null, 'int');
 		$dbo = JFactory::getDBO();
 		$changed = false;
 		//check changes in mask or type
@@ -153,14 +154,29 @@ class plgEveapiEve extends EveApiPlugin {
 		
 		//get entity IDs from xml
 		$entities = array();
-		foreach ($xml->result->key->characters as $character) {
+		foreach ($xml->result->key->characters as $characterNode) {
 			if ($apikey->type == 'Corporation') {
-				$entityID = $character->corporationID;
+				$entityID = $characterNode->corporationID;
 			} else {
-				$entityID = $character->characterID;
+				$entityID = $characterNode->characterID;
+			}
+			$character = EveFactory::getInstance('Character', $characterNode->characterID);
+			if (!$character->name || $user_id) {
+				$character->name = $characterNode->characterName;
+				$character->corporationID = $characterNode->corporationID;
+				if ($user_id) {
+					$character->user_id = $user_id;
+				}
+				$character->store();
+			}
+			$corporation = EveFactory::getInstance('Corporation', $characterNode->corporationID);
+			if (!$corporation->corporationName) {
+				$corporation->corporationName = $characterNode->corporationName;
+				$corporation->store();
 			}
 			$entities[] = intval($entityID);
 		}
+		
 		//check changes in entities
 		if (!$changed) {
 			$query = EveFactory::getQuery($dbo);
